@@ -1,17 +1,16 @@
 import React from "react";
 import { Button, Modal, Radio } from "antd";
 import { useState } from "react";
-
-
+import useEmployee from "../../hooks/use-employee";
+import moment from "moment";
 const EmployeeModal = (props) => {
-
-
-//   const opens = props.open;
+  const { data: employee, error } = useEmployee();
+  //   const opens = props.open;
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
   };
- 
+
   const [shiflt, setShiflt] = useState();
   const onChange = (e) => {
     setShiflt(e.target.value);
@@ -25,7 +24,8 @@ const EmployeeModal = (props) => {
     // console.log('Clicked cancel button');
     setOpen(false);
   };
-
+  if (error) return <div>Request Failed</div>;
+  if (!employee) return <div>Loading...</div>;
   return (
     <div>
       <Button type="primary" onClick={showModal}>
@@ -39,12 +39,12 @@ const EmployeeModal = (props) => {
         centered
       >
         <div className="">
-          {data?.map((item) => (
+          {employee?.map((item) => (
             <div className="" key={item._id}>
-              {/* <div className="">{item.name}</div>
+              <div className="">{item.name}</div>
               <div className="">{item.email}</div>
               <div className="">{item.phoneNumber}</div>
-              <div className="">{item.avatar}</div> */}
+              <div className="">{item.avatar}</div>
               <div className="">
                 {item.timeWork?.map((item2) => (
                   <div className="" key={item2._id}>
@@ -53,10 +53,10 @@ const EmployeeModal = (props) => {
                         {item2.shiftId}
                       </Radio.Button>
                     </Radio.Group>
-                    {/* <div className="">
+                    <div className="">
                       {item2.date}-----{moment(item2.date).format("L")}
                     </div>
-                    <div className="">{item2.shiftId}</div> */}
+                    <div className="">{item2.shiftId}</div>
                   </div>
                 ))}
               </div>

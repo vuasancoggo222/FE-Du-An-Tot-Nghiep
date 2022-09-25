@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Modal, Radio } from "antd";
 import { useState } from "react";
 import useEmployee from "../../hooks/use-employee";
 import moment from "moment";
+
 const EmployeeModal = (props) => {
-  const { data: employee, error } = useEmployee();
+  // const { data: employee, get, error } = useEmployee();
+  // const [employee, setEmployee] = useState();
   //   const opens = props.open;
+
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
@@ -24,6 +27,11 @@ const EmployeeModal = (props) => {
     // console.log('Clicked cancel button');
     setOpen(false);
   };
+  // useEffect(() => {
+  //   setEmployee(get(props.id));
+  // }, []);
+  const employee = "";
+  const error = "";
   if (error) return <div>Request Failed</div>;
   if (!employee) return <div>Loading...</div>;
   return (

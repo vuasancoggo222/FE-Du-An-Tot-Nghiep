@@ -1,5 +1,7 @@
 import instance from "./instance";
-
+const httpGet = (endpoint, id) => {
+  return instance.get(`${endpoint}/${id}`);
+};
 const httpPost = (endpoint, data) => {
   return instance.post(`${endpoint}`, data);
 };
@@ -11,4 +13,4 @@ const httpDelete = (endpoint, id) => {
   return instance.delete(`${endpoint}/${id}`);
 };
 
-export { httpPost, httpPut, httpDelete };
+export { httpGet, httpPost, httpPut, httpDelete };

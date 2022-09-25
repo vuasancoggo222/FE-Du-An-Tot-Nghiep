@@ -57,41 +57,12 @@ const Header = () => {
                 <Link to={"/contact"}><button className="px-[23px] text-[#fff]">Liên Hệ</button></Link>
                 </div>
                 <div className="flex-auto">
-                <Link to={"/"} ><button className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3">0384765490</button></Link>
-
                 <button data="signin" onClick={showModal} className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3">Đăng nhập</button>
               <button data="signup" onClick={showModal} className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3" >Đăng ký</button>
               </div>
                 </div>
               </nav>
           </div>
-        {/* <div>
-          <div className="menu">
-            <div>
-            <figure className="">
-                <Link to={'/'}>
-                  <img src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/logo-spa-4.svg" width="20px" className="ml-[450px]" />
-                </Link>
-              </figure>
-              <nav>
-              <ul className=" pl-10 pt-[25px]">
-                <Link to={"/"} ><button className="px-[23px] text-[#fff]" >Trang chủ</button></Link>
-                <Link to={`/products`}><button className="px-[23px] text-[#fff] ">Sản phẩm</button></Link>
-                <Link to={"/"}><button className="px-[23px] text-[#fff]">Hỗ trợ</button></Link>
-                <Link to={"/"}><button className="px-[23px] text-[#fff]">Hỗ trợ</button></Link>
-                <Link to={"/"}><button className="px-[23px] text-[#fff]">Hỗ trợ</button></Link>
-                <Link to={"/"}><button className="px-[23px] text-[#fff]">Hỗ trợ</button></Link>
-              </ul>
-              </nav>
-            </div>
-            <div>
-              <div className="">
-              
-              </div>
-            </div>
-          </div>
-        </div> */}
-
         <Modal
         open={open}
         onOk={handleOk}

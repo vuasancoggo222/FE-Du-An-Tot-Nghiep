@@ -11,19 +11,19 @@ const useEmployee = () => {
     refreshInterval: 3000,
   });
   const create = async (data) => {
-    const employees = await method.httpPost(endpoint, data);
-    mutate([...data, employees]);
+    const revalidate = await method.httpPost(endpoint, data);
+    mutate([...data, revalidate]);
   };
   const remove = async (id) => {
     await method.httpDelete(endpoint, id);
-    const employees = data.filter((item) => item.id !== id);
-    mutate(employees);
+    const revalidate = data.filter((item) => item.id !== id);
+    mutate(revalidate);
   };
 
   const update = async (id, data) => {
-    const updateData = await method.httpPut(endpoint, id, data);
-    const employees = data.map((item) => (item.id == id ? updateData : item));
-    mutate(employees);
+    const newData = await method.httpPut(endpoint, id, data);
+    const revalidate = data.map((item) => (item.id == id ? newData : item));
+    mutate(revalidate);
   };
   return {
     data,

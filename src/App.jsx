@@ -7,6 +7,7 @@ import HomePage from './pages/website/Home'
 import BookingPage from './pages/website/BookingPage'
 import Contact from './pages/website/Contact'
 import PriceList from './pages/website/PriceList'
+import AdminLayout from './layouts/AdminLayout'
 
 
 function App() {
@@ -21,6 +22,9 @@ function App() {
           <Route path="/booking" element={<BookingPage />} />
           <Route path='/contact' element={<Contact/>}/>
           <Route path='/price-list' element={<PriceList/>}/>
+        </Route>
+        <Route path='/admin' element={<AdminLayout/>}>
+          <Route index/>
         </Route>
       </Routes>
     </div>

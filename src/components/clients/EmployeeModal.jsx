@@ -5,7 +5,7 @@ import useEmployee from "../../hooks/use-employee";
 import moment from "moment";
 
 const EmployeeModal = (props) => {
-  // const { data: employee, get, error } = useEmployee();
+  const { data: employee, get, error } = useEmployee();
   // const [employee, setEmployee] = useState();
   //   const opens = props.open;
 
@@ -30,8 +30,7 @@ const EmployeeModal = (props) => {
   // useEffect(() => {
   //   setEmployee(get(props.id));
   // }, []);
-  const employee = "";
-  const error = "";
+
   if (error) return <div>Request Failed</div>;
   if (!employee) return <div>Loading...</div>;
   return (

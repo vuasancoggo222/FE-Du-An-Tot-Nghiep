@@ -12,6 +12,7 @@ import {
 import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
 import { useEffect } from "react";
+import { getEmployeeByDate } from "../../api/employee";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -57,18 +58,6 @@ const disabledDate = (current) => {
   return current && current < moment().endOf("day");
 };
 
-// const { RangePicker } = DatePicker;
-
-// const range = (start, end) => {
-//   const result = [];
-
-//   for (let i = start; i < end; i++) {
-//     result.push(i);
-//   }
-
-//   return result;
-// };
-
 const prefixSelector = (
   <Form.Item name="prefix" noStyle>
     <Select
@@ -84,60 +73,35 @@ const prefixSelector = (
 // ------------------------------------------------------------------------------------------------
 
 const BookingPage = () => {
-  const { data: employees, error, create } = useEmployee();
+  const { data: employees, error } = useEmployee();
   console.log(employees);
   const onSubmit = (data) => {
     console.log("submit", data.user.name);
   };
-  const onChange1 = (value, dateString) => {
-    console.log("Selected Time: ", value);
-    console.log("Formatted Selected Time: ", dateString);
-    // console.log(moment(dateString).format("X"));
-    // const query = moment(dateString).format("X");
-    // console.log(a);
-    // const a = getEmployeeByBookingDays(1063040400);
-    // setShift(a);
-  };
+
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
+  const [date, setDate] = useState("");
+
+
   const [open, setOpen] = useState(false);
   const onChangeSelected = (value) => {
     setId(value);
   };
+  const onChange1 = (value, dateString) => {
+    console.log("Formatted Selected Time: ", dateString);
+    console.log("timestamp", moment(dateString).format("X"));
+    const timeStamp = moment(dateString).format("X");
+    setDate(timeStamp);
+  };
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
+
   // ------------------------------------------------------------------------------------------------
   // useEffect(() => {
-  //   create({
-  //     name: "test api",
-  //     idCard: "071092429",
-  //     email: "test@gmail.com",
-  //     phoneNumber: "0384765294",
-  //     status: 1,
-  //     gender: 1,
-  //     timeWork: [
-  //       {
-  //         date: 1664064000,
-  //         shiftId: "6329f25081117054d459f8d4",
-  //         status: 1,
-  //         _id: "632e8eac33bb1bbd4bb1cf61",
-  //       },
-  //       {
-  //         date: 1664064000,
-  //         shiftId: "632a8c6a38f01fd54692a984",
-  //         status: 1,
-  //         _id: "632e8eca33bb1bbd4bb1cf6a",
-  //       },
-  //       {
-  //         date: 166199040,
-  //         shiftId: "6329f29881117054d459f8d6",
-  //         status: 1,
-  //         _id: "632e903922d4ffb59e132fd7",
-  //       },
-  //     ],
-  //   });
+  //   getEmployeeByDate(date,id)
   // }, []);
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
@@ -265,7 +229,6 @@ const BookingPage = () => {
                   <Select onChange={onChangeSelected}>
                     {employees?.map((item, index) => (
                       <Select.Option value={item._id} key={index}>
-                        {item.name}
                         <div
                           className=""
                           onClick={() => {
@@ -281,7 +244,7 @@ const BookingPage = () => {
 
                 {/* chọn ca  */}
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <EmployeeModal id={id} open={open} />
+                  <EmployeeModal date={date} id={id} open={open} />
                 </Form.Item>
                 {/* Ghi chú */}
                 <Form.Item name={["user", "note"]} label="Ghi chú">

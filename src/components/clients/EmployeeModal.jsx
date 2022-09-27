@@ -3,12 +3,24 @@ import { Button, Modal, Radio } from "antd";
 import { useState } from "react";
 import useEmployee from "../../hooks/use-employee";
 import moment from "moment";
-
+import { getEmployeeByDate } from "../../api/employee";
 const EmployeeModal = (props) => {
-  const { data: employee, get, error } = useEmployee();
-  // const [employee, setEmployee] = useState();
-  //   const opens = props.open;
+  const id = props.id;
+  const date = props.date;
+  const [employee, setEmployee] = useState();
 
+  console.log(id, date);
+  console.log(employee);
+  if(date !== '' && id !== ''){
+    const e = async () => {
+      const { data } = await getEmployeeByDate(date, id);
+      setEmployee(data);
+
+      console.log(data);
+    };
+    e()
+   
+  }
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);
@@ -27,12 +39,12 @@ const EmployeeModal = (props) => {
     // console.log('Clicked cancel button');
     setOpen(false);
   };
-  // useEffect(() => {
-  //   setEmployee(get(props.id));
-  // }, []);
 
-  if (error) return <div>Request Failed</div>;
-  if (!employee) return <div>Loading...</div>;
+  // useEffect(() => {
+    
+  // }, []);
+  // if (error) return <div>Request Failed</div>;
+  // if (!employee) return <div>Loading...</div>;
   return (
     <div>
       <Button type="primary" onClick={showModal}>
@@ -46,7 +58,7 @@ const EmployeeModal = (props) => {
         centered
       >
         <div className="">
-          {employee?.map((item) => (
+          {/* {employee?.map((item) => (
             <div className="" key={item._id}>
               <div className="">{item.name}</div>
               <div className="">{item.email}</div>
@@ -68,7 +80,7 @@ const EmployeeModal = (props) => {
                 ))}
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </Modal>
     </div>

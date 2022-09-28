@@ -1,52 +1,37 @@
-import { Layout } from 'antd';
-import React from 'react';
-import Sidebar from '../components/admin/sidebar';
 
-const { Header, Content, Footer } = Layout;
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Footer from '../components/admin/Footer';
+import Header from '../components/admin/Header';
+import Sidenav from '../components/admin/sidenav';
+
 
 
 const AdminLayout = () => {
 
   return (
-    <Layout
-      style={{
-        minHeight: '100vh',
-      }}
-    >
-      <Sidebar />
-      <Layout className="site-layout">
-        <Header ></Header>
-        <Content
-          style={{
-            margin: '0 16px',
-          }}
-        >
-          {/* <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-          >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
-          <div
-            className="site-layout-background"
-            style={{
-              padding: 24,
-              minHeight: 360,
-            }}
-          >
-          </div>
-        </Content>
-        <Footer
-          style={{
-            textAlign: 'center',
-          }}
-        >
-          Ant Design ©2018 Created by Ant UED
-        </Footer>
-      </Layout>
-    </Layout>
+    <>
+      <div className="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500">
+        <div className="absolute w-full bg-blue-500 dark:hidden min-h-75" />
+        {/* sidenav  */}
+        <Sidenav />
+        {/* end sidenav */}
+        <div>
+          <main className="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
+            {/* Navbar */}
+            <Header />
+            {/* end Navbar */}
+            {/* cards */}
+            <div >
+              <Outlet />
+            </div>
+            {/* end cards */}
+            <Footer />
+          </main>
+        </div>
+
+      </div>
+    </>
   );
 };
 

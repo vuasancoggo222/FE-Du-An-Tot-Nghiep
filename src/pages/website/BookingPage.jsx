@@ -11,12 +11,9 @@ import {
 } from "antd";
 import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
-<<<<<<< HEAD
 import { useEffect } from "react";
 import { getEmployeeByDate } from "../../api/employee";
 // ------------------------------------------------------------------------------------------------
-=======
->>>>>>> dev
 const layout = {
   labelCol: {
     span: 8,
@@ -82,16 +79,9 @@ const BookingPage = () => {
   const onSubmit = (data) => {
     console.log("submit", data.user.name);
   };
-<<<<<<< HEAD
 
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
-=======
-  const onChange1 = (value, dateString) => {
-    console.log("Selected Time: ", value);
-    console.log("Formatted Selected Time: ", dateString);
-  };
->>>>>>> dev
   const [id, setId] = useState("");
   const [date, setDate] = useState("");
 
@@ -108,7 +98,6 @@ const BookingPage = () => {
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
-<<<<<<< HEAD
   const [shiftId, setShiftId] = useState('test')
   // ------------------------------------------------------------------------------------------------
   // const [dataProps, setDataProps] = useState();
@@ -126,8 +115,6 @@ const BookingPage = () => {
   // }, [date, id]);
 
 
-=======
->>>>>>> dev
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
   return (
@@ -198,21 +185,6 @@ const BookingPage = () => {
                     <Input />
                   </Form.Item>
 
-<<<<<<< HEAD
-                {/* Email */}
-                <Form.Item
-                  name={["user", "email"]}
-                  label="Email"
-                  rules={[
-                    {
-                    
-                      type: "email",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-=======
                   {/* SĐT */}
                   <Form.Item
                     name={["user", "phone"]}
@@ -232,7 +204,6 @@ const BookingPage = () => {
                       }}
                     />
                   </Form.Item>
->>>>>>> dev
 
                   {/* Các dịch vụ */}
                   <Form.Item
@@ -264,44 +235,6 @@ const BookingPage = () => {
                     />
                   </Form.Item>
 
-<<<<<<< HEAD
-                {/* Chọn ngày đặt lich */}
-                <Form.Item
-                  name={["user", "date"]}
-                  label="Chọn ngày"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    disabledDate={disabledDate}
-                    onChange={onChange1}
-                    onOk={onOk}
-                  />
-                </Form.Item>
-
-                {/* chọn nhân viên */}
-                <Form.Item
-                  label="Chọn nhân viên"
-                  name={["user", "employees"]}
-                  rules={[
-                    {
-                      // required: true,
-                    },
-                  ]}
-                >
-                  <Select onChange={onChangeSelected}>
-                    {employees?.map((item, index) => (
-                      <Select.Option value={item._id} key={index}>
-                        <div
-                          className=""
-                          onClick={() => {
-                            setOpen(true);
-                          }}
-                        >
-=======
                   {/* chọn nhân viên */}
                   <Form.Item
                     label="Chọn nhân viên"
@@ -315,7 +248,6 @@ const BookingPage = () => {
                     <Select onChange={onChangeSelected}>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
->>>>>>> dev
                           {item.name}
                           <div
                             className=""
@@ -330,7 +262,6 @@ const BookingPage = () => {
                     </Select>
                   </Form.Item>
 
-<<<<<<< HEAD
                 {/* chọn ca  */}
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                   <Input value={shiftId} readOnly/>
@@ -344,16 +275,6 @@ const BookingPage = () => {
                 <Form.Item name={["user", "note"]} label="Ghi chú">
                   <Input.TextArea />
                 </Form.Item>
-=======
-                  {/* chọn ca  */}
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <EmployeeModal id={id} open={open} />
-                  </Form.Item>
-                  {/* Ghi chú */}
-                  <Form.Item name={["user", "note"]} label="Ghi chú">
-                    <Input.TextArea />
-                  </Form.Item>
->>>>>>> dev
 
                   {/* button */}
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

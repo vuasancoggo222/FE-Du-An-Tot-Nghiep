@@ -9,7 +9,8 @@ import PriceList from "./pages/website/PriceList";
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/admin/dashboard";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import Detailbooking from "./pages/website/detailbooking";
+import Detaibooking from "./pages/website/detailbook";
+
 function App() {
   return (
     <>
@@ -20,7 +21,7 @@ function App() {
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/Detai-booking" element={<Detailbooking />} />
+            <Route path="/detail-booking" element={<Detaibooking />} />
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />

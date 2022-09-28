@@ -15,6 +15,7 @@ import useEmployee from "../../hooks/use-employee";
 import { useEffect } from "react";
 import { httpGetAll } from "../../api/shift";
 import { httpGetOne, httpAddShift } from "../../api/employee";
+import { httpAddBooking } from "../../api/booking";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -95,7 +96,8 @@ const BookingPage = () => {
     console.log("submit", data);
     console.log(employeeBooking);
     httpAddShift(data.employees, {shiftId: data?.shift, date: dateBooking })
-  };
+    httpAddBooking({...data, date: dateBooking})
+  }; 
   const onOk = (value) => { 
     // console.log("...."+ employeeBooking);
 
@@ -324,7 +326,7 @@ const BookingPage = () => {
                 </Form.Item>
                 <Form.Item
                   label="Chọn ca"
-                  name={["data", "shift"]}
+                  name={["data", "shiftId"]}
                   rules={[
                     {
                       required: true,

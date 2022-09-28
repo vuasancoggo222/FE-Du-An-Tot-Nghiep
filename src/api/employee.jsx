@@ -5,7 +5,7 @@ const httpGetOne = (id) => {
 };
 const httpAddShift = (id, data) => {
     return instance.patch(`employees/new-employee-shift/${id}`, data);
-};   
+};
 // const httpPost = (endpoint, data) => {
 //   return instance.post(`${endpoint}`, data);
 // }; 

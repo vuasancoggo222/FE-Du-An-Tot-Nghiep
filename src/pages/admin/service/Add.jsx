@@ -1,7 +1,7 @@
 import Title from 'antd/lib/skeleton/Title';
 import React from 'react'
 import { Typography } from 'antd';
-import LayoutAdmin from "../../../../components/Layout/admin";
+import LayoutAdmin from "../../../components/admin/sidebar";
 import { Button, Checkbox, Form, Input } from 'antd';
 function AddService() {
     const onFinish = (values) => {

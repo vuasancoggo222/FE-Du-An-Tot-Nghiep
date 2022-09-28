@@ -36,7 +36,7 @@ const SignIn = () => {
 
       <div style={{ width: "40%" }} className="">
         <div className="pt-48 rounded-xl  flex justify-center text-white font-bold text-xl font-mono  ..." width="100px" style={bgStaff}>
-          <div >
+          <div  >
             <div style={texHello} className="p-2 text-center">Chào bạn đến với Tuyến Spa</div>
             <div style={texHello} className="text-center">Dịch vụ spa uy tín</div>
             <p style={{backgroundColor:"black"}} className="text-white text-sm text-center mt-5 ..."> Hỗ trợ đăng ký: 012344567</p>

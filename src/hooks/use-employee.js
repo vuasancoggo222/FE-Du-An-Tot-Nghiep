@@ -10,7 +10,7 @@ const useEmployee = () => {
   const { data, error, mutate } = useSWR(endpoint, fetcher, {
     refreshInterval: 3000,
   });
-  const get = async (id) => {
+  const useGetOne = async (id) => {
     const revalidate = await method.httpGet(endpoint, id);
     mutate(revalidate);
   };
@@ -32,7 +32,7 @@ const useEmployee = () => {
   return {
     data,
     error,
-    get,
+    useGetOne,
     create,
     remove,
     update,

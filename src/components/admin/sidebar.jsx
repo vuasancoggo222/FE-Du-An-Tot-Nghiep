@@ -26,6 +26,7 @@ import {
       };
     }
     const items = [
+      getItem(<NavLink to={"/admin/booking"}>Booking</NavLink>, '1',<PieChartOutlined />),
       getItem(<NavLink to={"/admin/service"}>Service</NavLink>, '1',<PieChartOutlined />),
       getItem( <NavLink to={"/admin/shift"}>Shift</NavLink>, '2', <DesktopOutlined />),
       getItem(<NavLink to={"/admin/employee"}>Employee</NavLink>, '3', <UserOutlined />),

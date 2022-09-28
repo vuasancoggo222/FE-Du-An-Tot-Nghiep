@@ -1,5 +1,6 @@
 import { Layout } from 'antd';
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../components/admin/sidebar';
 
 const { Header, Content, Footer } = Layout;
@@ -36,6 +37,7 @@ const AdminLayout = () => {
               minHeight: 360,
             }}
           >
+            <Outlet/>
           </div>
         </Content>
         <Footer

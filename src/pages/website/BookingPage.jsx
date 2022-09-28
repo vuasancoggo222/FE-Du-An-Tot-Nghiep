@@ -248,7 +248,7 @@ const BookingPage = () => {
                     <Select onChange={onChangeSelected}>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
-                          {item.name}
+                        
                           <div
                             className=""
                             onClick={() => {

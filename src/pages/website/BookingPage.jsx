@@ -11,6 +11,9 @@ import {
 } from "antd";
 import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
+import { useEffect } from "react";
+import { getEmployeeByDate } from "../../api/employee";
+// ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
     span: 8,
@@ -55,18 +58,6 @@ const disabledDate = (current) => {
   return current && current < moment().endOf("day");
 };
 
-// const { RangePicker } = DatePicker;
-
-// const range = (start, end) => {
-//   const result = [];
-
-//   for (let i = start; i < end; i++) {
-//     result.push(i);
-//   }
-
-//   return result;
-// };
-
 const prefixSelector = (
   <Form.Item name="prefix" noStyle>
     <Select
@@ -84,21 +75,46 @@ const prefixSelector = (
 const BookingPage = () => {
   const { data: employees, error } = useEmployee();
   console.log(employees);
+
   const onSubmit = (data) => {
     console.log("submit", data.user.name);
   };
-  const onChange1 = (value, dateString) => {
-    console.log("Selected Time: ", value);
-    console.log("Formatted Selected Time: ", dateString);
-  };
+
+  // console.log(shift);
+  // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
+  const [date, setDate] = useState("");
+
   const [open, setOpen] = useState(false);
   const onChangeSelected = (value) => {
     setId(value);
   };
+  const onChange1 = (value, dateString) => {
+    console.log("Formatted Selected Time: ", dateString);
+    console.log("timestamp", moment(dateString).format("X"));
+    const timeStamp = moment(dateString).format("X");
+    setDate(timeStamp);
+  };
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
+  const [shiftId, setShiftId] = useState('test')
+  // ------------------------------------------------------------------------------------------------
+  // const [dataProps, setDataProps] = useState();
+  // useEffect(() => {
+  //   const a = async () => {
+  //     if (id !== "" || date !== "") {
+  //       const { data: employeeData } = await getEmployeeByDate(date, id);
+  //       setDataProps(employeeData);
+  //       console.log("data", employeeData);
+  //     }
+  //   };
+  //   a();
+  //   console.log(getEmployeeByDate(date, id));
+  //   console.log("ddd", date, id);
+  // }, [date, id]);
+
+
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
   return (
@@ -246,14 +262,19 @@ const BookingPage = () => {
                     </Select>
                   </Form.Item>
 
-                  {/* chọn ca  */}
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <EmployeeModal id={id} open={open} />
-                  </Form.Item>
-                  {/* Ghi chú */}
-                  <Form.Item name={["user", "note"]} label="Ghi chú">
-                    <Input.TextArea />
-                  </Form.Item>
+                {/* chọn ca  */}
+                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                  <Input value={shiftId} readOnly/>
+                  <EmployeeModal
+                    date={date}
+                    id={id}
+                    open={open}
+                  />
+                </Form.Item>
+                {/* Ghi chú */}
+                <Form.Item name={["user", "note"]} label="Ghi chú">
+                  <Input.TextArea />
+                </Form.Item>
 
                   {/* button */}
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

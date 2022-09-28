@@ -1,81 +1,135 @@
-import React, { useState } from "react";
-import EmployeeModal from "../../components/clients/EmployeeModal";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Input, InputNumber, Select, DatePicker } from "antd";
-import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-const { Option } = Select;
-const validateMessages = {
-  required: "${label} không được để trống!",
-  types: {
-    email: "${label} không đúng định dạng!",
-    number: "${label} is not a valid number!",
-  },
-  number: {
-    range: "${label} must be between ${min} and ${max}",
-  },
-};
-const onOk = (value) => {
-  console.log("onOk: ", value);
-};
-const disabledDate = (current) => {
-  // Can not select days before today and today
-  return current && current < moment().endOf("day");
-};
-
-// const { RangePicker } = DatePicker;
-
-// const range = (start, end) => {
-//   const result = [];
-
-//   for (let i = start; i < end; i++) {
-//     result.push(i);
-//   }
-
-//   return result;
-// };
-
-const prefixSelector = (
-  <Form.Item name="prefix" noStyle>
-    <Select
-      style={{
-        width: 70,
-      }}
-    >
-      <Option value="84">+84</Option>
-      <Option value="87">+87</Option>
-    </Select>
-  </Form.Item>
-);
-// ------------------------------------------------------------------------------------------------
+import { httpGetAll } from "../../api/shift";
+import { httpGetOne, httpAddShift } from "../../api/employee";
+import { httpAddBooking } from "../../api/booking";
+import { httpGetOneService } from "../../api/services";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Detaibooking = () => {
+  const navigate = useNavigate()
+  const { id } = useParams()
   const { data: employees, error } = useEmployee();
+  const [shift, setShift] = useState();
+  const [dateBooking, seDateBooking] = useState();
+  const [employeeBooking, setEmployeeBooking] = useState();
+  const [service, setService] = useState();
   console.log(employees);
-  const onSubmit = (data) => {
-    console.log("submit", data.user.name);
+  const onSubmit = async ({ data }) => {
+    console.log("submit", data);
+    console.log(employeeBooking);
+    try {
+      await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })
+      console.log(service._id);
+      await httpAddBooking({ ...data, date: dateBooking, serviceId: service._id })
+      alert("success")
+      navigate('/admin/booking');  
+      toast.success("Đã đặt lịch, chờ Spa xác nhận cái đã :))")
+    } catch (error) {
+      alert(error.response.data.message)
+      toast.error(`${error.response.data.message}`)
+    }
+ 
+  };
+  const layout = {
+    labelCol: {
+      span: 8,
+    },
+    wrapperCol: {
+      span: 16,
+    },
+  };
+  const { Option } = Select;
+  const validateMessages = {
+    required: "${label} không được để trống!",
+    types: {
+      email: "${label} không đúng định dạng!",
+      number: "${label} is not a valid number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+  // const disabledDate = (current) => {
+  //   // Can not select days before today and today
+  //   return current && current < moment().endOf("day");
+  // };
+
+  // const { RangePicker } = DatePicker;
+
+  // const range = (start, end) => {
+  //   const result = [];
+
+  //   for (let i = start; i < end; i++) {
+  //     result.push(i);
+  //   }
+
+  //   return result;
+  // };
+
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select
+        style={{
+          width: 70,
+        }}
+      >
+        <Option value="84">+84</Option>
+        <Option value="87">+87</Option>
+      </Select>
+    </Form.Item>
+  );
+  // ------------------------------------------------------------------------------------------------
+
+  const onOk = (value) => {
+    // console.log("...."+ employeeBooking);
+
+    console.log("onOk: ", value);
+
   };
   const onChange1 = (value, dateString) => {
     console.log("Selected Time: ", value);
-    console.log("Formatted Selected Time: ", dateString);
+    seDateBooking(Number(dateString.replace("-", "").replace("-", "")))
+    // console.log(moment(dateString).format("X")); 
+    // const query = moment(dateString).format("X");
+    // console.log(a);
+    // const a = getEmployeeByBookingDays(1063040400);
+    // setShift(a);
   };
-  const [id, setId] = useState("");
+  // console.log(shift);
+  // ------------------------------------------------------------------------------------------------
+  // eslint-disable-next-line no-unused-vars
   const [open, setOpen] = useState(false);
-  const onChangeSelected = (value) => {
-    setId(value);
+  const onChangeSelected = async (e) => {
+    console.log(e);
+    // await setEmployeeBooking(employees[e]);
+    const employeesOne = await httpGetOne(e)
+    console.log(employeesOne);
+    setEmployeeBooking(employeesOne);
   };
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
+
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
+  useEffect(() => {
+    const getShift = async () => {
+      const data = await httpGetAll();
+      console.log(data.shift);
+      setShift(data.shift)
+    }
+    getShift()
+
+    const getSerVice = async () => {
+      const data = await httpGetOneService(id);
+      console.log(data);
+      setService(data)
+    }
+    getSerVice()
+  }, [])
   return (
     <>
       <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cole-keister-8V1gfeaPP1Y-unsplash.jpg')] b-centerg bg-no-repeat bg-cover py-[100px] ">
@@ -175,7 +229,7 @@ const Detaibooking = () => {
                 >
                   {/* Tên */}
                   <Form.Item
-                    name={["user", "name"]}
+                    name={["data", "name"]}
                     label="Tên "
                     rules={[
                       {
@@ -185,29 +239,19 @@ const Detaibooking = () => {
                   >
                     <Input />
                   </Form.Item>
-                  {/* Tuổi */}
-                  <Form.Item
-                    name={["user", "age"]}
-                    label="Tuổi"
-                    rules={[
-                      {
-                        type: "number",
-                        min: 0,
-                        max: 99,
-                      },
-                    ]}
-                  >
-                    <InputNumber />
-                  </Form.Item>
+
+                  {/* Tên */}
+
+
                   {/* SĐT */}
                   <Form.Item
-                    name={["user", "phone"]}
+                    name={["data", "phoneNumber"]}
                     label="Số điện thoại"
                     rules={[
                       {
                         required: true,
-                        // type: "phone",
-                        // message: "Please input your phone number!",
+                        pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
+                        message: "Số điện thoại không đúng định dạng!"
                       },
                     ]}
                   >
@@ -218,25 +262,38 @@ const Detaibooking = () => {
                       }}
                     />
                   </Form.Item>
-
-                  {/* Các dịch vụ */}
-                  {/* Email */}
                   <Form.Item
-                    name={["user", "email"]}
-                    label="Dịch Vụ"
+                    name={["data", "service"]}
+                    label="Dịch vụ "
                     rules={[
                       {
-                        type: "text",
-                        placeholder: "Dịch Vụ Mát Xa",
+                        // eslint-disable-next-line no-undef
                       },
                     ]}
                   >
-                    <Input />
+
+                    <Input value={service?._id} placeholder={service?.name} disabled />
                   </Form.Item>
+                  {/* chọn nhân viên */}
+                  {/* <Form.Item
+                  label="Chọn dịch vụ"
+                  name={["user", "employees"]}
+                  rules={[
+                    {
+                      // required: true,
+                    },
+                  ]}
+                >
+                  <Select onChange={onChangeSelected}>
+                    <Checkbox onChange={onChange}>Checkbox</Checkbox>
+                  </Select>
+                </Form.Item> */}
+                  {/* Các dịch vụ */}
+
 
                   {/* Chọn ngày đặt lich */}
                   <Form.Item
-                    name={["user", "date"]}
+                    name={["data", "dateBooking"]}
                     label="Chọn ngày"
                     rules={[
                       {
@@ -245,7 +302,7 @@ const Detaibooking = () => {
                     ]}
                   >
                     <DatePicker
-                      disabledDate={disabledDate}
+                      // disabledDate={disabledDate}
                       onChange={onChange1}
                       onOk={onOk}
                     />
@@ -254,10 +311,10 @@ const Detaibooking = () => {
                   {/* chọn nhân viên */}
                   <Form.Item
                     label="Chọn nhân viên"
-                    name={["user", "employees"]}
+                    name={["data", "employeeId"]}
                     rules={[
                       {
-                        // required: true,
+                        required: true,
                       },
                     ]}
                   >
@@ -267,27 +324,56 @@ const Detaibooking = () => {
                           {item.name}
                           <div
                             className=""
-                            onClick={() => {
-                              setOpen(true);
-                            }}
+                          // onClick={() => {
+                          //   setOpen(true);
+                          // }}
                           >
-                            {item.name}
                           </div>
                         </Select.Option>
                       ))}
                     </Select>
                   </Form.Item>
+                  <Form.Item
+                    label="Chọn ca"
+                    name={["data", "shiftId"]}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
+                    <Select onChange={onChangeSelected}>
+                      {shift?.map((item, index) => {
+                        let checkIs = true;
 
-                  {/* chọn ca  */}
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <EmployeeModal id={id} open={open} />
+                        employeeBooking?.timeWork.map((itemStaff) => {
+                          if (itemStaff.date === dateBooking) {
+                            if (item._id === itemStaff.shiftId)
+                              checkIs = false
+                            return
+                          }
+                        }
+                        )
+                        if (checkIs)
+                          return (
+                            <Select.Option value={item._id} key={index}>
+                              {item.shiftName + "(" + item.timeStart + "-" + item.timeEnd + ")"}
+                              <div
+                                className=""
+                              // onClick={() => {
+                              //   setOpen(true);
+                              // }}
+                              >
+                              </div>
+                            </Select.Option>
+                          )
+                      })}
+                    </Select>
                   </Form.Item>
-                  {/* Ghi chú */}
-                  <Form.Item name={["user", "note"]} label="Ghi chú">
+                  {/* chọn ca  */}
+                  <Form.Item name={["data", "note"]} label="Ghi chú">
                     <Input.TextArea />
                   </Form.Item>
-
-                  {/* button */}
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                     <Button type="primary" htmlType="submit">
                       Đặt lịch

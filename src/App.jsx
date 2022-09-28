@@ -21,13 +21,13 @@ function App() {
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking" element={<Detaibooking />} />
+            <Route path="/detail-booking/:id" element={<Detaibooking />} />
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
           </Route>
         </Routes>
-      </div>
+      </div>  
     </>
   );
 }

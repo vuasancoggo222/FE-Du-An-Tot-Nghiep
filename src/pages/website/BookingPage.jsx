@@ -98,32 +98,22 @@ const BookingPage = () => {
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
-
+  const [shiftId, setShiftId] = useState('test')
   // ------------------------------------------------------------------------------------------------
-  const [dataProps, setDataProps] = useState();
-  useEffect(() => {
-    const a = async () => {
-      if (id !== "" || date !== "") {
-        const { data: employeeData } = await getEmployeeByDate(date, id);
-        setDataProps(employeeData);
-        console.log("data", employeeData);
-      }
-    };
-    a();
-    console.log(getEmployeeByDate(date, id));
-    console.log("ddd", date, id);
-  }, [date, id]);
+  // const [dataProps, setDataProps] = useState();
+  // useEffect(() => {
+  //   const a = async () => {
+  //     if (id !== "" || date !== "") {
+  //       const { data: employeeData } = await getEmployeeByDate(date, id);
+  //       setDataProps(employeeData);
+  //       console.log("data", employeeData);
+  //     }
+  //   };
+  //   a();
+  //   console.log(getEmployeeByDate(date, id));
+  //   console.log("ddd", date, id);
+  // }, [date, id]);
 
-  if (id !== "" && date !== "") {
-    const a = () => {
-      const { data: employeeData } = getEmployeeByDate(date, id);
-      return employeeData;
-    };
-    a.then(
-      setDataProps(a)
-    )
-;
-  }
 
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
@@ -180,7 +170,7 @@ const BookingPage = () => {
                   label="Email"
                   rules={[
                     {
-                      required: true,
+                    
                       type: "email",
                     },
                   ]}
@@ -266,10 +256,10 @@ const BookingPage = () => {
 
                 {/* chọn ca  */}
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                  <Input value={shiftId} readOnly/>
                   <EmployeeModal
                     date={date}
                     id={id}
-                    data={dataProps}
                     open={open}
                   />
                 </Form.Item>

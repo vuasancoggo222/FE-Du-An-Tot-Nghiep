@@ -75,6 +75,7 @@ const prefixSelector = (
 const BookingPage = () => {
   const { data: employees, error } = useEmployee();
   console.log(employees);
+
   const onSubmit = (data) => {
     console.log("submit", data.user.name);
   };
@@ -83,7 +84,6 @@ const BookingPage = () => {
   // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
   const [date, setDate] = useState("");
-
 
   const [open, setOpen] = useState(false);
   const onChangeSelected = (value) => {
@@ -100,9 +100,31 @@ const BookingPage = () => {
   };
 
   // ------------------------------------------------------------------------------------------------
-  // useEffect(() => {
-  //   getEmployeeByDate(date,id)
-  // }, []);
+  const [dataProps, setDataProps] = useState();
+  useEffect(() => {
+    const a = async () => {
+      if (id !== "" || date !== "") {
+        const { data: employeeData } = await getEmployeeByDate(date, id);
+        setDataProps(employeeData);
+        console.log("data", employeeData);
+      }
+    };
+    a();
+    console.log(getEmployeeByDate(date, id));
+    console.log("ddd", date, id);
+  }, [date, id]);
+
+  if (id !== "" && date !== "") {
+    const a = () => {
+      const { data: employeeData } = getEmployeeByDate(date, id);
+      return employeeData;
+    };
+    a.then(
+      setDataProps(a)
+    )
+;
+  }
+
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
   return (
@@ -244,7 +266,12 @@ const BookingPage = () => {
 
                 {/* chọn ca  */}
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <EmployeeModal date={date} id={id} open={open} />
+                  <EmployeeModal
+                    date={date}
+                    id={id}
+                    data={dataProps}
+                    open={open}
+                  />
                 </Form.Item>
                 {/* Ghi chú */}
                 <Form.Item name={["user", "note"]} label="Ghi chú">

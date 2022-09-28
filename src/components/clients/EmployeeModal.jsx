@@ -7,20 +7,12 @@ import { getEmployeeByDate } from "../../api/employee";
 const EmployeeModal = (props) => {
   const id = props.id;
   const date = props.date;
+  const dataEmploy = props.data;
   const [employee, setEmployee] = useState();
 
-  console.log(id, date);
-  console.log(employee);
-  if(date !== '' && id !== ''){
-    const e = async () => {
-      const { data } = await getEmployeeByDate(date, id);
-      setEmployee(data);
-
-      console.log(data);
-    };
-    e()
-   
-  }
+  // console.log(id, date);
+  // console.log(employee);
+  console.log(dataEmploy);
   const [open, setOpen] = useState(false);
   const showModal = () => {
     setOpen(true);

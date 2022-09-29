@@ -161,7 +161,7 @@ const BookingPage = () => {
                     label="Email"
                     rules={[
                       {
-                        required: true,
+                        // required: true,
                         type: "email",
                       },
                     ]}

@@ -9,3 +9,6 @@ export const httpAddShift = (id, data) => {
 export const httpGetOne = (id) => {
     return instance.get(`employees/${id}`);
 }; 
+export const httpChangeStatusTimeWork= (id, data) => {
+    return instance.patch(`employees/update-employee-shift/${id}`, data);
+};

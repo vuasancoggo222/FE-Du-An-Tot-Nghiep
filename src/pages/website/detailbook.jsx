@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, InputNumber, Select, DatePicker } from "antd";
+import { Button, Form, Input, Select, DatePicker } from "antd";
 import useEmployee from "../../hooks/use-employee";
 import { httpGetAll } from "../../api/shift";
 import { httpGetOne, httpAddShift } from "../../api/employee";

@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import WebsiteLayout from "./layouts/WebsiteLayout";
 import HomePage from "./pages/website/Home";
@@ -10,8 +10,25 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/admin/dashboard";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
+import ListBooking from "./pages/admin/booking";
+import { httpGetAll } from "./api/booking";
 
 function App() {
+  const [booking, setBooking] = useState()
+  useEffect(() => {
+    const getBooking = async () => {
+      const res = await httpGetAll();
+      console.log(res);
+      setBooking(res)
+    }
+    getBooking()
+  },[])
+
+  const changeStatusBooking = async () => {
+    const res = await httpGetAll();
+    console.log(res);
+    setBooking(res)
+  }
   return (
     <>
       <div className="App">
@@ -25,6 +42,7 @@ function App() {
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="booking" element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} />} />
           </Route>
         </Routes>
       </div>  

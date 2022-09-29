@@ -1,11 +1,11 @@
 import instance from "./instance";
 
 const httpGetAll = () => {
-    return instance.get(`shift`);
-  };
-// const httpGet = (endpoint, id) => {
-//   return instance.get(`${endpoint}/${id}`);
-// };
+  return instance.get(`shift`);
+};
+const httpGetOne = (id) => {
+  return instance.get(`shift/${id}`);
+};
 // const httpPost = (endpoint, data) => {
 //   return instance.post(`${endpoint}`, data);
 // }; 
@@ -17,6 +17,7 @@ const httpGetAll = () => {
 //   return instance.delete(`${endpoint}/${id}`);
 // };
 
-export { httpGetAll
-    // , httpPost, httpPut, httpDelete 
+export {
+  httpGetAll,httpGetOne
+  // , httpPost, httpPut, httpDelete 
 };

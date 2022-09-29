@@ -1,58 +1,22 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useState } from "react";
 import { Button, Modal, Space, Table, Tag, Tooltip } from 'antd';
-import { httpGetChangeStatus } from "../../../api/booking";
-const ListBooking = (props) => {
+const ListBooking = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [titleModal, setTitleModal] = useState("Xác nhận khách hàng");
-    const [handleBooking, setHandleBooking] = useState();
-    const [ishandle, setIshandle] = useState();
-    // eslint-disable-next-line react/prop-types
-    const booking = props.dataBooking
-    
-    const showModal = async (e) => {
+    const [titleModal] = useState("Xác nhận khách hàng");
+  
+    const showModal = async () => {
         await setIsModalOpen(true);
-        const isButon = e.target.getAttribute("data");
-        const idBooking = e.target.getAttribute("dataId");
-        console.log(idBooking);
-        // const res = await httpGetOne(idBooking)
-        // eslint-disable-next-line react/prop-types
-        booking.map((item, index) => {
-            if(index == idBooking) {
-                setHandleBooking(item)
-                console.log(item);
-                return 
-            }
-        })
-        setIshandle(isButon)
-        if (isButon === "success") {
-            return
-        } else if(isButon === "failure") {
-            setTitleModal("Hủy khách hàng")
-        }else{
-            setTitleModal("Chờ xác nhận")
-        }
+    
     };
 
     const handleOk = async () => {
         setIsModalOpen(false);
-        console.log(ishandle);
-        if (ishandle === "success") {
-            await httpGetChangeStatus(handleBooking._id, { status: 1 })
-        } else if (ishandle === "failure") {
-            await httpGetChangeStatus(handleBooking._id, { status: 2 })
-        }else{
-            await httpGetChangeStatus(handleBooking._id, { status: 0 })
-        }
-        // eslint-disable-next-line react/prop-types
-        props.handleChangeStatus();
+     
     };
 
-    const showtime = (data) => {    
-        const str = data.toString()
-        return str.substring(0,4) + "-" + str.substring(4,6) + "-" +str.substring(6,8)
-    }
+  
 
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -75,7 +39,7 @@ const ListBooking = (props) => {
             title: 'Ngày',
             dataIndex: 'date',
             key: 'date',
-            render: (data) => <a>{showtime(data)}</a>,
+            render: (data) => <a>{data}</a>,
         },
         {
             title: 'Ca',
@@ -145,20 +109,146 @@ const ListBooking = (props) => {
             ),
         },
     ];
-
-    // eslint-disable-next-line react/prop-types
-    const datatable = booking?.map((item, index) => {
-        return {
-            name: item.name,
-            phoneNumber: item.phoneNumber,
-            status: item.status,
-            date: item.date,
-            shiftId: item.shiftId.shiftName,
-            employeeId:item.employeeId.name,
-            serviceId: item.serviceId.name,
-            action: index
-        }
-    })
+    const data = [
+        {
+            "_id": "6335b6a7fd266b3cca1203a2",
+            "name": "Vu chiu",
+            "phoneNumber": "0347378693",
+            "note": "hehe",
+            "status": 0,
+            "date": 20220930,
+            "shiftId": {
+              "_id": "6329f29881117054d459f8d6",
+              "shiftName": "Ca 2",
+              "timeStart": "9:20",
+              "timeEnd": "10:20"
+            },
+            "employeeId": {
+              "_id": "632e853433bb1bbd4bb1cf57",
+              "name": "Lê Trọng Vũ",
+              "email": "levu@gmail.com",
+              "phoneNumber": "0384765293",
+              "status": 1,
+              "gender": 0,
+              "timeWork": [
+                {
+                  "date": 20220930,
+                  "shiftId": "6329f29881117054d459f8d6",
+                  "status": 0,
+                  "_id": "6335b6a7fd266b3cca1203a5"
+                }
+              ],
+              "createdAt": "2022-09-24T04:19:00.754Z",
+              "updatedAt": "2022-09-29T15:15:51.588Z",
+              "__v": 0
+            },
+            "serviceId": {
+              "_id": "632e7e9ad0933c8c06926642",
+              "name": "Combo SPA 001",
+              "description": "Các chuyên viên da liễu trực tiếp thăm khám, soi da và đề xuất các phương pháp điều trị phù hợp để mang lại hiệu quả cao nhất. Không chỉ vậy, bạn còn trải nghiệm nhiều dịch vụ với công nghệ hiện đại, tiên tiến nhất cùng mức giá siêu hời.",
+              "price": 400000,
+              "status": 1,
+              "createdAt": "2022-09-24T03:50:50.545Z",
+              "updatedAt": "2022-09-24T03:50:50.545Z",
+              "__v": 0
+            },
+            "createdAt": "2022-09-29T15:15:51.499Z",
+            "updatedAt": "2022-09-29T15:15:51.499Z",
+            "__v": 0
+          },{
+            "_id": "6335b6a7fd266b3cca1203a2",
+            "name": "Vu chiu",
+            "phoneNumber": "0347378693",
+            "note": "hehe",
+            "status": 0,
+            "date": 20220930,
+            "shiftId": {
+              "_id": "6329f29881117054d459f8d6",
+              "shiftName": "Ca 2",
+              "timeStart": "9:20",
+              "timeEnd": "10:20"
+            },
+            "employeeId": {
+              "_id": "632e853433bb1bbd4bb1cf57",
+              "name": "Lê Trọng Vũ",
+              "email": "levu@gmail.com",
+              "phoneNumber": "0384765293",
+              "status": 1,
+              "gender": 0,
+              "timeWork": [
+                {
+                  "date": 20220930,
+                  "shiftId": "6329f29881117054d459f8d6",
+                  "status": 0,
+                  "_id": "6335b6a7fd266b3cca1203a5"
+                }
+              ],
+              "createdAt": "2022-09-24T04:19:00.754Z",
+              "updatedAt": "2022-09-29T15:15:51.588Z",
+              "__v": 0
+            },
+            "serviceId": {
+              "_id": "632e7e9ad0933c8c06926642",
+              "name": "Combo SPA 001",
+              "description": "Các chuyên viên da liễu trực tiếp thăm khám, soi da và đề xuất các phương pháp điều trị phù hợp để mang lại hiệu quả cao nhất. Không chỉ vậy, bạn còn trải nghiệm nhiều dịch vụ với công nghệ hiện đại, tiên tiến nhất cùng mức giá siêu hời.",
+              "price": 400000,
+              "status": 1,
+              "createdAt": "2022-09-24T03:50:50.545Z",
+              "updatedAt": "2022-09-24T03:50:50.545Z",
+              "__v": 0
+            },
+            "createdAt": "2022-09-29T15:15:51.499Z",
+            "updatedAt": "2022-09-29T15:15:51.499Z",
+            "__v": 0
+          },
+          {
+            "_id": "6335b6a7fd266b3cca1203a2",
+            "name": "Vu chiu",
+            "phoneNumber": "0347378693",
+            "note": "hehe",
+            "status": 0,
+            "date": 20220930,
+            "shiftId": {
+              "_id": "6329f29881117054d459f8d6",
+              "shiftName": "Ca 2",
+              "timeStart": "9:20",
+              "timeEnd": "10:20"
+            },
+            "employeeId": {
+              "_id": "632e853433bb1bbd4bb1cf57",
+              "name": "Lê Trọng Vũ",
+              "email": "levu@gmail.com",
+              "phoneNumber": "0384765293",
+              "status": 1,
+              "gender": 0,
+              "timeWork": [
+                {
+                  "date": 20220930,
+                  "shiftId": "6329f29881117054d459f8d6",
+                  "status": 0,
+                  "_id": "6335b6a7fd266b3cca1203a5"
+                }
+              ],
+              "createdAt": "2022-09-24T04:19:00.754Z",
+              "updatedAt": "2022-09-29T15:15:51.588Z",
+              "__v": 0
+            },
+            "serviceId": {
+              "_id": "632e7e9ad0933c8c06926642",
+              "name": "Combo SPA 001",
+              "description": "Các chuyên viên da liễu trực tiếp thăm khám, soi da và đề xuất các phương pháp điều trị phù hợp để mang lại hiệu quả cao nhất. Không chỉ vậy, bạn còn trải nghiệm nhiều dịch vụ với công nghệ hiện đại, tiên tiến nhất cùng mức giá siêu hời.",
+              "price": 400000,
+              "status": 1,
+              "createdAt": "2022-09-24T03:50:50.545Z",
+              "updatedAt": "2022-09-24T03:50:50.545Z",
+              "__v": 0
+            },
+            "createdAt": "2022-09-29T15:15:51.499Z",
+            "updatedAt": "2022-09-29T15:15:51.499Z",
+            "__v": 0
+          }
+    ]
+  
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
             <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
@@ -166,15 +256,11 @@ const ListBooking = (props) => {
             </h1>
         </div>
 
-        <Table columns={columns} dataSource={datatable} />;
+        <Table columns={columns} dataSource={data} />;
 
-        <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            <p>Tên Khách hàng: {handleBooking?.name}</p>
-            <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
-            <p>Ngày: {handleBooking?.date}</p>
-            <p>Giờ: {handleBooking?.shiftId.shiftName}</p>
-            <p>Nhân viên: {handleBooking?.employeeId.name}</p>
-            <p>Dịch vụ: {handleBooking?.serviceId.name}</p>
+        <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} 
+        open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+         
         </Modal>
     </div>;
 };

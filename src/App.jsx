@@ -10,7 +10,9 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/admin/dashboard";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
-import ListEmployee from "./components/admin/list-employee";
+import ListEmployee from "./pages/admin/employee";
+import AddEmployee from "./pages/admin/employee/add";
+
 
 function App() {
   return (
@@ -26,7 +28,11 @@ function App() {
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="employee" element={<ListEmployee />} />
+            <Route path="employee">
+            <Route index element={<ListEmployee  />} />
+            <Route path="add" element={<AddEmployee />} />
+           
+            </Route>
           </Route>
         </Routes>
       </div>

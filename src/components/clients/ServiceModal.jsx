@@ -42,7 +42,7 @@ const ServiceModal = (props) => {
         Danh sách dịch vụ
       </Button>
       <Modal
-        title="Basic Modal"
+        title="Danh sách dịch vụ"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}

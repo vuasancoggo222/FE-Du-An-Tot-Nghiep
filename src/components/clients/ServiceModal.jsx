@@ -39,7 +39,7 @@ const ServiceModal = (props) => {
   return (
     <>
       <Button type="primary" onClick={showModal}>
-        Open Modal
+        Danh sách dịch vụ
       </Button>
       <Modal
         title="Basic Modal"

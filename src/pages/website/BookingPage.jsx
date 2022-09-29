@@ -13,6 +13,7 @@ import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
 import { useEffect } from "react";
 import { getEmployeeByDate } from "../../api/employee";
+import ServiceModal from "../../components/clients/ServiceModal";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -33,23 +34,7 @@ const validateMessages = {
     range: "${label} must be between ${min} and ${max}",
   },
 };
-const options = [
-  {
-    label: "dich vu 1",
-    value: "1",
-  },
-  {
-    label: "dich vu 2",
-    value: "2",
-  },
-  {
-    label: "dich vu 3",
-    value: "3",
-  },
-];
-const onChange = (checkedValues) => {
-  console.log("checked = ", checkedValues);
-};
+
 const onOk = (value) => {
   console.log("onOk: ", value);
 };
@@ -74,11 +59,6 @@ const prefixSelector = (
 
 const BookingPage = () => {
   const { data: employees, error } = useEmployee();
-  console.log(employees);
-
-  const onSubmit = (data) => {
-    console.log("submit", data.user.name);
-  };
 
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
@@ -98,22 +78,26 @@ const BookingPage = () => {
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
-  const [shiftId, setShiftId] = useState('test')
-  // ------------------------------------------------------------------------------------------------
-  // const [dataProps, setDataProps] = useState();
-  // useEffect(() => {
-  //   const a = async () => {
-  //     if (id !== "" || date !== "") {
-  //       const { data: employeeData } = await getEmployeeByDate(date, id);
-  //       setDataProps(employeeData);
-  //       console.log("data", employeeData);
-  //     }
-  //   };
-  //   a();
-  //   console.log(getEmployeeByDate(date, id));
-  //   console.log("ddd", date, id);
-  // }, [date, id]);
+  const [shiftId, setShiftId] = useState("");
+  const ParentShiftID = (e) => {
+    setShiftId(e);
+  };
+  const [serviceId, setServiceId] = useState("");
+  const ParentServiceID = (e) => {
+    setServiceId(e);
+  };
 
+  const convertServiceId = Object.assign({}, serviceId);
+  const onSubmit = (data) => {
+    console.log("submit", {
+      ...data.user,
+      shiftId: shiftId.id,
+      serviceId: convertServiceId,
+      date: date,
+    });
+  };
+
+  // ------------------------------------------------------------------------------------------------
 
   if (!employees) return <div>Loading...</div>;
   if (error) return <div>Failed to loading</div>;
@@ -171,20 +155,6 @@ const BookingPage = () => {
                     <InputNumber />
                   </Form.Item>
 
-                  {/* Email */}
-                  <Form.Item
-                    name={["user", "email"]}
-                    label="Email"
-                    rules={[
-                      {
-                        required: true,
-                        type: "email",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
                   {/* SĐT */}
                   <Form.Item
                     name={["user", "phone"]}
@@ -207,15 +177,14 @@ const BookingPage = () => {
 
                   {/* Các dịch vụ */}
                   <Form.Item
-                    name={["user", "oders"]}
                     label="Lựa chọn dịch vụ"
                     rules={[
                       {
-                        required: true,
+                        // required: true,
                       },
                     ]}
                   >
-                    <Checkbox.Group options={options} onChange={onChange} />
+                    <ServiceModal ParentServiceId={ParentServiceID} />
                   </Form.Item>
 
                   {/* Chọn ngày đặt lich */}
@@ -232,6 +201,7 @@ const BookingPage = () => {
                       disabledDate={disabledDate}
                       onChange={onChange1}
                       onOk={onOk}
+                      size="large"
                     />
                   </Form.Item>
 
@@ -248,7 +218,6 @@ const BookingPage = () => {
                     <Select onChange={onChangeSelected}>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
-                        
                           <div
                             className=""
                             onClick={() => {
@@ -262,19 +231,20 @@ const BookingPage = () => {
                     </Select>
                   </Form.Item>
 
-                {/* chọn ca  */}
-                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                  <Input value={shiftId} readOnly/>
-                  <EmployeeModal
-                    date={date}
-                    id={id}
-                    open={open}
-                  />
-                </Form.Item>
-                {/* Ghi chú */}
-                <Form.Item name={["user", "note"]} label="Ghi chú">
-                  <Input.TextArea />
-                </Form.Item>
+                  {/* chọn ca  */}
+                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                    <Input value={shiftId.shiftName} readOnly />
+                    <EmployeeModal
+                      date={date}
+                      id={id}
+                      open={open}
+                      ParentShiftId={ParentShiftID}
+                    />
+                  </Form.Item>
+                  {/* Ghi chú */}
+                  <Form.Item name={["user", "note"]} label="Ghi chú">
+                    <Input.TextArea />
+                  </Form.Item>
 
                   {/* button */}
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

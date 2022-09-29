@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Select, DatePicker } from "antd";
+import { Button, Form, Input, Select, DatePicker, message } from "antd";
 import useEmployee from "../../hooks/use-employee";
 import { httpGetAll } from "../../api/shift";
 import { httpGetOne, httpAddShift } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
-import { httpGetOneService } from "../../api/services";
 import { useNavigate, useParams } from "react-router-dom";
-import {  toast } from 'react-toastify';
+import { httpGetOneService } from "../../api/services";
 
 const Detaibooking = () => {
   const navigate = useNavigate()
@@ -24,10 +23,10 @@ const Detaibooking = () => {
       console.log(service._id);
       await httpAddBooking({ ...data, date: dateBooking, serviceId: service._id })
       await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })  
-      toast.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
+      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
       navigate('/');  
     } catch (error) {
-      toast.error(`${error.response.data.message}`)
+      message.error(`${error.response.data.message}`)
     }
  
   };

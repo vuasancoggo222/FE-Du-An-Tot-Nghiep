@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useState } from "react";
 import { Button, Modal, Space, Table, Tag, Tooltip } from 'antd';
-import { httpGetChangeStatus, httpGetOne } from "../../../api/booking";
+import { httpGetChangeStatus } from "../../../api/booking";
 const ListBooking = (props) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,17 +9,22 @@ const ListBooking = (props) => {
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
     // eslint-disable-next-line react/prop-types
-    const book = props.dataBooking
-
-
+    const booking = props.dataBooking
+    
     const showModal = async (e) => {
         await setIsModalOpen(true);
         const isButon = e.target.getAttribute("data");
         const idBooking = e.target.getAttribute("dataId");
         console.log(idBooking);
-        const res = await httpGetOne(idBooking)
-        setHandleBooking(res)
-        console.log(res);
+        // const res = await httpGetOne(idBooking)
+        // eslint-disable-next-line react/prop-types
+        booking.map((item, index) => {
+            if(index == idBooking) {
+                setHandleBooking(item)
+                console.log(item);
+                return 
+            }
+        })
         setIshandle(isButon)
         if (isButon === "success") {
             return
@@ -44,6 +49,11 @@ const ListBooking = (props) => {
         props.handleChangeStatus();
     };
 
+    const showtime = (data) => {    
+        const str = data.toString()
+        return str.substring(0,4) + "-" + str.substring(4,6) + "-" +str.substring(6,8)
+    }
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -65,13 +75,12 @@ const ListBooking = (props) => {
             title: 'Ngày',
             dataIndex: 'date',
             key: 'date',
+            render: (data) => <a>{showtime(data)}</a>,
         },
         {
             title: 'Ca',
             dataIndex: 'shiftId',
             key: 'shiftId',
-            render: (data =>
-                <p>{data}</p>)
         },
         {
             title: 'Nhân viên',
@@ -138,16 +147,16 @@ const ListBooking = (props) => {
     ];
 
     // eslint-disable-next-line react/prop-types
-    const datatable = book?.map((item) => {
+    const datatable = booking?.map((item, index) => {
         return {
             name: item.name,
             phoneNumber: item.phoneNumber,
             status: item.status,
             date: item.date,
-            shiftId: item.shiftId,
-            employeeId: item.employeeId,
-            serviceId: item.serviceId,
-            action: item._id
+            shiftId: item.shiftId.shiftName,
+            employeeId:item.employeeId.name,
+            serviceId: item.serviceId.name,
+            action: index
         }
     })
     return <div className="w-full px-6 py-6 mx-auto">
@@ -163,9 +172,9 @@ const ListBooking = (props) => {
             <p>Tên Khách hàng: {handleBooking?.name}</p>
             <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
             <p>Ngày: {handleBooking?.date}</p>
-            <p>Giờ: {handleBooking?.shiftId}</p>
-            <p>Nhân viên: {handleBooking?.employeeId}</p>
-            <p>Dịch vụ: {handleBooking?.serviceId}</p>
+            <p>Giờ: {handleBooking?.shiftId.shiftName}</p>
+            <p>Nhân viên: {handleBooking?.employeeId.name}</p>
+            <p>Dịch vụ: {handleBooking?.serviceId.name}</p>
         </Modal>
     </div>;
 };

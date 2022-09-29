@@ -12,6 +12,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [booking, setBooking] = useState()
@@ -46,6 +47,7 @@ function App() {
           </Route>
         </Routes>
       </div>  
+      <ToastContainer />
     </>
   );
 }

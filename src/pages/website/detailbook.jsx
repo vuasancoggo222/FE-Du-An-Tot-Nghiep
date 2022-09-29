@@ -6,7 +6,7 @@ import { httpGetOne, httpAddShift } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { httpGetOneService } from "../../api/services";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import {  toast } from 'react-toastify';
 
 const Detaibooking = () => {
   const navigate = useNavigate()
@@ -21,14 +21,12 @@ const Detaibooking = () => {
     console.log("submit", data);
     console.log(employeeBooking);
     try {
-      await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })
       console.log(service._id);
       await httpAddBooking({ ...data, date: dateBooking, serviceId: service._id })
-      alert("success")
-      navigate('/admin/booking');  
-      toast.success("Đã đặt lịch, chờ Spa xác nhận cái đã :))")
+      await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })  
+      toast.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
+      navigate('/');  
     } catch (error) {
-      alert(error.response.data.message)
       toast.error(`${error.response.data.message}`)
     }
  

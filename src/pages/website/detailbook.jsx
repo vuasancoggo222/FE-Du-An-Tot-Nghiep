@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, InputNumber, Select, DatePicker } from "antd";
+import { Button, Form, Input, Select, DatePicker } from "antd";
 import useEmployee from "../../hooks/use-employee";
 import { httpGetAll } from "../../api/shift";
 import { httpGetOne, httpAddShift } from "../../api/employee";
@@ -108,13 +108,14 @@ const Detaibooking = () => {
     const employeesOne = await httpGetOne(e)
     console.log(employeesOne);
     setEmployeeBooking(employeesOne);
+    
+  if (!employees) return <div>Loading...</div>;
+  if (error) return <div>Failed to loading</div>;
   };
   const onHandleAdd = (value) => {
     console.log("cha:", value);
   };
 
-  if (!employees) return <div>Loading...</div>;
-  if (error) return <div>Failed to loading</div>;
   useEffect(() => {
     const getShift = async () => {
       const data = await httpGetAll();

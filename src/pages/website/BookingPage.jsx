@@ -155,20 +155,6 @@ const BookingPage = () => {
                     <InputNumber />
                   </Form.Item>
 
-                  {/* Email */}
-                  <Form.Item
-                    name={["user", "email"]}
-                    label="Email"
-                    rules={[
-                      {
-                        // required: true,
-                        type: "email",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-
                   {/* SĐT */}
                   <Form.Item
                     name={["user", "phone"]}
@@ -198,7 +184,6 @@ const BookingPage = () => {
                       },
                     ]}
                   >
-           
                     <ServiceModal ParentServiceId={ParentServiceID} />
                   </Form.Item>
 

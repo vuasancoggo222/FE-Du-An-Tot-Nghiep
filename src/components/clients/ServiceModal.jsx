@@ -25,7 +25,7 @@ const ServiceModal = (props) => {
   const [dataUptoForm, setdataUptoForm] = useState({});
   const onChange = (checkedValues) => {
     console.log("checked = ", checkedValues);
-    setdataUptoForm(checkedValues)
+    setdataUptoForm(checkedValues);
   };
 
   const ChildServiceID = (e) => {
@@ -46,6 +46,7 @@ const ServiceModal = (props) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        centered
       >
         <Checkbox.Group options={options} onChange={onChange} />
       </Modal>

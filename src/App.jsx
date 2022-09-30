@@ -13,6 +13,12 @@ import Detaibooking from "./pages/website/detailbook";
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
 
+import ListBooking from "./pages/admin/booking";
+import { httpGetAll } from "./api/booking";
+
+import ListEmployee from "./pages/admin/employee";
+import AddEmployee from "./pages/admin/employee/add";
+
 function App() {
   const [booking, setBooking] = useState()
   useEffect(() => {
@@ -43,6 +49,10 @@ function App() {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="booking" element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} />} />
+            <Route path="employee">
+            <Route index element={<ListEmployee  />} />
+            <Route path="add" element={<AddEmployee />} />
+            </Route>
           </Route>
         </Routes>
       </div>  

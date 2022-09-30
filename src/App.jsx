@@ -10,6 +10,8 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/admin/dashboard";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
+import ListBooking from "./pages/admin/booking";
+import { httpGetAll } from "./api/booking";
 
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";

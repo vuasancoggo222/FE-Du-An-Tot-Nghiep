@@ -105,7 +105,9 @@ const ListBooking = (props) => {
             title: 'Ngày',
             dataIndex: 'date',
             key: 'date',
+
             render: (data) =><span>{showtime(data)}</span>,
+
         },
         {
             title: 'Ca',
@@ -214,13 +216,13 @@ const ListBooking = (props) => {
             serviceId: item.serviceId.name,
             action: (index, item.status, index)
         }
-    })
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
             <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
                 List Booking
             </h1>
         </div>
+
 
         <Table columns={columns} dataSource={datatable} />;
 

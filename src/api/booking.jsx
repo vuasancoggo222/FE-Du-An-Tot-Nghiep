@@ -11,6 +11,7 @@ const httpGetOne = (id) => {
 const httpGetChangeStatus = (id, data) => {
   return instance.patch(`booking/${id}`, data);
 };
+
 // const httpPut = (endpoint, id, data) => {
 //   return instance.put(`${endpoint}/${id}`, data);
 // };
@@ -19,6 +20,6 @@ const httpGetChangeStatus = (id, data) => {
 //   return instance.delete(`${endpoint}/${id}`);
 // };
 
-export { httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus
+export { httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus,
     //  httpPut, httpDelete 
     };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Select, DatePicker, message } from "antd";
 import useEmployee from "../../hooks/use-employee";
-import { httpGetAll } from "../../api/shift";
+import { httpGetAllShift } from "../../api/shift";
 import { httpGetOne, httpAddShift } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
@@ -49,22 +49,6 @@ const Detaibooking = () => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  // const disabledDate = (current) => {
-  //   // Can not select days before today and today
-  //   return current && current < moment().endOf("day");
-  // };
-
-  // const { RangePicker } = DatePicker;
-
-  // const range = (start, end) => {
-  //   const result = [];
-
-  //   for (let i = start; i < end; i++) {
-  //     result.push(i);
-  //   }
-
-  //   return result;
-  // };
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -78,10 +62,9 @@ const Detaibooking = () => {
       </Select>
     </Form.Item>
   );
-  // ------------------------------------------------------------------------------------------------
+ 
 
   const onOk = (value) => {
-    // console.log("...."+ employeeBooking);
 
     console.log("onOk: ", value);
 
@@ -89,14 +72,8 @@ const Detaibooking = () => {
   const onChange1 = (value, dateString) => {
     console.log("Selected Time: ", value);
     seDateBooking(Number(dateString.replace("-", "").replace("-", "")))
-    // console.log(moment(dateString).format("X")); 
-    // const query = moment(dateString).format("X");
-    // console.log(a);
-    // const a = getEmployeeByBookingDays(1063040400);
-    // setShift(a);
   };
-  // console.log(shift);
-  // ------------------------------------------------------------------------------------------------
+  
   // eslint-disable-next-line no-unused-vars
   const [open, setOpen] = useState(false);
   const onChangeSelected = async (e) => {
@@ -115,7 +92,7 @@ const Detaibooking = () => {
 
   useEffect(() => {
     const getShift = async () => {
-      const data = await httpGetAll();
+      const data = await httpGetAllShift();
       console.log(data.shift);
       setShift(data.shift)
     }

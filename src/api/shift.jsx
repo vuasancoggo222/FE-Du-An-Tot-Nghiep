@@ -1,6 +1,6 @@
 import instance from "./instance";
 
-const httpGetAll = () => {
+const httpGetAllShift = () => {
   return instance.get(`shift`);
 };
 const httpGetOne = (id) => {
@@ -18,6 +18,6 @@ const httpGetOne = (id) => {
 // };
 
 export {
-  httpGetAll,httpGetOne
+  httpGetAllShift,httpGetOne
   // , httpPost, httpPut, httpDelete 
 };

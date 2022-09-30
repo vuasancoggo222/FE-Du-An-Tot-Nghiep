@@ -12,7 +12,7 @@ const useBooking = () => {
   });
   const create = async (data) => {
     const revalidate = await method.httpPost(endpoint, data);
-    mutate([...data, revalidate]);
+    mutate(revalidate);
   };
   const remove = async (id) => {
     await method.httpDelete(endpoint, id);

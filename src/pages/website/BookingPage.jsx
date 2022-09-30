@@ -7,12 +7,14 @@ import {
   InputNumber,
   Select,
   DatePicker,
-  Alert
+  Alert,
+  message,
 } from "antd";
 import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
 import ServiceModal from "../../components/clients/ServiceModal";
 import useBooking from "../../hooks/use-booking";
+import { useNavigate, useParams } from "react-router-dom";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -58,7 +60,8 @@ const prefixSelector = (
 
 const BookingPage = () => {
   const { data: employees, error } = useEmployee();
-  const {create} = useBooking();
+  const navigate = useNavigate()
+  const { create } = useBooking();
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
@@ -84,38 +87,27 @@ const BookingPage = () => {
     setServiceId(e);
   };
 
- 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     try {
-      create({
-          ...data.user,
-          // date:20221007,
-          shiftId: shiftId.id,
-          serviceId: serviceId,
-          date: date,
-        }).then(
-          <Alert
-          message="Success Tips"
-          description="Detailed description and advice about successful copywriting."
-          type="success"
-          showIcon
-        />
-        )
+      await create({
+        ...data.user,
+        shiftId: shiftId.shiftId,
+        serviceId: serviceId,
+        date: date,
+      }).then(() => {
+        message.success("Đặt lịch thành công", 4);
+        navigate('/')
+      });
     } catch (error) {
-      <Alert
-      message="Error"
-      description="This is an error message about copywriting."
-      type="error"
-      showIcon
-    />
+      message.error(`${error.response.data.message}`, 4);
     }
-    console.log("submit", {
-      ...data.user,
-      // employeeId: data.user.,
-      shiftId: shiftId.id,
-      serviceId: serviceId,
-      date: date,
-    });
+    // console.log("submit", {
+    //   ...data.user,
+    //   // employeeId: data.user.,
+    //   shiftId: shiftId.shiftId,
+    //   serviceId: serviceId,
+    //   date: date,
+    // });
   };
 
   // ------------------------------------------------------------------------------------------------

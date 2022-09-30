@@ -18,16 +18,16 @@ const ListBooking = (props) => {
         const isButon = e.target.getAttribute("data");
         const idBooking = e.target.getAttribute("dataId");
         // eslint-disable-next-line react/prop-types
-        booking.map( async(item, index) => {
+        booking.map(async (item, index) => {
             if (index == idBooking) {
-                if(item.status == isButon) {
+                if (item.status == isButon) {
                     return
                 }
                 await setIsModalOpen(true);
             }
         })
-        
-       
+
+
         console.log(idBooking);
         // const res = await httpGetOne(idBooking)
         // eslint-disable-next-line react/prop-types
@@ -106,7 +106,7 @@ const ListBooking = (props) => {
             dataIndex: 'date',
             key: 'date',
 
-            render: (data) =><span>{showtime(data)}</span>,
+            render: (data) => <span>{showtime(data)}</span>,
 
         },
         {
@@ -215,7 +215,7 @@ const ListBooking = (props) => {
             employeeId: item.employeeId.name,
             serviceId: item.serviceId.name,
             action: (index, item.status, index)
-        }
+        }})
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
             <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">

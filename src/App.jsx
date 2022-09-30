@@ -13,9 +13,6 @@ import Detaibooking from "./pages/website/detailbook";
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
 
-import ListBooking from "./pages/admin/booking";
-import { httpGetAll } from "./api/booking";
-
 import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import { Button, Modal, Radio } from "antd";
 import { Checkbox } from "antd";
 const ServiceModal = (props) => {
   //  Modal
@@ -24,8 +24,8 @@ const ServiceModal = (props) => {
 
   const [dataUptoForm, setdataUptoForm] = useState({});
   const onChange = (checkedValues) => {
-    console.log("checked = ", checkedValues);
-    setdataUptoForm(checkedValues);
+    console.log("checked = ", checkedValues.target.value);
+    setdataUptoForm(checkedValues.target.value);
   };
 
   const ChildServiceID = (e) => {
@@ -48,7 +48,7 @@ const ServiceModal = (props) => {
         onCancel={handleCancel}
         centered
       >
-        <Checkbox.Group options={options} onChange={onChange} />
+        <Radio.Group options={options} onChange={onChange} buttonStyle="solid" />
       </Modal>
     </>
   );

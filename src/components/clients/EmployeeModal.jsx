@@ -8,7 +8,7 @@ import moment from "moment";
 const EmployeeModal = (props) => {
   const id = props.id;
   // const date = props.date;
-  const date = "1664064000";
+  const date = "20220930";
   const [shiftName, setshiftName] = useState();
   const [shiftTimeStart, setshiftTimeStart] = useState();
   const [shiftTimeEnd, setShiftTimeEnd] = useState();
@@ -44,8 +44,10 @@ const EmployeeModal = (props) => {
         `http://localhost:5000/api/employee/get-employee-by-date?date=${date}&employee=${id}`
       )
         .then((response) => response.json())
-        .then((data) => setEmployee(data));
+        .then((data) => {setEmployee(data),console.log(data)});
+        
     }
+
   }, [date, id]);
   const convertDate = (date) => {
     var timestamp = moment.unix(date);

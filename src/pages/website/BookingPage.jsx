@@ -7,10 +7,12 @@ import {
   InputNumber,
   Select,
   DatePicker,
+  Alert
 } from "antd";
 import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
 import ServiceModal from "../../components/clients/ServiceModal";
+import useBooking from "../../hooks/use-booking";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -56,7 +58,7 @@ const prefixSelector = (
 
 const BookingPage = () => {
   const { data: employees, error } = useEmployee();
-
+  const {create} = useBooking();
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
@@ -84,14 +86,38 @@ const BookingPage = () => {
     setServiceId(e);
   };
 
-  const convertServiceId = Object.assign({}, serviceId);
+ 
   const onSubmit = (data) => {
-    console.log("submit", {
-      ...data.user,
-      shiftId: shiftId.id,
-      serviceId: convertServiceId,
-      date: date,
-    });
+    try {
+      create({
+          ...data.user,
+          // date:20221007,
+          shiftId: shiftId.id,
+          serviceId: serviceId,
+          date: date,
+        }).then(
+          <Alert
+          message="Success Tips"
+          description="Detailed description and advice about successful copywriting."
+          type="success"
+          showIcon
+        />
+        )
+    } catch (error) {
+      <Alert
+      message="Error"
+      description="This is an error message about copywriting."
+      type="error"
+      showIcon
+    />
+    }
+    // console.log("submit", {
+    //   ...data.user,
+    //   // employeeId: data.user.,
+    //   shiftId: shiftId.id,
+    //   serviceId: serviceId,
+    //   date: date,
+    // });
   };
 
   // ------------------------------------------------------------------------------------------------
@@ -205,7 +231,7 @@ const BookingPage = () => {
                   {/* chọn nhân viên */}
                   <Form.Item
                     label="Chọn nhân viên"
-                    name={["user", "employees"]}
+                    name={["user", "employeeId"]}
                     rules={[
                       {
                         // required: true,

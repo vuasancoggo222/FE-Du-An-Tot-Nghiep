@@ -12,14 +12,20 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
+import  {httpGetAllShift}  from "./api/shift";
+import { httpGetEmployees } from "./api/employee";
 
 import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
+import { httpGetAllService } from "./api/services";
 
 
 
 function App() {
   const [booking, setBooking] = useState()
+  const [employees, setEmployees] = useState()
+  const [service, setService] = useState()
+  const [shift, setShift] = useState()
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -27,6 +33,21 @@ function App() {
       setBooking(res)
     }
     getBooking()
+    const getEmployee = async () => {
+      const res = await httpGetEmployees(); 
+      setEmployees(res)
+    }
+    getEmployee()
+    const getService = async () => {
+      const res = await httpGetAllService(); 
+      setService(res)
+    }
+    getService()
+    const getShift = async () => {
+      const res = await httpGetAllShift(); 
+      setShift(res)
+    }
+    getShift()
   },[])
 
   const changeStatusBooking = async () => {
@@ -34,6 +55,7 @@ function App() {
     console.log(res);
     setBooking(res)
   }
+  
   return (
     <>
       <div className="App">
@@ -47,7 +69,7 @@ function App() {
           </Route>
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="booking" element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} />} />
+            <Route path="booking" element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} />
             <Route path="employee">
             <Route index element={<ListEmployee  />} />
             <Route path="add" element={<AddEmployee />} />

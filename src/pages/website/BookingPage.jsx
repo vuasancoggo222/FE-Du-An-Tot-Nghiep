@@ -72,10 +72,8 @@ const BookingPage = () => {
     setId(value);
   };
   const onChange1 = (value, dateString) => {
-    console.log("Formatted Selected Time: ", dateString);
-    console.log("timestamp", moment(dateString).format("X"));
-    const timeStamp = moment(dateString).format("X");
-    setDate(timeStamp);
+    console.log("Selected Time: ", value);
+    setDate(Number(dateString.replace("-", "").replace("-", "")));
   };
   const onHandleAdd = (value) => {
     console.log("cha:", value);

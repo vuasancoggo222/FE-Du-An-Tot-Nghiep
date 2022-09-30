@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Footer from '../components/admin/Footer';
 import Header from '../components/admin/Header';
 import Sidenav from '../components/admin/sidenav';
 
@@ -26,7 +25,7 @@ const AdminLayout = () => {
               <Outlet />
             </div>
             {/* end cards */}
-            <Footer />
+      
           </main>
         </div>
 

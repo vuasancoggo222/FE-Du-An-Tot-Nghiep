@@ -111,13 +111,13 @@ const BookingPage = () => {
       showIcon
     />
     }
-    // console.log("submit", {
-    //   ...data.user,
-    //   // employeeId: data.user.,
-    //   shiftId: shiftId.id,
-    //   serviceId: serviceId,
-    //   date: date,
-    // });
+    console.log("submit", {
+      ...data.user,
+      // employeeId: data.user.,
+      shiftId: shiftId.id,
+      serviceId: serviceId,
+      date: date,
+    });
   };
 
   // ------------------------------------------------------------------------------------------------
@@ -180,7 +180,7 @@ const BookingPage = () => {
 
                   {/* SĐT */}
                   <Form.Item
-                    name={["user", "phone"]}
+                    name={["user", "phoneNumber"]}
                     label="Số điện thoại"
                     rules={[
                       {

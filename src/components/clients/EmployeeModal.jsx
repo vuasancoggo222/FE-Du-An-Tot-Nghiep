@@ -12,6 +12,7 @@ const EmployeeModal = (props) => {
   const [shiftName, setshiftName] = useState();
   const [shiftTimeStart, setshiftTimeStart] = useState();
   const [shiftTimeEnd, setShiftTimeEnd] = useState();
+  const [shiftId, setshiftId] = useState();
 
 
   const [employee, setEmployee] = useState();
@@ -19,7 +20,7 @@ const EmployeeModal = (props) => {
   const showModal = () => {
     setOpen(true);
   };
-  const dataUptoForm = {id,date,shiftName,shiftTimeStart,shiftTimeEnd}
+  const dataUptoForm = {id,date,shiftId,shiftName,shiftTimeStart,shiftTimeEnd}
   const ChildShiftID = (e) => {
     props.ParentShiftId(e);
   };
@@ -36,7 +37,7 @@ const EmployeeModal = (props) => {
 
   const onChange = ({ target: { value } }) => {
     console.log("shift id:", value);
-    // setValue4(value);
+    setshiftId(value)
   };
   useEffect(() => {
     if (id !== "" && date !== "") {

@@ -1,7 +1,9 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/no-unknown-property */
 import React, { useState } from "react";
-import { Button, Modal, Space, Table, Tag, Tooltip } from 'antd';
+import { Button, message, Modal, Space, Table, Tag, Tooltip } from 'antd';
 import { httpGetChangeStatus } from "../../../api/booking";
+import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,48 +12,78 @@ const ListBooking = (props) => {
     const [ishandle, setIshandle] = useState();
     // eslint-disable-next-line react/prop-types
     const booking = props.dataBooking
-    
-    const showModal = async (e) => {
-        await setIsModalOpen(true);
+
+    const showModal = (e) => {
+        // eslint-disable-next-line react/prop-types
         const isButon = e.target.getAttribute("data");
         const idBooking = e.target.getAttribute("dataId");
+        // eslint-disable-next-line react/prop-types
+        booking.map( async(item, index) => {
+            if (index == idBooking) {
+                if(item.status == isButon) {
+                    return
+                }
+                await setIsModalOpen(true);
+            }
+        })
+        
+       
         console.log(idBooking);
         // const res = await httpGetOne(idBooking)
         // eslint-disable-next-line react/prop-types
         booking.map((item, index) => {
-            if(index == idBooking) {
+            if (index == idBooking) {
                 setHandleBooking(item)
                 console.log(item);
-                return 
+                return
             }
         })
         setIshandle(isButon)
-        if (isButon === "success") {
+        if (isButon === "1") {
             return
-        } else if(isButon === "failure") {
+        } else if (isButon === "2") {
             setTitleModal("Hủy khách hàng")
-        }else{
+        } else {
             setTitleModal("Chờ xác nhận")
         }
     };
 
+    // eslint-disable-next-line no-unused-vars
     const handleOk = async () => {
         setIsModalOpen(false);
         console.log(ishandle);
-        if (ishandle === "success") {
-            await httpGetChangeStatus(handleBooking._id, { status: 1 })
-        } else if (ishandle === "failure") {
-            await httpGetChangeStatus(handleBooking._id, { status: 2 })
-        }else{
-            await httpGetChangeStatus(handleBooking._id, { status: 0 })
+        if (ishandle === "1") {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 1 })
+                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 1 })
+                message.success(`Xác nhận khách hàng "${handleBooking.name}"`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
+        } else if (ishandle === "2") {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 2 })
+                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 2 })
+                message.success(`Hủy khách hàng "${handleBooking.name}"`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
+        } else {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 0 })
+                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 0 })
+                message.success(`Reset chờ khách hàng "${handleBooking.name}"`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
         }
         // eslint-disable-next-line react/prop-types
         props.handleChangeStatus();
     };
 
-    const showtime = (data) => {    
+    const showtime = (data) => {
         const str = data.toString()
-        return str.substring(0,4) + "-" + str.substring(4,6) + "-" +str.substring(6,8)
+        return str.substring(0, 4) + "-" + str.substring(4, 6) + "-" + str.substring(6, 8)
     }
 
     const handleCancel = () => {
@@ -63,19 +95,17 @@ const ListBooking = (props) => {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Phone',
             dataIndex: 'phoneNumber',
             key: 'phoneNumber',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Ngày',
             dataIndex: 'date',
             key: 'date',
-            render: (data) => <a>{showtime(data)}</a>,
+            render: (data) =><span>{showtime(data)}</span>,
         },
         {
             title: 'Ca',
@@ -127,22 +157,48 @@ const ListBooking = (props) => {
             title: 'Action',
             dataIndex: "action",
             key: 'action',
-            render: (id) => (
-                <Space size="middle">
-                    <Tooltip title="Xác nhận">
-                        <Button style={{ border: "none" }} shape="circle" ><i style={{ fontSize: "25px", color: "blue" }} onClick={showModal} dataId={id} data="success" class="far fa-check-circle"></i></Button>
-                    </Tooltip>
-                    <Tooltip title="Hủy">
-                        <Button style={{ border: "none" }} shape="circle" ><i style={{ fontSize: "25px", color: "red" }} onClick={showModal} dataId={id} data="failure" class="far fa-times-circle"></i></Button>
-                    </Tooltip>
-                    <Tooltip title="Chờ xác nhận">
-                        <Button style={{ border: "none" }} shape="circle" >
-                            <i style={{ fontSize: "25px", color: "Gray" }} onClick={showModal} dataId={id} data="wait" class="fas fa-info-circle"></i>
-                        </Button>
-                    </Tooltip>
+            render: (status, item, index) => {
+                console.log(item);
+                // chờ
+                let BtWaitCursor
+                let BtWaitColor = "#06060a"
+                // xác nhận
+                let BtSusscesCursor
+                let BtSusscessColor = "blue"
+                // hủy
+                let BtFailureCursor
+                let BtFailureColor = "red"
 
-                </Space>
-            ),
+                if (item.status === 0) {
+                    // chờ
+                    BtWaitCursor = "not-allowed"
+                    BtWaitColor = "gray"
+                } else if (item.status === 1) {
+                    // xác nhận
+                    BtSusscesCursor = "not-allowed"
+                    BtSusscessColor = "gray"
+                } else if (item.status === 2) {
+                    // hủy
+                    BtFailureCursor = "not-allowed"
+                    BtFailureColor = "gray"
+                }
+                return (
+                    <Space size="middle">
+                        <Tooltip title="Xác nhận">
+                            <Button style={{ border: "none", cursor: BtSusscesCursor, color: BtSusscessColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={index} data="1" class="far fa-check-circle"></i></Button>
+                        </Tooltip>
+                        <Tooltip title="Hủy">
+                            <Button style={{ border: "none", cursor: BtFailureCursor, color: BtFailureColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={index} data="2" class="far fa-times-circle"></i></Button>
+                        </Tooltip>
+                        <Tooltip title="Chờ xác nhận">
+                            <Button style={{ border: "none", cursor: BtWaitCursor, color: BtWaitColor }} shape="circle" >
+                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={index} data="0" class="fas fa-info-circle"></i>
+                            </Button>
+                        </Tooltip>
+
+                    </Space>
+                )
+            },
         },
     ];
 
@@ -154,9 +210,9 @@ const ListBooking = (props) => {
             status: item.status,
             date: item.date,
             shiftId: item.shiftId.shiftName,
-            employeeId:item.employeeId.name,
+            employeeId: item.employeeId.name,
             serviceId: item.serviceId.name,
-            action: index
+            action: (index, item.status, index)
         }
     })
     return <div className="w-full px-6 py-6 mx-auto">
@@ -175,6 +231,7 @@ const ListBooking = (props) => {
             <p>Giờ: {handleBooking?.shiftId.shiftName}</p>
             <p>Nhân viên: {handleBooking?.employeeId.name}</p>
             <p>Dịch vụ: {handleBooking?.serviceId.name}</p>
+            <p>Note: {handleBooking?.note}</p>
         </Modal>
     </div>;
 };

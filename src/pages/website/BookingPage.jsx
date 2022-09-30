@@ -90,27 +90,26 @@ const BookingPage = () => {
   };
 
   const onSubmit = async (data) => {
-    // try {
-    //   await create({
-    //     ...data.user,
-    //     // date:20221007,
-    //     shiftId: shiftId.id,
-    //     serviceId: serviceId,
-    //     date: date,
-    //   }).then(() => {
-    //     message.success("Đặt lịch thành công", 4);
-    //     navigate('/')
-    //   });
-    // } catch (error) {
-    //   message.error(`${error.response.data.message}`, 4);
-    // }
-    console.log("submit", {
-      ...data.user,
-      // employeeId: data.user.,
-      shiftId: shiftId.shiftId,
-      serviceId: serviceId,
-      date: date,
-    });
+    try {
+      await create({
+        ...data.user,
+        shiftId: shiftId.shiftId,
+        serviceId: serviceId,
+        date: date,
+      }).then(() => {
+        message.success("Đặt lịch thành công", 4);
+        navigate('/')
+      });
+    } catch (error) {
+      message.error(`${error.response.data.message}`, 4);
+    }
+    // console.log("submit", {
+    //   ...data.user,
+    //   // employeeId: data.user.,
+    //   shiftId: shiftId.shiftId,
+    //   serviceId: serviceId,
+    //   date: date,
+    // });
   };
 
   // ------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Modal, Radio } from "antd";
+import { Button, Empty, Modal, Radio } from "antd";
 import { useState } from "react";
 // import useEmployee from "../../hooks/use-employee";
 import moment from "moment";
@@ -65,7 +65,7 @@ const EmployeeModal = (props) => {
   return (
     <div>
       <Button type="primary" onClick={showModal}>
-        Chọn ca nhân viên
+       Danh sách ca làm
       </Button>
       <Modal
         title="Chọn giờ đến"
@@ -105,6 +105,7 @@ const EmployeeModal = (props) => {
               </div>
             </div>
           ))}
+          {!employee ? <Empty/>: ""}
         </div>
       </Modal>
     </div>

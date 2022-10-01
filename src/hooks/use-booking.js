@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import instance from "../api/instance";
 import * as method from "../api/services";
-
+const userId = JSON.parse(localStorage.getItem('user')).id
 const fetcher = async (url) => await instance.get(url);
 
 const endpoint = "/booking";
@@ -11,7 +11,7 @@ const useBooking = () => {
     refreshInterval: 5000,
   });
   const create = async (data) => {
-    const revalidate = await method.httpPost(endpoint, data);
+    const revalidate = await method.httpPost(endpoint+`?user=${userId}`, data);
     mutate(revalidate);
   };
   const remove = async (id) => {

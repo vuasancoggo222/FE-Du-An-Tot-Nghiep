@@ -20,7 +20,7 @@ const ServiceModal = (props) => {
   // ----------------------------
   const [service, setService] = useState();
   let options = [];
-  service?.map((item) => options.push({ value: item._id, label: item.name }));
+  service?.map((item) => options.push({ value: item._id, label: item.name}));
 
   const [dataUptoForm, setdataUptoForm] = useState({});
   const onChange = (checkedValues) => {

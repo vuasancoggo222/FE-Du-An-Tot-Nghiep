@@ -23,12 +23,13 @@ const SignIn = () => {
   };
   const onFinish = async (values) => {
     const userValues = {
-      phoneNumber: values.phoneNumber,
-      password: values.password
+      phoneNumber: values.phoneNumber.phoneNumber,
+      password: values.password.password
     }
     console.log(values.phoneNumber.phoneNumber, values.password.password);
     try {
-      const {data} = await login(userValues)
+      const data = await login(userValues)
+      console.log(data);
       localStorage.setItem('user', JSON.stringify(data))
       message.success('Đăng nhập thành công')
       navigate('/')

@@ -1,21 +1,14 @@
-import { Button,  Form, Input } from "antd";
-// import { Option } from "antd/lib/mentions";
+import { Button,  Form, Input,message } from "antd";
 import React from "react";
+import { register } from "../../api/user";
 
 const SignUp = () => {
-  // const bgSign = {
-  //   backgroundImage:
-  //     "url('https://res.cloudinary.com/df7kkrfoe/image/upload/v1663306360/aromatherapy-la-gi_wclia9.jpg')",
-  // };
   const bgStaff = {
     width: "100%",
     height: "100%",
     backgroundImage:
       "url('https://res.cloudinary.com/df7kkrfoe/image/upload/v1663325104/tac-phong-lam-viec-nhan-vien-spa-1_mfbeu0.jpg')",
     backgroundRepeat: 'no-repeat'
-  };
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
   };
   const layout = {
     labelCol: {
@@ -36,14 +29,21 @@ const SignUp = () => {
     color: "#002200",
     opacity: 0.8
   }
-//   const prefixSelector = (
-//     <Form.Item name="prefix" noStyle>
-//       <Select style={{ width: 70 }}>
-//         <Option value="86">+86</Option>
-//         <Option value="87">+87</Option>
-//       </Select>
-//     </Form.Item>
-//   );
+  const onFinish = async (values) => {
+    const userValues = {
+      name: values.name.name,
+      phoneNumber: values.phoneNumber.phoneNumber,
+      password: values.password.password
+    }
+    console.log(values.phoneNumber.phoneNumber, values.password.password);
+    try {
+       await register(userValues)
+       message.success('Đăng ký thành công')
+    } catch (error) {
+      message.error('Lỗi đăng ký')
+    }
+  };
+
 
   return <div>
 
@@ -77,20 +77,8 @@ const SignUp = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                name={['email', 'email']}
-                label="Email"
-                rules={[
-                  {
-                    type: 'email',
-                    required: true
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                 name={['phone']}
-                 label="Number Phone"
+                 name={['phoneNumber','phoneNumber']}
+                 label="PhoneNumber"
                 rules={[{
                   required: true,
                   pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),

@@ -1,29 +1,30 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/no-unknown-property */
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, Tooltip } from 'antd';
-import { httpGetChangeStatus } from "../../../api/booking";
+import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
-import { httpChangeStatusTimeWork } from "../../../api/employee";
-const ListBooking = (props) => {
+import { httpChangeStatusTimeWork, httpGetOne } from "../../../../api/employee";
+const ListBookingByEmployee = (props) => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [titleModal, setTitleModal] = useState("Xác nhận khách hàng");
+    const [titleModal, setTitleModal] = useState("Đang diễn ra");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
     const [dateFilter, setDateFilter] = useState();
+    const [isEmploye, setIsemploye] = useState();
     // eslint-disable-next-line react/prop-types
     const booking = props.dataBooking
     // eslint-disable-next-line react/prop-types
-    const employee = props.dataEmployy?.map((item) => {
-        return {
-            text: item.name,
-            value: item.name,
-        }
-    })
+
+    const isEmployee = JSON.parse(localStorage.getItem('user'));
+    if (isEmployee) {
+        console.log(isEmployee._id
+        );
+    }
     // eslint-disable-next-line react/prop-types
     const service = props.dataService?.map((item) => {
         return {
@@ -64,10 +65,9 @@ const ListBooking = (props) => {
             }
         ])
         console.log(dateFilter)
-       
+
     };
-    const btn = document.querySelectorAll(".ant-checkbox-input");
-    console.log(btn);
+
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div
@@ -177,12 +177,12 @@ const ListBooking = (props) => {
             }
         })
         setIshandle(isButon)
-        if (isButon === "1") {
-            setTitleModal("Đã xác nhận")
-        } else if (isButon === "2") {
-            setTitleModal("Hủy khách hàng")
+        if (isButon === "3") {
+            setTitleModal("Đang diễn ra")
+        } else if (isButon === "4") {
+            setTitleModal("Hoàn thành")
         } else {
-            setTitleModal("Chờ xác nhận")
+            setTitleModal("khách không đến")
         }
     };
 
@@ -190,26 +190,26 @@ const ListBooking = (props) => {
     const handleOk = async () => {
         setIsModalOpen(false);
         console.log(ishandle);
-        if (ishandle === "1") {
+        if (ishandle === "3") {
             try {
-                await httpGetChangeStatus(handleBooking._id, { status: 1 })
-                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 1 })
+                await httpGetChangeStatus(handleBooking._id, { status: 3 })
+                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 3 })
                 message.success(`Xác nhận khách hàng "${handleBooking.name}"`)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
-        } else if (ishandle === "2") {
+        } else if (ishandle === "4") {
             try {
-                await httpGetChangeStatus(handleBooking._id, { status: 2 })
-                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 2 })
+                await httpGetChangeStatus(handleBooking._id, { status: 4 })
+                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 4 })
                 message.success(`Hủy khách hàng "${handleBooking.name}"`)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
         } else {
             try {
-                await httpGetChangeStatus(handleBooking._id, { status: 0 })
-                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 0 })
+                await httpGetChangeStatus(handleBooking._id, { status: 5 })
+                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 5 })
                 message.success(`Reset chờ khách hàng "${handleBooking.name}"`)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
@@ -227,7 +227,6 @@ const ListBooking = (props) => {
         setIsModalOpen(false);
     };
 
-    console.log(btn);
     const columns = [
         {
             title: 'Name',
@@ -266,8 +265,6 @@ const ListBooking = (props) => {
             title: 'Nhân viên',
             dataIndex: 'employeeId',
             key: 'employeeId',
-            filters: employee,
-            onFilter: (value, record) => record.employeeId.indexOf(value) === 0,
         },
         {
             title: 'Dịch vụ',
@@ -282,24 +279,12 @@ const ListBooking = (props) => {
             dataIndex: 'status',
             filters: [
                 {
-                    text: 'Chờ xác nhận',
-                    value: '0',
-                },
-                {
                     text: 'Đã xác nhận',
                     value: '1',
                 },
                 {
-                    text: 'Hủy',
-                    value: '2',
-                },
-                {
                     text: 'Đang diễn ra',
                     value: '3',
-                },
-                {
-                    text: 'Hoàn thành',
-                    value: '4',
                 },
                 {
                     text: 'Khách không đến',
@@ -309,7 +294,7 @@ const ListBooking = (props) => {
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
             render: (status) => {
                 let key = "Chờ xác nhận";
-                let color = "#e4ed36"
+                let color = "volcano"
                 if (status === 0) {
                     true
                 } else if (status === 1) {
@@ -318,7 +303,7 @@ const ListBooking = (props) => {
                 }
                 else if (status === 2) {
                     key = "Hủy"
-                    color = "red"
+                    color = "Silver"
                 } else if (status === 3) {
                     key = "Đang diễn ra"
                     color = "#da0cc8"
@@ -346,38 +331,39 @@ const ListBooking = (props) => {
             render: (item) => {
                 // chờ
                 let BtWaitCursor
-                let BtWaitColor = "#e4ed36"
+                let BtWaitColor = "#bc0808"
                 // xác nhận
                 let BtSusscesCursor
-                let BtSusscessColor = "blue"
+                let BtSusscessColor = "#da0cc8"
                 // hủy
                 let BtFailureCursor
-                let BtFailureColor = "red"
+                let BtFailureColor = "green"
 
-                if (item.status === 0) {
+                if (item.status === 5) {
                     // chờ
                     BtWaitCursor = "not-allowed"
                     BtWaitColor = "#f9f6f6"
-                } else if (item.status === 1) {
+                } else if (item.status === 3) {
                     // xác nhận
                     BtSusscesCursor = "not-allowed"
                     BtSusscessColor = "#f9f6f6"
-                } else if (item.status === 2) {
+                } else if (item.status === 4) {
                     // hủy
                     BtFailureCursor = "not-allowed"
                     BtFailureColor = "#f9f6f6"
                 }
                 return (
                     <Space size="middle">
-                        <Tooltip title="Xác nhận">
-                            <Button style={{ border: "none", cursor: BtSusscesCursor, color: BtSusscessColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="1" class="far fa-check-circle"></i></Button>
+                        <Tooltip title="Đang diễn ra">
+                            <Button style={{ border: "none", cursor: BtSusscesCursor, color: BtSusscessColor }} shape="circle" >
+                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="3" class="far fa-clock"></i></Button>
                         </Tooltip>
-                        <Tooltip title="Hủy">
-                            <Button style={{ border: "none", cursor: BtFailureCursor, color: BtFailureColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="2" class="far fa-times-circle"></i></Button>
+                        <Tooltip title="Hoàn thành">
+                            <Button style={{ border: "none", cursor: BtFailureCursor, color: BtFailureColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="4" class="far fa-check-circle"></i></Button>
                         </Tooltip>
-                        <Tooltip title="Chờ xác nhận">
+                        <Tooltip title="Khách không đến">
                             <Button style={{ border: "none", cursor: BtWaitCursor, color: BtWaitColor }} shape="circle" >
-                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="0" class="fas fa-info-circle"></i>
+                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="5" class="fas fa-exclamation-circle"></i>
                             </Button>
                         </Tooltip>
 
@@ -386,24 +372,36 @@ const ListBooking = (props) => {
             },
         },
     ];
+
+    let datatable = []
     // eslint-disable-next-line react/prop-types
-    const datatable = booking?.map((item) => {
-        return {
-            name: item.name,
-            phoneNumber: item.phoneNumber,
-            status: item.status,
-            date: item.date,
-            shiftId: item.shiftId.shiftName,
-            employeeId: item.employeeId.name,
-            serviceId: item.serviceId.name,
-            action: (item)
+    booking?.forEach(item => {
+        if (item.employeeId._id === isEmployee._id && item.status !== 0) {
+            datatable.push({
+                name: item.name,
+                phoneNumber: item.phoneNumber,
+                status: item.status,
+                date: item.date,
+                shiftId: item.shiftId.shiftName,
+                employeeId: item.employeeId.name,
+                serviceId: item.serviceId.name,
+                action: (item)
+            })
         }
     })
-
+    console.log(datatable);
+    useEffect(() => {
+        const getEmployee = async () => {
+            const res = await httpGetOne(isEmployee._id)
+            setIsemploye(res)
+            console.log(res);
+        }
+        getEmployee()
+    }, [])
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
             <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-                List Booking
+                List Booking By {isEmploye?.name}
             </h1>
         </div>
 
@@ -420,4 +418,4 @@ const ListBooking = (props) => {
         </Modal>
     </div>;
 };
-export default ListBooking;
+export default ListBookingByEmployee;

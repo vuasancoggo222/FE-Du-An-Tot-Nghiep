@@ -19,6 +19,7 @@ import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
 import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
+import { PrivateRouter } from "./utils/PrivateRouter";
 
 
 
@@ -68,7 +69,7 @@ function App() {
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
           </Route>
-          <Route path="admin" element={<AdminLayout />}>
+          <Route path="admin" element={<PrivateRouter><AdminLayout/></PrivateRouter>}>
             <Route index element={<Dashboard />} />
             <Route path="booking">
               <Route index element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} />

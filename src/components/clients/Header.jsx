@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { Modal } from "antd";
 import SignIn from "../../pages/website/SignIn";
 import SignUp from "../../pages/website/SignUp";
+import { isAuthenticate } from "../../utils/LocalStorage";
 
 const Header = () => {
+  const [auth,setAuth] =  useState(false)
+  const [user,setUser] = useState({})
+  useEffect(()=>{
+    const user = isAuthenticate()
+    if(user){
+      setAuth(true)
+      setUser(user)
+    }
+  },[])
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -71,7 +81,24 @@ const Header = () => {
                     <button className="px-[23px] text-[#fff]">Liên Hệ</button>
                   </Link>
                 </div>
-                <div className="flex-auto">
+                {auth ? <div className="flex-auto">
+                  <button
+                    className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
+                  >
+                    <span> Xin chào,</span> {user.name}
+                  </button>
+                  <button
+                    className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
+                  >
+                    Đăng xuất
+                  </button>
+
+                  <button className=" mx-3 rounded-md bg-[#003C21]  border-2 border-emerald-500 px-3">
+                    <Link className="text-[#fff]" to={`/booking`}>
+                      Đặt Lịch
+                    </Link>
+                  </button>
+                </div>   : <div className="flex-auto">
                   <button
                     data="signin"
                     onClick={showModal}
@@ -92,7 +119,7 @@ const Header = () => {
                       Đặt Lịch
                     </Link>
                   </button>
-                </div>
+                </div>}
               </div>
             </nav>
           </div>

@@ -1,7 +1,18 @@
 import useSWR from "swr";
 import instance from "../api/instance";
 import * as method from "../api/services";
-const userId = JSON.parse(localStorage.getItem('user')).id
+import { isAuthenticate } from "../utils/LocalStorage";
+const user = isAuthenticate()
+
+let userId = ""
+
+if(!userId){
+  userId = "63392e3fec0fc66e7175e03f"
+  // Guess userId when user is not sign in
+}
+else{
+  userId = user.id
+}
 const fetcher = async (url) => await instance.get(url);
 
 const endpoint = "/booking";

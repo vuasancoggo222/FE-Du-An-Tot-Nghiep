@@ -64,7 +64,7 @@ const EmployeeModal = (props) => {
   // if (!employee) return <div>Loading...</div>;
   return (
     <div>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" style={{backgroundColor: '#00502b', border: 'none' }} onClick={showModal}>
        Danh sách ca làm
       </Button>
       <Modal

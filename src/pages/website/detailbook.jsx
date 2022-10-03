@@ -350,7 +350,7 @@ const Detaibooking = () => {
                     <Input.TextArea />
                   </Form.Item>
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" style={{backgroundColor: '#00502b', border: 'none' }} htmlType="submit">
                       Đặt lịch
                     </Button>
                   </Form.Item>

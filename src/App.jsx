@@ -19,43 +19,42 @@ import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
 import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
-
-
+import ListService from "./pages/admin/services";
 
 function App() {
-  const [booking, setBooking] = useState()
-  const [employees, setEmployees] = useState()
-  const [service, setService] = useState()
-  const [shift, setShift] = useState()
+  const [booking, setBooking] = useState();
+  const [employees, setEmployees] = useState();
+  const [service, setService] = useState();
+  const [shift, setShift] = useState();
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
       console.log(res);
-      setBooking(res)
-    }
-    getBooking()
+      setBooking(res);
+    };
+    getBooking();
     const getEmployee = async () => {
       const res = await httpGetEmployees();
-      setEmployees(res)
-    }
-    getEmployee()
+      setEmployees(res);
+    };
+    getEmployee();
     const getService = async () => {
       const res = await httpGetAllService();
-      setService(res)
-    }
-    getService()
+      setService(res);
+    };
+    getService();
     const getShift = async () => {
       const res = await httpGetAllShift();
-      setShift(res)
-    }
-    getShift()
-  }, [])
+      setShift(res);
+    };
+    getShift();
+  }, []);
 
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     console.log(res);
-    setBooking(res)
-  }
+    setBooking(res);
+  };
 
   return (
     <>
@@ -71,12 +70,38 @@ function App() {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="booking">
-              <Route index element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} />
-              <Route path="employee" element={<ListBookingByEmployee handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} />
+              <Route
+                index
+                element={
+                  <ListBooking
+                    handleChangeStatus={changeStatusBooking}
+                    dataBooking={booking}
+                    dataEmployy={employees}
+                    dataService={service}
+                    dataShift={shift}
+                  />
+                }
+              />
+              <Route
+                path="employee"
+                element={
+                  <ListBookingByEmployee
+                    handleChangeStatus={changeStatusBooking}
+                    dataBooking={booking}
+                    dataEmployy={employees}
+                    dataService={service}
+                    dataShift={shift}
+                  />
+                }
+              />
             </Route>
             <Route path="employee">
               <Route index element={<ListEmployee />} />
               <Route path="add" element={<AddEmployee />} />
+            </Route>
+            <Route path="service">
+              <Route index element={<ListService />} />
+              {/* <Route path="add" element={<AddEmployee />} /> */}
             </Route>
           </Route>
         </Routes>

@@ -19,7 +19,7 @@ import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
 import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
-import ListService from "./pages/admin/services";
+import ListService from "./pages/admin/service";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -101,7 +101,6 @@ function App() {
             </Route>
             <Route path="service">
               <Route index element={<ListService />} />
-              {/* <Route path="add" element={<AddEmployee />} /> */}
             </Route>
           </Route>
         </Routes>

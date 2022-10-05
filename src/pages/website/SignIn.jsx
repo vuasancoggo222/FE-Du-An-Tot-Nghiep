@@ -3,9 +3,8 @@ import { Button, Form, Input, message } from "antd";
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/user';
 
-const SignIn = () => {
+const SignIn = (props) => {
   const navigate = useNavigate()
-
   const layout = {
     labelCol: {
       span: 6,
@@ -34,7 +33,7 @@ const SignIn = () => {
       message.success('Đăng nhập thành công')
       navigate('/')
     } catch (error) {
-      message.error('Lỗi đăng nhập')
+      message.error(`${error.message}`,2)
     }
   };
   const validateMessages = {

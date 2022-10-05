@@ -5,8 +5,11 @@ import { Modal } from "antd";
 import SignIn from "../../pages/website/SignIn";
 import SignUp from "../../pages/website/SignUp";
 import { isAuthenticate } from "../../utils/LocalStorage";
-
+import {useNavigate} from 'react-router-dom'
+import {message} from 'antd'
 const Header = () => {
+
+  const navigate = useNavigate()
   const [auth,setAuth] =  useState(false)
   const [user,setUser] = useState({})
   useEffect(()=>{
@@ -40,7 +43,7 @@ const Header = () => {
   const checkInUp = () => {
     console.log(ismolDal);
     if (ismolDal === "signin") {
-      return <SignIn />;
+      return <SignIn/>;
     } else {
       return <SignUp />;
     }
@@ -50,6 +53,13 @@ const Header = () => {
     console.log("Clicked cancel button");
     setOpen(false);
   };
+  const handleLogout = () =>{
+    console.log(1);
+    localStorage.removeItem('user')
+    message.success('Đăng xuất thành công.',2)
+    navigate('/')
+    setAuth(false)
+  }
   return (
     <>
       <div className="bg-[#005E2E] ">
@@ -89,6 +99,7 @@ const Header = () => {
                   </button>
                   <button
                     className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
+                    onClick={handleLogout}
                   >
                     Đăng xuất
                   </button>

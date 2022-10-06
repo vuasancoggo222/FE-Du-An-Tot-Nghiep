@@ -2,6 +2,8 @@ import { Table, Image, Space, Tooltip, Button } from "antd";
 import React from "react";
 import useService from "../../../hooks/use-service";
 import Description from "../../../components/admin/detaiservice";
+import { BiEdit } from "react-icons/bi";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -66,48 +68,47 @@ const columns = [
     title: "Action",
     dataIndex: "action",
     key: "action",
+    colapse: 2,
     render: (item) => {
       // Thêm
       let BtSusscesCursor;
-      let BtSusscessColor = "blue";
+      let BtSusscessColor = "#3b82f6";
       // hủy
       let BtFailureCursor;
       let BtFailureColor = "red";
       return (
-        <Space size="middle">
-          <Tooltip title="Thêm">
-            <Button
-              style={{
-                border: "none",
-                cursor: BtSusscesCursor,
-                color: BtSusscessColor,
-              }}
-              shape="circle"
-            >
-              <i
-                style={{ fontSize: "25px" }}
-                data="1"
-                className="far fa-check-circle"
-              ></i>
-            </Button>
-          </Tooltip>
-          <Tooltip title="Hủy">
-            <Button
-              style={{
-                border: "none",
-                cursor: BtFailureCursor,
-                color: BtFailureColor,
-              }}
-              shape="circle"
-            >
-              <i
-                style={{ fontSize: "25px" }}
-                data="2"
-                className="far fa-times-circle"
-              ></i>
-            </Button>
-          </Tooltip>
-        </Space>
+        <div className="text-center">
+          <Space size="middle">
+            <Tooltip title="Sửa">
+              <Button
+                style={{
+                  border: "none",
+                  cursor: BtSusscesCursor,
+                  color: BtSusscessColor,
+                }}
+                shape="circle"
+              >
+                <BiEdit style={{ fontSize: "25px" }} data="1" />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Hủy">
+              <Button
+                style={{
+                  border: "none",
+                  cursor: BtFailureCursor,
+                  color: BtFailureColor,
+                }}
+                shape="circle"
+              >
+                <i
+                  style={{ fontSize: "25px" }}
+                  data="2"
+                  className="far fa-times-circle"
+                ></i>
+              </Button>
+            </Tooltip>
+          </Space>
+        </div>
       );
     },
   },
@@ -117,19 +118,22 @@ const onChange = (pagination, filters, sorter, extra) => {
 };
 
 const ListService = () => {
-  const { data: service } = useService();
-  const data = service?.map((item) => {
-    return item;
-  });
-  console.log(data);
+  const { data, error } = useService();
+  if (!data) return <div>loading</div>;
+  if (error) return <div>Failed loading</div>;
   return (
     <>
       <div className="w-full px-6 py-6 mx-auto">
         <div>
-          <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-            List Booking
+          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
+            <div>Service</div>
           </h1>
         </div>
+        <Link to={"/admin/service/add"}>
+          <Button type="primary">Primary Button</Button>
+        </Link>
+      </div>
+      <div className="w-full px-6 py-6 mx-auto">
         <Table columns={columns} dataSource={data} onChange={onChange} />
       </div>
       ;

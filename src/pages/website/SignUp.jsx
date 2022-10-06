@@ -1,8 +1,9 @@
 import { Button,  Form, Input,message } from "antd";
-import React from "react";
+import React, { useState } from "react";
 import { register } from "../../api/user";
 
 const SignUp = () => {
+  const [auth,setAuth] = useState(false)
   const bgStaff = {
     width: "100%",
     height: "100%",
@@ -39,8 +40,9 @@ const SignUp = () => {
     try {
        await register(userValues)
        message.success('Đăng ký thành công')
+       setAuth(true)
     } catch (error) {
-      message.error('Lỗi đăng ký')
+      message.error(`${error.message}`,2)
     }
   };
 

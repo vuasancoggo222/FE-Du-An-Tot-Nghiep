@@ -3,7 +3,6 @@ import React from "react";
 import useService from "../../../hooks/use-service";
 import Description from "../../../components/admin/detaiservice";
 import { BiEdit } from "react-icons/bi";
-import AddService from "./Add";
 import { Link } from "react-router-dom";
 
 const columns = [

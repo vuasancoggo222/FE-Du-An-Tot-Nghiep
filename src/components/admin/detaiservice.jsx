@@ -20,9 +20,9 @@ const Description = (props) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  // chờ
+  // chi tiết
   let BtWaitCursor;
-  let BtWaitColor = "#e4ed36";
+  let BtWaitColor = "green";
 
   return (
     <>

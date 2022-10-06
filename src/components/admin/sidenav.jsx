@@ -146,43 +146,6 @@ const Sidenav = () => {
             </li>
           </ul>
         </div>
-        <div className="mx-4">
-          {/* load phantom colors for card after: */}
-          <div className="relative flex flex-col min-w-0 break-words bg-transparent border-0 shadow-none rounded-2xl bg-clip-border">
-            <img
-              className="w-1/2 mx-auto"
-              src="../assets/img/illustrations/icon-documentation.svg"
-              alt="sidebar illustrations"
-            />
-            <div className="flex-auto w-full p-4 pt-0 text-center">
-              <div className="transition-all duration-200 ease-nav-brand">
-                <h6 className="mb-0 dark:text-white text-slate-700">
-                  Need help?
-                </h6>
-                <p className="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
-                  Please check our docs
-                </p>
-              </div>
-            </div>
-          </div>
-          <Link
-            href="https://www.creative-tim.com/learning-lab/tailwind/html/quick-start/argon-dashboard/"
-            target="_blank"
-            className="inline-block w-full px-8 py-2 mb-4 text-xs font-bold leading-normal text-center text-white capitalize transition-all ease-in rounded-lg shadow-md bg-slate-700 bg-150 hover:shadow-xs hover:-translate-y-px"
-            rel="noreferrer"
-          >
-            Documentation
-          </Link>
-          {/* pro btn  */}
-          <Link
-            className="inline-block w-full px-8 py-2 text-xs font-bold leading-normal text-center text-white align-middle transition-all ease-in bg-blue-500 border-0 rounded-lg shadow-md select-none bg-150 bg-x-25 hover:shadow-xs hover:-translate-y-px"
-            href="https://www.creative-tim.com/product/argon-dashboard-pro-tailwind?ref=sidebarfree"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Upgrade to pro
-          </Link>
-        </div>
       </aside>
     </>
   );

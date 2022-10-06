@@ -14,12 +14,12 @@ import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
 import { httpGetAllShift } from "./api/shift";
 import { httpGetEmployees } from "./api/employee";
-
 import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
 import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
 import ListService from "./pages/admin/service";
+import AddService from "./pages/admin/service/Add";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -42,6 +42,7 @@ function App() {
       const res = await httpGetAllService();
       setService(res);
     };
+
     getService();
     const getShift = async () => {
       const res = await httpGetAllShift();
@@ -101,6 +102,7 @@ function App() {
             </Route>
             <Route path="service">
               <Route index element={<ListService />} />
+              <Route path="add" element={<AddService />} />
             </Route>
           </Route>
         </Routes>

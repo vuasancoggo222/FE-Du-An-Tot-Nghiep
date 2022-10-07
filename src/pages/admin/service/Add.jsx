@@ -1,9 +1,10 @@
 import { Button, Form, Input, Upload, Select, message } from "antd";
-import React from "react";
+import React, { useState } from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
 import { httpPost } from "../../../api/services";
-import { Link, useNavigate } from "react-router-dom";
+import { Await, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 const normFile = (e) => {
   console.log("Upload event:", e);
 
@@ -15,6 +16,8 @@ const normFile = (e) => {
 };
 const { Option } = Select;
 const AddService = () => {
+  const [url,setUrl] = useState('')
+
   const navigate = useNavigate();
   // const { create } = useService();
   const create = async (data) => {
@@ -27,20 +30,73 @@ const AddService = () => {
       message.error(`${error.response.data.message}`, 4);
     }
   };
-  const onFinish = async (data) => {
+  const uploadImage = async (options) => {
+    const { onSuccess, onError, file } = options;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "my_upload");
     try {
-      await create(data).then(() => {
-        message.success("Đặt lịch thành công", 4);
-      });
-    } catch (error) {
-      message.error(`${error.response.data.message}`, 4);
+      const res = await axios({
+        url: "https://api.cloudinary.com/v1_1/trung9901/image/upload",
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-formendcoded",
+        },
+        data: formData,
+      }
+  
+      );
+      onSuccess('Ok');
+      message.success("Upload successfully !")
+      console.log("server res: ", res);
+      setUrl( res.data.secure_url)
+    } catch (err) {
+      console.log("Error: ", err);
+      const error = new Error("Some error");
+      onError({ err });
     }
+  };
+  const onFinish = async (data) => {
+    // try {
+    //   await create(data).then(() => {
+    //     message.success("Đặt lịch thành công", 4);
+    //   });
+    // } catch (error) {
+    //   message.error(`${error.response.data.message}`, 4);
+    // }
+   
+
+    // console.log(imageFile);
+    console.log(url);
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+  // ------------------------------
 
+  const setting = {
+    name: "file",
+    beforeUpload: (file) => {
+      const isPNG = file.type === "image/png";
+      const isJPG = file.type === "image/jpg";
+      const isJPEG = file.type === "image/jpeg";
+      if (!isPNG && !isJPG && !isJPEG) {
+        message.error(`không đúng định dạng ảnh`);
+      }
+
+      return isPNG, isJPG, isJPEG || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      // setImageFile(info);
+  
+
+    },
+    listType: "picture-card",
+    maxCount: 1,
+    onDrop: true,
+    
+  };
   return (
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
@@ -88,15 +144,12 @@ const AddService = () => {
               getValueFromEvent={normFile}
               noStyle
             >
-              <Upload.Dragger name="files" action="/upload.do">
+              <Upload.Dragger {...setting}   customRequest={uploadImage}  >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
                   Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint">
-                  Support for a single or bulk upload.
                 </p>
               </Upload.Dragger>
             </Form.Item>

@@ -24,9 +24,11 @@ import { PrivateRouter } from "./utils/PrivateRouter";
 
 
 import ListService from "./pages/admin/service";
+import VerifyPage from "./pages/website/VerifyPage";
 
 
 function App() {
+  
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
@@ -71,6 +73,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
+            <Route path="/verify" element={<VerifyPage/>}/>
           </Route>
           <Route path="admin" element={<PrivateRouter><AdminLayout/></PrivateRouter>}>
             <Route index element={<Dashboard />} />

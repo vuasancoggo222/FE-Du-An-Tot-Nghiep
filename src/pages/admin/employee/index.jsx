@@ -1,9 +1,22 @@
-import React from 'react'
+import React, { useState,useEffect } from "react";
 import { Link } from 'react-router-dom'
-
+import {httpGetEmployees} from '../../../api/employee'
 
 
 const ListEmployee = () => {
+
+    const [employees,setEmployees] = useState()
+    useEffect(()=>{
+        
+        const getEmployee = async () => {
+          const res = await httpGetEmployees();
+          console.log(res);
+          setEmployees(res);
+        };
+        getEmployee();
+    })
+
+
     return (
         <>
             <div className="w-full px-6 py-6 mx-auto">

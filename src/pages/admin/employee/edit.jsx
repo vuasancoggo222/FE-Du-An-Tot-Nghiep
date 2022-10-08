@@ -1,145 +1,103 @@
-import React from 'react'
+import { Button, Form, Input, Upload, Select, message } from "antd";
+import React, { useState } from "react";
+
+import { httpPost } from "../../../api/services";
+import { Await, Link, useNavigate } from "react-router-dom";
 
 const EditEmployee = () => {
-  return (
-    <div>
-          <div>
-                <h1 className="mb-0 font-bold text-white capitalize text-center text-[50px]">Sửa Thông Tin Nhân Viên</h1>
-            </div>
-            <div className="flex items-center justify-center pt-52 pb-16 ">
+    const [url, setUrl] = useState("");
 
-                <div className="mx-auto w-full max-w-[950px]">
-                    <form action="https://formbold.com/s/FORM_ID" method="POST">
-                    <div className="mb-5">
-                            <label
-                                htmlFor="guest"
-                                className="mb-3 block text-base font-medium text-[#07074D]"
-                            >
-                               Họ và Tên
-                            </label>
-                            <input
-                                type="text"
-                                name="guest"
-                                id="guest"
-                                placeholder=""
-                                min="0"
-                                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-1.5 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            />
-                        </div>
-                        <div className="mb-5">
-                            <label
-                                htmlFor="guest"
-                                className="mb-3 block text-base font-medium text-[#07074D]"
-                            >
-                               Email
-                            </label>
-                            <input
-                                type="text"
-                                name="guest"
-                                id="guest"
-                                placeholder=""
-                                min="0"
-                                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-1.5 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            />
-                        </div>
-                        <div className="mb-5">
-                            <label
-                                htmlFor="guest"
-                                className="mb-3 block text-base font-medium text-[#07074D]"
-                            >
-                               Phone
-                            </label>
-                            <input
-                                type="text"
-                                name="guest"
-                                id="guest"
-                                placeholder=""
-                                min="0"
-                                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-1.5 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            />
-                        </div>
-                        <div className="mb-5">
-                            <label
-                                htmlFor="guest"
-                                className="mb-3 block text-base font-medium text-[#07074D]"
-                            >
-                               CCCD/CMND
-                            </label>
-                            <input
-                                type="text"
-                                name="guest"
-                                id="guest"
-                                placeholder=""
-                                min="0"
-                                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-1.5 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            />
-                        </div>
-                        <div className="mb-5">
-                            <label
-                                htmlFor="guest"
-                                className="mb-3 block text-base font-medium text-[#07074D]"
-                            >
-                              Ảnh
-                            </label>
-                            <input
-                                type="file"
-                                name="guest"
-                                id="guest"
-                                placeholder=""
-                                min="0"
-                                className="w-full appearance-none rounded-md border border-[#e0e0e0] bg-white py-1.5 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            />
-                        </div>
+    const navigate = useNavigate();
+    // const { create } = useService();
+    const create = async (data) => {
+        try {
+            await httpPost("/service", data).then(() => {
+                message.success("Thêm dịch vụ thành công", 4);
+                navigate("/admin/service");
+            });
+        } catch (error) {
+            message.error(`${error.response.data.message}`, 4);
+        }
+    };
+    const onFinish = async (data) => {
+        const servicePost = { ...data, image: url };
+        await create(servicePost);
+        // console.log(imageFile);
+        console.log(servicePost);
+    };
 
-                        
-                        <div className="mb-5">
-                            <label className="mb-3 block text-base font-medium text-[#07074D]">
-                                Giới Tính
-                            </label>
-                            <div className="flex items-center space-x-6">
-                                <div className="flex items-center">
-                                    <input
-                                        type="radio"
-                                        name="radio1"
-                                        id="radioButton1"
-                                        className="h-5 w-5"
-                                    />
-                                    <label
-                                        htmlFor="radioButton1"
-                                        className="pl-3 text-base font-medium text-[#07074D]"
-                                    >
-                                        Nam
-                                    </label>
-                                </div>
-                                <div className="flex items-center">
-                                    <input
-                                        type="radio"
-                                        name="radio1"
-                                        id="radioButton2"
-                                        className="h-5 w-5"
-                                    />
-                                    <label
-                                        htmlFor="radioButton2"
-                                        className="pl-3 text-base font-medium text-[#07074D]"
-                                    >
-                                        Nữ
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <button
-                                className="hover:shadow-form rounded-md bg-[#6A64F1] py-2 px-8 text-center text-base font-semibold text-white outline-none"
-                            >
-                                Update
-                            </button>
-                        </div>
-                    </form>
+    const onFinishFailed = (errorInfo) => {
+        console.log("Failed:", errorInfo);
+    };
+    // ------------------------------
+    return (
+        <>
+            <div className="w-[1200px] px-6 py-6 m-auto">
+                <div>
+                    <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
+                        <div>Update Employee</div>
+                    </h1>
                 </div>
             </div>
-    </div>
-  )
-}
 
-export default EditEmployee
+            <div className=" px-6 py-6 ml-[30px]  ">
+                <div className="mt-[150px] my-[20px]">
+                </div>
+                <Form
+                    className="m-auto text-center"
+                    name="basic"
+                    labelCol={{ span: 4, offset: 5 }}
+                    wrapperCol={{ span: 15, offset: 5 }}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                    layout="vertical"
+                >
+                    <Form.Item
+                        label="User Name"
+                        name="name"
+                        rules={[{ required: true, message: "Please input your username!" }]}
+                    >
+                        <Input type="text" />
+                    </Form.Item>
+                    <Form.Item
+                        label="User PhoneNumber"
+                        name="phoneNumber"
+                        rules={[{ required: true, message: "Please input your username!" }]}
+                    >
+                        <Input type="text" />
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        label="Your Password"
+                        rules={[{ required: true, message: "Please input your number" }]}
+                    >
+                        <Input type="text" />
+                    </Form.Item>
+                    <Form.Item
+                        name="age"
+                        label="Your Age"
+                        hasFeedback
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please select your status",
+                            },
+                        ]}
+                    >
+                        <Input type="text" />
+                    </Form.Item>
+
+                    <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
+        </>
+    );
+};
+
+export default EditEmployee;

@@ -16,7 +16,7 @@ const normFile = (e) => {
 };
 const { Option } = Select;
 const AddService = () => {
-  const [url,setUrl] = useState('')
+  const [url, setUrl] = useState("");
 
   const navigate = useNavigate();
   // const { create } = useService();
@@ -40,16 +40,14 @@ const AddService = () => {
         url: "https://api.cloudinary.com/v1_1/trung9901/image/upload",
         method: "POST",
         headers: {
-            "Content-Type": "application/x-www-formendcoded",
+          "Content-Type": "application/x-www-formendcoded",
         },
         data: formData,
-      }
-  
-      );
-      onSuccess('Ok');
-      message.success("Upload successfully !")
+      });
+      onSuccess("Ok");
+      message.success("Upload successfully !");
       console.log("server res: ", res);
-      setUrl( res.data.secure_url)
+      setUrl(res.data.secure_url);
     } catch (err) {
       console.log("Error: ", err);
       const error = new Error("Some error");
@@ -57,8 +55,8 @@ const AddService = () => {
     }
   };
   const onFinish = async (data) => {
-      const servicePost = {...data,image:url }
-      await create(servicePost)
+    const servicePost = { ...data, image: url };
+    await create(servicePost);
     // console.log(imageFile);
     console.log(servicePost);
   };
@@ -82,13 +80,10 @@ const AddService = () => {
     },
     onChange: (info) => {
       // setImageFile(info);
-  
-
     },
     listType: "picture-card",
     maxCount: 1,
     onDrop: true,
-    
   };
   return (
     <>
@@ -99,6 +94,7 @@ const AddService = () => {
           </h1>
         </div>
       </div>
+
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
           <Link to={"/admin/service/add"}>
@@ -121,7 +117,7 @@ const AddService = () => {
             name="name"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input />
+            <Input value="lethetam" />
           </Form.Item>
           <Form.Item
             name="price"
@@ -137,7 +133,7 @@ const AddService = () => {
               getValueFromEvent={normFile}
               noStyle
             >
-              <Upload.Dragger {...setting}   customRequest={uploadImage}  >
+              <Upload.Dragger {...setting} customRequest={uploadImage}>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>

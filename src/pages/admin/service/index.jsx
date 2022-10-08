@@ -66,10 +66,11 @@ const columns = [
   },
   {
     title: "Action",
-    dataIndex: "action",
+    dataIndex: "_id",
     key: "action",
     colapse: 2,
     render: (item) => {
+      console.log(item);
       // Thêm
       let BtSusscesCursor;
       let BtSusscessColor = "#3b82f6";
@@ -80,18 +81,22 @@ const columns = [
         <div className="text-center">
           <Space size="middle">
             <Tooltip title="Sửa">
-              <Button
-                style={{
-                  border: "none",
-                  cursor: BtSusscesCursor,
-                  color: BtSusscessColor,
-                }}
-                shape="circle"
-              >
-                <BiEdit style={{ fontSize: "25px" }} data="1" />
-              </Button>
+              <Link to={`/admin/service/${item}/edit`}>
+                {" "}
+                <Button
+                  style={{
+                    border: "none",
+                    cursor: BtSusscesCursor,
+                    color: BtSusscessColor,
+                  }}
+                  shape="circle"
+                >
+                  <BiEdit style={{ fontSize: "25px" }} data="1" />
+                </Button>
+              </Link>
             </Tooltip>
-            <Tooltip title="Xóa">
+            <Tooltip title="Hủy">
+              <Link to={`/admin/service/${item}/remove`}></Link>
               <Button
                 style={{
                   border: "none",
@@ -106,6 +111,7 @@ const columns = [
                   className="far fa-times-circle"
                 ></i>
               </Button>
+              <Link />
             </Tooltip>
           </Space>
         </div>

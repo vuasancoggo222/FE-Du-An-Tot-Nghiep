@@ -32,13 +32,7 @@ const ListBooking = (props) => {
         }
     })
     // eslint-disable-next-line react/prop-types
-    const shift = props.dataShift?.shift.map((item) => {
-        return {
-            text: item.shiftName,
-            value: item.shiftName,
-        }
-    })
-    console.log(shift);
+  
     // eslint-disable-next-line react/prop-types
     console.log(props);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -393,7 +387,6 @@ const ListBooking = (props) => {
             phoneNumber: item.phoneNumber,
             status: item.status,
             date: item.date,
-            shiftId: item.shiftId.shiftName,
             employeeId: item.employeeId.name,
             serviceId: item.serviceId.name,
             action: (item)
@@ -413,7 +406,6 @@ const ListBooking = (props) => {
             <p>Tên Khách hàng: {handleBooking?.name}</p>
             <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
             <p>Ngày: {handleBooking?.date}</p>
-            <p>Giờ: {handleBooking?.shiftId.shiftName}</p>
             <p>Nhân viên: {handleBooking?.employeeId.name}</p>
             <p>Dịch vụ: {handleBooking?.serviceId.name}</p>
             <p>Note: {handleBooking?.note}</p>

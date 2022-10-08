@@ -10,7 +10,6 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/admin/dashboard";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
-import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
 import { httpGetAllShift } from "./api/shift";
 import { httpGetEmployees } from "./api/employee";
@@ -71,7 +70,7 @@ function App() {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="booking">
-              <Route index element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} />
+              {/* <Route index element={<ListBooking handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} /> */}
               <Route path="employee" element={<ListBookingByEmployee handleChangeStatus={changeStatusBooking} dataBooking={booking} dataEmployy={employees} dataService={service} dataShift={shift} />} />
             </Route>
             <Route path="employee">

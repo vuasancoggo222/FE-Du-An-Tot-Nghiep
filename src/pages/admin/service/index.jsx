@@ -1,131 +1,143 @@
 import { Table, Image, Space, Tooltip, Button } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useService from "../../../hooks/use-service";
 import Description from "../../../components/admin/detaiservice";
 import { BiEdit } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { removeService } from "../../../api/service";
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    filters: [
-      {
-        text: "Joe",
-        value: "Joe",
-      },
-      {
-        text: "Jim",
-        value: "Jim",
-      },
-      {
-        text: "Submenu",
-        value: "Submenu",
-        children: [
-          {
-            text: "Green",
-            value: "Green",
-          },
-          {
-            text: "Black",
-            value: "Black",
-          },
-        ],
-      },
-    ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value, record) => record.name.indexOf(value) === 0,
-    sorter: (a, b) => a.name.length - b.name.length,
-    sortDirections: ["descend"],
-  },
-
-  {
-    title: "price",
-    dataIndex: "price",
-  },
-  {
-    title: "image",
-    dataIndex: "image",
-    render: (image) => <Image width={200} src={image} key={image} />,
-  },
-  {
-    title: "status",
-    dataIndex: "status",
-  },
-  {
-    title: "description",
-
-    render: (item) => {
-      return (
-        <>
-          <Description ondetail={item.description} />
-        </>
-      );
+const ListService = () => {
+  const { data: services, error } = useService();
+  const [data, setData] = useState();
+  useEffect(() => {
+    setData(services);
+  }, []);
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      filters: [
+        {
+          text: "Joe",
+          value: "Joe",
+        },
+        {
+          text: "Jim",
+          value: "Jim",
+        },
+        {
+          text: "Submenu",
+          value: "Submenu",
+          children: [
+            {
+              text: "Green",
+              value: "Green",
+            },
+            {
+              text: "Black",
+              value: "Black",
+            },
+          ],
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      onFilter: (value, record) => record.name.indexOf(value) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
     },
-  },
-  {
-    title: "Action",
-    dataIndex: "_id",
-    key: "action",
-    colapse: 2,
-    render: (item) => {
-      console.log(item);
-      // Thêm
-      let BtSusscesCursor;
-      let BtSusscessColor = "#3b82f6";
-      // hủy
-      let BtFailureCursor;
-      let BtFailureColor = "red";
-      return (
-        <div className="text-center">
-          <Space size="middle">
-            <Tooltip title="Sửa">
-              <Link to={`/admin/service/${item}/edit`}>
-                {" "}
+
+    {
+      title: "price",
+      dataIndex: "price",
+    },
+    {
+      title: "image",
+      dataIndex: "image",
+      render: (image) => <Image width={200} src={image} key={image} />,
+    },
+    {
+      title: "status",
+      dataIndex: "status",
+    },
+    {
+      title: "description",
+
+      render: (item) => {
+        return (
+          <>
+            <Description ondetail={item.description} />
+          </>
+        );
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "_id",
+      key: "action",
+      colapse: 2,
+      render: (item) => {
+        console.log(item);
+        // Thêm
+        let BtSusscesCursor;
+        let BtSusscessColor = "#3b82f6";
+        // hủy
+        let BtFailureCursor;
+        let BtFailureColor = "red";
+        return (
+          <div className="text-center">
+            <Space size="middle">
+              <Tooltip title="Sửa">
+                <Link to={`/admin/service/${item}/edit`}>
+                  {" "}
+                  <Button
+                    style={{
+                      border: "none",
+                      cursor: BtSusscesCursor,
+                      color: BtSusscessColor,
+                    }}
+                    shape="circle"
+                  >
+                    <BiEdit style={{ fontSize: "25px" }} data="1" />
+                  </Button>
+                </Link>
+              </Tooltip>
+              <Tooltip title="Hủy">
+                <Link to={`/admin/service/${item}/remove`}></Link>
                 <Button
                   style={{
                     border: "none",
-                    cursor: BtSusscesCursor,
-                    color: BtSusscessColor,
+                    cursor: BtFailureCursor,
+                    color: BtFailureColor,
                   }}
                   shape="circle"
+                  onClick={() => onRemove(item)}
                 >
-                  <BiEdit style={{ fontSize: "25px" }} data="1" />
+                  <i
+                    style={{ fontSize: "25px" }}
+                    data="2"
+                    className="far fa-times-circle"
+                  ></i>
                 </Button>
-              </Link>
-            </Tooltip>
-            <Tooltip title="Hủy">
-              <Link to={`/admin/service/${item}/remove`}></Link>
-              <Button
-                style={{
-                  border: "none",
-                  cursor: BtFailureCursor,
-                  color: BtFailureColor,
-                }}
-                shape="circle"
-              >
-                <i
-                  style={{ fontSize: "25px" }}
-                  data="2"
-                  className="far fa-times-circle"
-                ></i>
-              </Button>
-              <Link />
-            </Tooltip>
-          </Space>
-        </div>
-      );
+                <Link />
+              </Tooltip>
+            </Space>
+          </div>
+        );
+      },
     },
-  },
-];
-const onChange = (pagination, filters, sorter, extra) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
-
-const ListService = () => {
-  const { data, error } = useService();
-  if (!data) return <div>loading</div>;
+  ];
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+  const onRemove = async (id) => {
+    const confirm = window.confirm("Are you sure you want to delete");
+    if (confirm) {
+      await removeService(id);
+      setData(data.filter((item) => item._id !== id));
+    }
+  };
+  if (!services) return <div>loading</div>;
   if (error) return <div>Failed loading</div>;
   return (
     <>

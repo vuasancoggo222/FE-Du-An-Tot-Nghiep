@@ -9,7 +9,7 @@ export const createService = (data) => {
 
   return instance.post(url, data);
 };
-export const remove = (id, data) => {
+export const removeService = (id, data) => {
   const url = `service/${id}`;
   return instance.delete(url, data);
 };

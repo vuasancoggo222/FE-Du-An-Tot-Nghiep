@@ -23,7 +23,7 @@ const AddService = () => {
   const create = async (data) => {
     try {
       await httpPost("/service", data).then(() => {
-        message.success("Đặt lịch thành công", 4);
+        message.success("Thêm dịch vụ thành công", 4);
         navigate("/admin/service");
       });
     } catch (error) {
@@ -57,17 +57,10 @@ const AddService = () => {
     }
   };
   const onFinish = async (data) => {
-    // try {
-    //   await create(data).then(() => {
-    //     message.success("Đặt lịch thành công", 4);
-    //   });
-    // } catch (error) {
-    //   message.error(`${error.response.data.message}`, 4);
-    // }
-   
-
+      const servicePost = {...data,image:url }
+      await create(servicePost)
     // console.log(imageFile);
-    console.log(url);
+    console.log(servicePost);
   };
 
   const onFinishFailed = (errorInfo) => {

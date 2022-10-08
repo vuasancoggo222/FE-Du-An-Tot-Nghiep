@@ -91,7 +91,7 @@ const columns = [
                 <BiEdit style={{ fontSize: "25px" }} data="1" />
               </Button>
             </Tooltip>
-            <Tooltip title="Hủy">
+            <Tooltip title="Xóa">
               <Button
                 style={{
                   border: "none",

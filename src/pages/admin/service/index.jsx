@@ -7,11 +7,8 @@ import { Link } from "react-router-dom";
 import { removeService } from "../../../api/service";
 
 const ListService = () => {
-  const { data: services, error } = useService();
-  const [data, setData] = useState();
-  useEffect(() => {
-    setData(services);
-  }, []);
+  const { data, error } = useService();
+
   const columns = [
     {
       title: "Name",
@@ -134,10 +131,10 @@ const ListService = () => {
     const confirm = window.confirm("Are you sure you want to delete");
     if (confirm) {
       await removeService(id);
-      setData(data.filter((item) => item._id !== id));
+      data.filter((item) => item._id !== id);
     }
   };
-  if (!services) return <div>loading</div>;
+  if (!data) return <div>loading</div>;
   if (error) return <div>Failed loading</div>;
   return (
     <>

@@ -20,7 +20,7 @@ const ServiceModal = (props) => {
   // ----------------------------
   const [service, setService] = useState();
   let options = [];
-  service?.map((item) => options.push({ value: item._id, label: item.name }));
+  service?.map((item) => options.push({ value: item._id, label: item.name}));
 
   const [dataUptoForm, setdataUptoForm] = useState({});
   const onChange = (checkedValues) => {
@@ -38,7 +38,7 @@ const ServiceModal = (props) => {
   }, []);
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" style={{backgroundColor: '#00502b', border: 'none' }} onClick={showModal}>
         Danh sách dịch vụ
       </Button>
       <Modal
@@ -47,8 +47,9 @@ const ServiceModal = (props) => {
         onOk={handleOk}
         onCancel={handleCancel}
         centered
+        
       >
-        <Radio.Group options={options} onChange={onChange} buttonStyle="solid" />
+        <Radio.Group options={options} onChange={onChange} buttonStyle="solid"  />
       </Modal>
     </>
   );

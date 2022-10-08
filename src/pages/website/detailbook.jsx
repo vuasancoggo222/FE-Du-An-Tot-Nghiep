@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Select, DatePicker, message } from "antd";
 import useEmployee from "../../hooks/use-employee";
-import { httpGetAll } from "../../api/shift";
+import { httpGetAllShift } from "../../api/shift";
 import { httpGetOne, httpAddShift } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
 import { httpGetOneService } from "../../api/services";
 
 const Detaibooking = () => {
-  const navigate = useNavigate()
-  const { id } = useParams()
+  const navigate = useNavigate();
+  const { id } = useParams();
   const { data: employees, error } = useEmployee();
   const [shift, setShift] = useState();
   const [dateBooking, seDateBooking] = useState();
@@ -21,14 +21,20 @@ const Detaibooking = () => {
     console.log(employeeBooking);
     try {
       console.log(service._id);
-      await httpAddBooking({ ...data, date: dateBooking, serviceId: service._id })
-      await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })  
-      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
-      navigate('/');  
+      await httpAddBooking({
+        ...data,
+        date: dateBooking,
+        serviceId: service._id,
+      });
+      await httpAddShift(data.employeeId, {
+        shiftId: data?.shiftId,
+        date: dateBooking,
+      });
+      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã");
+      navigate("/");
     } catch (error) {
-      message.error(`${error.response.data.message}`)
+      message.error(`${error.response.data.message}`);
     }
- 
   };
   const layout = {
     labelCol: {
@@ -49,22 +55,6 @@ const Detaibooking = () => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-  // const disabledDate = (current) => {
-  //   // Can not select days before today and today
-  //   return current && current < moment().endOf("day");
-  // };
-
-  // const { RangePicker } = DatePicker;
-
-  // const range = (start, end) => {
-  //   const result = [];
-
-  //   for (let i = start; i < end; i++) {
-  //     result.push(i);
-  //   }
-
-  //   return result;
-  // };
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -78,36 +68,26 @@ const Detaibooking = () => {
       </Select>
     </Form.Item>
   );
-  // ------------------------------------------------------------------------------------------------
 
   const onOk = (value) => {
-    // console.log("...."+ employeeBooking);
-
     console.log("onOk: ", value);
-
   };
   const onChange1 = (value, dateString) => {
     console.log("Selected Time: ", value);
-    seDateBooking(Number(dateString.replace("-", "").replace("-", "")))
-    // console.log(moment(dateString).format("X")); 
-    // const query = moment(dateString).format("X");
-    // console.log(a);
-    // const a = getEmployeeByBookingDays(1063040400);
-    // setShift(a);
+    seDateBooking(Number(dateString.replace("-", "").replace("-", "")));
   };
-  // console.log(shift);
-  // ------------------------------------------------------------------------------------------------
+
   // eslint-disable-next-line no-unused-vars
   const [open, setOpen] = useState(false);
   const onChangeSelected = async (e) => {
     console.log(e);
     // await setEmployeeBooking(employees[e]);
-    const employeesOne = await httpGetOne(e)
+    const employeesOne = await httpGetOne(e);
     console.log(employeesOne);
     setEmployeeBooking(employeesOne);
-    
-  if (!employees) return <div>Loading...</div>;
-  if (error) return <div>Failed to loading</div>;
+
+    if (!employees) return <div>Loading...</div>;
+    if (error) return <div>Failed to loading</div>;
   };
   const onHandleAdd = (value) => {
     console.log("cha:", value);
@@ -115,19 +95,19 @@ const Detaibooking = () => {
 
   useEffect(() => {
     const getShift = async () => {
-      const data = await httpGetAll();
+      const data = await httpGetAllShift();
       console.log(data.shift);
-      setShift(data.shift)
-    }
-    getShift()
+      setShift(data.shift);
+    };
+    getShift();
 
     const getSerVice = async () => {
       const data = await httpGetOneService(id);
       console.log(data);
-      setService(data)
-    }
-    getSerVice()
-  }, [])
+      setService(data);
+    };
+    getSerVice();
+  }, []);
   return (
     <>
       <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cole-keister-8V1gfeaPP1Y-unsplash.jpg')] b-centerg bg-no-repeat bg-cover py-[100px] ">
@@ -240,7 +220,6 @@ const Detaibooking = () => {
 
                   {/* Tên */}
 
-
                   {/* SĐT */}
                   <Form.Item
                     name={["data", "phoneNumber"]}
@@ -249,7 +228,7 @@ const Detaibooking = () => {
                       {
                         required: true,
                         pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
-                        message: "Số điện thoại không đúng định dạng!"
+                        message: "Số điện thoại không đúng định dạng!",
                       },
                     ]}
                   >
@@ -269,8 +248,11 @@ const Detaibooking = () => {
                       },
                     ]}
                   >
-
-                    <Input value={service?._id} placeholder={service?.name} disabled />
+                    <Input
+                      value={service?._id}
+                      placeholder={service?.name}
+                      disabled
+                    />
                   </Form.Item>
                   {/* chọn nhân viên */}
                   {/* <Form.Item
@@ -287,7 +269,6 @@ const Detaibooking = () => {
                   </Select>
                 </Form.Item> */}
                   {/* Các dịch vụ */}
-
 
                   {/* Chọn ngày đặt lich */}
                   <Form.Item
@@ -322,11 +303,10 @@ const Detaibooking = () => {
                           {item.name}
                           <div
                             className=""
-                          // onClick={() => {
-                          //   setOpen(true);
-                          // }}
-                          >
-                          </div>
+                            // onClick={() => {
+                            //   setOpen(true);
+                            // }}
+                          ></div>
                         </Select.Option>
                       ))}
                     </Select>
@@ -346,25 +326,27 @@ const Detaibooking = () => {
 
                         employeeBooking?.timeWork.map((itemStaff) => {
                           if (itemStaff.date === dateBooking) {
-                            if (item._id === itemStaff.shiftId)
-                              checkIs = false
-                            return
+                            if (item._id === itemStaff.shiftId) checkIs = false;
+                            return;
                           }
-                        }
-                        )
+                        });
                         if (checkIs)
                           return (
                             <Select.Option value={item._id} key={index}>
-                              {item.shiftName + "(" + item.timeStart + "-" + item.timeEnd + ")"}
+                              {item.shiftName +
+                                "(" +
+                                item.timeStart +
+                                "-" +
+                                item.timeEnd +
+                                ")"}
                               <div
                                 className=""
-                              // onClick={() => {
-                              //   setOpen(true);
-                              // }}
-                              >
-                              </div>
+                                // onClick={() => {
+                                //   setOpen(true);
+                                // }}
+                              ></div>
                             </Select.Option>
-                          )
+                          );
                       })}
                     </Select>
                   </Form.Item>
@@ -373,7 +355,11 @@ const Detaibooking = () => {
                     <Input.TextArea />
                   </Form.Item>
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: "#00502b", border: "none" }}
+                      htmlType="submit"
+                    >
                       Đặt lịch
                     </Button>
                   </Form.Item>

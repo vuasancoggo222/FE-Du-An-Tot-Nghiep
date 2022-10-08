@@ -2,8 +2,8 @@ import { Button, Form, Input, Upload, Select, message } from "antd";
 import React from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
-import { httpPost } from "../../../api/services";
 import { Link, useNavigate } from "react-router-dom";
+import { createService } from "../../../api/service";
 const normFile = (e) => {
   console.log("Upload event:", e);
 
@@ -17,20 +17,12 @@ const { Option } = Select;
 const AddService = () => {
   const navigate = useNavigate();
   // const { create } = useService();
-  const create = async (data) => {
-    try {
-      await httpPost("/service", data).then(() => {
-        message.success("Đặt lịch thành công", 4);
-        navigate("/admin/service");
-      });
-    } catch (error) {
-      message.error(`${error.response.data.message}`, 4);
-    }
-  };
+
   const onFinish = async (data) => {
     try {
-      await create(data).then(() => {
-        message.success("Đặt lịch thành công", 4);
+      await createService(data).then(() => {
+        message.success("them thành công", 4);
+        navigate("/admin/service");
       });
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
@@ -50,6 +42,7 @@ const AddService = () => {
           </h1>
         </div>
       </div>
+
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
           <Link to={"/admin/service/add"}>
@@ -72,7 +65,7 @@ const AddService = () => {
             name="name"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
-            <Input />
+            <Input value="lethetam" />
           </Form.Item>
           <Form.Item
             name="price"

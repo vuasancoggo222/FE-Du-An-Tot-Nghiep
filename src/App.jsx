@@ -21,6 +21,7 @@ import ListBookingByEmployee from "./pages/admin/booking/employee";
 import ListService from "./pages/admin/service";
 import AddService from "./pages/admin/service/Add";
 import { PrivateRouter } from "./utils/PrivateRouter";
+import EditService from "./pages/admin/service/Edit";
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -108,8 +109,12 @@ function App() {
               <Route path="add" element={<AddEmployee />} />
             </Route>
             <Route path="service">
-              <Route index element={<ListService />} />
-              <Route path="add" element={<AddService />} />
+              <Route index element={<ListService dataEmployy={employees} />} />
+              <Route
+                path="add"
+                element={<AddService dataEmployy={employees} />}
+              />
+              <Route path=":id/edit" element={<EditService />} />
             </Route>
           </Route>
         </Routes>

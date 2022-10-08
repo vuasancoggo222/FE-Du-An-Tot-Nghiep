@@ -38,7 +38,7 @@ const menu = (
     />
 );
 
-function Contact() {
+function AddNewEmployee() {
     const [form] = Form.useForm();
     const onFinish = (values) => {
         console.log('Success:', values);
@@ -138,4 +138,4 @@ function Contact() {
     );
 }
 
-export default Contact;
+export default AddNewEmployee;

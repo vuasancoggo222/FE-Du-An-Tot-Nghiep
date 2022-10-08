@@ -21,14 +21,8 @@ import ListBookingByEmployee from "./pages/admin/booking/employee";
 import ListService from "./pages/admin/service";
 import AddService from "./pages/admin/service/Add";
 import { PrivateRouter } from "./utils/PrivateRouter";
-
-
-
-import ListService from "./pages/admin/service";
-
-
+import EditService from "./pages/admin/service/Edit";
 function App() {
-  
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
@@ -74,7 +68,6 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
-            <Route path="/verify" element={<VerifyPage/>}/>
           </Route>
           <Route
             path="admin"

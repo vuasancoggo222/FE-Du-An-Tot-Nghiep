@@ -2,6 +2,7 @@ import { Table, Image, Space, Tooltip, Button } from "antd";
 import React from "react";
 import { BiEdit } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { removeEmployees } from "../../../api/employee";
 import useEmployee from "../../../hooks/use-employee";
 
 const columns = [
@@ -76,7 +77,7 @@ const columns = [
                   color: BtFailureColor,
                 }}
                 shape="circle"
-         
+                onClick={() => onRemove(item)}
               >
                 <i
                   style={{ fontSize: "25px" }}
@@ -95,7 +96,13 @@ const columns = [
 const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
-
+const onRemove = async (id) => {
+    const confirm = window.confirm("Are you sure you want to delete");
+    if (confirm) {
+      await removeEmployees(id);
+      data.filter((item) => item._id !== id);
+    }
+  };
 const ListService = () => {
   const { data, error } = useEmployee();
   if (!data) return <div>loading</div>;

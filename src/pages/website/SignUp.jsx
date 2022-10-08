@@ -1,9 +1,11 @@
-import { Button,  Form, Input,message } from "antd";
+import { Button,  Form, Input,message, Select } from "antd";
+import { Option } from "antd/lib/mentions";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { register } from "../../api/user";
 
 const SignUp = () => {
-  const [auth,setAuth] = useState(false)
+  const navigate = useNavigate()
   const bgStaff = {
     width: "100%",
     height: "100%",
@@ -19,6 +21,13 @@ const SignUp = () => {
       span: 16,
     },
   };
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select style={{ width: 70 }}>
+        <Option value="84">+84</Option>
+      </Select>
+    </Form.Item>
+  );
   const validateMessages = {
     required: '${label} Không được bỏ trống!',
     types: {
@@ -31,18 +40,20 @@ const SignUp = () => {
     opacity: 0.8
   }
   const onFinish = async (values) => {
+    const phoneNumber = `${values.prefix}${values.phoneNumber.phoneNumber}`
     const userValues = {
       name: values.name.name,
-      phoneNumber: values.phoneNumber.phoneNumber,
+      phoneNumber: phoneNumber,
       password: values.password.password
     }
-    console.log(values.phoneNumber.phoneNumber, values.password.password);
+    console.log(userValues);
     try {
        await register(userValues)
        message.success('Đăng ký thành công')
-       setAuth(true)
+       navigate(`/verify?prefix=${values.prefix}&phone=${values.phoneNumber.phoneNumber}`)
     } catch (error) {
-      message.error(`${error.message}`,2)
+      console.log(error);
+      message.error(`${error.response.data.message}`,2)
     }
   };
 
@@ -83,11 +94,11 @@ const SignUp = () => {
                  label="PhoneNumber"
                 rules={[{
                   required: true,
-                  pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
+                  pattern: new RegExp(/((9|3|7|8|5)+([0-9]{8})\b)/g),
                   message:"Số điện thoại không đúng định dạng!"
                 }]}
               >
-                <Input/>
+                <Input addonBefore={prefixSelector} style={{ width: '100%' }}/>
               </Form.Item>
               <Form.Item
                 name={['password', 'password']}

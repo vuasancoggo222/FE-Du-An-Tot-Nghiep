@@ -7,9 +7,11 @@ const fetcher = async (url) => await instance.get(url);
 const endpoint = "/service";
 
 const useService = () => {
-  const { data, error, mutate } = useSWR(endpoint, fetcher, {
-    refreshInterval: 5000,
-  });
+  const {
+    data,
+    error,
+    mutate
+  } = useSWR(endpoint, fetcher)
   const create = async (data) => {
     const revalidate = await method.httpPost(endpoint, data);
     mutate(revalidate);

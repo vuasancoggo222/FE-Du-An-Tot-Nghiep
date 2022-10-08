@@ -2,10 +2,10 @@ import { Button, Modal, Tooltip, Space } from "antd";
 import React, { useState } from "react";
 
 const Description = (props) => {
-  // eslint-disable-next-line react/prop-types
+
   const data = props.ondetail;
-  console.log(data);
-  // eslint-disable-next-line react/prop-types
+  // console.log(data);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -20,9 +20,9 @@ const Description = (props) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  // chờ
+  // chi tiết
   let BtWaitCursor;
-  let BtWaitColor = "#e4ed36";
+  let BtWaitColor = "green";
 
   return (
     <>

@@ -19,7 +19,7 @@ export const httpChangeStatusTimeWork= (id, date, shift, data) => {
     return instance.patch(`employees/update-employee-shift/${id}?date=${date}&shift=${shift}`, data);
 };
 
-export const removehttpGetEmployees = (id, data) => {
+export const removeEmployees = (id, data) => {
     const url = `employees/${id}`;
     return instance.delete(url, data);
   };

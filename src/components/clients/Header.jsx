@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
-import { Modal } from "antd";
+import { Avatar, Dropdown, Menu, Modal } from "antd";
 import SignIn from "../../pages/website/SignIn";
 import SignUp from "../../pages/website/SignUp";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import {useNavigate} from 'react-router-dom'
 import {message} from 'antd'
-const Header = () => {
 
+
+const Header = () => {
+  
   const navigate = useNavigate()
   const [auth,setAuth] =  useState(false)
   const [user,setUser] = useState({})
@@ -60,6 +62,34 @@ const Header = () => {
     navigate('/')
     setAuth(false)
   }
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: '1',
+          label: (
+            <Link to="user-information/me">
+              Hồ sơ của tôi
+            </Link>
+          ),
+        },
+        {
+          key: '2',
+          label: (
+            <Link to="/booking-history/me">
+              Lịch sử đặt lịch
+            </Link>
+          ),
+        },
+        {
+          key: '3',
+          label: (
+            <button onClick={handleLogout}>Đăng xuất</button>
+          ),
+        },
+      ]}
+    />
+  );
   return (
     <>
       <div className="bg-[#005E2E] ">
@@ -92,23 +122,14 @@ const Header = () => {
                   </Link>
                 </div>
                 {auth ? <div className="flex-auto">
-                  <button
-                    className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
-                  >
-                    <span> Xin chào,</span> {user.name}
-                  </button>
-                  <button
-                    className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
-                    onClick={handleLogout}
-                  >
-                    Đăng xuất
-                  </button>
-
-                  <button className=" mx-3 rounded-md bg-[#003C21]  border-2 border-emerald-500 px-3">
+                <button className=" mx-3 rounded-md bg-[#003C21] mr-5  border-2 border-emerald-500 px-3">
                     <Link className="text-[#fff]" to={`/booking`}>
                       Đặt Lịch
                     </Link>
                   </button>
+                <Dropdown overlay={menu} placement="bottom">
+                <Avatar  style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>{user.name.slice(0,2)}</Avatar>
+                </Dropdown>
                 </div>   : <div className="flex-auto">
                   <button
                     data="signin"

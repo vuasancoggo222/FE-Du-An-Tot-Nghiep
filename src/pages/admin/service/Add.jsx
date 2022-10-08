@@ -1,10 +1,9 @@
 import { Button, Form, Input, Upload, Select, message } from "antd";
 import React, { useState } from "react";
-
+import { uploadCloudinary } from "../../../api/upload";
 import { InboxOutlined } from "@ant-design/icons";
 import { httpPost } from "../../../api/services";
-import { Await, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 const normFile = (e) => {
   console.log("Upload event:", e);
 
@@ -36,14 +35,7 @@ const AddService = () => {
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
-      const res = await axios({
-        url: "https://api.cloudinary.com/v1_1/trung9901/image/upload",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-formendcoded",
-        },
-        data: formData,
-      });
+      const res = await uploadCloudinary(formData)
       onSuccess("Ok");
       message.success("Upload successfully !");
       console.log("server res: ", res);

@@ -18,6 +18,7 @@ const VerifyPage = () => {
     const prefix = query.get("prefix")
     console.log(phoneNumber,prefix);
     const navigate = useNavigate()
+    const [isSend,setIsSend] = useState(false)
     const [showInput,setShowInput] = useState(false)
     const [form] = Form.useForm();  
     const [form2] = Form.useForm()  
@@ -50,8 +51,10 @@ const VerifyPage = () => {
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
         const phoneNumber = `+${values.prefix}${values.phone}`
-      
             setShowInput(true)
+            setTimeout(() => {
+              setIsSend(true)
+            }, 1000);
             generateCaptcha()
             let appVerifier =  window.recaptchaVerifier
             signInWithPhoneNumber(auth, phoneNumber, appVerifier)
@@ -104,12 +107,14 @@ const VerifyPage = () => {
         <Form.Item
         name="phone"
         label="Số điện thoại">
-        <Input addonBefore={prefixSelector} style={{ width: '100%' }} readOnly/>
+        <Input addonBefore={prefixSelector} style={{ width: '80%' }} readOnly/>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
+      <Form.Item wrapperCol={{ offset: 8, span: 6 }}>
+        {isSend ? <><span>Chưa nhận được mã xác nhận ? <Button type="link" primary htmlType="submit">
+         Gửi lại 
+        </Button> </span></> : <Button type="primary" htmlType="submit">
           Nhận mã xác nhận 
-        </Button>
+        </Button>}
       </Form.Item>
     </Form>
       {showInput ?  <Form
@@ -117,7 +122,7 @@ const VerifyPage = () => {
       form={form2}
       name="verify"
       onFinish={onVerify}
-    >       <Form.Item  name="otp" wrapperCol={{ offset: 0, span: 16 }} label="Mã xác thực">
+    >       <Form.Item  name="otp" wrapperCol={{ offset: 0, span: 2 }} label="Mã xác thực">
         <Input  minLength={6} maxLength={6}/>
             </Form.Item>
            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

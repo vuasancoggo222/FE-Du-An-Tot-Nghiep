@@ -22,10 +22,13 @@ import AddService from "./pages/admin/service/Add";
 import { PrivateRouter } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
+import UserHistory from "./pages/website/user/UserHistory";
+import EditEmployee from "./pages/amin/employee/edit";
+
 function App() {
-  const [booking, setBooking] = useState()
-  const [employees, setEmployees] = useState()
-  const [service, setService] = useState()
+  const [booking, setBooking] = useState();
+  const [employees, setEmployees] = useState();
+  const [service, setService] = useState();
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -59,6 +62,7 @@ function App() {
           <Route path="/" element={<WebsiteLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
+            <Route path="booking-history/me" element={<UserHistory/>}/>
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
@@ -100,6 +104,7 @@ function App() {
             <Route path="employee">
               <Route index element={<ListEmployee />} />
               <Route path="add" element={<AddEmployee />} />
+              <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
             <Route path="service">
               <Route index element={<ListService dataEmployy={employees} />} />

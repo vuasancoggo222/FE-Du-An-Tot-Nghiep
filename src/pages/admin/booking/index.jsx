@@ -795,6 +795,7 @@ const ListBooking = (props) => {
         name: handleBooking?.name,
         phoneNumber: handleBooking?.phoneNumber.toString().replace("+84", "0"),
         serviceId: handleBooking?.serviceId[0]._id,
+        // employeeId: handleBooking?.employeeId?._id,
         note: handleBooking?.note,
     });
     const handleOnbler = (e) => {
@@ -879,7 +880,7 @@ const ListBooking = (props) => {
         </div>
 
         <Table columns={columns} dataSource={datatable} />;
-        <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal footer={null} style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             {/* <p>Tên Khách hàng: {}</p>
             <p>Số điện thoại: </p>
             <p>Ngày: {handleBooking?.date}</p>

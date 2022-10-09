@@ -523,7 +523,9 @@ const ListBooking = (props) => {
         const d = new Date(value)
         let time = d.getHours();
         if (time.toString().length == 1) {
-            time = `0${time}`
+            time = `0${time}: 00`
+        }else{
+            time = `${time}: 00`
         }
         return time
     }
@@ -602,12 +604,24 @@ const ListBooking = (props) => {
                 {
                     text: 'Hủy',
                     value: '2',
+                },
+                {
+                    text: 'Đang diễn ra',
+                    value: '3',
+                },
+                {
+                    text: 'Hoàn thành',
+                    value: '4',
+                },
+                {
+                    text: 'Khách không đến',
+                    value: '5',
                 }
             ],
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
             render: (status) => {
                 let key = "Chờ xác nhận";
-                let color = "volcano"
+                let color = "#e4ed36"
                 if (status === 0) {
                     true
                 } else if (status === 1) {
@@ -616,13 +630,17 @@ const ListBooking = (props) => {
                 }
                 else if (status === 2) {
                     key = "Hủy"
-                    color = "Silver"
+                    color = "red"
                 } else if (status === 3) {
+                    key = "Đang diễn ra"
+                    color = "#da0cc8"
+                } else if (status === 4) {
                     key = "Hoàn thành"
-                    color = "green"
-                } else {
+                    color = "#69c20a"
+                }
+                else {
                     key = "Khách không đến"
-                    color = "Red"
+                    color = "#bc0808"
                 }
                 return (
                     <Tag color={color} key={key}>
@@ -690,7 +708,7 @@ const ListBooking = (props) => {
             status: item.status,
             date: date,
             time: time,
-            employeeId: item.employeeId.name,
+            employeeId: item.employeeId?.name,
             serviceId: item.serviceId[0].name,
             action: (item)
         }
@@ -946,7 +964,7 @@ const ListBooking = (props) => {
 
                 >
                     <Select onChange={changeEmployee}
-                        defaultValue={handleBooking?.employeeId.name}
+                        defaultValue={handleBooking?.employeeId?.name}
                     >
                         {props.dataEmployy?.map((item) => (
                             // eslint-disable-next-line react/jsx-key

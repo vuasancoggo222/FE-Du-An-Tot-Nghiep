@@ -1,114 +1,159 @@
-import React, { useState } from "react";
-import { Modal, Space, Table, Tag } from 'antd';
-import { Typography } from 'antd';
-import LayoutAdmin from "../../../components/Layout/admin";
-// import Title from "antd/lib/skeleton/Title";
-// import { Button } from 'antd';
-import {
-  PlusCircleFilled,
-  FormOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
-import Link from "next/link";
+import { Table, Image, Space, Tooltip, Button } from "antd";
+import React from "react";
+import useService from "../../../hooks/use-service";
+import Description from "../../../components/admin/detaiservice";
+import { BiEdit } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { removeService } from "../../../api/service";
+
 const ListService = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const { data, error } = useService();
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
+      title: "Name",
+      dataIndex: "name",
+      filters: [
+        {
+          text: "Joe",
+          value: "Joe",
+        },
+        {
+          text: "Jim",
+          value: "Jim",
+        },
+        {
+          text: "Submenu",
+          value: "Submenu",
+          children: [
+            {
+              text: "Green",
+              value: "Green",
+            },
+            {
+              text: "Black",
+              value: "Black",
+            },
+          ],
+        },
+      ],
+      // specify the condition of filtering result
+      // here is that finding the name started with `value`
+      onFilter: (value, record) => record.name.indexOf(value) === 0,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ["descend"],
+    },
+
+    {
+      title: "price",
+      dataIndex: "price",
     },
     {
-      title: 'description',
-      dataIndex: 'desc',
-      key: 'desc',
+      title: "image",
+      dataIndex: "image",
+      render: (image) => <Image width={200} src={image} key={image} />,
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
+      title: "status",
+      dataIndex: "status",
     },
     {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-  
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-  
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: "description",
+
+      render: (item) => {
+        return (
+          <>
+            <Description ondetail={item.description} />
+          </>
+        );
+      },
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Link href={"/admin/service/edit"} ><button style={{fontSize:"18px",color:"#0000FF"}}><FormOutlined /></button></Link>
-          <button onClick={showModal} style={{fontSize:"18px",color:"red"}}><DeleteOutlined /></button>
-        </Space>
-      ),
+      title: "Action",
+      dataIndex: "_id",
+      key: "action",
+      colapse: 2,
+      render: (item) => {
+        console.log(item);
+        // Thêm
+        let BtSusscesCursor;
+        let BtSusscessColor = "#3b82f6";
+        // hủy
+        let BtFailureCursor;
+        let BtFailureColor = "red";
+        return (
+          <div className="text-center">
+            <Space size="middle">
+              <Tooltip title="Sửa">
+                <Link to={`/admin/service/${item}/edit`}>
+                  {" "}
+                  <Button
+                    style={{
+                      border: "none",
+                      cursor: BtSusscesCursor,
+                      color: BtSusscessColor,
+                    }}
+                    shape="circle"
+                  >
+                    <BiEdit style={{ fontSize: "25px" }} data="1" />
+                  </Button>
+                </Link>
+              </Tooltip>
+              <Tooltip title="Hủy">
+                <Link to={`/admin/service/${item}/remove`}></Link>
+                <Button
+                  style={{
+                    border: "none",
+                    cursor: BtFailureCursor,
+                    color: BtFailureColor,
+                  }}
+                  shape="circle"
+                  onClick={() => onRemove(item)}
+                >
+                  <i
+                    style={{ fontSize: "25px" }}
+                    data="2"
+                    className="far fa-times-circle"
+                  ></i>
+                </Button>
+                <Link />
+              </Tooltip>
+            </Space>
+          </div>
+        );
+      },
     },
   ];
-  const data = [
-    { 
-      key: '1',
-      name: 'John Brown',
-      price: 32,
-      desc: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      price: 42,
-      desc: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      price: 32,
-      desc: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-  
-  const { Title } = Typography;
-  return <div>
-    <div style={{fontSize:"30px", cursor:"pointer"}} className="flex justify-between ... "><Title level={3}>List Service</Title><Link href={"/admin/service/add"}><PlusCircleFilled /></Link></div>
-    <Table columns={columns} dataSource={data} />;
-   
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
-  </div>;
+  const onChange = (pagination, filters, sorter, extra) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+  const onRemove = async (id) => {
+    const confirm = window.confirm("Are you sure you want to delete");
+    if (confirm) {
+      await removeService(id);
+      data.filter((item) => item._id !== id);
+    }
+  };
+  if (!data) return <div>loading</div>;
+  if (error) return <div>Failed loading</div>;
+  return (
+    <>
+      <div className="w-full px-6 py-6 mx-auto">
+        <div>
+          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
+            <div>Service</div>
+          </h1>
+        </div>
+        <Link to={"/admin/service/add"}>
+          <Button type="primary">Primary Button</Button>
+        </Link>
+      </div>
+      <div className="w-full px-6 py-6 mx-auto">
+        <Table columns={columns} dataSource={data} onChange={onChange} />
+      </div>
+      ;
+    </>
+  );
 };
-ListService.Layout = LayoutAdmin;
+
 export default ListService;

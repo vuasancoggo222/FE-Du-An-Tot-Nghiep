@@ -1,21 +1,17 @@
-import { Button,  Form, Input } from "antd";
-// import { Option } from "antd/lib/mentions";
-import React from "react";
+import { Button,  Form, Input,message, Select } from "antd";
+import { Option } from "antd/lib/mentions";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { register } from "../../api/user";
 
 const SignUp = () => {
-  // const bgSign = {
-  //   backgroundImage:
-  //     "url('https://res.cloudinary.com/df7kkrfoe/image/upload/v1663306360/aromatherapy-la-gi_wclia9.jpg')",
-  // };
+  const navigate = useNavigate()
   const bgStaff = {
     width: "100%",
     height: "100%",
     backgroundImage:
       "url('https://res.cloudinary.com/df7kkrfoe/image/upload/v1663325104/tac-phong-lam-viec-nhan-vien-spa-1_mfbeu0.jpg')",
     backgroundRepeat: 'no-repeat'
-  };
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
   };
   const layout = {
     labelCol: {
@@ -25,6 +21,13 @@ const SignUp = () => {
       span: 16,
     },
   };
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select style={{ width: 70 }}>
+        <Option value="84">+84</Option>
+      </Select>
+    </Form.Item>
+  );
   const validateMessages = {
     required: '${label} Không được bỏ trống!',
     types: {
@@ -36,14 +39,24 @@ const SignUp = () => {
     color: "#002200",
     opacity: 0.8
   }
-//   const prefixSelector = (
-//     <Form.Item name="prefix" noStyle>
-//       <Select style={{ width: 70 }}>
-//         <Option value="86">+86</Option>
-//         <Option value="87">+87</Option>
-//       </Select>
-//     </Form.Item>
-//   );
+  const onFinish = async (values) => {
+    const phoneNumber = `${values.prefix}${values.phoneNumber.phoneNumber}`
+    const userValues = {
+      name: values.name.name,
+      phoneNumber: phoneNumber,
+      password: values.password.password
+    }
+    console.log(userValues);
+    try {
+       await register(userValues)
+       message.success('Đăng ký thành công')
+       navigate(`/verify?prefix=${values.prefix}&phone=${values.phoneNumber.phoneNumber}`)
+    } catch (error) {
+      console.log(error);
+      message.error(`${error.response.data.message}`,2)
+    }
+  };
+
 
   return <div>
 
@@ -77,27 +90,15 @@ const SignUp = () => {
                 <Input />
               </Form.Item>
               <Form.Item
-                name={['email', 'email']}
-                label="Email"
-                rules={[
-                  {
-                    type: 'email',
-                    required: true
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                 name={['phone']}
-                 label="Number Phone"
+                 name={['phoneNumber','phoneNumber']}
+                 label="PhoneNumber"
                 rules={[{
                   required: true,
-                  pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
+                  pattern: new RegExp(/((9|3|7|8|5)+([0-9]{8})\b)/g),
                   message:"Số điện thoại không đúng định dạng!"
                 }]}
               >
-                <Input/>
+                <Input addonBefore={prefixSelector} style={{ width: '100%' }}/>
               </Form.Item>
               <Form.Item
                 name={['password', 'password']}

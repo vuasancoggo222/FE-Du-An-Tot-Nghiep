@@ -117,7 +117,7 @@ const Detaibooking = () => {
             <h2 className="text-[#FFF] text-[50px]">
               {" "}
               <span className="uppercase text-white font-medium">
-                {service.name}
+                {service?.name}
               </span>
             </h2>
           </div>

@@ -12,7 +12,7 @@ const ServiceCategory = () => {
         {data &&
           data.map((item) => (
             <div key={item._id}>
-              <Link to={`/detail-booking/${item._id}`}>
+              <Link to={`/detail-booking/${item.slug}`}>
                 <a>
                   <img
                     src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv1.jpg"

@@ -12,7 +12,6 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
-import { httpGetAllShift } from "./api/shift";
 import { httpGetEmployees } from "./api/employee";
 import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
@@ -46,11 +45,6 @@ function App() {
     };
 
     getService();
-    const getShift = async () => {
-      const res = await httpGetAllShift();
-      setShift(res);
-    };
-    getShift();
   }, []);
 
   const changeStatusBooking = async () => {
@@ -69,7 +63,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
-            <Route path="/verify" element={<VerifyPage/>}/>
+            <Route path="/verify" element={<VerifyPage />} />
           </Route>
           <Route
             path="admin"

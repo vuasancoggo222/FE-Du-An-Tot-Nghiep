@@ -23,10 +23,9 @@ import { PrivateRouter } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
 function App() {
-  const [booking, setBooking] = useState();
-  const [employees, setEmployees] = useState();
-  const [service, setService] = useState();
-  const [shift, setShift] = useState();
+  const [booking, setBooking] = useState()
+  const [employees, setEmployees] = useState()
+  const [service, setService] = useState()
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -83,7 +82,6 @@ function App() {
                     dataBooking={booking}
                     dataEmployy={employees}
                     dataService={service}
-                    dataShift={shift}
                   />
                 }
               />
@@ -95,7 +93,6 @@ function App() {
                     dataBooking={booking}
                     dataEmployy={employees}
                     dataService={service}
-                    dataShift={shift}
                   />
                 }
               />

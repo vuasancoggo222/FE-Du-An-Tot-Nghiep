@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Select, DatePicker, message } from "antd";
 import useEmployee from "../../hooks/use-employee";
-import { httpGetAllShift } from "../../api/shift";
-import { httpGetOne, httpAddShift } from "../../api/employee";
+import { httpGetOne } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
 import { httpGetOneService } from "../../api/services";
-
+import { TimePicker } from 'antd';
+import { isAuthenticate } from "../../utils/LocalStorage"
 const Detaibooking = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: employees, error } = useEmployee();
-  const [shift, setShift] = useState();
-  const [dateBooking, seDateBooking] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
-
+  const format = 'HH';
   console.log(employees);
-  const onSubmit = async ({ data }) => {
+  const onSubmit = async (data) => {
     console.log("submit", data);
     console.log(employeeBooking);
     try {
       console.log(service._id);
-      await httpAddBooking({
-        ...data,
-        date: dateBooking,
-        serviceId: service._id,
-      });
-      await httpAddShift(data.employeeId, {
-        shiftId: data?.shiftId,
-        date: dateBooking,
-      });
-      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã");
-      navigate("/");
+      await httpAddBooking({ ...data, serviceId: service?._id })
+      // await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })
+      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
+      navigate('/');
     } catch (error) {
       message.error(`${error.response.data.message}`);
     }
+    // const d = new Date(data.time._d)
+    // console.log(d.getHours());
   };
+  const onChange = (time, timeString) => {
+    console.log(time, timeString);
+  };
+  const user = isAuthenticate();
+  // console.log(user);
   const layout = {
     labelCol: {
       span: 8,
@@ -73,9 +71,8 @@ const Detaibooking = () => {
   const onOk = (value) => {
     console.log("onOk: ", value);
   };
-  const onChange1 = (value, dateString) => {
+  const onChange1 = (value) => {
     console.log("Selected Time: ", value);
-    seDateBooking(Number(dateString.replace("-", "").replace("-", "")));
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -95,13 +92,6 @@ const Detaibooking = () => {
   };
 
   useEffect(() => {
-    const getShift = async () => {
-      const data = await httpGetAllShift();
-      console.log(data.shift);
-      setShift(data.shift);
-    };
-    getShift();
-
     const getSerVice = async () => {
       const data = await httpGetOneService(id);
       console.log(data);
@@ -204,13 +194,15 @@ const Detaibooking = () => {
                   name="nest-messages"
                   validateMessages={validateMessages}
                   initialValues={{
+                    phoneNumber:user?.phoneNumber,
+                    name:user?.name,
                     prefix: "+84",
                   }}
                   onFinish={onSubmit}
                 >
                   {/* Tên */}
                   <Form.Item
-                    name={["data", "name"]}
+                    name="name"
                     label="Tên "
                     rules={[
                       {
@@ -225,17 +217,18 @@ const Detaibooking = () => {
 
                   {/* SĐT */}
                   <Form.Item
-                    name={["data", "phoneNumber"]}
+                    name="phoneNumber"
                     label="Số điện thoại"
                     rules={[
                       {
                         required: true,
-                        pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
+                        pattern: new RegExp(/((9|3|7|8|5)+([0-9]{8})\b)/g),
                         message: "Số điện thoại không đúng định dạng!",
                       },
                     ]}
                   >
                     <Input
+                    
                       addonBefore={prefixSelector}
                       style={{
                         width: "100%",
@@ -243,7 +236,7 @@ const Detaibooking = () => {
                     />
                   </Form.Item>
                   <Form.Item
-                    name={["data", "service"]}
+                    name="service"
                     label="Dịch vụ "
                     rules={[
                       {
@@ -254,8 +247,7 @@ const Detaibooking = () => {
                     <Input
                       value={service?._id}
                       placeholder={service?.name}
-                      disabled
-                    />
+                      readOnly />
                   </Form.Item>
                   {/* chọn nhân viên */}
                   {/* <Form.Item
@@ -275,7 +267,7 @@ const Detaibooking = () => {
 
                   {/* Chọn ngày đặt lich */}
                   <Form.Item
-                    name={["data", "dateBooking"]}
+                    name="date"
                     label="Chọn ngày"
                     rules={[
                       {
@@ -293,12 +285,8 @@ const Detaibooking = () => {
                   {/* chọn nhân viên */}
                   <Form.Item
                     label="Chọn nhân viên"
-                    name={["data", "employeeId"]}
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
+                    name="employeeId"
+                   
                   >
                     <Select onChange={onChangeSelected}>
                       {employees?.map((item, index) => (
@@ -306,24 +294,24 @@ const Detaibooking = () => {
                           {item.name}
                           <div
                             className=""
-                            // onClick={() => {
-                            //   setOpen(true);
-                            // }}
+                          // onClick={() => {
+                          //   setOpen(true);
+                          // }}
                           ></div>
                         </Select.Option>
                       ))}
                     </Select>
                   </Form.Item>
                   <Form.Item
-                    label="Chọn ca"
-                    name={["data", "shiftId"]}
+                    label="Chọn giờ đến"
+                    name="time"
                     rules={[
                       {
                         required: true,
                       },
                     ]}
                   >
-                    <Select onChange={onChangeSelected}>
+                    {/* <Select onChange={onChangeSelected}>
                       {shift?.map((item, index) => {
                         let checkIs = true;
 
@@ -351,10 +339,11 @@ const Detaibooking = () => {
                             </Select.Option>
                           );
                       })}
-                    </Select>
+                    </Select> */}
+                    <TimePicker onChange={onChange} format={format} />
                   </Form.Item>
                   {/* chọn ca  */}
-                  <Form.Item name={["data", "note"]} label="Ghi chú">
+                  <Form.Item name="note" label="Ghi chú">
                     <Input.TextArea />
                   </Form.Item>
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>

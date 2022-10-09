@@ -35,7 +35,7 @@ const AddService = () => {
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
-      const res = await uploadCloudinary(formData)
+      const res = await uploadCloudinary(formData);
       onSuccess("Ok");
       message.success("Upload successfully !");
       console.log("server res: ", res);
@@ -56,7 +56,6 @@ const AddService = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  // ------------------------------
 
   const setting = {
     name: "file",
@@ -131,6 +130,9 @@ const AddService = () => {
                 </p>
                 <p className="ant-upload-text">
                   Click or drag file to this area to upload
+                </p>
+                <p className="ant-upload-hint">
+                  Support for a single or bulk upload.
                 </p>
               </Upload.Dragger>
             </Form.Item>

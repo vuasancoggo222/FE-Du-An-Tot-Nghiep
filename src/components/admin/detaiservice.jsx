@@ -2,10 +2,10 @@ import { Button, Modal, Tooltip, Space } from "antd";
 import React, { useState } from "react";
 
 const Description = (props) => {
-
+  // eslint-disable-next-line react/prop-types
   const data = props.ondetail;
-  // console.log(data);
-
+  console.log(data);
+  // eslint-disable-next-line react/prop-types
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 

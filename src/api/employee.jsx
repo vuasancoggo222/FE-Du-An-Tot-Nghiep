@@ -13,7 +13,12 @@ export const httpGetOne = (id) => {
 export const httpGetEmployees = () => {
     return instance.get(`employees`);
 }; 
-
+export const httpAddEmployees = (data) => {
+    return instance.post(`employees`, data);
+};
+export const httpUpdateEmployees = (id, data) => {
+    return instance.put(`employees/${id}`, data);
+};
 
 export const httpChangeStatusTimeWork= (id, date, shift, data) => {
     return instance.patch(`employees/update-employee-shift/${id}?date=${date}&shift=${shift}`, data);

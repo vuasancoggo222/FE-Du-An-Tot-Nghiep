@@ -16,6 +16,7 @@ import { httpGetAllShift } from "./api/shift";
 import { httpGetEmployees } from "./api/employee";
 import ListEmployee from "./pages/admin/employee";
 import AddEmployee from "./pages/admin/employee/add";
+import EditEmployee from "./pages/admin/employee/edit";
 import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
 import ListService from "./pages/admin/service";
@@ -30,7 +31,6 @@ function App() {
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
-      console.log(res);
       setBooking(res);
     };
     getBooking();
@@ -43,13 +43,7 @@ function App() {
       const res = await httpGetAllService();
       setService(res);
     };
-
     getService();
-    const getShift = async () => {
-      const res = await httpGetAllShift();
-      setShift(res);
-    };
-    getShift();
   }, []);
 
   const changeStatusBooking = async () => {
@@ -107,6 +101,7 @@ function App() {
             <Route path="employee">
               <Route index element={<ListEmployee />} />
               <Route path="add" element={<AddEmployee />} />
+              <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
             <Route path="service">
               <Route index element={<ListService dataEmployy={employees} />} />

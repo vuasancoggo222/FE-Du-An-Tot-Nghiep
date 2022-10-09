@@ -111,7 +111,7 @@ const ListBooking = (props) => {
         setDateUpdate(value._d)
         booking?.map((item) => {
             // console.log(renderDate(value._d) == renderDate(item.date));
-            if (item.status == 1 && renderDate(item.date) == renderDate(value._d) && item.employeeId._id == employeeBooking  && renderTime(item.time) == renderTime(timeUpdate)) {
+            if (item.status == 1 && renderDate(item.date) == renderDate(value._d) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(timeUpdate)) {
                 count = Number(count) + 1;
             }
         })
@@ -435,6 +435,7 @@ const ListBooking = (props) => {
     // let elemenPick;
     const showModal = (e) => {
         // eslint-disable-next-line react/prop-types
+        setIsHouseNoneBlock("none")
         const isButon = e.target.getAttribute("data");
         const idBooking = e.target.getAttribute("dataId");
         console.log(idBooking);
@@ -460,23 +461,32 @@ const ListBooking = (props) => {
                 if (item.status == isButon) {
                     return
                 }
-                console.log(item.date.toString());
                 await seDateBooking(item.date.toString())
                 await setIsModalOpen(true);
                 const renDate = document.querySelector(".renderDate");
                 const renTime = document.querySelector(".renderTime");
-                if(renDate) {
+                if (renDate) {
                     renDate.innerText = renderDate(item.date)
                 }
-                if(renTime) {
+                if (renTime) {
                     renTime.innerText = renderTime(item.time)
                 }
 
-               
-                const elemenPick = document.querySelector("#nest-messages_date")
-                elemenPick.value = renderDate(item.date)
                 const elemenTime = document.querySelector("#nest-messages_time")
                 elemenTime.value = renderTime(item.time)
+                const elemenPick = document.querySelector("#nest-messages_date")
+                elemenPick.value = renderDate(item.date)
+                const elemenEmployy = document.querySelectorAll(".ant-select-selector")
+                const para = document.createElement("span");
+                para.innerText = item.employeeId?.name || "";
+                para.className = "ant-select-selection-item"
+                elemenEmployy[2].appendChild(para);
+                const p = document.querySelector(".ant-select-selection-placeholder")
+                p.parentNode.removeChild(p);
+                elemenEmployy[2].addEventListener("click", () => {
+                    para.parentNode.removeChild(para)
+                    elemenEmployy[2].appendChild(p);
+                })
             }
 
         })
@@ -518,13 +528,17 @@ const ListBooking = (props) => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        const p = document.querySelectorAll(".ant-select-selection-item")
+        console.log(p[2]);
+        p[2].parentNode.removeChild(p[2])
+
     };
     const renderTime = (value) => {
         const d = new Date(value)
         let time = d.getHours();
         if (time.toString().length == 1) {
             time = `0${time}: 00`
-        }else{
+        } else {
             time = `${time}: 00`
         }
         return time
@@ -751,7 +765,7 @@ const ListBooking = (props) => {
         }
         // eslint-disable-next-line react/prop-types
         props.handleChangeStatus();
-        setIsModalOpen(false)
+        handleCancel()
     };
     const onHandleAdd = (value) => {
         console.log("cha:", value);
@@ -779,7 +793,7 @@ const ListBooking = (props) => {
     };
     form.setFieldsValue({
         name: handleBooking?.name,
-        phoneNumber: handleBooking?.phoneNumber,
+        phoneNumber: handleBooking?.phoneNumber.toString().replace("+84", "0"),
         serviceId: handleBooking?.serviceId[0]._id,
         // employeeId: handleBooking?.employeeId?._id,
         note: handleBooking?.note,
@@ -944,7 +958,6 @@ const ListBooking = (props) => {
                 <Form.Item
                     name="date"
                     label="Chọn ngày"
-
                 >
                     <DatePicker
                         onBlur={handleOnbler}
@@ -958,13 +971,18 @@ const ListBooking = (props) => {
 
                 {/* chọn nhân viên */}
                 <Form.Item
-
+                    rules={[
+                        {
+                            required: !handleBooking?.employeeId,
+                            // eslint-disable-next-line no-undef
+                        },
+                    ]}
                     label="Chọn nhân viên"
                     name="employeeId"
 
                 >
                     <Select onChange={changeEmployee}
-                        defaultValue={handleBooking?.employeeId?.name}
+                    // defaultValue={handleBooking?.employeeId?.name}
                     >
                         {props.dataEmployy?.map((item) => (
                             // eslint-disable-next-line react/jsx-key
@@ -1055,7 +1073,7 @@ const ListBooking = (props) => {
                       })}
                     </Select> */}
 
-                    <div className="" style={{color:"#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
+                    <div className="" style={{ color: "#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
                 </Form.Item>
 
 

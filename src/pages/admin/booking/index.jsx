@@ -690,7 +690,7 @@ const ListBooking = (props) => {
             status: item.status,
             date: date,
             time: time,
-            employeeId: item.employeeId.name,
+            employeeId: item.employeeId?.name,
             serviceId: item.serviceId[0].name,
             action: (item)
         }
@@ -946,7 +946,7 @@ const ListBooking = (props) => {
 
                 >
                     <Select onChange={changeEmployee}
-                        defaultValue={handleBooking?.employeeId.name}
+                        defaultValue={handleBooking?.employeeId?.name}
                     >
                         {props.dataEmployy?.map((item) => (
                             // eslint-disable-next-line react/jsx-key

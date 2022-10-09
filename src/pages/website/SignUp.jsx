@@ -40,6 +40,7 @@ const SignUp = () => {
     opacity: 0.8
   }
   const onFinish = async (values) => {
+    console.log(values);
     const phoneNumber = `${values.prefix}${values.phoneNumber.phoneNumber}`
     const userValues = {
       name: values.name.name,
@@ -76,7 +77,7 @@ const SignUp = () => {
         <div style={{ width: "100%" }} className="pl-5">
           <h3 className="font-bold text-2xl text-center mt-5 ...">Đăng Ký Tài Khoản</h3>
           <div className="pt-5 p-10">
-            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
+            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} initialValues={{ prefix : +84}}>
 
               <Form.Item
                 name={['name', 'name']}
@@ -92,7 +93,7 @@ const SignUp = () => {
               <Form.Item
                  name={['phoneNumber','phoneNumber']}
                  label="PhoneNumber"
-                rules={[{
+                  rules={[{
                   required: true,
                   pattern: new RegExp(/((9|3|7|8|5)+([0-9]{8})\b)/g),
                   message:"Số điện thoại không đúng định dạng!"

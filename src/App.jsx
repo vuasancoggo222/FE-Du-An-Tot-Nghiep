@@ -22,7 +22,9 @@ import AddService from "./pages/admin/service/Add";
 import { PrivateRouter } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
-import EditEmployee from "./pages/admin/employee/edit";
+import UserHistory from "./pages/website/user/UserHistory";
+import EditEmployee from "./pages/amin/employee/edit";
+
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -60,6 +62,7 @@ function App() {
           <Route path="/" element={<WebsiteLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
+            <Route path="booking-history/me" element={<UserHistory/>}/>
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />

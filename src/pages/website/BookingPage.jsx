@@ -17,6 +17,7 @@ import useBooking from "../../hooks/use-booking";
 import { useNavigate } from "react-router-dom";
 import { httpGetOneService } from "../../api/services";
 import { getPrefixPhoneNumber } from "../../api/prefix";
+import { isAuthenticate } from "../../utils/LocalStorage";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -112,7 +113,6 @@ const BookingPage = () => {
     try {
     await create({
         ...data.user,
-        shiftId: shiftId.shiftId,
         serviceId,
         date
       }).then(() => {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { httpGetEmployees } from '../../../api/employee'
 
-
 const ListEmployee = () => {
     const [employees, setEmployees] = useState();
     useEffect(() => {

@@ -1,11 +1,9 @@
 import { Button, Form, Input, Upload, Select, message, Row, Col } from "antd";
 import React, { useState } from 'react'
 import { httpAddEmployees } from '../../../api/employee'
-
 import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 
 const normFile = (e) => {
     console.log("Upload event:", e);
@@ -17,7 +15,6 @@ const normFile = (e) => {
     return e?.fileList;
 };
 const { Option } = Select;
-
 const AddEmployee = () => {
     const [url, setUrl] = useState("");
     const navigate = useNavigate();

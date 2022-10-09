@@ -2,11 +2,9 @@ import { Button, Form, Input, Upload, Select, message, Row, Col } from "antd";
 import React, { useEffect, useState } from 'react'
 import { httpUpdateEmployees, httpGetOne } from '../../../api/employee'
 import { useParams } from 'react-router-dom';
-
 import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 
 const normFile = (e) => {
     console.log("Upload event:", e);

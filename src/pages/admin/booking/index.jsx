@@ -471,12 +471,12 @@ const ListBooking = (props) => {
                 if(renTime) {
                     renTime.innerText = renderTime(item.time)
                 }
+
+               
                 const elemenPick = document.querySelector("#nest-messages_date")
                 elemenPick.value = renderDate(item.date)
                 const elemenTime = document.querySelector("#nest-messages_time")
                 elemenTime.value = renderTime(item.time)
-                const elemenFooter = document.querySelector(".ant-modal-footer")
-                elemenFooter.style.display = "none"
             }
 
         })
@@ -781,7 +781,7 @@ const ListBooking = (props) => {
         name: handleBooking?.name,
         phoneNumber: handleBooking?.phoneNumber,
         serviceId: handleBooking?.serviceId[0]._id,
-        // employeeId: handleBooking?.employeeId._id,
+        // employeeId: handleBooking?.employeeId?._id,
         note: handleBooking?.note,
     });
     const handleOnbler = (e) => {
@@ -866,7 +866,7 @@ const ListBooking = (props) => {
         </div>
 
         <Table columns={columns} dataSource={datatable} />;
-        <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal footer={null} style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             {/* <p>Tên Khách hàng: {}</p>
             <p>Số điện thoại: </p>
             <p>Ngày: {handleBooking?.date}</p>

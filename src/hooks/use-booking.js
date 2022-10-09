@@ -3,10 +3,9 @@ import instance from "../api/instance";
 import * as method from "../api/services";
 import { isAuthenticate } from "../utils/LocalStorage";
 const user = isAuthenticate()
-
 let userId = ""
 
-if(!userId){
+if(!user.id){
   userId = "63392e3fec0fc66e7175e03f"
   // Guess userId when user is not sign in
 }

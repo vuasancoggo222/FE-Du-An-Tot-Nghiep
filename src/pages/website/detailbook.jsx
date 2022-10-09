@@ -15,6 +15,7 @@ const Detaibooking = () => {
   const [dateBooking, seDateBooking] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
+
   console.log(employees);
   const onSubmit = async ({ data }) => {
     console.log("submit", data);
@@ -115,7 +116,9 @@ const Detaibooking = () => {
           <div className="text-center text-[#FFF]">
             <h2 className="text-[#FFF] text-[50px]">
               {" "}
-              MASSAGE TOÀN THÂN THEO PHONG CÁCH ROZEN
+              <span className="uppercase text-white font-medium">
+                {service?.name}
+              </span>
             </h2>
           </div>
         </section>

@@ -222,7 +222,6 @@ const BookingPage = () => {
                   ) : (
                     ""
                   )}
-                  1
                   <Form.Item
                     name={["user", "date"]}
                     label="Chọn ngày"

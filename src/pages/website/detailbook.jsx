@@ -4,7 +4,7 @@ import useEmployee from "../../hooks/use-employee";
 import { httpGetOne } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
-import { httpGetOneService } from "../../api/services";
+import {  getSerViceBySlug } from "../../api/services";
 import { TimePicker } from 'antd';
 import { isAuthenticate } from "../../utils/LocalStorage"
 const Detaibooking = () => {
@@ -15,6 +15,8 @@ const Detaibooking = () => {
   const [service, setService] = useState();
   const format = 'HH';
   console.log(employees);
+  console.log(id);
+
   const onSubmit = async (data) => {
     console.log("submit", data);
     console.log(employeeBooking);
@@ -92,7 +94,7 @@ const Detaibooking = () => {
 
   useEffect(() => {
     const getSerVice = async () => {
-      const data = await httpGetOneService(id);
+      const data = await getSerViceBySlug(id);
       console.log(data);
       setService(data);
     };

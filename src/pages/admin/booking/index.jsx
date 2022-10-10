@@ -685,7 +685,6 @@ const ListBooking = (props) => {
                 }}
             >
                 <Option value="84">+84</Option>
-                <Option value="87">+87</Option>
             </Select>
         </Form.Item>
     );

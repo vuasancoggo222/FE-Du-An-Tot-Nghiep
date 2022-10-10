@@ -384,7 +384,7 @@ const ListBooking = (props) => {
                 await setHandleBooking(item)
                 setDateUpdate(item.date)
                 setTimeUpdate(item.time)
-                setEmployeeBooking(item.employeeId._id)
+                setEmployeeBooking(item.employeeId._id || "")
                 return
             }
         })

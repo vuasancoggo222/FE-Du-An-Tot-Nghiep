@@ -4,26 +4,26 @@ import useEmployee from "../../hooks/use-employee";
 import { httpGetOne } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
-import { httpGetOneService, getSerViceBySlug } from "../../api/services";
-import { TimePicker } from "antd";
-import { isAuthenticate } from "../../utils/LocalStorage";
+import { httpGetOneService } from "../../api/services";
+import { TimePicker } from 'antd';
+import { isAuthenticate } from "../../utils/LocalStorage"
 const Detaibooking = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: employees, error } = useEmployee();
   const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
-  const format = "HH";
+  const format = 'HH';
   console.log(employees);
   const onSubmit = async (data) => {
     console.log("submit", data);
     console.log(employeeBooking);
     try {
       console.log(service._id);
-      await httpAddBooking({ ...data, serviceId: service?._id });
+      await httpAddBooking({ ...data, serviceId: service?._id })
       // await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })
-      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã");
-      navigate("/");
+      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
+      navigate('/');
     } catch (error) {
       message.error(`${error.response.data.message}`);
     }
@@ -83,7 +83,6 @@ const Detaibooking = () => {
     const employeesOne = await httpGetOne(e);
     console.log(employeesOne);
     setEmployeeBooking(employeesOne);
-
     if (!employees) return <div>Loading...</div>;
     if (error) return <div>Failed to loading</div>;
   };
@@ -93,7 +92,7 @@ const Detaibooking = () => {
 
   useEffect(() => {
     const getSerVice = async () => {
-      const data = await getSerViceBySlug(id);
+      const data = await httpGetOneService(id);
       console.log(data);
       setService(data);
     };
@@ -194,8 +193,8 @@ const Detaibooking = () => {
                   name="nest-messages"
                   validateMessages={validateMessages}
                   initialValues={{
-                    phoneNumber: user?.phoneNumber,
-                    name: user?.name,
+                    phoneNumber:user?.phoneNumber,
+                    name:user?.name,
                     prefix: "+84",
                   }}
                   onFinish={onSubmit}
@@ -228,6 +227,7 @@ const Detaibooking = () => {
                     ]}
                   >
                     <Input
+                    
                       addonBefore={prefixSelector}
                       style={{
                         width: "100%",
@@ -246,8 +246,7 @@ const Detaibooking = () => {
                     <Input
                       value={service?._id}
                       placeholder={service?.name}
-                      readOnly
-                    />
+                      readOnly />
                   </Form.Item>
                   {/* chọn nhân viên */}
                   {/* <Form.Item
@@ -283,16 +282,20 @@ const Detaibooking = () => {
                   </Form.Item>
 
                   {/* chọn nhân viên */}
-                  <Form.Item label="Chọn nhân viên" name="employeeId">
+                  <Form.Item
+                    label="Chọn nhân viên"
+                    name="employeeId"
+                   
+                  >
                     <Select onChange={onChangeSelected}>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
                           {item.name}
                           <div
                             className=""
-                            // onClick={() => {
-                            //   setOpen(true);
-                            // }}
+                          // onClick={() => {
+                          //   setOpen(true);
+                          // }}
                           ></div>
                         </Select.Option>
                       ))}

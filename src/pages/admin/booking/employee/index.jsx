@@ -22,7 +22,7 @@ const ListBookingByEmployee = (props) => {
 
     const isEmployee = JSON.parse(localStorage.getItem('user'));
     if (isEmployee) {
-        console.log(isEmployee._id
+        console.log(isEmployee
         );
     }
     // eslint-disable-next-line react/prop-types
@@ -136,7 +136,7 @@ const ListBookingByEmployee = (props) => {
         // eslint-disable-next-line react/prop-types
         props.handleChangeStatus();
     };
-  
+
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div
@@ -441,7 +441,7 @@ const ListBookingByEmployee = (props) => {
                     text: 'Đã xác nhận',
                     value: '1',
                 },
-               
+
                 {
                     text: 'Đang diễn ra',
                     value: '3',
@@ -540,7 +540,7 @@ const ListBookingByEmployee = (props) => {
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
         console.log(item);
-        if(item.employeeId._id == isEmploye._id && item.status != 0 && item.status != 2) {
+        if (item.employeeId._id == isEmploye?._id && item.status != 0 && item.status != 2) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -555,10 +555,9 @@ const ListBookingByEmployee = (props) => {
             })
         }
     })
-    console.log(datatable);
     useEffect(() => {
         const getEmployee = async () => {
-            const res = await httpGetOne(isEmployee._id)
+            const res = await httpGetOne(isEmployee.id)
             setIsemploye(res)
             console.log(res);
         }

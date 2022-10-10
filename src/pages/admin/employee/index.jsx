@@ -97,13 +97,13 @@ const onChange = (pagination, filters, sorter, extra) => {
   console.log("params", pagination, filters, sorter, extra);
 };
 const onRemove = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete");
-    if (confirm) {
-      await removeEmployees(id);
-      data.filter((item) => item._id !== id);
-    }
-  };
-const ListService = () => {
+  const confirm = window.confirm("Are you sure you want to delete");
+  if (confirm) {
+    await removeEmployees(id);
+    data.filter((item) => item._id !== id);
+  }
+};
+const ListEmployee = () => {
   const { data, error } = useEmployee();
   if (!data) return <div>loading</div>;
   if (error) return <div>Failed loading</div>;
@@ -127,4 +127,4 @@ const ListService = () => {
   );
 };
 
-export default ListService;
+export default ListEmployee;

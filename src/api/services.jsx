@@ -2,6 +2,10 @@ import instance from "./instance";
 const httpGetOneService = (id) => {
   return instance.get(`service/${id}`);
 };
+const getSerViceBySlug = (slug) => {
+  return instance.get(`service-slug/${slug}`);
+};
+
 const httpGetAllService = () => {
   return instance.get(`service`);
 };
@@ -26,4 +30,5 @@ export {
   httpPut,
   httpDelete,
   httpGetAllService,
+  getSerViceBySlug,
 };

@@ -13,18 +13,19 @@ import Detaibooking from "./pages/website/detailbook";
 import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
 import { httpGetEmployees } from "./api/employee";
+import ListEmployee from "./pages/admin/employee";
+import AddEmployee from "./pages/admin/employee/add";
 import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
+import ListService from "./pages/admin/service";
+import AddService from "./pages/admin/service/Add";
 import { PrivateRouter } from "./utils/PrivateRouter";
-// import EditService from "./pages/admin/service/Edit";
-// import VerifyPage from "./pages/website/VerifyPage";
-// import UserHistory from "./pages/website/user/UserHistory";
-// import EditEmployee from "./pages/amin/employee/edit";
-
+import EditService from "./pages/admin/service/Edit";
+import VerifyPage from "./pages/website/VerifyPage";
 function App() {
-  const [booking, setBooking] = useState();
-  const [employees, setEmployees] = useState();
-  const [service, setService] = useState();
+  const [booking, setBooking] = useState()
+  const [employees, setEmployees] = useState()
+  const [service, setService] = useState()
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -58,11 +59,10 @@ function App() {
           <Route path="/" element={<WebsiteLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
-            {/* <Route path="booking-history/me" element={<UserHistory/>}/> */}
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
-            {/* <Route path="/verify" element={<VerifyPage />} /> */}
+            <Route path="/verify" element={<VerifyPage />} />
           </Route>
           <Route
             path="admin"
@@ -97,10 +97,9 @@ function App() {
                 }
               />
             </Route>
-            {/* <Route path="employee">
+            <Route path="employee">
               <Route index element={<ListEmployee />} />
               <Route path="add" element={<AddEmployee />} />
-              <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
             <Route path="service">
               <Route index element={<ListService dataEmployy={employees} />} />
@@ -109,7 +108,7 @@ function App() {
                 element={<AddService dataEmployy={employees} />}
               />
               <Route path=":id/edit" element={<EditService />} />
-            </Route> */}
+            </Route>
           </Route>
         </Routes>
       </div>

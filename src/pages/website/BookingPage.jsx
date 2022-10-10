@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EmployeeModal from "../../components/clients/EmployeeModal";
 import {
   Button,
@@ -8,12 +8,17 @@ import {
   Select,
   DatePicker,
   message,
+  Tag,
+  TimePicker,
 } from "antd";
 import moment from "moment";
 import useEmployee from "../../hooks/use-employee";
 import ServiceModal from "../../components/clients/ServiceModal";
 import useBooking from "../../hooks/use-booking";
 import { useNavigate } from "react-router-dom";
+import { httpGetOneService } from "../../api/services";
+import { getPrefixPhoneNumber } from "../../api/prefix";
+import { isAuthenticate } from "../../utils/LocalStorage";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -34,79 +39,98 @@ const validateMessages = {
     range: "${label} must be between ${min} and ${max}",
   },
 };
+const format = "HH";
 
-const onOk = (value) => {
-  console.log("onOk: ", value);
-};
 const disabledDate = (current) => {
   // Can not select days before today and today
   return current && current < moment().endOf("day");
 };
 
-const prefixSelector = (
-  <Form.Item name="prefix" noStyle>
+// ------------------------------------------------------------------------------------------------
+
+const BookingPage = () => {
+  const { data: employees, error } = useEmployee();
+  const navigate = useNavigate();
+  const { create } = useBooking();
+  // const [prefixs, setPrefixs] = useState();
+  // useEffect(() => {
+  //   const getPrefix = async () => {
+  //     const { data } = await getPrefixPhoneNumber();
+  //     setPrefixs(data);
+  //   };
+  //   console.log(prefixs);
+  //   getPrefix();
+  // }, []);
+
+  const prefixSelector = (
     <Select
       style={{
         width: 70,
       }}
     >
+      {/* {prefixs?.map((prefix) => (
+        <Option value={prefix.dial_code} key={prefix.code}>
+          {prefix.dial_code}
+        </Option>
+      ))} */}
       <Option value="84">+84</Option>
       <Option value="87">+87</Option>
     </Select>
-  </Form.Item>
-);
-// ------------------------------------------------------------------------------------------------
-
-const BookingPage = () => {
-  const { data: employees, error } = useEmployee();
-  const navigate = useNavigate()
-  const { create } = useBooking();
+  );
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
   const [date, setDate] = useState("");
-
   const [open, setOpen] = useState(false);
+  const [serviceDetail, setServiceDetail] = useState(null);
+  const [time, setTime] = useState();
   const onChangeSelected = (value) => {
     setId(value);
   };
+
   const onChange1 = (value, dateString) => {
     console.log("Selected Time: ", value);
-    setDate(Number(dateString.replace("-", "").replace("-", "")));
-  };
-  const onHandleAdd = (value) => {
-    console.log("cha:", value);
-  };
-  const [shiftId, setShiftId] = useState("");
-  const ParentShiftID = (e) => {
-    setShiftId(e);
-  };
-  const [serviceId, setServiceId] = useState("");
-  const ParentServiceID = (e) => {
-    setServiceId(e);
+    // setDate(Number(dateString.replace("-", "").replace("-", "")));
+    setDate(value);
   };
 
+  const [serviceId, setServiceId] = useState("");
+  const ParentServiceID = (id) => {
+    setServiceId(id);
+    getServiceName(id);
+  };
+  const getServiceName = async (id) => {
+    try {
+      const data = await httpGetOneService(id);
+      console.log(data);
+      setServiceDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const onSubmit = async (data) => {
     try {
       await create({
         ...data.user,
-        shiftId: shiftId.shiftId,
-        serviceId: serviceId,
-        date: date,
+        serviceId,
       }).then(() => {
         message.success("Đặt lịch thành công", 4);
-        navigate('/')
+        navigate("/");
       });
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
     }
-    // console.log("submit", {
-    //   ...data.user,
-    //   // employeeId: data.user.,
-    //   shiftId: shiftId.shiftId,
-    //   serviceId: serviceId,
-    //   date: date,
-    // });
+
+    console.log(data);
+  };
+  const onRemoveService = () => {
+    setServiceDetail(null);
+    setServiceId("");
+  };
+
+  const onChange = (time, timeString) => {
+    console.log("giờ", time, timeString);
+    setTime(timeString);
   };
 
   // ------------------------------------------------------------------------------------------------
@@ -131,7 +155,6 @@ const BookingPage = () => {
             <div className="m-5">
               <div className="mx-5">
                 <Form
-                  onAdd={onHandleAdd}
                   {...layout}
                   name="nest-messages"
                   validateMessages={validateMessages}
@@ -166,7 +189,6 @@ const BookingPage = () => {
                   >
                     <InputNumber />
                   </Form.Item>
-
                   {/* SĐT */}
                   <Form.Item
                     name={["user", "phoneNumber"]}
@@ -174,8 +196,8 @@ const BookingPage = () => {
                     rules={[
                       {
                         required: true,
-                        // type: "phone",
-                        // message: "Please input your phone number!",
+                        pattern: new RegExp(/((9|3|7|8|5)+([0-9]{8})\b)/g),
+                        message: "Số điện thoại không đúng định dạng!",
                       },
                     ]}
                   >
@@ -186,20 +208,20 @@ const BookingPage = () => {
                       }}
                     />
                   </Form.Item>
-
                   {/* Các dịch vụ */}
-                  <Form.Item
-                    label="Lựa chọn dịch vụ"
-                    rules={[
-                      {
-                        // required: true,
-                      },
-                    ]}
-                  >
+                  <Form.Item label="Lựa chọn dịch vụ">
                     <ServiceModal ParentServiceId={ParentServiceID} />
                   </Form.Item>
-
                   {/* Chọn ngày đặt lich */}
+                  {serviceDetail ? (
+                    <Form.Item label="Dịch vụ đã chọn">
+                      <Tag closable onClose={onRemoveService}>
+                        {serviceDetail.name}
+                      </Tag>
+                    </Form.Item>
+                  ) : (
+                    ""
+                  )}
                   <Form.Item
                     name={["user", "date"]}
                     label="Chọn ngày"
@@ -212,11 +234,9 @@ const BookingPage = () => {
                     <DatePicker
                       disabledDate={disabledDate}
                       onChange={onChange1}
-                      onOk={onOk}
                       size="large"
                     />
                   </Form.Item>
-
                   {/* chọn nhân viên */}
                   <Form.Item
                     label="Chọn nhân viên"
@@ -227,7 +247,10 @@ const BookingPage = () => {
                       },
                     ]}
                   >
-                    <Select onChange={onChangeSelected}>
+                    <Select onChange={onChangeSelected} defaultValue="default">
+                      <Select.Option disabled value="default">
+                        Vui lòng chọn nhân viên
+                      </Select.Option>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
                           <div
@@ -242,25 +265,27 @@ const BookingPage = () => {
                       ))}
                     </Select>
                   </Form.Item>
-
                   {/* chọn ca  */}
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Input value={shiftId.shiftName} readOnly />
-                    <EmployeeModal
+                  <Form.Item label="Chọn giờ đến" name={["user", "time"]}>
+                    {/* <EmployeeModal
                       date={date}
                       id={id}
                       open={open}
                       ParentShiftId={ParentShiftID}
-                    />
+                    /> */}
+                    <TimePicker onChange={onChange} format={format} />
                   </Form.Item>
                   {/* Ghi chú */}
                   <Form.Item name={["user", "note"]} label="Ghi chú">
                     <Input.TextArea />
                   </Form.Item>
-
                   {/* button */}
                   <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: "#00502b", border: "none" }}
+                      htmlType="submit"
+                    >
                       Đặt lịch
                     </Button>
                   </Form.Item>

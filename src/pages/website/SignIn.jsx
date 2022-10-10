@@ -1,7 +1,10 @@
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
+import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/user';
 
-const SignIn = () => {
+const SignIn = (props) => {
+  const navigate = useNavigate()
   const layout = {
     labelCol: {
       span: 6,
@@ -17,13 +20,26 @@ const SignIn = () => {
       "url('https://res.cloudinary.com/df7kkrfoe/image/upload/v1663325104/tac-phong-lam-viec-nhan-vien-spa-1_mfbeu0.jpg')",
     backgroundRepeat: 'no-repeat'
   };
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+  const onFinish = async (values) => {
+    const userValues = {
+      phoneNumber: values.phoneNumber.phoneNumber,
+      password: values.password.password
+    }
+    console.log(values.phoneNumber.phoneNumber, values.password.password);
+    try {
+      const data = await login(userValues)
+      console.log(data);
+      localStorage.setItem('user', JSON.stringify(data))
+      message.success('Đăng nhập thành công')
+      navigate('/')
+    } catch (error) {
+      message.error(`${error.message}`,2)
+    }
   };
   const validateMessages = {
     required: '${label} Không được bỏ trống!',
     types: {
-      email: '${label} không đúng định dạng!',
+      text: '${label} không đúng định dạng!',
     },
   };
   const texHello = {
@@ -51,11 +67,11 @@ const SignIn = () => {
             <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
 
               <Form.Item
-                name={['email', 'email']}
-                label="Email"
+                name={['phoneNumber', 'phoneNumber']}
+                label="Phone"
                 rules={[
                   {
-                    type: 'email',
+                    type: 'text',
                     required: true
                   },
                 ]}
@@ -74,7 +90,7 @@ const SignIn = () => {
                 <Input.Password />
 
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 name="remember"
                 valuePropName="checked"
                 wrapperCol={{
@@ -83,7 +99,7 @@ const SignIn = () => {
                 }}
               >
                 <Checkbox>Remember me</Checkbox>
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item
                 wrapperCol={{

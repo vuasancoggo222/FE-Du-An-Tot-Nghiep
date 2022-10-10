@@ -23,7 +23,7 @@ import { PrivateRouter } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
 import UserHistory from "./pages/website/user/UserHistory";
-import EditEmployee from "./pages/amin/employee/edit";
+import EditEmployee from "./pages/admin/employee/Edit";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -62,7 +62,7 @@ function App() {
           <Route path="/" element={<WebsiteLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
-            <Route path="booking-history/me" element={<UserHistory/>}/>
+            <Route path="booking-history/me" element={<UserHistory />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />

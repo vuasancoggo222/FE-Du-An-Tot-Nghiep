@@ -5,7 +5,7 @@ import { isAuthenticate } from "../utils/LocalStorage";
 const user = isAuthenticate()
 let userId = ""
 
-if(!user.id){
+if(!user){
   userId = "63392e3fec0fc66e7175e03f"
   // Guess userId when user is not sign in
 }

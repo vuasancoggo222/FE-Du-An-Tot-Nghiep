@@ -39,13 +39,22 @@ const validateMessages = {
     range: "${label} must be between ${min} and ${max}",
   },
 };
-const format = "HH";
+const format = "DD-MM-YYYY HH";
 
 const disabledDate = (current) => {
   // Can not select days before today and today
   return current && current < moment().endOf("day");
 };
-
+const range = (start, end) => {
+  const result = [];
+  for (let i = start; i < end; i++) {
+    result.push(i);
+  }
+  return result;
+};
+const disabledDateTime = () => ({
+  disabledHours: () => range(0, 24).splice(0, 7),
+});
 // ------------------------------------------------------------------------------------------------
 
 const BookingPage = () => {
@@ -233,9 +242,14 @@ const BookingPage = () => {
                     ]}
                   >
                     <DatePicker
+                      format={format}
                       disabledDate={disabledDate}
+                      disabledTime={disabledDateTime}
                       onChange={onChange1}
                       size="large"
+                      showTime={{
+                        defaultValue: moment("00", "HH"),
+                      }}
                     />
                   </Form.Item>
                   {/* chọn nhân viên */}
@@ -267,15 +281,15 @@ const BookingPage = () => {
                     </Select>
                   </Form.Item>
                   {/* chọn ca  */}
-                  <Form.Item label="Chọn giờ đến" name={["user", "time"]}>
-                    {/* <EmployeeModal
+                  {/* <Form.Item label="Chọn giờ đến" name={["user", "time"]}>
+                    <EmployeeModal
                       date={date}
                       id={id}
                       open={open}
                       ParentShiftId={ParentShiftID}
-                    /> */}
+                    />
                     <TimePicker onChange={onChange} format={format} />
-                  </Form.Item>
+                  </Form.Item> */}
                   {/* Ghi chú */}
                   <Form.Item name={["user", "note"]} label="Ghi chú">
                     <Input.TextArea />

@@ -7,6 +7,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Form, Input, message, Modal, Select, Space, Table, Tag, TimePicker, Tooltip } from 'antd';
 import { httpGetChangeStatus } from "../../../api/booking";
 import Highlighter from 'react-highlight-words';
+import moment from "moment";
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
     const [form] = Form.useForm();
@@ -44,74 +45,18 @@ const ListBooking = (props) => {
         }
     })
     // eslint-disable-next-line react/prop-types
-
-    // eslint-disable-next-line react/prop-types
-    console.log(props);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
     const changeEmployee = (e) => {
+        console.log(e);
         let count = 0;
         setEmployeeBooking(e)
         booking?.map((item) => {
             // console.log(renderDate(value._d) == renderDate(item.date));
             if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId._id == e && renderTime(item.time) == renderTime(timeUpdate)) {
-                if (item.employeeId._id == e) {
-                    count = Number(count) + 1;
-                }
-            }
-        })
-
-        if (count > 0) {
-            setIsHouseNoneBlock("block")
-            setIsHouse(count)
-        } else {
-            setIsHouseNoneBlock("none")
-        }
-
-        const elemenPick = document.querySelector("#nest-messages_time")
-        if (elemenPick.value == renderTime(handleBooking?.time)) {
-            elemenPick.style.marginLeft = "10px"
-            elemenPick.parentNode.removeChild(elemenPick)
-            const para = document.createElement("li");
-            para.innerText = renderTime(handleBooking?.time);
-            para.style.marginLeft = "10px"
-            para.className = "renderTime"
-            const elementParen = document.querySelectorAll(".ant-picker-input")
-            elementParen[1].appendChild(para);
-            const renTime = document.querySelector(".renderTime");
-            console.log(renTime);
-            renTime.addEventListener("click", () => {
-                renTime.parentNode.removeChild(renTime)
-                elementParen[1].appendChild(elemenPick).focus();
-            })
-        }
-        const elemenPickDate = document.querySelector("#nest-messages_date")
-        if (elemenPickDate.value == renderDate(dateUpdate)) {
-            elemenPickDate.style.marginLeft = "10px"
-            elemenPickDate.parentNode.removeChild(elemenPickDate)
-            const para = document.createElement("li");
-            para.innerText = renderDate(handleBooking?.date);
-            para.style.marginLeft = "10px"
-            para.className = "renderDate"
-            document.querySelector(".ant-picker-input").appendChild(para);
-            const renDate = document.querySelector(".renderDate");
-            console.log(renDate);
-            renDate.addEventListener("click", () => {
-                renDate.parentNode.removeChild(renDate)
-                document.querySelector(".ant-picker-input").appendChild(elemenPickDate).focus();
-            })
-        }
-    }
-    const onchangeDateBooking = (value) => {
-        let count = 0;
-        console.log("Selected Time: ", value._d);
-        setDateUpdate(value._d)
-        booking?.map((item) => {
-            // console.log(renderDate(value._d) == renderDate(item.date));
-            if (item.status == 1 && renderDate(item.date) == renderDate(value._d) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(timeUpdate)) {
                 count = Number(count) + 1;
             }
         })
@@ -122,23 +67,26 @@ const ListBooking = (props) => {
         } else {
             setIsHouseNoneBlock("none")
         }
-        const elemenPick = document.querySelector("#nest-messages_time")
-        console.log(elemenPick.value);
-        if (elemenPick.value == renderTime(handleBooking?.time)) {
-            elemenPick.style.marginLeft = "10px"
-            elemenPick.parentNode.removeChild(elemenPick)
-            const para = document.createElement("li");
-            para.innerText = renderTime(handleBooking?.time);
-            para.style.marginLeft = "10px"
-            para.className = "renderTime"
-            const elementParen = document.querySelectorAll(".ant-picker-input")
-            elementParen[1].appendChild(para);
-            const renTime = document.querySelector(".renderTime");
-            console.log(renTime);
-            renTime.addEventListener("click", () => {
-                renTime.parentNode.removeChild(renTime)
-                elementParen[1].appendChild(elemenPick).focus();
-            })
+        console.log(count);
+    }
+    const onchangeDateBooking = (value) => {
+        let count = 0;
+        console.log(employeeBooking);
+        // setDateUpdate(dateIp.value)
+        setDateUpdate(value)
+        booking?.map((item) => {
+            // console.log(renderDate(value._d) == renderDate(item.date));
+            if (item.status == 1 && renderDate(item.date) == renderDate(value) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(timeUpdate)) {
+                count = Number(count) + 1;
+
+            }
+        })
+        console.log(count);
+        if (count > 0) {
+            setIsHouseNoneBlock("block")
+            setIsHouse(count)
+        } else {
+            setIsHouseNoneBlock("none")
         }
     };
     const onOk = (value) => {
@@ -151,10 +99,10 @@ const ListBooking = (props) => {
         setSearchText('');
     };
     const onchangeTimeBooking = async (value) => {
-        setTimeUpdate(value._d)
+        setTimeUpdate(value)
         let count = 0;
         booking?.map((item) => {
-            if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(value._d)) {
+            if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(value)) {
                 count = Number(count) + 1;
             }
         })
@@ -164,26 +112,9 @@ const ListBooking = (props) => {
         } else {
             setIsHouseNoneBlock("none")
         }
-        const elemenPick = document.querySelector("#nest-messages_date")
-        if (elemenPick.value == renderDate(dateUpdate)) {
-            elemenPick.style.marginLeft = "10px"
-            elemenPick.parentNode.removeChild(elemenPick)
-            const para = document.createElement("li");
-            para.innerText = renderDate(handleBooking?.date);
-            para.style.marginLeft = "10px"
-            para.className = "renderDate"
-            document.querySelector(".ant-picker-input").appendChild(para);
-            const renDate = document.querySelector(".renderDate");
-            console.log(renDate);
-            renDate.addEventListener("click", () => {
-                renDate.parentNode.removeChild(renDate)
-                document.querySelector(".ant-picker-input").appendChild(elemenPick).focus();
-            })
-        }
+
     };
 
-    const btn = document.querySelectorAll(".ant-checkbox-input");
-    console.log(btn);
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div
@@ -450,7 +381,7 @@ const ListBooking = (props) => {
                 await setHandleBooking(item)
                 setDateUpdate(item.date)
                 setTimeUpdate(item.time)
-                setEmployeeBooking(item.employeeId._id)
+                setEmployeeBooking(item.employeeId._id || "")
                 return
             }
         })
@@ -462,33 +393,18 @@ const ListBooking = (props) => {
                     return
                 }
                 await seDateBooking(item.date.toString())
+                form.setFieldsValue({
+                    name: item?.name,
+                    phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
+                    serviceId: item?.serviceId[0]._id,
+                    employeeId: item?.employeeId?._id,
+                    note: item?.note,
+                    date: (moment(renderDate(item?.date), dateFormat)),
+                    time: (moment(renderTime(item?.time), format)),
+                });
                 await setIsModalOpen(true);
-                const renDate = document.querySelector(".renderDate");
-                const renTime = document.querySelector(".renderTime");
-                if (renDate) {
-                    renDate.innerText = renderDate(item.date)
-                }
-                if (renTime) {
-                    renTime.innerText = renderTime(item.time)
-                }
-
-                const elemenTime = document.querySelector("#nest-messages_time")
-                elemenTime.value = renderTime(item.time)
-                const elemenPick = document.querySelector("#nest-messages_date")
-                elemenPick.value = renderDate(item.date)
-                const elemenEmployy = document.querySelectorAll(".ant-select-selector")
-                const para = document.createElement("span");
-                para.innerText = item.employeeId?.name || "";
-                para.className = "ant-select-selection-item"
-                elemenEmployy[2].appendChild(para);
-                const p = document.querySelector(".ant-select-selection-placeholder")
-                p.parentNode.removeChild(p);
-                elemenEmployy[2].addEventListener("click", () => {
-                    para.parentNode.removeChild(para)
-                    elemenEmployy[2].appendChild(p);
-                })
             }
-
+                setReadOrigin("readOnly")
         })
 
         setIshandle(isButon)
@@ -521,17 +437,9 @@ const ListBooking = (props) => {
     const handleOk = async () => {
 
     };
-    // const showtime = (data) => {
-    //     const str = data.toString()
-    //     return str.substring(0, 4) + "-" + str.substring(4, 6) + "-" + str.substring(6, 8)
-    // }
 
     const handleCancel = () => {
         setIsModalOpen(false);
-        const p = document.querySelectorAll(".ant-select-selection-item")
-        console.log(p[2]);
-        p[2].parentNode.removeChild(p[2])
-
     };
     const renderTime = (value) => {
         const d = new Date(value)
@@ -556,7 +464,6 @@ const ListBooking = (props) => {
         }
         return `${d.getFullYear()}-${month}-${date}`;
     }
-    console.log(btn);
     const columns = [
         {
             title: 'Name',
@@ -778,7 +685,6 @@ const ListBooking = (props) => {
                 }}
             >
                 <Option value="84">+84</Option>
-                <Option value="87">+87</Option>
             </Select>
         </Form.Item>
     );
@@ -791,86 +697,6 @@ const ListBooking = (props) => {
             span: 16,
         },
     };
-    form.setFieldsValue({
-        name: handleBooking?.name,
-        phoneNumber: handleBooking?.phoneNumber.toString().replace("+84", "0"),
-        serviceId: handleBooking?.serviceId[0]._id,
-        // employeeId: handleBooking?.employeeId?._id,
-        note: handleBooking?.note,
-    });
-    const handleOnbler = (e) => {
-        if (e.target.value == "") {
-            const elemenPick = document.querySelector("#nest-messages_date")
-            elemenPick.style.marginLeft = "10px"
-            elemenPick.parentNode.removeChild(elemenPick)
-            const para = document.createElement("li");
-            para.innerText = renderDate(handleBooking?.date);
-            para.style.marginLeft = "10px"
-            para.className = "renderDate"
-            document.querySelector(".ant-picker-input").appendChild(para);
-            const renDate = document.querySelector(".renderDate");
-            const Date = document.querySelector(".ant-picker");
-            console.log(renDate);
-            Date.addEventListener("click", () => {
-                renDate.parentNode.removeChild(renDate)
-                document.querySelector(".ant-picker-input").appendChild(elemenPick).focus();
-            })
-            const elemenPickTime = document.querySelector("#nest-messages_time")
-            elemenPickTime.style.marginLeft = "10px"
-            elemenPickTime.parentNode.removeChild(elemenPickTime)
-            const paraTime = document.createElement("li");
-            paraTime.innerText = renderTime(handleBooking?.time);
-            paraTime.style.marginLeft = "10px"
-            paraTime.className = "renderTime"
-            const elementParen = document.querySelectorAll(".ant-picker-input")
-            elementParen[1].appendChild(paraTime);
-            const renTime = document.querySelector(".renderTime");
-            const Time = document.querySelectorAll(".ant-picker");
-            console.log(renTime);
-            Time[1].addEventListener("click", () => {
-                renTime.parentNode.removeChild(renTime)
-                elementParen[1].appendChild(elemenPickTime).focus();
-            })
-            setDateUpdate(handleBooking.date)
-        }
-    }
-
-    const handleOnblerTime = (e) => {
-        if (e.target.value == "") {
-            const elemenPick = document.querySelector("#nest-messages_time")
-            elemenPick.style.marginLeft = "10px"
-            elemenPick.parentNode.removeChild(elemenPick)
-            const para = document.createElement("li");
-            para.innerText = renderTime(handleBooking?.time);
-            para.style.marginLeft = "10px"
-            para.className = "renderTime"
-            const elementParen = document.querySelectorAll(".ant-picker-input")
-            elementParen[1].appendChild(para);
-            const renTime = document.querySelector(".renderTime");
-            const Time = document.querySelectorAll(".ant-picker");
-            console.log(renTime);
-            Time[1].addEventListener("click", () => {
-                renTime.parentNode.removeChild(renTime)
-                elementParen[1].appendChild(elemenPick).focus();
-            })
-            const elemenPickDate = document.querySelector("#nest-messages_date")
-            elemenPickDate.style.marginLeft = "10px"
-            elemenPickDate.parentNode.removeChild(elemenPickDate)
-            const paraD = document.createElement("li");
-            paraD.innerText = renderDate(handleBooking?.date);
-            paraD.style.marginLeft = "10px"
-            paraD.className = "renderDate"
-            document.querySelector(".ant-picker-input").appendChild(paraD);
-            const renDate = document.querySelector(".renderDate");
-            const Date = document.querySelector(".ant-picker");
-            console.log(renDate);
-            Date.addEventListener("click", () => {
-                renDate.parentNode.removeChild(renDate)
-                document.querySelector(".ant-picker-input").appendChild(elemenPickDate).focus();
-            })
-            setDateUpdate(handleBooking.time)
-        }
-    }
 
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
@@ -881,13 +707,7 @@ const ListBooking = (props) => {
 
         <Table columns={columns} dataSource={datatable} />;
         <Modal footer={null} style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            {/* <p>Tên Khách hàng: {}</p>
-            <p>Số điện thoại: </p>
-            <p>Ngày: {handleBooking?.date}</p>
-            <p>Giờ: {}</p>
-            <p>Nhân viên: {handleBooking?.employeeId.name}</p>
-            <p>Dịch vụ: {handleBooking?.}</p>
-            <p>Note: {handleBooking?.note}</p> */}
+
             <Form
                 form={form}
                 onAdd={onHandleAdd}
@@ -909,13 +729,10 @@ const ListBooking = (props) => {
                         },
                     ]}
                 >
-                    <Input />
+                    
+                    <Input  disabled = {ishandle == 1 ? false : true}  />
                 </Form.Item>
 
-                {/* Tên */}
-
-
-                {/* SĐT */}
                 <Form.Item
                     name="phoneNumber"
                     label="Số điện thoại"
@@ -928,7 +745,7 @@ const ListBooking = (props) => {
                     ]}
                 >
                     <Input
-
+                     disabled = {ishandle == 1 ? false : true}
                         addonBefore={prefixSelector}
                         style={{
                             width: "100%",
@@ -946,7 +763,7 @@ const ListBooking = (props) => {
                     ]}
                 >
 
-                    <Select>
+                    <Select  disabled = {ishandle == 1 ? false : true}>
                         {props.dataService?.map((item, index) => (
                             <Select.Option value={item._id} key={index}>
                                 {item.name}
@@ -954,132 +771,76 @@ const ListBooking = (props) => {
                         ))}
                     </Select>
                 </Form.Item>
-
                 <Form.Item
                     name="date"
-                    label="Chọn ngày"
+                    label="Ngày đến"
+                    rules={[
+                        {
+                            required: true,
+                            // eslint-disable-next-line no-undef
+                        },
+                    ]}
                 >
                     <DatePicker
-                        onBlur={handleOnbler}
-                        class="datePick"
+                     disabled = {ishandle == 1 ? false : true}
+                        showTime
                         format={dateFormat}
-                        // disabledDate={disabledDate}
-                        onChange={onchangeDateBooking}
-                        onOk={onOk}
+                        onOk={onchangeDateBooking}
+                    // onOk={onOk}
                     />
                 </Form.Item>
 
                 {/* chọn nhân viên */}
                 <Form.Item
+                    name="employeeId"
+                    label="Nhân viên"
                     rules={[
                         {
-                            required: !handleBooking?.employeeId,
+                            required: true,
                             // eslint-disable-next-line no-undef
                         },
                     ]}
-                    label="Chọn nhân viên"
-                    name="employeeId"
 
                 >
-                    <Select onChange={changeEmployee}
-                    // defaultValue={handleBooking?.employeeId?.name}
-                    >
-                        {props.dataEmployy?.map((item) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <Select.Option value={item._id}>{item.name}</Select.Option>
-                        ))}
 
-
-                    </Select>
-                    {/* <Select onChange={changeEmployee}>
-
+                    <Select  disabled = {ishandle == 1 ? false : true} onChange={changeEmployee} >
                         {props.dataEmployy?.map((item, index) => (
-                            <Select.Option value={item._id} key={index}>
+                            <Select.Option  value={item._id} key={index}>
                                 {item.name}
                             </Select.Option>
                         ))}
-
-                    </Select> */}
+                    </Select >
                 </Form.Item>
+
                 <Form.Item
-                    label="Chọn giờ đến"
                     name="time"
-
+                    label="Giờ đến"
+                    rules={[
+                        {
+                            required: true,
+                            // eslint-disable-next-line no-undef
+                        },
+                    ]}
                 >
-                    {/* <Select onChange={onChangeSelected}>
-                      {shift?.map((item, index) => {
-                        let checkIs = true;
-
-                        employeeBooking?.timeWork.map((itemStaff) => {
-                          if (itemStaff.date === dateBooking) {
-                            if (item._id === itemStaff.shiftId)
-                              checkIs = false
-                            return
-                          }
-                        }
-                        )
-                        if (checkIs)
-                          return (
-                            <Select.Option value={item._id} key={index}>
-                              {item.shiftName + "(" + item.timeStart + "-" + item.timeEnd + ")"}
-                              <div
-                                className=""
-                              // onClick={() => {
-                              //   setOpen(true);
-                              // }}
-                              >
-                              </div>
-                            </Select.Option>
-                          )
-                      })}
-                    </Select> */}
                     <TimePicker
-                        onChange={onchangeTimeBooking}
-                        onBlur={handleOnblerTime}
-                        // e.target.value=handleBooking?.date
-                        format={format} />
-
+                     disabled = {ishandle == 1 ? false : true}
+                        format={format}
+                        onOk={onchangeTimeBooking}
+                    />
                 </Form.Item>
+
                 <Form.Item
                     style={{ display: ishouseNoneBlock }}
                     label="Note"
                     name="time"
                 >
-                    {/* <Select onChange={onChangeSelected}>
-                      {shift?.map((item, index) => {
-                        let checkIs = true;
-
-                        employeeBooking?.timeWork.map((itemStaff) => {
-                          if (itemStaff.date === dateBooking) {
-                            if (item._id === itemStaff.shiftId)
-                              checkIs = false
-                            return
-                          }
-                        }
-                        )
-                        if (checkIs)
-                          return (
-                            <Select.Option value={item._id} key={index}>
-                              {item.shiftName + "(" + item.timeStart + "-" + item.timeEnd + ")"}
-                              <div
-                                className=""
-                              // onClick={() => {
-                              //   setOpen(true);
-                              // }}
-                              >
-                              </div>
-                            </Select.Option>
-                          )
-                      })}
-                    </Select> */}
-
-                    <div className="" style={{ color: "#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
+                    <div  className="" style={{ color: "#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
                 </Form.Item>
 
 
                 {/* chọn ca  */}
                 <Form.Item name="note" label="Ghi chú">
-                    <Input.TextArea />
+                    <Input.TextArea disabled = {ishandle == 1 ? false : true} />
                 </Form.Item>
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                     <Button type="primary" htmlType="submit">

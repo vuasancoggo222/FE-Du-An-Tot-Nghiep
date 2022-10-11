@@ -2,11 +2,12 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, Tooltip } from 'antd';
+import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Tooltip } from 'antd';
 import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
-import { httpChangeStatusTimeWork, httpGetOne } from "../../../../api/employee";
+import { httpGetOne } from "../../../../api/employee";
 const ListBookingByEmployee = (props) => {
+    const format = 'HH';
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -14,7 +15,6 @@ const ListBookingByEmployee = (props) => {
     const [titleModal, setTitleModal] = useState("Đang diễn ra");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
-    const [dateFilter, setDateFilter] = useState();
     const [isEmploye, setIsemploye] = useState();
     // eslint-disable-next-line react/prop-types
     const booking = props.dataBooking
@@ -22,7 +22,7 @@ const ListBookingByEmployee = (props) => {
 
     const isEmployee = JSON.parse(localStorage.getItem('user'));
     if (isEmployee) {
-        console.log(isEmployee._id
+        console.log(isEmployee
         );
     }
     // eslint-disable-next-line react/prop-types
@@ -33,13 +33,7 @@ const ListBookingByEmployee = (props) => {
         }
     })
     // eslint-disable-next-line react/prop-types
-    const shift = props.dataShift?.shift.map((item) => {
-        return {
-            text: item.shiftName,
-            value: item.shiftName,
-        }
-    })
-    console.log(shift);
+
     // eslint-disable-next-line react/prop-types
     console.log(props);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -57,15 +51,90 @@ const ListBookingByEmployee = (props) => {
         clearFilters();
         setSearchText('');
     };
-    const onChange1 = (value, dateString) => {
-        setDateFilter([
-            {
-                text: Number(dateString.replace("-", "").replace("-", "")),
-                value: Number(dateString.replace("-", "").replace("-", ""))
-            }
-        ])
-        console.log(dateFilter)
 
+    const renderTime = (value) => {
+        const d = new Date(value)
+        let time = d.getHours();
+        if (time.toString().length == 1) {
+            time = `0${time}`
+        }
+        return time
+    }
+
+    const renderDate = (value) => {
+        const d = new Date(value)
+        let date = d.getDate();
+        let month = d.getMonth() + 1;
+        if (date.toString().length == 1) {
+            date = `0${date}`;
+        }
+        if (month.toString().length == 1) {
+            month = `0${month}`;
+        }
+        return `${d.getFullYear()}-${month}-${date}`;
+    }
+    const showModal = (e) => {
+        // eslint-disable-next-line react/prop-types
+        const isButon = e.target.getAttribute("data");
+        const idBooking = e.target.getAttribute("dataId");
+        console.log(idBooking);
+        // eslint-disable-next-line react/prop-types
+        booking.map(async (item) => {
+            if (item._id == idBooking) {
+                if (item.status == isButon) {
+                    return
+                }
+                await setIsModalOpen(true);
+            }
+        })
+
+        // eslint-disable-next-line react/prop-types
+        booking.map(async (item) => {
+            if (item._id == idBooking) {
+                await setHandleBooking(item)
+                console.log(item);
+                return
+            }
+        })
+        setIshandle(isButon)
+        if (isButon === "3") {
+            setTitleModal("Chuyển sang Đang diễn ra")
+        } else if (isButon === "4") {
+            setTitleModal("Chuyển sang Hoàn thành")
+        } else {
+            setTitleModal("Chuyển sang khách không đến")
+        }
+    };
+
+    // eslint-disable-next-line no-unused-vars
+    const handleOk = async () => {
+        setIsModalOpen(false);
+        console.log(ishandle);
+        if (ishandle === "3") {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 3 })
+                message.success(`Xác nhận khách hàng "${handleBooking.name}"`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
+        } else if (ishandle === "4") {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 4 })
+                message.success(`Hủy khách hàng "${handleBooking.name}"`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
+        } else {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 5 })
+
+                message.success(`Reset chờ khách hàng "${handleBooking.name}"`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
+        }
+        // eslint-disable-next-line react/prop-types
+        props.handleChangeStatus();
     };
 
     const getColumnSearchProps = (dataIndex) => ({
@@ -153,76 +222,169 @@ const ListBookingByEmployee = (props) => {
             ),
     });
 
-    const showModal = (e) => {
-        // eslint-disable-next-line react/prop-types
-        const isButon = e.target.getAttribute("data");
-        const idBooking = e.target.getAttribute("dataId");
-        console.log(idBooking);
-        // eslint-disable-next-line react/prop-types
-        booking.map(async (item) => {
-            if (item._id == idBooking) {
-                if (item.status == isButon) {
-                    return
-                }
-                await setIsModalOpen(true);
-            }
-        })
+    const getColumnSearchDateTime = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div
+                style={{
+                    padding: 8,
+                }}
+            >
 
-        // eslint-disable-next-line react/prop-types
-        booking.map(async (item) => {
-            if (item._id == idBooking) {
-                await setHandleBooking(item)
-                console.log(item);
-                return
+                <DatePicker
+                    // disabledDate={disabledDate}
+                    onChange={async (e) => { console.log(renderDate(e._d)), setSelectedKeys([renderDate(e._d)]) }}
+                    // onChange={setSelectedKeys([2022006])}
+                    onOk={onOk}
+                    style={{
+                        marginBottom: 8,
+                        display: 'block',
+                    }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({
+                                closeDropdown: false,
+                            });
+                            setSearchText(selectedKeys[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? '#1890ff' : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
             }
-        })
-        setIshandle(isButon)
-        if (isButon === "3") {
-            setTitleModal("Đang diễn ra")
-        } else if (isButon === "4") {
-            setTitleModal("Hoàn thành")
-        } else {
-            setTitleModal("khách không đến")
-        }
-    };
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{
+                        backgroundColor: '#ffc069',
+                        padding: 0,
+                    }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
 
-    // eslint-disable-next-line no-unused-vars
-    const handleOk = async () => {
-        setIsModalOpen(false);
-        console.log(ishandle);
-        if (ishandle === "3") {
-            try {
-                await httpGetChangeStatus(handleBooking._id, { status: 3 })
-                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 3 })
-                message.success(`Xác nhận khách hàng "${handleBooking.name}"`)
-            } catch (error) {
-                message.error(`${error.response.data.message}`)
-            }
-        } else if (ishandle === "4") {
-            try {
-                await httpGetChangeStatus(handleBooking._id, { status: 4 })
-                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 4 })
-                message.success(`Hủy khách hàng "${handleBooking.name}"`)
-            } catch (error) {
-                message.error(`${error.response.data.message}`)
-            }
-        } else {
-            try {
-                await httpGetChangeStatus(handleBooking._id, { status: 5 })
-                await httpChangeStatusTimeWork(handleBooking.employeeId._id, handleBooking.date, handleBooking.shiftId._id, { status: 5 })
-                message.success(`Reset chờ khách hàng "${handleBooking.name}"`)
-            } catch (error) {
-                message.error(`${error.response.data.message}`)
-            }
-        }
-        // eslint-disable-next-line react/prop-types
-        props.handleChangeStatus();
-    };
-    const showtime = (data) => {
-        const str = data.toString()
-        return str.substring(0, 4) + "-" + str.substring(4, 6) + "-" + str.substring(6, 8)
-    }
+    const getColumnSearchTime = (dataIndex) => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div
+                style={{
+                    padding: 8,
+                }}
+            >
+                <TimePicker onChange={async (e) => { console.log(renderTime(e._d)), setSelectedKeys([renderTime(e._d).toString()]) }} style={{
+                    marginBottom: 8,
+                    display: 'block',
+                }} format={format} />
 
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({
+                                closeDropdown: false,
+                            });
+                            setSearchText(selectedKeys[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? '#1890ff' : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{
+                        backgroundColor: '#ffc069',
+                        padding: 0,
+                    }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -241,25 +403,22 @@ const ListBookingByEmployee = (props) => {
             ...getColumnSearchProps('phoneNumber')
         },
         {
-            title: <span > <DatePicker
-                // disabledDate={disabledDate}
-                onChange={onChange1}
-                onOk={onOk}
-            />
+            title: <span >
+                Ngày
 
             </span>,
             dataIndex: 'date',
             key: 'date',
-            render: (data) => <span>{showtime(data)}</span>,
-            filters: dateFilter,
-            onFilter: (value, record) => record.date.toString().indexOf(value) === 0,
+            render: (data) => <span>{data}</span>,
+            ...getColumnSearchDateTime("date")
+            // filters: dateFilter,
+            // onFilter: (value, record) => record.date.toString().indexOf(value) === 0,
         },
         {
-            title: 'Ca',
-            dataIndex: 'shiftId',
-            key: 'shiftId',
-            filters: shift,
-            onFilter: (value, record) => record.shiftId.indexOf(value) === 0,
+            title: 'Giờ',
+            dataIndex: 'time',
+            key: 'time',
+            ...getColumnSearchTime("time")
         },
         {
             title: 'Nhân viên',
@@ -282,9 +441,14 @@ const ListBookingByEmployee = (props) => {
                     text: 'Đã xác nhận',
                     value: '1',
                 },
+
                 {
                     text: 'Đang diễn ra',
                     value: '3',
+                },
+                {
+                    text: 'Hoàn thành',
+                    value: '4',
                 },
                 {
                     text: 'Khách không đến',
@@ -372,27 +536,28 @@ const ListBookingByEmployee = (props) => {
             },
         },
     ];
-
-    let datatable = []
+    let datatable = [];
     // eslint-disable-next-line react/prop-types
-    booking?.forEach(item => {
-        if (item.employeeId._id === isEmployee._id && item.status !== 0) {
+    booking?.forEach((item) => {
+        console.log(item);
+        if (item.employeeId._id == isEmploye?._id && item.status != 0 && item.status != 2) {
+            const time = renderTime(item.time)
+            const date = renderDate(item.date)
             datatable.push({
                 name: item.name,
                 phoneNumber: item.phoneNumber,
                 status: item.status,
-                date: item.date,
-                shiftId: item.shiftId.shiftName,
+                date: date,
+                time: time,
                 employeeId: item.employeeId.name,
-                serviceId: item.serviceId.name,
+                serviceId: item.serviceId[0].name,
                 action: (item)
             })
         }
     })
-    console.log(datatable);
     useEffect(() => {
         const getEmployee = async () => {
-            const res = await httpGetOne(isEmployee._id)
+            const res = await httpGetOne(isEmployee.id)
             setIsemploye(res)
             console.log(res);
         }
@@ -410,10 +575,10 @@ const ListBookingByEmployee = (props) => {
         <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <p>Tên Khách hàng: {handleBooking?.name}</p>
             <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
-            <p>Ngày: {handleBooking?.date}</p>
-            <p>Giờ: {handleBooking?.shiftId.shiftName}</p>
+            <p>Ngày: {renderDate(handleBooking?.date)}</p>
+            <p>Giờ đến: {renderTime(handleBooking?.time)}</p>
             <p>Nhân viên: {handleBooking?.employeeId.name}</p>
-            <p>Dịch vụ: {handleBooking?.serviceId.name}</p>
+            <p>Dịch vụ: {handleBooking?.serviceId[0].name}</p>
             <p>Note: {handleBooking?.note}</p>
         </Modal>
     </div>;

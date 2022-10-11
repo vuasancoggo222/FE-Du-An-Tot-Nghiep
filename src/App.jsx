@@ -10,7 +10,6 @@ import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/admin/dashboard";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Detaibooking from "./pages/website/detailbook";
-import ListBooking from "./pages/admin/booking";
 import { httpGetAll } from "./api/booking";
 import { httpGetEmployees } from "./api/employee";
 import ListEmployee from "./pages/admin/employee";
@@ -22,9 +21,9 @@ import AddService from "./pages/admin/service/Add";
 import { PrivateRouter } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
+import ListBooking from "./pages/admin/booking";
+import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
-import EditEmployee from "./pages/admin/employee/Edit";
-
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();

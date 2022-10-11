@@ -2,6 +2,7 @@ import React from "react";
 import { Slide } from "react-slideshow-image";
 import { NavLink } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
+import ServiceCategory from "../../components/clients/ServiceCategory";
 
 const HomePage = () => {
   return (
@@ -50,107 +51,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-[190px_190px_190px] ">
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv1.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv2.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv4.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv3.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv5.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv7.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv8.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv9.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <img
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv2.jpg"
-                    alt=""
-                  />
-                  <div className="text-center py-[10px]">
-                    <a href="">
-                      <button>Nâng mũi</button>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <ServiceCategory/>
             </div>
           </div>
 

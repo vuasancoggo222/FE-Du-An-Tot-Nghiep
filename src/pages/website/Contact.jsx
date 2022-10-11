@@ -1,52 +1,27 @@
 import React from 'react';
-import {
-    DownOutlined,
-    ArrowLeftOutlined,
-    ArrowRightOutlined,
-} from '@ant-design/icons';
-import {
-    Button,
-    Form,
-    Input,
-    Row,
-    Col,
-    Dropdown,
-    Menu,
-    Space,
-    Typography,
-    Select,
-} from 'antd';
-
-const menu = (
-    <Menu
-        selectable
-        defaultSelectedKeys={['3']}
-        items={[
-            {
-                key: '1',
-                label: 'Item 1',
-            },
-            {
-                key: '2',
-                label: 'Item 2',
-            },
-            {
-                key: '3',
-                label: 'Item 3',
-            },
-        ]}
-    />
-);
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Row, Col, Space, message } from 'antd';
+import { httpAddContact } from '../../api/contact';
+import { useNavigate } from "react-router-dom"
 
 function Contact() {
-    const [form] = Form.useForm();
-    const onFinish = (values) => {
-        console.log('Success:', values);
+    const navigate = useNavigate()
+    const onSubmit = async (data) => {
+        var res = await httpAddContact(data)
+        if (res._id !== undefined) {
+            message.success("Add contact success")
+        }
+        navigate("/contact")
+    }
+    const onFinish = async (data) => {
+        const dataPost = { ...data }
+        await onSubmit(dataPost)
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+
 
     return (
         <React.Fragment>
@@ -60,6 +35,7 @@ function Contact() {
                                 onFinishFailed={onFinishFailed}
                                 autoComplete='off'
                                 layout='vertical'
+
                             >
                                 <Row gutter={[4, 8]}>
                                     <Col xxl={24} xl={24} sm={24} xs={24}>
@@ -67,13 +43,17 @@ function Contact() {
                                             <Col xxl={24} xl={10} sm={10} xs={10}>
                                                 <Form.Item
                                                     label='Your Name'
-                                                    name=''
+                                                    name='name'
+                                                    rules={[
+                                                        { required: true, message: "Please input your name !" },
+                                                    ]}
                                                     style={{ marginRight: '10px' }}
                                                 >
                                                     <Input
                                                         placeholder='Your Name'
                                                         className='form-input'
                                                     />
+                                                    
                                                 </Form.Item>
                                             </Col>
                                         </Row>
@@ -81,13 +61,17 @@ function Contact() {
                                             <Col xxl={24} xl={10} sm={10} xs={10}>
                                                 <Form.Item
                                                     label='Your Address'
-                                                    name=''
+                                                    name='address'
+                                                     rules={[
+                                                        { required: true, message: "Please input your address !" },
+                                                    ]}
                                                     style={{ marginRight: '10px' }}
                                                 >
                                                     <Input
                                                         placeholder='Your Address'
                                                         className='form-input'
                                                     />
+                                                   
                                                 </Form.Item>
                                             </Col>
                                         </Row>
@@ -95,13 +79,17 @@ function Contact() {
                                             <Col xxl={24} xl={10} sm={10} xs={10}>
                                                 <Form.Item
                                                     label='Your Context'
-                                                    name=''
+                                                    name='content'
+                                                    rules={[
+                                                        { required: true, message: "Please input your content !" },
+                                                    ]}
                                                     style={{ marginRight: '10px' }}
                                                 >
                                                     <Input
                                                         placeholder='Your Context'
                                                         className='form-input'
                                                     />
+                                                    
                                                 </Form.Item>
                                             </Col>
                                         </Row>
@@ -109,13 +97,17 @@ function Contact() {
                                             <Col xxl={24} xl={10} sm={10} xs={10}>
                                                 <Form.Item
                                                     label='Your PhoneNumber'
-                                                    name=''
+                                                    name='phoneNumber'
+                                                    rules={[
+                                                        { required: true, message: "Please input your phone number !" },
+                                                    ]}
                                                     style={{ marginRight: '10px' }}
                                                 >
                                                     <Input
                                                         placeholder='Your PhoneNumber'
                                                         className='form-input'
                                                     />
+                                                    
                                                 </Form.Item>
                                             </Col>
                                         </Row>
@@ -124,7 +116,7 @@ function Contact() {
                                 <Form.Item>
                                     <Space className='space'>
                                         <Button htmlType='submit' className='btn-submit'>
-                                            Submit
+                                            Thêm
                                             <ArrowRightOutlined />
                                         </Button>
                                     </Space>

@@ -13,7 +13,7 @@ const useContact = () => {
 
     const create = async (data) => {
         const revalidate = await method.httpAddContact(endpoint, data)
-        mutate(revalidate)
+        mutate([...data, revalidate]);
     }
     return {data, error, mutate, create}
 }

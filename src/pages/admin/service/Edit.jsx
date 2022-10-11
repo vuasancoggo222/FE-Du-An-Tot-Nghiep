@@ -1,14 +1,15 @@
 import { Button, Form, Input, Upload, Select, message } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
-import { httpGetOneService, httpPost, httpPut } from "../../../api/services";
+import { httpGetOneService } from "../../../api/services";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { updateService } from "../../../api/service";
+import axios from "axios";
 
 const normFile = (e) => {
   console.log("Upload event:", e);
-  
+
   if (Array.isArray(e)) {
     return e;
   }
@@ -18,6 +19,7 @@ const normFile = (e) => {
 const { Option } = Select;
 const EditService = () => {
   const navigate = useNavigate();
+  const [url, setUrl] = useState("");
   const { id } = useParams();
   const [form] = Form.useForm();
   useEffect(() => {
@@ -25,7 +27,6 @@ const EditService = () => {
       const dataService = await httpGetOneService(id);
       console.log(dataService);
       form.setFieldsValue({
-        id: dataService?._id,
         name: dataService?.name,
         description: dataService?.description,
         price: dataService?.price,
@@ -34,11 +35,33 @@ const EditService = () => {
     };
     getSerVice();
   }, []);
-
+  const uploadImage = async (options) => {
+    const { onSuccess, onError, file } = options;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "my_upload");
+    try {
+      const res = await axios({
+        url: "https://api.cloudinary.com/v1_1/trung9901/image/upload",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-formendcoded",
+        },
+        data: formData,
+      });
+      onSuccess("Ok");
+      message.success("Upload successfully !");
+      console.log("server res: ", res);
+      setUrl(res.data.secure_url);
+    } catch (err) {
+      onError({ err });
+    }
+  };
   const onFinish = async (data) => {
     console.log(data);
+    const a = { ...data, image: url };
     try {
-      await updateService(id, data).then(() => {
+      await updateService(id, a).then(() => {
         message.success("cap nhat thành công", 4);
         navigate("/admin/service");
       });
@@ -46,7 +69,26 @@ const EditService = () => {
       message.error(`${error.response.data.message}`, 4);
     }
   };
+  const setting = {
+    name: "file",
+    beforeUpload: (file) => {
+      const isPNG = file.type === "image/png";
+      const isJPG = file.type === "image/jpg";
+      const isJPEG = file.type === "image/jpeg";
+      if (!isPNG && !isJPG && !isJPEG) {
+        message.error(`không đúng định dạng ảnh`);
+      }
 
+      return isPNG, isJPG, isJPEG || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      console.log(info);
+      // setImageFile(info);
+    },
+    listType: "picture-card",
+    maxCount: 1,
+    onDrop: true,
+  };
   return (
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
@@ -96,7 +138,7 @@ const EditService = () => {
               getValueFromEvent={normFile}
               noStyle
             >
-              <Upload.Dragger name="files" action="/upload.do">
+              <Upload.Dragger {...setting} customRequest={uploadImage}>
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined />
                 </p>

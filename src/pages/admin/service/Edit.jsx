@@ -22,19 +22,24 @@ const EditService = () => {
   const [url, setUrl] = useState("");
   const { id } = useParams();
   const [form] = Form.useForm();
+
   useEffect(() => {
     const getSerVice = async () => {
       const dataService = await httpGetOneService(id);
-      console.log(dataService);
+      console.log("log service :", dataService);
+      setUrl(dataService?.image);
       form.setFieldsValue({
         name: dataService?.name,
         description: dataService?.description,
         price: dataService?.price,
         status: dataService?.status,
+        // image: dataService?.image,
       });
     };
+
     getSerVice();
   }, []);
+
   const uploadImage = async (options) => {
     const { onSuccess, onError, file } = options;
     const formData = new FormData();
@@ -69,26 +74,30 @@ const EditService = () => {
       message.error(`${error.response.data.message}`, 4);
     }
   };
+
   const setting = {
     name: "file",
     beforeUpload: (file) => {
-      const isPNG = file.type === "image/png";
-      const isJPG = file.type === "image/jpg";
-      const isJPEG = file.type === "image/jpeg";
-      if (!isPNG && !isJPG && !isJPEG) {
-        message.error(`không đúng định dạng ảnh`);
-      }
+      const accept = ["image/png", "image/jpeg", "image/jpg"];
 
-      return isPNG, isJPG, isJPEG || Upload.LIST_IGNORE;
+      if (file.size > 1024 * 1024 * 2) {
+        message.error(`file quá lớn`);
+        return Upload.LIST_IGNORE;
+      } else if (!accept.includes(file.type)) {
+        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
+        return Upload.LIST_IGNORE;
+      }
     },
     onChange: (info) => {
-      console.log(info);
+      // console.log(info);
       // setImageFile(info);
     },
-    listType: "picture-card",
+    listType: "picture",
     maxCount: 1,
     onDrop: true,
+    defaultFileList: [{ url, name: "default image" }],
   };
+
   return (
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
@@ -143,10 +152,7 @@ const EditService = () => {
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
-                  Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint">
-                  Support for a single or bulk upload.
+                  Nhấn hoặc kéo thả để tải ảnh lên
                 </p>
               </Upload.Dragger>
             </Form.Item>

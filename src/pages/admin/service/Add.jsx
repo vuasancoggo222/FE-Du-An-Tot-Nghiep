@@ -72,7 +72,7 @@ const AddService = () => {
     onChange: (info) => {
       // setImageFile(info);
     },
-    listType: "picture-card",
+    listType: "picture",
     maxCount: 1,
     onDrop: true,
   };

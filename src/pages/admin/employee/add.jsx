@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { httpAddEmployees } from "../../../api/employee";
 import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
+import { uploadCloudinary } from "../../../api/upload";
 const normFile = (e) => {
   console.log("Upload event:", e);
 
@@ -34,14 +34,7 @@ const AddEmployee = () => {
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
-      const res = await axios({
-        url: "https://api.cloudinary.com/v1_1/trung9901/image/upload",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-formendcoded",
-        },
-        data: formData,
-      });
+      const res = await uploadCloudinary(formData);
       onSuccess("Ok");
       message.success("Upload successfully !");
       setUrl(res.data.secure_url);
@@ -62,14 +55,15 @@ const AddEmployee = () => {
   const setting = {
     name: "file",
     beforeUpload: (file) => {
-      const isPNG = file.type === "image/png";
-      const isJPG = file.type === "image/jpg";
-      const isJPEG = file.type === "image/jpeg";
-      if (!isPNG && !isJPG && !isJPEG) {
-        message.error(`không đúng định dạng ảnh`);
-      }
+      const accept = ["image/png", "image/jpeg", "image/jpg"];
 
-      return isPNG, isJPG, isJPEG || Upload.LIST_IGNORE;
+      if (file.size > 1024 * 1024 * 2) {
+        message.error(`file quá lớn`);
+        return Upload.LIST_IGNORE;
+      } else if (!accept.includes(file.type)) {
+        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
+        return Upload.LIST_IGNORE;
+      }
     },
     onChange: (info) => {
       console.log(info);
@@ -162,7 +156,8 @@ const AddEmployee = () => {
           {/* Avater */}
           <Form.Item>
             <Form.Item
-              label="Avatar"
+              name="avatar"
+              label="avatar"
               valuePropName="fileList"
               getValueFromEvent={normFile}
               noStyle
@@ -171,7 +166,9 @@ const AddEmployee = () => {
                 <p className="ant-upload-drag-icon h-[15px]">
                   <InboxOutlined />
                 </p>
-                <p className="ant-upload-text">chose your image</p>
+                <p className="ant-upload-text">
+                  Nhấn hoặc kéo thả để tải ảnh lên
+                </p>
               </Upload.Dragger>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>

@@ -84,22 +84,24 @@ const EditEmployee = () => {
   const setting = {
     name: "file",
     beforeUpload: (file) => {
-      const isPNG = file.type === "image/png";
-      const isJPG = file.type === "image/jpg";
-      const isJPEG = file.type === "image/jpeg";
-      if (!isPNG && !isJPG && !isJPEG) {
-        message.error(`không đúng định dạng ảnh`);
-      }
+      const accept = ["image/png", "image/jpeg", "image/jpg"];
 
-      return isPNG, isJPG, isJPEG || Upload.LIST_IGNORE;
+      if (file.size > 1024 * 1024 * 2) {
+        message.error(`file quá lớn`);
+        return Upload.LIST_IGNORE;
+      } else if (!accept.includes(file.type)) {
+        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
+        return Upload.LIST_IGNORE;
+      }
     },
-    onChange: (info) => {
+    Change: (info) => {
       console.log(info);
       // setImageFile(info);
     },
     listType: "picture-card",
     maxCount: 1,
     onDrop: true,
+    defaultFileList: [{ url, name: "default image" }],
   };
   return (
     <>

@@ -4,7 +4,8 @@ import { httpUpdateEmployees, httpGetOne } from "../../../api/employee";
 import { useParams } from "react-router-dom";
 import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import { uploadCloudinary } from "../../../api/upload";
 
 const normFile = (e) => {
   console.log("Upload event:", e);
@@ -53,14 +54,7 @@ const EditEmployee = () => {
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
-      const res = await axios({
-        url: "https://api.cloudinary.com/v1_1/trung9901/image/upload",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-formendcoded",
-        },
-        data: formData,
-      });
+      const res = await uploadCloudinary(formData);
       onSuccess("Ok");
       message.success("Upload successfully !");
       console.log("server res: ", res);

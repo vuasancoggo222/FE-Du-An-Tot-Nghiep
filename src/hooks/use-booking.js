@@ -20,8 +20,13 @@ const useBooking = () => {
   const { data, error, mutate } = useSWR(endpoint, fetcher, {
     refreshInterval: 5000,
   });
-  const create = async (data) => {
-    const revalidate = await method.httpPost(endpoint+`?user=${userId}`, data);
+  const create = async (data,token) => {
+    const header = {
+      headers: {
+        "Authorization": `${token}`,
+      },
+    };
+    const revalidate = await method.httpPost(endpoint+`?user=${userId}`,data,header);
     mutate(revalidate);
   };
   const remove = async (id) => {

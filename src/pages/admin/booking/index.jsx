@@ -620,7 +620,7 @@ const ListBooking = (props) => {
         },
     ];
     // eslint-disable-next-line react/prop-types
-    const datatable = booking?.map((item) => {
+    const datatable = booking?.map((item) => {  
         const time = renderTime(item.time)
         const date = renderDate(item.date)
         return {

@@ -4,6 +4,7 @@ if (document.querySelector("#chart-bars")) {
   
   var ctx = document.getElementById("chart-bars").getContext("2d");
   
+  // eslint-disable-next-line no-undef
   new Chart(ctx, {
     type: "bar",
     data: {
@@ -82,6 +83,7 @@ if(document.querySelector("#chart-line")){
   gradientStroke1.addColorStop(1, 'rgba(94, 114, 228, 0.2)');
   gradientStroke1.addColorStop(0.2, 'rgba(94, 114, 228, 0.0)');
   gradientStroke1.addColorStop(0, 'rgba(94, 114, 228, 0)');
+  // eslint-disable-next-line no-undef
   new Chart(ctx1, {
     type: "line",
     data: {
@@ -93,6 +95,7 @@ if(document.querySelector("#chart-line")){
         pointRadius: 0,
         borderColor: "#5e72e4",
         backgroundColor: gradientStroke1,
+        // eslint-disable-next-line no-dupe-keys
         borderWidth: 3,
         fill: true,
         data: [50, 40, 300, 220, 500, 250, 400, 230, 500],

@@ -540,7 +540,7 @@ const ListBookingByEmployee = (props) => {
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
         console.log(item);
-        if (item.employeeId._id == isEmploye?._id && item.status != 0 && item.status != 2) {
+        if (item.employeeId?._id == isEmploye?._id && item.status != 0 && item.status != 2) { 
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({

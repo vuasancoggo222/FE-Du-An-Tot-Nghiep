@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/user';
 
 const SignIn = (props) => {
+  
   const navigate = useNavigate()
   const layout = {
     labelCol: {
@@ -33,7 +34,7 @@ const SignIn = (props) => {
       message.success('Đăng nhập thành công')
       navigate('/')
     } catch (error) {
-      message.error(`${error.message}`,2)
+      message.error(`${error.message}`, 2)
     }
   };
   const validateMessages = {
@@ -43,10 +44,10 @@ const SignIn = (props) => {
     },
   };
   const texHello = {
-    backgroundColor:"white",
-    color:"#002200",
+    backgroundColor: "white",
+    color: "#002200",
     opacity: 0.8
-  } 
+  }
   return <div>
     <div style={{ height: "320px", width: "100%" }} className=" border-green-600 ... 0 bg-white flex rounded-r-3xl rounded-l-2xl"  >
 
@@ -55,7 +56,7 @@ const SignIn = (props) => {
           <div >
             <div style={texHello} className="p-2 text-center">Chào bạn đến với Tuyến Spa</div>
             <div style={texHello} className="text-center">Dịch vụ spa uy tín</div>
-            <p style={{backgroundColor:"black"}} className="text-white text-sm text-center mt-5 ..."> Hỗ trợ đăng ký: 012344567</p>
+            <p style={{ backgroundColor: "black" }} className="text-white text-sm text-center mt-5 ..."> Hỗ trợ đăng ký: 012344567</p>
           </div>
         </div>
 
@@ -107,7 +108,10 @@ const SignIn = (props) => {
                   span: 16,
                 }}
               >
-                <Button type="primary" htmlType="submit">
+                <Button onClick={(() => {
+                  // eslint-disable-next-line react/prop-types
+                  props.handleSignIn()
+                })} type="primary" htmlType="submit">
                   Đăng nhập
                 </Button>
               </Form.Item>

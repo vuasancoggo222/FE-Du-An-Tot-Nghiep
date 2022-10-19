@@ -12,6 +12,23 @@ const CommentList = ({ comments }) => (
     renderItem={(props) => <Comment {...props} />}
   />
 );
+
+const ExampleComment = ({ children }) => (
+  <Comment
+    actions={[<span key="comment-nested-reply-to">Reply to</span>]}
+    author={<a>Han Solo</a>}
+    rate={<Rate />}
+    avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
+    content={
+      <p>
+        We supply a series of design principles, practical patterns and high
+        quality design resources (Sketch and Axure).
+      </p>
+    }
+  >
+    {children}
+  </Comment>
+);
 // eslint-disable-next-line react/prop-types
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
   <>
@@ -77,6 +94,12 @@ const Formcomment = () => {
         }
       />
       {comments.length > 0 && <CommentList comments={comments} />}
+      <ExampleComment>
+        <ExampleComment>
+          <ExampleComment />
+          <ExampleComment />
+        </ExampleComment>
+      </ExampleComment>
     </>
   );
 };

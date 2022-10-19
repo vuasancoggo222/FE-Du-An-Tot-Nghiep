@@ -26,6 +26,9 @@ import ListBooking from "./pages/admin/booking";
 import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
 import ContactList from "./pages/admin/contact/index"
+import UserInfo from "./components/clients/UserInfo";
+import ListUser from "./pages/admin/user";
+
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -63,7 +66,11 @@ function App() {
           <Route path="/" element={<WebsiteLayout />}>
             <Route index element={<HomePage />} />
             <Route path="/booking" element={<BookingPage />} />
-            <Route path="booking-history/me" element={<UserHistory />} />
+
+            <Route element={<UserInfo />}>
+              <Route path="booking-history/me" element={<UserHistory />} />
+            </Route>
+
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
@@ -117,6 +124,9 @@ function App() {
             </Route>
             <Route path="contact">
                 <Route index element={<ContactList/>}/>
+            </Route>
+            <Route path="user">
+              <Route index element={<ListUser />}></Route>
             </Route>
           </Route>
         </Routes>

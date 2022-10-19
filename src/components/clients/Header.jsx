@@ -5,22 +5,22 @@ import { Avatar, Dropdown, Menu, Modal } from "antd";
 import SignIn from "../../pages/website/SignIn";
 import SignUp from "../../pages/website/SignUp";
 import { isAuthenticate } from "../../utils/LocalStorage";
-import {useNavigate} from 'react-router-dom'
-import {message} from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { message } from 'antd'
 
 
 const Header = () => {
-  
+
   const navigate = useNavigate()
-  const [auth,setAuth] =  useState(false)
-  const [user,setUser] = useState({})
-  useEffect(()=>{
+  const [auth, setAuth] = useState()
+  const [user, setUser] = useState({})
+  useEffect(() => {
     const user = isAuthenticate()
-    if(user){
+    if (user) {
       setAuth(true)
       setUser(user)
     }
-  },[])
+  }, [])
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -33,6 +33,15 @@ const Header = () => {
     setIsModal(e.target.getAttribute("data"));
   };
 
+  const handleSignIn = () => {
+    const user = isAuthenticate()
+    if (user) {
+      setAuth(true)
+      setUser(user)
+    }
+    setOpen(false)
+  }
+
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
@@ -41,11 +50,12 @@ const Header = () => {
       setConfirmLoading(false);
     }, 2000);
   };
+
   // Kiểm tra nhấn signin/signup
   const checkInUp = () => {
     console.log(ismolDal);
     if (ismolDal === "signin") {
-      return <SignIn/>;
+      return <SignIn handleSignIn={handleSignIn} />;
     } else {
       return <SignUp />;
     }
@@ -55,10 +65,10 @@ const Header = () => {
     console.log("Clicked cancel button");
     setOpen(false);
   };
-  const handleLogout = () =>{
+  const handleLogout = () => {
     console.log(1);
     localStorage.removeItem('user')
-    message.success('Đăng xuất thành công.',2)
+    message.success('Đăng xuất thành công.', 2)
     navigate('/')
     setAuth(false)
   }
@@ -122,15 +132,15 @@ const Header = () => {
                   </Link>
                 </div>
                 {auth ? <div className="flex-auto">
-                <button className=" mx-3 rounded-md bg-[#003C21] mr-5  border-2 border-emerald-500 px-3">
+                  <button className=" mx-3 rounded-md bg-[#003C21] mr-5  border-2 border-emerald-500 px-3">
                     <Link className="text-[#fff]" to={`/booking`}>
                       Đặt Lịch
                     </Link>
                   </button>
-                <Dropdown overlay={menu} placement="bottom">
-                <Avatar  style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>{user.name.slice(0,2)}</Avatar>
-                </Dropdown>
-                </div>   : <div className="flex-auto">
+                  <Dropdown overlay={menu} placement="bottom">
+                    <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>{user.name.slice(0, 2)}</Avatar>
+                  </Dropdown>
+                </div> : <div className="flex-auto">
                   <button
                     data="signin"
                     onClick={showModal}

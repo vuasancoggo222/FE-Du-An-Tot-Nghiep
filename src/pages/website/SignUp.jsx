@@ -1,6 +1,6 @@
 import { Button,  Form, Input,message, Select } from "antd";
 import { Option } from "antd/lib/mentions";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../api/user";
 

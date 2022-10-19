@@ -4,12 +4,12 @@ import React, { useState } from 'react'
 import { Typography } from 'antd';
 const { Title } = Typography;
 import {auth} from '../../firebase/config'
-import { RecaptchaVerifier,signInWithPhoneNumber  } from "firebase/auth";
+import { signInWithPhoneNumber  } from "firebase/auth";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { changeAccountStatus } from '../../api/user';
+import { generateCaptcha } from '../../utils/GenerateCaptcha';
 function useQuery() {
     const { search } = useLocation();
-  
     return React.useMemo(() => new URLSearchParams(search), [search]);
   }
 const VerifyPage = () => {
@@ -40,14 +40,7 @@ const VerifyPage = () => {
           },
         },
       };
-    const generateCaptcha = () =>{
-        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
-            'size': 'invisible',
-            'callback': (response) => {
-            },
-
-          }, auth);
-    }
+    
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
         const phoneNumber = `+${values.prefix}${values.phone}`

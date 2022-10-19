@@ -1,6 +1,12 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
+import {
+  ClockCircleFilled,
+  ClockCircleOutlined,
+  SettingFilled,
+  SettingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Avatar, Image, Menu } from "antd";
 
 import { isAuthenticate } from "../../utils/LocalStorage";
@@ -15,9 +21,21 @@ const UserInfo = () => {
     };
   }
   const items = [
-    getItem(<Link to={`/booking-history/me`}>Lịch sử đặt lịch</Link>, "1"),
-    getItem(<Link to={`/user-information/me`}>Thông tin tài khoản</Link>, "2"),
-    getItem(<Link to={`/user-setting/me`}>Cài đặt</Link>, "3"),
+    getItem(
+      <Link to={`/booking-history/me`}>Lịch sử đặt lịch</Link>,
+      "1",
+      <ClockCircleFilled />
+    ),
+    getItem(
+      <Link to={`/user-information/me`}>Thông tin tài khoản</Link>,
+      "2",
+      <UserOutlined />
+    ),
+    getItem(
+      <Link to={`/user-setting/me`}>Cài đặt</Link>,
+      "3",
+      <SettingFilled />
+    ),
   ];
   return (
     <>

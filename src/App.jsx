@@ -24,6 +24,7 @@ import VerifyPage from "./pages/website/VerifyPage";
 import ListBooking from "./pages/admin/booking";
 import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
+import ListUser from "./pages/admin/user";
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -112,6 +113,11 @@ function App() {
                 element={<AddService dataEmployy={employees} />}
               />
               <Route path=":id/edit" element={<EditService />} />
+            </Route>
+            <Route path="user">
+              <Route index element ={<ListUser />}>
+
+              </Route>
             </Route>
           </Route>
         </Routes>

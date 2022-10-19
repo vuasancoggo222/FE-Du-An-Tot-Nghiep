@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import "./index.css"
 import WebsiteLayout from "./layouts/WebsiteLayout";
 import HomePage from "./pages/website/Home";
 import BookingPage from "./pages/website/BookingPage";
@@ -24,8 +25,10 @@ import VerifyPage from "./pages/website/VerifyPage";
 import ListBooking from "./pages/admin/booking";
 import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
+import ContactList from "./pages/admin/contact/index"
 import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
+
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -118,6 +121,9 @@ function App() {
                 element={<AddService dataEmployy={employees} />}
               />
               <Route path=":id/edit" element={<EditService />} />
+            </Route>
+            <Route path="contact">
+                <Route index element={<ContactList/>}/>
             </Route>
             <Route path="user">
               <Route index element={<ListUser />}></Route>

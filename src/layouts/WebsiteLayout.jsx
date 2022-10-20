@@ -4,18 +4,22 @@ import { Layout } from "antd";
 import Header from "../components/clients/Header";
 import Footer from "../components/clients/Footer";
 
-
-
-const {  Content} = Layout;
+const { Content } = Layout;
 
 const WebsiteLayout = () => {
   return (
     <>
-      <Header />
-      <Content>
-        <Outlet />
-      </Content>
-      <Footer />
+      <div className="m-auto">
+        <div className="fixed w-full z-40">
+          <Header />
+        </div>
+        <div style={{maxWidth:"1000px"}} className="z-30 pt-20 m-auto">
+          <Content>
+            <Outlet />
+          </Content>
+          <Footer />
+        </div>
+      </div>
     </>
   );
 };

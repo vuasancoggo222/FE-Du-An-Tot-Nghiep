@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRightOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, BgColorsOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Row, Col, Space, message } from "antd";
 import { httpAddContact } from "../../api/contact";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,10 @@ function Contact() {
           <div className="register-wrapper">
             <div className="register-right -mt-32 w-full">
               <div className="flex">
-                <div style={{width:"30%"}} className="inline-block flex-1 bg-white z-20 shadow-2xl p-4">
+                <div
+                  style={{ width: "30%" }}
+                  className="inline-block flex-1 bg-white z-20 shadow-2xl p-4"
+                >
                   <div>
                     <svg
                       class="bg-black w-1/6 h-1/6 mx-auto text-white rounded-full"
@@ -70,8 +73,11 @@ function Contact() {
                     0123456789
                   </p>
                 </div>
-                <div className="mx-32"></div>
-                <div style={{width:"30%" , height:"30%"}} className="inline-block flex-1 bg-white z-20 shadow-2xl p-4">
+                <div className="mx-2"></div>
+                <div
+                  style={{ width: "30%", height: "30%" }}
+                  className="inline-block flex-1 bg-white z-20 shadow-2xl p-4"
+                >
                   <div>
                     <svg
                       class="bg-black w-1/6 h-1/6 mx-auto text-white rounded-full"
@@ -131,7 +137,7 @@ function Contact() {
                       <Row>
                         <Col className="w-full">
                           <Form.Item
-                          className="shadow-2xl shadow-gray-300"
+                            className="shadow-2xl shadow-gray-300"
                             label="Your Name"
                             name="name"
                             rules={[
@@ -152,7 +158,7 @@ function Contact() {
                       <Row>
                         <Col className="w-full">
                           <Form.Item
-                          className="shadow-2xl shadow-gray-300"
+                            className="shadow-2xl shadow-gray-300"
                             label="Your Address"
                             name="address"
                             rules={[
@@ -173,7 +179,7 @@ function Contact() {
                       <Row>
                         <Col className="w-full">
                           <Form.Item
-                          className="shadow-2xl shadow-gray-300"
+                            className="shadow-2xl shadow-gray-300"
                             label="Your Context"
                             name="content"
                             rules={[
@@ -194,7 +200,7 @@ function Contact() {
                       <Row>
                         <Col className="w-full">
                           <Form.Item
-                          className="shadow-2xl shadow-gray-300"
+                            className="shadow-2xl shadow-gray-300"
                             label="Your PhoneNumber"
                             name="phoneNumber"
                             rules={[
@@ -207,21 +213,21 @@ function Contact() {
                           >
                             <Input
                               placeholder="Your PhoneNumber"
-                              className="form-input shadow-inner shadow-gray-300"
+                              className="form-input shadow-inner shadow-blue-300"
                             />
                           </Form.Item>
                         </Col>
                       </Row>
                     </Col>
                   </Row>
-                  <Form.Item
-                  className="shadow-2xl shadow-gray-300">
-                    <Space className="space">
-                      <Button htmlType="submit" className="btn-submit">
-                        Thêm
-                        <ArrowRightOutlined />
-                      </Button>
-                    </Space>
+                  <Form.Item>
+                    <Button
+                      htmlType="submit"
+                      className="w-5/12 block m-12 ml-[16.5%]"
+                      style={{backgroundColor:"rgb(59 130 246 / var(--tw-bg-opacity))"}}
+                    >
+                      Thêm
+                    </Button>
                   </Form.Item>
                 </Form>
               </div>

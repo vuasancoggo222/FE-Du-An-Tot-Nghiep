@@ -26,7 +26,7 @@ function Contact() {
     <>
       <div className="bg-gray-100 min-w-fit">
         <div className="w-full h-96 bg-green-800 z-30"></div>
-        <div className="block my-8 m-auto w-3/4">
+        <div className="block my-8 m-auto w-3/4 max-w-fit">
           <div className="register-wrapper">
             <div className="register-right -mt-32 w-full">
               <div className="flex">
@@ -224,7 +224,10 @@ function Contact() {
                     <Button
                       htmlType="submit"
                       className="w-5/12 block m-12 ml-[16.5%]"
-                      style={{backgroundColor:"rgb(59 130 246 / var(--tw-bg-opacity))"}}
+                      style={{
+                        backgroundColor:
+                          "rgb(59 130 246 / var(--tw-bg-opacity))",
+                      }}
                     >
                       Thêm
                     </Button>

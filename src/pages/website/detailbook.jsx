@@ -4,28 +4,27 @@ import useEmployee from "../../hooks/use-employee";
 import { httpGetOne } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
-import {  getSerViceBySlug } from "../../api/services";
-import { TimePicker } from 'antd';
-import { isAuthenticate } from "../../utils/LocalStorage"
+import { getSerViceBySlug, httpGet } from "../../api/services";
+import { TimePicker } from "antd";
+import { isAuthenticate } from "../../utils/LocalStorage";
+import Formcomment from "../../components/clients/comment";
 const Detaibooking = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: employees, error } = useEmployee();
   const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
-  const format = 'HH';
-  console.log(employees);
-  console.log(id);
-
+  const [feedback, setFeedback] = useState();
+  const format = "HH";
   const onSubmit = async (data) => {
     console.log("submit", data);
     console.log(employeeBooking);
     try {
       console.log(service._id);
-      await httpAddBooking({ ...data, serviceId: service?._id })
+      await httpAddBooking({ ...data, serviceId: service?._id });
       // await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })
-      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã")
-      navigate('/');
+      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã");
+      navigate("/");
     } catch (error) {
       message.error(`${error.response.data.message}`);
     }
@@ -95,7 +94,8 @@ const Detaibooking = () => {
   useEffect(() => {
     const getSerVice = async () => {
       const data = await getSerViceBySlug(id);
-      console.log(data);
+      const feedbackData = await httpGet("/feedback/service", data._id);
+      setFeedback(feedbackData);
       setService(data);
     };
     getSerVice();
@@ -195,8 +195,8 @@ const Detaibooking = () => {
                   name="nest-messages"
                   validateMessages={validateMessages}
                   initialValues={{
-                    phoneNumber:user?.phoneNumber,
-                    name:user?.name,
+                    phoneNumber: user?.phoneNumber,
+                    name: user?.name,
                     prefix: "+84",
                   }}
                   onFinish={onSubmit}
@@ -229,7 +229,6 @@ const Detaibooking = () => {
                     ]}
                   >
                     <Input
-                    
                       addonBefore={prefixSelector}
                       style={{
                         width: "100%",
@@ -248,7 +247,8 @@ const Detaibooking = () => {
                     <Input
                       value={service?._id}
                       placeholder={service?.name}
-                      readOnly />
+                      readOnly
+                    />
                   </Form.Item>
                   {/* chọn nhân viên */}
                   {/* <Form.Item
@@ -284,20 +284,16 @@ const Detaibooking = () => {
                   </Form.Item>
 
                   {/* chọn nhân viên */}
-                  <Form.Item
-                    label="Chọn nhân viên"
-                    name="employeeId"
-                   
-                  >
+                  <Form.Item label="Chọn nhân viên" name="employeeId">
                     <Select onChange={onChangeSelected}>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
                           {item.name}
                           <div
                             className=""
-                          // onClick={() => {
-                          //   setOpen(true);
-                          // }}
+                            // onClick={() => {
+                            //   setOpen(true);
+                            // }}
                           ></div>
                         </Select.Option>
                       ))}
@@ -361,6 +357,13 @@ const Detaibooking = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="formcomment w-[1200px] m-auto">
+        {user ? (
+          <Formcomment serviceId={service?._id} feedbackData={feedback} />
+        ) : (
+          <span>Vui lòng đăng nhập để đánh giá</span>
+        )}
       </div>
     </>
   );

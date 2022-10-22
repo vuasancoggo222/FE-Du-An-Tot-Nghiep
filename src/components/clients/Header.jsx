@@ -51,7 +51,6 @@ const Header = () => {
 
   // Kiểm tra nhấn signin/signup
   const checkInUp = () => {
-    console.log(ismolDal);
     if (ismolDal === "signin") {
       return <SignIn handleSignIn={handleSignIn} />;
     } else {

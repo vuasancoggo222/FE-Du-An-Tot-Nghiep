@@ -74,15 +74,36 @@ const Header = () => {
       items={[
         {
           key: "1",
-          label: <Link to="user-information/me">Hồ sơ của tôi</Link>,
+          label: (
+            <Link
+              className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
+              to="user-information/me"
+            >
+              Hồ sơ của tôi
+            </Link>
+          ),
         },
         {
           key: "2",
-          label: <Link to="/booking-history/me">Lịch sử đặt lịch</Link>,
+          label: (
+            <Link
+              className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
+              to="/booking-history/me"
+            >
+              Lịch sử đặt lịch
+            </Link>
+          ),
         },
         {
           key: "3",
-          label: <button onClick={handleLogout}>Đăng xuất</button>,
+          label: (
+            <button
+              className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
+              onClick={handleLogout}
+            >
+              Đăng xuất
+            </button>
+          ),
         },
       ]}
     />
@@ -90,73 +111,84 @@ const Header = () => {
   return (
     <>
       <div className="bg-[#005E2E] ">
-        <header className="h-[80px] w-[1920px] max-w-full m-auto py-[29px]  pl-[200px] ">
+        <header className="h-[80px] sm:w-[1000px] max-w-full m-auto py-[29px] justify-center">
           <div className="header-menu">
             <nav>
               <div className=" flex">
-                <Link to={"/"}>
-                  <img
-                    className="flex mr-[100px]"
-                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/logo-spa-4.svg"
-                    width="100px"
-                  />
-                </Link>
-                <div
-                  style={{ justifyContent: "center" }}
-                  className="flex-auto w-84"
-                >
+                <div>
                   <Link to={"/"}>
-                    <button className="px-[23px] text-[#fff]">Trang chủ</button>
-                  </Link>
-                  <Link to={`/products`}>
-                    <button className="px-[23px] text-[#fff] ">Sản phẩm</button>
-                  </Link>
-                  <Link to={"/price-list"}>
-                    <button className="px-[23px] text-[#fff]">Dịch vụ</button>
-                  </Link>
-                  <Link to={"/contact"}>
-                    <button className="px-[23px] text-[#fff]">Liên Hệ</button>
+                    <img
+                      className="flex w-[50px] sm:w-[100px] mr-[50px]"
+                      src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/logo-spa-4.svg"
+                    />
                   </Link>
                 </div>
-                {auth ? (
-                  <div className="flex-auto">
-                    <button className=" mx-3 rounded-md bg-[#003C21] mr-5  border-2 border-emerald-500 px-3">
-                      <Link className="text-[#fff]" to={`/booking`}>
-                        Đặt Lịch
-                      </Link>
+                <div className="flex-auto w-84">
+                  <Link to={"/"}>
+                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                      Trang chủ
                     </button>
-                    <Dropdown overlay={menu} placement="bottom">
-                      <Avatar
-                        style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                  </Link>
+                  <Link to={`/products`}>
+                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff] ">
+                      Sản phẩm
+                    </button>
+                  </Link>
+                  <Link to={"/price-list"}>
+                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                      Dịch vụ
+                    </button>
+                  </Link>
+                  <Link to={"/contact"}>
+                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                      Liên Hệ
+                    </button>
+                  </Link>
+                </div>
+                <div>
+                  {auth ? (
+                    <div className="sm:flex-auto">
+                      <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
+                        <Link className="text-[#fff]" to={`/booking`}>
+                          Đặt Lịch
+                        </Link>
+                      </button>
+                      <Dropdown overlay={menu} placement="bottom">
+                        <Avatar
+                          style={{
+                            color: "#f56a00",
+                            backgroundColor: "#fde3cf",
+                          }}
+                        >
+                          {user.name.slice(0, 2)}
+                        </Avatar>
+                      </Dropdown>
+                    </div>
+                  ) : (
+                    <div className="sm:flex-auto">
+                      <button
+                        data="signin"
+                        onClick={showModal}
+                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff]"
                       >
-                        {user.name.slice(0, 2)}
-                      </Avatar>
-                    </Dropdown>
-                  </div>
-                ) : (
-                  <div className="flex-auto">
-                    <button
-                      data="signin"
-                      onClick={showModal}
-                      className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
-                    >
-                      Đăng nhập
-                    </button>
-                    <button
-                      data="signup"
-                      onClick={showModal}
-                      className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
-                    >
-                      Đăng ký
-                    </button>
+                        Đăng nhập
+                      </button>
+                      <button
+                        data="signup"
+                        onClick={showModal}
+                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff]"
+                      >
+                        Đăng ký
+                      </button>
 
-                    <button className=" mx-3 rounded-md bg-[#003C21]  border-2 border-emerald-500 px-3">
-                      <Link className="text-[#fff]" to={`/booking`}>
-                        Đặt Lịch
-                      </Link>
-                    </button>
-                  </div>
-                )}
+                      <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
+                        <Link className="text-[#fff]" to={`/booking`}>
+                          Đặt Lịch
+                        </Link>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </nav>
           </div>

@@ -4,7 +4,6 @@ import {
   Form,
   Input,
   InputNumber,
-  message,
   Select,
   Upload,
 } from "antd";
@@ -12,9 +11,6 @@ import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { getProfile } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
-
-import { useNavigate } from "react-router-dom";
-
 const layout = {
   labelCol: {
     span: 4,

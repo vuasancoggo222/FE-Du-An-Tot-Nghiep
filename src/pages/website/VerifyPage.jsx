@@ -15,8 +15,7 @@ function useQuery() {
 const VerifyPage = () => {
     let query = useQuery();
     const phoneNumber = query.get("phone")
-    const prefix = query.get("prefix")
-    console.log(phoneNumber,prefix);
+    console.log(phoneNumber);
     const navigate = useNavigate()
     const [isSend,setIsSend] = useState(false)
     const [showInput,setShowInput] = useState(false)
@@ -43,7 +42,8 @@ const VerifyPage = () => {
     
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
-        const phoneNumber = `+${values.prefix}${values.phone}`
+        const phoneNumber = values.phone.replace('0','+84')
+        console.log(phoneNumber);
             setShowInput(true)
             setTimeout(() => {
               setIsSend(true)
@@ -66,24 +66,13 @@ const VerifyPage = () => {
             console.log(result._tokenResponse.idToken);
             const token = result._tokenResponse.idToken
             message.success('Xác thực OTP thành công.',2)
-            const phoneNumber = result.user.phoneNumber.substring(1)
+            let phoneNumber = result.user.phoneNumber.replace('+84','0')
             await changeAccountStatus(phoneNumber,1,token)
             navigate('/')
           }).catch((error) => {
             message.error(`${error.message}`,2)
           });
       };
-      const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-          <Select
-            style={{
-              width: 70,
-            }}
-          >
-            <Option value={prefix}>+{prefix}</Option>
-          </Select>
-        </Form.Item>
-      );
   return (
     <>
          <Title level={2}>Xác thực Otp</Title>
@@ -93,14 +82,14 @@ const VerifyPage = () => {
       name="phoneNumber"
       onFinish={onFinish}
       initialValues={
-        {prefix : prefix,phone : phoneNumber}
+        {phone : phoneNumber}
       }
       scrollToFirstError
     >
         <Form.Item
         name="phone"
         label="Số điện thoại">
-        <Input addonBefore={prefixSelector} style={{ width: '80%' }} readOnly/>
+        <Input style={{ width: '80%' }} readOnly/>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 6 }}>
         {isSend ? <><span>Chưa nhận được mã xác nhận ? <Button type="link" primary htmlType="submit">

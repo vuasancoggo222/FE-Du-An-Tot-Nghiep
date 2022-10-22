@@ -4,7 +4,7 @@ import useEmployee from "../../hooks/use-employee";
 import { httpGetOne } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
 import { useNavigate, useParams } from "react-router-dom";
-import { getSerViceBySlug } from "../../api/services";
+import { getSerViceBySlug, httpGet } from "../../api/services";
 import { TimePicker } from "antd";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import Formcomment from "../../components/clients/comment";
@@ -14,10 +14,8 @@ const Detaibooking = () => {
   const { data: employees, error } = useEmployee();
   const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
+  const [feedback, setFeedback] = useState();
   const format = "HH";
-  console.log(employees);
-  console.log(id);
-
   const onSubmit = async (data) => {
     console.log("submit", data);
     console.log(employeeBooking);
@@ -96,7 +94,8 @@ const Detaibooking = () => {
   useEffect(() => {
     const getSerVice = async () => {
       const data = await getSerViceBySlug(id);
-      console.log(data);
+      const feedbackData = await httpGet("/feedback/service", data._id);
+      setFeedback(feedbackData);
       setService(data);
     };
     getSerVice();
@@ -360,7 +359,11 @@ const Detaibooking = () => {
         </div>
       </div>
       <div className="formcomment w-[1200px] m-auto">
-        <Formcomment />
+        {user ? (
+          <Formcomment serviceId={service?._id} feedbackData={feedback} />
+        ) : (
+          <span>Vui lòng đăng nhập để đánh giá</span>
+        )}
       </div>
     </>
   );

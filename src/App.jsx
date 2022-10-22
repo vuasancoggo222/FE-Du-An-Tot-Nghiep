@@ -37,7 +37,7 @@ function App() {
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
-      console.log(res);
+
       setBooking(res);
     };
     getBooking();
@@ -56,7 +56,7 @@ function App() {
 
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
-    console.log(res);
+
     setBooking(res);
   };
 

@@ -2,9 +2,8 @@ import { Button, Form, Input, Upload, Select, message, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
 import { httpUpdateEmployees, httpGetOne } from "../../../api/employee";
 import { useParams } from "react-router-dom";
-import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import ImgCrop from 'antd-img-crop';
+import ImgCrop from "antd-img-crop";
 import { uploadCloudinary } from "../../../api/upload";
 const { Option } = Select;
 
@@ -12,7 +11,7 @@ const EditEmployee = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [form] = Form.useForm();
-
+  const [url, setUrl] = useState("");
   const onSubmit = async (data) => {
     var res = await httpUpdateEmployees(id, data);
     if (res._id !== undefined) {
@@ -24,21 +23,21 @@ const EditEmployee = () => {
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-  };  
+  };
   useEffect(() => {
     const reloadData = async (id) => {
       var res = await httpGetOne(id);
       console.log(res);
-     
-      setFileList([{url : res.avatar}])
+
+      setFileList([{ url: res.avatar }]);
       form.setFieldsValue({
         name: res.name,
-        image : res.image,
-        email : res.email,
-        idCard : res.idCard,
-        phoneNumber : res.phoneNumber,
-        avatar : res.avatar,
-        status : res.status
+        image: res.image,
+        email: res.email,
+        idCard: res.idCard,
+        phoneNumber: res.phoneNumber,
+        avatar: res.avatar,
+        status: res.status,
       });
     };
     reloadData(id);
@@ -47,6 +46,7 @@ const EditEmployee = () => {
   const uploadImage = async (options) => {
     const { onSuccess, onError, file } = options;
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
@@ -69,7 +69,6 @@ const EditEmployee = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
 
   return (
     <>
@@ -154,22 +153,19 @@ const EditEmployee = () => {
           </Form.Item>
           {/* Avater */}
           <Form.Item label="image">
-<ImgCrop>
-<Upload
-        customRequest={uploadImage}
-        listType="picture-card"
-        fileList={fileList}
-        onChange={onChange}
-        name="avatar"
-  
-      >
-        {fileList.length < 1 && '+ Upload'}
-      </Upload>
-</ImgCrop>
-      </Form.Item>
+            <ImgCrop>
+              <Upload
+                customRequest={uploadImage}
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                name="avatar"
+              >
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
+            </ImgCrop>
+          </Form.Item>
           <Form.Item>
-            
-
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
               <Button type="primary" htmlType="submit">
                 Submit

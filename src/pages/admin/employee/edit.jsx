@@ -4,33 +4,14 @@ import { httpUpdateEmployees, httpGetOne } from "../../../api/employee";
 import { useParams } from "react-router-dom";
 import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-
+import ImgCrop from 'antd-img-crop';
 import { uploadCloudinary } from "../../../api/upload";
-
-const normFile = (e) => {
-  console.log("Upload event:", e);
-
-  if (Array.isArray(e)) {
-    return e;
-  }
-
-  return e?.fileList;
-};
 const { Option } = Select;
 
 const EditEmployee = () => {
-  const [url, setUrl] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
-  const [dataReload, setDataReload] = useState({
-    _id: "",
-    name: "",
-    phoneNumber: "",
-    avatar: "",
-    email: "",
-    gender: 1,
-    idCard: "",
-  });
+  const [form] = Form.useForm();
 
   const onSubmit = async (data) => {
     var res = await httpUpdateEmployees(id, data);
@@ -40,10 +21,25 @@ const EditEmployee = () => {
     }
   };
 
+  const [fileList, setFileList] = useState([]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };  
   useEffect(() => {
     const reloadData = async (id) => {
       var res = await httpGetOne(id);
-      setDataReload(res);
+      console.log(res);
+     
+      setFileList([{url : res.avatar}])
+      form.setFieldsValue({
+        name: res.name,
+        image : res.image,
+        email : res.email,
+        idCard : res.idCard,
+        phoneNumber : res.phoneNumber,
+        avatar : res.avatar,
+        status : res.status
+      });
     };
     reloadData(id);
   }, []);
@@ -73,30 +69,8 @@ const EditEmployee = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  // ------------------------------
 
-  const setting = {
-    name: "file",
-    beforeUpload: (file) => {
-      const accept = ["image/png", "image/jpeg", "image/jpg"];
 
-      if (file.size > 1024 * 1024 * 2) {
-        message.error(`file quá lớn`);
-        return Upload.LIST_IGNORE;
-      } else if (!accept.includes(file.type)) {
-        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
-        return Upload.LIST_IGNORE;
-      }
-    },
-    Change: (info) => {
-      console.log(info);
-      // setImageFile(info);
-    },
-    listType: "picture-card",
-    maxCount: 1,
-    onDrop: true,
-    defaultFileList: [{ url, name: "default image" }],
-  };
   return (
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
@@ -111,6 +85,7 @@ const EditEmployee = () => {
         <div className="mt-[150px] my-[20px]"></div>
         <Form
           className="m-auto text-center"
+          form={form}
           name="basic"
           labelCol={{ span: 4, offset: 5 }}
           wrapperCol={{ span: 15, offset: 5 }}
@@ -119,32 +94,6 @@ const EditEmployee = () => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           layout="vertical"
-          fields={[
-            {
-              name: ["name"],
-              value: dataReload.name,
-            },
-            {
-              name: ["phoneNumber"],
-              value: dataReload.phoneNumber,
-            },
-            {
-              name: ["email"],
-              value: dataReload.email,
-            },
-            {
-              name: ["gender"],
-              value: dataReload.gender,
-            },
-            {
-              name: ["idCard"],
-              value: dataReload.idCard,
-            },
-            {
-              name: ["name"],
-              value: dataReload.name,
-            },
-          ]}
         >
           {/* name */}
           <Row gutter={[4, 4]}>
@@ -204,20 +153,23 @@ const EditEmployee = () => {
             </Select>
           </Form.Item>
           {/* Avater */}
+          <Form.Item label="image">
+<ImgCrop>
+<Upload
+        customRequest={uploadImage}
+        listType="picture-card"
+        fileList={fileList}
+        onChange={onChange}
+        name="avatar"
+  
+      >
+        {fileList.length < 1 && '+ Upload'}
+      </Upload>
+</ImgCrop>
+      </Form.Item>
           <Form.Item>
-            <Form.Item
-              label="Avatar"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload.Dragger {...setting} customRequest={uploadImage}>
-                <p className="ant-upload-drag-icon h-[15px]">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">chose your image</p>
-              </Upload.Dragger>
-            </Form.Item>
+            
+
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
               <Button type="primary" htmlType="submit">
                 Submit

@@ -11,7 +11,9 @@ export const register = (values) =>{
 export const httpGetAllUser= () => {
   return instance.get(`users`);
 };
-
+export const httpGetOneUser= (id) => {
+  return instance.get(`users/${id}`);
+};
 export const changeAccountStatus = (phoneNumber, status, token) => {
     const url = `change-account-status?phone=${phoneNumber}&status=${status}`;
     const header = {

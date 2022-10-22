@@ -25,6 +25,7 @@ import ListBooking from "./pages/admin/booking";
 import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
 import ListUser from "./pages/admin/user";
+import EditUsers from "./pages/admin/user/edit";
 function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -115,9 +116,8 @@ function App() {
               <Route path=":id/edit" element={<EditService />} />
             </Route>
             <Route path="user">
-              <Route index element ={<ListUser />}>
-
-              </Route>
+              <Route index element ={<ListUser />}/>
+                <Route path=":id/edit" element={<EditUsers />} />
             </Route>
           </Route>
         </Routes>

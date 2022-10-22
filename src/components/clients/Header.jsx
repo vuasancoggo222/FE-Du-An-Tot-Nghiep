@@ -5,22 +5,20 @@ import { Avatar, Dropdown, Menu, Modal } from "antd";
 import SignIn from "../../pages/website/SignIn";
 import SignUp from "../../pages/website/SignUp";
 import { isAuthenticate } from "../../utils/LocalStorage";
-import { useNavigate } from 'react-router-dom'
-import { message } from 'antd'
-
+import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Header = () => {
-
-  const navigate = useNavigate()
-  const [auth, setAuth] = useState()
-  const [user, setUser] = useState({})
+  const navigate = useNavigate();
+  const [auth, setAuth] = useState();
+  const [user, setUser] = useState({});
   useEffect(() => {
-    const user = isAuthenticate()
+    const user = isAuthenticate();
     if (user) {
-      setAuth(true)
-      setUser(user)
+      setAuth(true);
+      setUser(user);
     }
-  }, [])
+  }, []);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -34,13 +32,13 @@ const Header = () => {
   };
 
   const handleSignIn = () => {
-    const user = isAuthenticate()
+    const user = isAuthenticate();
     if (user) {
-      setAuth(true)
-      setUser(user)
+      setAuth(true);
+      setUser(user);
     }
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
@@ -53,7 +51,6 @@ const Header = () => {
 
   // Kiểm tra nhấn signin/signup
   const checkInUp = () => {
-    console.log(ismolDal);
     if (ismolDal === "signin") {
       return <SignIn handleSignIn={handleSignIn} />;
     } else {
@@ -67,35 +64,25 @@ const Header = () => {
   };
   const handleLogout = () => {
     console.log(1);
-    localStorage.removeItem('user')
-    message.success('Đăng xuất thành công.', 2)
-    navigate('/')
-    setAuth(false)
-  }
+    localStorage.removeItem("user");
+    message.success("Đăng xuất thành công.", 2);
+    navigate("/");
+    setAuth(false);
+  };
   const menu = (
     <Menu
       items={[
         {
-          key: '1',
-          label: (
-            <Link to="user-information/me">
-              Hồ sơ của tôi
-            </Link>
-          ),
+          key: "1",
+          label: <Link to="user-information/me">Hồ sơ của tôi</Link>,
         },
         {
-          key: '2',
-          label: (
-            <Link to="/booking-history/me">
-              Lịch sử đặt lịch
-            </Link>
-          ),
+          key: "2",
+          label: <Link to="/booking-history/me">Lịch sử đặt lịch</Link>,
         },
         {
-          key: '3',
-          label: (
-            <button onClick={handleLogout}>Đăng xuất</button>
-          ),
+          key: "3",
+          label: <button onClick={handleLogout}>Đăng xuất</button>,
         },
       ]}
     />
@@ -131,37 +118,45 @@ const Header = () => {
                     <button className="px-[23px] text-[#fff]">Liên Hệ</button>
                   </Link>
                 </div>
-                {auth ? <div className="flex-auto">
-                  <button className=" mx-3 rounded-md bg-[#003C21] mr-5  border-2 border-emerald-500 px-3">
-                    <Link className="text-[#fff]" to={`/booking`}>
-                      Đặt Lịch
-                    </Link>
-                  </button>
-                  <Dropdown overlay={menu} placement="bottom">
-                    <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>{user.name.slice(0, 2)}</Avatar>
-                  </Dropdown>
-                </div> : <div className="flex-auto">
-                  <button
-                    data="signin"
-                    onClick={showModal}
-                    className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
-                  >
-                    Đăng nhập
-                  </button>
-                  <button
-                    data="signup"
-                    onClick={showModal}
-                    className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
-                  >
-                    Đăng ký
-                  </button>
+                {auth ? (
+                  <div className="flex-auto">
+                    <button className=" mx-3 rounded-md bg-[#003C21] mr-5  border-2 border-emerald-500 px-3">
+                      <Link className="text-[#fff]" to={`/booking`}>
+                        Đặt Lịch
+                      </Link>
+                    </button>
+                    <Dropdown overlay={menu} placement="bottom">
+                      <Avatar
+                        style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                      >
+                        {user.name.slice(0, 2)}
+                      </Avatar>
+                    </Dropdown>
+                  </div>
+                ) : (
+                  <div className="flex-auto">
+                    <button
+                      data="signin"
+                      onClick={showModal}
+                      className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
+                    >
+                      Đăng nhập
+                    </button>
+                    <button
+                      data="signup"
+                      onClick={showModal}
+                      className=" mx-3 rounded-md bg-[#003C21] text-[#fff] border-2 border-emerald-500 px-3"
+                    >
+                      Đăng ký
+                    </button>
 
-                  <button className=" mx-3 rounded-md bg-[#003C21]  border-2 border-emerald-500 px-3">
-                    <Link className="text-[#fff]" to={`/booking`}>
-                      Đặt Lịch
-                    </Link>
-                  </button>
-                </div>}
+                    <button className=" mx-3 rounded-md bg-[#003C21]  border-2 border-emerald-500 px-3">
+                      <Link className="text-[#fff]" to={`/booking`}>
+                        Đặt Lịch
+                      </Link>
+                    </button>
+                  </div>
+                )}
               </div>
             </nav>
           </div>

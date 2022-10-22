@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import "./index.css"
+import "./index.css";
 import WebsiteLayout from "./layouts/WebsiteLayout";
 import HomePage from "./pages/website/Home";
 import BookingPage from "./pages/website/BookingPage";
@@ -25,7 +25,7 @@ import VerifyPage from "./pages/website/VerifyPage";
 import ListBooking from "./pages/admin/booking";
 import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
-import ContactList from "./pages/admin/contact/index"
+import ContactList from "./pages/admin/contact/index";
 import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
 
@@ -36,7 +36,7 @@ function App() {
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
-      console.log(res);
+
       setBooking(res);
     };
     getBooking();
@@ -55,7 +55,7 @@ function App() {
 
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
-    console.log(res);
+
     setBooking(res);
   };
 
@@ -123,7 +123,7 @@ function App() {
               <Route path=":id/edit" element={<EditService />} />
             </Route>
             <Route path="contact">
-                <Route index element={<ContactList/>}/>
+              <Route index element={<ContactList />} />
             </Route>
             <Route path="user">
               <Route index element={<ListUser />}></Route>

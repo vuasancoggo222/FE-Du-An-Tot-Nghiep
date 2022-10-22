@@ -163,7 +163,6 @@ const Formcomment = (props) => {
               <>
                 <Comment
                   key={index}
-                  actions={[<span key="comment-nested-reply-to">Trả lời</span>]}
                   author={
                     <a>
                       <p className="">{item.user?.name}</p>
@@ -188,39 +187,27 @@ const Formcomment = (props) => {
                   }
                   content={<p>{item.content}</p>}
                 >
-                  {
-                    // <Comment
-                    //   actions={[<span key="comment-nested-reply-to">Trả lời</span>]}
-                    //   author={
-                    //     <a>
-                    //       <p>Han Solo</p>
-                    //       {/* date ở đây */}
-                    //       <Tooltip title="2016-11-22 11:22:33">
-                    //         <span>8 hours ago</span>
-                    //       </Tooltip>
-                    //     </a>
-                    //   }
-                    //   datetime={
-                    //     // đổi thành rate
-                    //     <span className="mx-3">
-                    //       <Rate value={3} disabled style={{ fontSize: 15 }} />
-                    //     </span>
-                    //   }
-                    //   avatar={
-                    //     <Avatar
-                    //       src="https://joeschmoe.io/api/v1/random"
-                    //       alt="Han Solo"
-                    //     />
-                    //   }
-                    //   content={
-                    //     <p>
-                    //       We supply a series of design principles, practical
-                    //       patterns and high quality design resources (Sketch and
-                    //       Axure).
-                    //     </p>
-                    //   }
-                    // ></Comment>
-                  }
+                  {item?.reply !== null &&
+                  item?.reply !== undefined &&
+                  item?.reply !== "" ? (
+                    <Comment
+                      author={
+                        <a>
+                          <p>{item.userReply.name}</p>
+                        </a>
+                      }
+                      datetime={
+                        // đổi thành rate
+                        <span className="border rounded-lg bg-red-400 text-white px-2">
+                          Quản trị viên
+                        </span>
+                      }
+                      avatar={
+                        <Avatar src={item.userReply?.avatar} alt="Han Solo" />
+                      }
+                      content={<p>{item?.reply}</p>}
+                    ></Comment>
+                  ) : null}
                 </Comment>
               </>
             ))}

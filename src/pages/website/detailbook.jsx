@@ -16,6 +16,7 @@ const Detaibooking = () => {
   const [service, setService] = useState();
   const [feedback, setFeedback] = useState();
   const format = "HH";
+  const user = isAuthenticate();
   const onSubmit = async (data) => {
     console.log("submit", data);
     console.log(employeeBooking);
@@ -34,7 +35,7 @@ const Detaibooking = () => {
   const onChange = (time, timeString) => {
     console.log(time, timeString);
   };
-  const user = isAuthenticate();
+
   // console.log(user);
   const layout = {
     labelCol: {
@@ -359,11 +360,13 @@ const Detaibooking = () => {
         </div>
       </div>
       <div className="formcomment w-[1200px] m-auto">
-        {user ? (
-          <Formcomment serviceId={service?._id} feedbackData={feedback} />
-        ) : (
-          <span>Vui lòng đăng nhập để đánh giá</span>
-        )}
+        <div className="">
+          {user ? (
+            <Formcomment serviceId={service?._id} feedbackData={feedback} />
+          ) : (
+            <span className="">Vui lòng đăng nhập để đánh giá !</span>
+          )}
+        </div>
       </div>
     </>
   );

@@ -8,7 +8,7 @@ export const PrivateRouter = (props) => {
   if (localStorage.getItem("user")) {
     const user = isAuthenticate();
     console.log(user);
-    if (user.role !== 0) {
+    if (user.role == 0) {
       React.useEffect(() => {
         message.error("Bạn không có quyền truy cập !", 2);
         return navigate("/");

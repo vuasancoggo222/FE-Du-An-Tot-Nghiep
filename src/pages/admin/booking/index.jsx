@@ -367,9 +367,14 @@ const ListBooking = (props) => {
     const showModal = (e) => {
         // eslint-disable-next-line react/prop-types
         setIsHouseNoneBlock("none")
-        const isButon = e.target.getAttribute("data");
-        const idBooking = e.target.getAttribute("dataId");
-        console.log(idBooking);
+        // let isButton;
+        // let idBooking;
+        let isButon = e.target.getAttribute("data");
+        let idBooking = e.target.getAttribute("dataId");
+        if (isButon == null) {
+            isButon = e.target.offsetParent.getAttribute("data");
+            idBooking = e.target.offsetParent.getAttribute("dataId");
+        }
         let count = 0;
         let isBooking;
         // eslint-disable-next-line react/prop-types
@@ -400,11 +405,11 @@ const ListBooking = (props) => {
                     employeeId: item?.employeeId?._id,
                     note: item?.note,
                     date: (moment(renderDate(item?.date), dateFormat)),
-                    time: (moment(renderTime(item?.time), format)),
+                    time: item?.time != undefined ? (moment(renderTime(item?.time), format)) : "",
                 });
                 await setIsModalOpen(true);
             }
-                setReadOrigin("readOnly")
+            setReadOrigin("readOnly")
         })
 
         setIshandle(isButon)
@@ -448,6 +453,9 @@ const ListBooking = (props) => {
             time = `0${time}: 00`
         } else {
             time = `${time}: 00`
+        }
+        if (value == undefined) {
+            return ""
         }
         return time
     }
@@ -582,50 +590,47 @@ const ListBooking = (props) => {
                 let BtWaitColor = "#e4ed36"
                 // xác nhận
                 let BtSusscesCursor
-                let BtSusscessColor = "blue"
+                let BtSusscessColor = "#26cbe8"
                 // hủy
                 let BtFailureCursor
-                let BtFailureColor = "red"
+                let BtFailureColor = "#db5656"
 
                 if (item.status === 0) {
                     // chờ
                     BtWaitCursor = "not-allowed"
-                    BtWaitColor = "#f9f6f6"
+                    BtWaitColor = "#dedede"
                 } else if (item.status === 1) {
                     // xác nhận
                     BtSusscesCursor = "not-allowed"
-                    BtSusscessColor = "#f9f6f6"
+                    BtSusscessColor = "#dedede"
                 } else if (item.status === 2) {
                     // hủy
                     BtFailureCursor = "not-allowed"
-                    BtFailureColor = "#f9f6f6"
+                    BtFailureColor = "#dedede"
                 }
                 return (
                     <Space size="middle">
-                        <Tooltip title="Xác nhận">
-                            <Button style={{ border: "none", cursor: BtSusscesCursor, color: BtSusscessColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="1" class="far fa-check-circle"></i></Button>
-                        </Tooltip>
-                        <Tooltip title="Hủy">
-                            <Button style={{ border: "none", cursor: BtFailureCursor, color: BtFailureColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="2" class="far fa-times-circle"></i></Button>
-                        </Tooltip>
-                        <Tooltip title="Chờ xác nhận">
-                            <Button style={{ border: "none", cursor: BtWaitCursor, color: BtWaitColor }} shape="circle" >
-                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="0" class="fas fa-info-circle"></i>
-                            </Button>
-                        </Tooltip>
-
+                        <Button onClick={showModal} dataId={item._id} data="1"  style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color:"white" }} >
+                            Xác nhận
+                        </Button>
+                        <Button onClick={showModal} dataId={item._id} data="2" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color:"white" }} >
+                            Hủy
+                        </Button>
+                        <Button onClick={showModal} dataId={item._id} data="0"  style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color:"white" }} >
+                            Chờ
+                        </Button>
                     </Space>
                 )
             },
         },
     ];
     // eslint-disable-next-line react/prop-types
-    const datatable = booking?.map((item) => {  
+    const datatable = booking?.map((item) => {
         const time = renderTime(item.time)
         const date = renderDate(item.date)
         return {
             name: item.name,
-            phoneNumber: item.phoneNumber,
+            phoneNumber: item.phoneNumber.toString().replace("+84", "0"),
             status: item.status,
             date: date,
             time: time,
@@ -729,8 +734,8 @@ const ListBooking = (props) => {
                         },
                     ]}
                 >
-                    
-                    <Input  disabled = {ishandle == 1 ? false : true}  />
+
+                    <Input disabled={ishandle == 1 ? false : true} />
                 </Form.Item>
 
                 <Form.Item
@@ -745,7 +750,7 @@ const ListBooking = (props) => {
                     ]}
                 >
                     <Input
-                     disabled = {ishandle == 1 ? false : true}
+                        disabled={ishandle == 1 ? false : true}
                         addonBefore={prefixSelector}
                         style={{
                             width: "100%",
@@ -763,7 +768,7 @@ const ListBooking = (props) => {
                     ]}
                 >
 
-                    <Select  disabled = {ishandle == 1 ? false : true}>
+                    <Select disabled={ishandle == 1 ? false : true}>
                         {props.dataService?.map((item, index) => (
                             <Select.Option value={item._id} key={index}>
                                 {item.name}
@@ -782,7 +787,7 @@ const ListBooking = (props) => {
                     ]}
                 >
                     <DatePicker
-                     disabled = {ishandle == 1 ? false : true}
+                        disabled={ishandle == 1 ? false : true}
                         showTime
                         format={dateFormat}
                         onOk={onchangeDateBooking}
@@ -803,9 +808,9 @@ const ListBooking = (props) => {
 
                 >
 
-                    <Select  disabled = {ishandle == 1 ? false : true} onChange={changeEmployee} >
+                    <Select disabled={ishandle == 1 ? false : true} onChange={changeEmployee} >
                         {props.dataEmployy?.map((item, index) => (
-                            <Select.Option  value={item._id} key={index}>
+                            <Select.Option value={item._id} key={index}>
                                 {item.name}
                             </Select.Option>
                         ))}
@@ -823,7 +828,7 @@ const ListBooking = (props) => {
                     ]}
                 >
                     <TimePicker
-                     disabled = {ishandle == 1 ? false : true}
+                        disabled={ishandle == 1 ? false : true}
                         format={format}
                         onOk={onchangeTimeBooking}
                     />
@@ -834,13 +839,13 @@ const ListBooking = (props) => {
                     label="Note"
                     name="time"
                 >
-                    <div  className="" style={{ color: "#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
+                    <div className="" style={{ color: "#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
                 </Form.Item>
 
 
                 {/* chọn ca  */}
                 <Form.Item name="note" label="Ghi chú">
-                    <Input.TextArea disabled = {ishandle == 1 ? false : true} />
+                    <Input.TextArea disabled={ishandle == 1 ? false : true} />
                 </Form.Item>
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
                     <Button type="primary" htmlType="submit">

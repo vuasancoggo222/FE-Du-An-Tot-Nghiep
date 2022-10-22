@@ -28,6 +28,7 @@ import UserHistory from "./pages/website/user/UserHistory";
 import ContactList from "./pages/admin/contact/index";
 import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
+import Userinformation from "./components/clients/userinformation";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -69,6 +70,7 @@ function App() {
 
             <Route element={<UserInfo />}>
               <Route path="booking-history/me" element={<UserHistory />} />
+              <Route path="user-information/me" element={<Userinformation />} />
             </Route>
 
             <Route path="/contact" element={<Contact />} />

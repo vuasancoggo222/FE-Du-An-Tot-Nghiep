@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [chartYear, setChartYear] = useState();
   const [tatalChartBefor, setTatalChartBefor] = useState();
   const [isChart, setIsChart] = useState("turnover");
+  
   function formatCash(str) {
     const string = str.toString()
     return string.split('').reverse().reduce((prev, next, index) => {

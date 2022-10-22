@@ -4,7 +4,7 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Form, Input, message, Modal, Select, Space, Table, Tag, TimePicker, Tooltip } from 'antd';
+import { Button, DatePicker, Form, Input, message, Modal, Select, Space, Table, Tag, TimePicker } from 'antd';
 import { httpGetChangeStatus } from "../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import moment from "moment";
@@ -44,6 +44,7 @@ const ListBooking = (props) => {
             value: item.name,
         }
     })
+
     // eslint-disable-next-line react/prop-types
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -114,6 +115,13 @@ const ListBooking = (props) => {
         }
 
     };
+
+    function formatCash(str) {
+        const string = str.toString()
+        return string.split('').reverse().reduce((prev, next, index) => {
+            return ((index % 3) ? next : (next + ',')) + prev
+        })
+    }
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -367,8 +375,6 @@ const ListBooking = (props) => {
     const showModal = (e) => {
         // eslint-disable-next-line react/prop-types
         setIsHouseNoneBlock("none")
-        // let isButton;
-        // let idBooking;
         let isButon = e.target.getAttribute("data");
         let idBooking = e.target.getAttribute("dataId");
         if (isButon == null) {
@@ -404,12 +410,12 @@ const ListBooking = (props) => {
                     serviceId: item?.serviceId[0]._id,
                     employeeId: item?.employeeId?._id,
                     note: item?.note,
+                    bookingPrice: item?.bookingPrice,
                     date: (moment(renderDate(item?.date), dateFormat)),
                     time: item?.time != undefined ? (moment(renderTime(item?.time), format)) : "",
                 });
                 await setIsModalOpen(true);
             }
-            setReadOrigin("readOnly")
         })
 
         setIshandle(isButon)
@@ -417,8 +423,11 @@ const ListBooking = (props) => {
             setTitleModal("Xác nhận")
         } else if (isButon === "2") {
             setTitleModal("Hủy")
-        } else {
+        } else if (isButon === "0") {
             setTitleModal("Chờ xác nhận")
+        }
+        else if (isButon === "6") {
+            setTitleModal("Thanh toán")
         }
 
         if (isButon == 1) {
@@ -445,6 +454,7 @@ const ListBooking = (props) => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        props.handleChangeStatus();
     };
     const renderTime = (value) => {
         const d = new Date(value)
@@ -474,13 +484,13 @@ const ListBooking = (props) => {
     }
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name',
             ...getColumnSearchProps('name'),
         },
         {
-            title: 'Phone',
+            title: 'SĐT',
             dataIndex: 'phoneNumber',
             key: 'phoneNumber',
             ...getColumnSearchProps('phoneNumber')
@@ -518,7 +528,7 @@ const ListBooking = (props) => {
             onFilter: (value, record) => record.serviceId.indexOf(value) === 0,
         },
         {
-            title: 'Status',
+            title: 'Trạng Thái',
             key: 'status',
             dataIndex: 'status',
             filters: [
@@ -539,12 +549,16 @@ const ListBooking = (props) => {
                     value: '3',
                 },
                 {
-                    text: 'Hoàn thành',
+                    text: 'Chờ thanh toán',
                     value: '4',
                 },
                 {
                     text: 'Khách không đến',
                     value: '5',
+                },
+                {
+                    text: 'Hoàn thành',
+                    value: '6',
                 }
             ],
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
@@ -564,12 +578,15 @@ const ListBooking = (props) => {
                     key = "Đang diễn ra"
                     color = "#da0cc8"
                 } else if (status === 4) {
-                    key = "Hoàn thành"
+                    key = "Chờ thanh toán"
                     color = "#69c20a"
                 }
-                else {
+                else if (status == 5) {
                     key = "Khách không đến"
                     color = "#bc0808"
+                } else {
+                    key = "Hoàn thành"
+                    color = "#09857e"
                 }
                 return (
                     <Tag color={color} key={key}>
@@ -581,19 +598,22 @@ const ListBooking = (props) => {
 
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             dataIndex: "action",
             key: 'action',
             render: (item) => {
                 // chờ
-                let BtWaitCursor
+                let BtWaitCursor = "pointer"
                 let BtWaitColor = "#e4ed36"
                 // xác nhận
-                let BtSusscesCursor
+                let BtSusscesCursor = "pointer"
                 let BtSusscessColor = "#26cbe8"
                 // hủy
-                let BtFailureCursor
+                let BtFailureCursor = "pointer"
                 let BtFailureColor = "#db5656"
+                // thanh toán
+                let BtPayCursor = "pointer"
+                let BtPayColor = "#09857e"
 
                 if (item.status === 0) {
                     // chờ
@@ -608,22 +628,35 @@ const ListBooking = (props) => {
                     BtFailureCursor = "not-allowed"
                     BtFailureColor = "#dedede"
                 }
+                else if (item.status === 6) {
+                    // thanh toán
+                    BtPayCursor = "not-allowed"
+                    BtPayColor = "#dedede"
+                }
                 return (
-                    <Space size="middle">
-                        <Button onClick={showModal} dataId={item._id} data="1"  style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color:"white" }} >
+                    <Select className="selectChangeSatus"
+                        style={{ width: "150px" , color:"blue" , textAlign:"center" }}
+                        value="Đổi trạng thái"
+                    >
+                        <Option value="1"> <Button onClick={showModal} dataId={item._id} data="1" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
                             Xác nhận
-                        </Button>
-                        <Button onClick={showModal} dataId={item._id} data="2" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color:"white" }} >
+                        </Button></Option>
+                        <Option value="2">  <Button onClick={showModal} dataId={item._id} data="2" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
                             Hủy
-                        </Button>
-                        <Button onClick={showModal} dataId={item._id} data="0"  style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color:"white" }} >
-                            Chờ
-                        </Button>
-                    </Space>
+                        </Button></Option>
+                        <Option value="0"><Button onClick={showModal} dataId={item._id} data="0" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
+                            Chờ xác nhận
+                        </Button></Option>
+                        <Option value="6"><Button onClick={showModal} dataId={item._id} data="6" style={{ cursor: BtPayCursor, backgroundColor: BtPayColor, border: "none", color: "white", width: "100%" }} >
+                            Thanh toán
+                        </Button></Option>
+
+                    </Select>
                 )
             },
         },
     ];
+
     // eslint-disable-next-line react/prop-types
     const datatable = booking?.map((item) => {
         const time = renderTime(item.time)
@@ -667,9 +700,17 @@ const ListBooking = (props) => {
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
-        } else {
+        } else if (ishandle === "0") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 0 })
+                message.success(`${titleModal} khách hàng ${handleBooking.name}`)
+            } catch (error) {
+                message.error(`${error.response.data.message}`)
+            }
+        }
+        else if (ishandle === "6") {
+            try {
+                await httpGetChangeStatus(handleBooking._id, { status: 6 })
                 message.success(`${titleModal} khách hàng ${handleBooking.name}`)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
@@ -730,7 +771,7 @@ const ListBooking = (props) => {
                     label="Tên "
                     rules={[
                         {
-                            required: true,
+                            required: ishandle == 1 ? true : false,
                         },
                     ]}
                 >
@@ -743,7 +784,7 @@ const ListBooking = (props) => {
                     label="Số điện thoại"
                     rules={[
                         {
-                            required: true,
+                            required: ishandle == 1 ? true : false,
                             pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
                             message: "Số điện thoại không đúng định dạng!"
                         },
@@ -762,7 +803,7 @@ const ListBooking = (props) => {
                     label="Dịch vụ"
                     rules={[
                         {
-                            required: true,
+                            required: ishandle == 1 ? true : false,
                             // eslint-disable-next-line no-undef
                         },
                     ]}
@@ -781,7 +822,7 @@ const ListBooking = (props) => {
                     label="Ngày đến"
                     rules={[
                         {
-                            required: true,
+                            required: ishandle == 1 ? true : false,
                             // eslint-disable-next-line no-undef
                         },
                     ]}
@@ -801,7 +842,7 @@ const ListBooking = (props) => {
                     label="Nhân viên"
                     rules={[
                         {
-                            required: true,
+                            required: ishandle == 1 ? true : false,
                             // eslint-disable-next-line no-undef
                         },
                     ]}
@@ -822,7 +863,7 @@ const ListBooking = (props) => {
                     label="Giờ đến"
                     rules={[
                         {
-                            required: true,
+                            required: ishandle == 1 ? true : false,
                             // eslint-disable-next-line no-undef
                         },
                     ]}
@@ -841,9 +882,14 @@ const ListBooking = (props) => {
                 >
                     <div className="" style={{ color: "#cfab1b", display: ishouseNoneBlock }}>Nhân viên này đã có {ishouse} khách vào thời điểm này !</div>
                 </Form.Item>
-
-
                 {/* chọn ca  */}
+                <Form.Item
+                    name="bookingPrice"
+                    label="Thanh toán"
+                    initialValue={formatCash(handleBooking?.bookingPrice || "0")}
+                >
+                    <Input disabled />
+                </Form.Item>
                 <Form.Item name="note" label="Ghi chú">
                     <Input.TextArea disabled={ishandle == 1 ? false : true} />
                 </Form.Item>

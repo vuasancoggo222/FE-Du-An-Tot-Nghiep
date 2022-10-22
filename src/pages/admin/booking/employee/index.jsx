@@ -2,12 +2,13 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Tooltip } from 'antd';
+import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select } from 'antd';
 import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import { httpGetOne } from "../../../../api/employee";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
+    const { Option } = Select;
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
@@ -73,10 +74,22 @@ const ListBookingByEmployee = (props) => {
         }
         return `${d.getFullYear()}-${month}-${date}`;
     }
+
+    function formatCash(str) {
+        const string = str.toString()
+        return string.split('').reverse().reduce((prev, next, index) => {
+            return ((index % 3) ? next : (next + ',')) + prev
+        })
+    }
+
     const showModal = (e) => {
         // eslint-disable-next-line react/prop-types
-        const isButon = e.target.getAttribute("data");
-        const idBooking = e.target.getAttribute("dataId");
+        let isButon = e.target.getAttribute("data");
+        let idBooking = e.target.getAttribute("dataId");
+        if (isButon == null) {
+            isButon = e.target.offsetParent.getAttribute("data");
+            idBooking = e.target.offsetParent.getAttribute("dataId");
+        }
         console.log(idBooking);
         // eslint-disable-next-line react/prop-types
         booking.map(async (item) => {
@@ -391,13 +404,13 @@ const ListBookingByEmployee = (props) => {
 
     const columns = [
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name',
             ...getColumnSearchProps('name'),
         },
         {
-            title: 'Phone',
+            title: 'SĐT',
             dataIndex: 'phoneNumber',
             key: 'phoneNumber',
             ...getColumnSearchProps('phoneNumber')
@@ -433,7 +446,7 @@ const ListBookingByEmployee = (props) => {
             onFilter: (value, record) => record.serviceId.indexOf(value) === 0,
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             key: 'status',
             dataIndex: 'status',
             filters: [
@@ -477,7 +490,7 @@ const ListBookingByEmployee = (props) => {
                 }
                 else {
                     key = "Khách không đến"
-                    color = "#bc0808"
+                    color = "#cd3e3e"
                 }
                 return (
                     <Tag color={color} key={key}>
@@ -489,13 +502,13 @@ const ListBookingByEmployee = (props) => {
 
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             dataIndex: "action",
             key: 'action',
             render: (item) => {
                 // chờ
                 let BtWaitCursor
-                let BtWaitColor = "#bc0808"
+                let BtWaitColor = "#cd3e3e"
                 // xác nhận
                 let BtSusscesCursor
                 let BtSusscessColor = "#da0cc8"
@@ -506,32 +519,32 @@ const ListBookingByEmployee = (props) => {
                 if (item.status === 5) {
                     // chờ
                     BtWaitCursor = "not-allowed"
-                    BtWaitColor = "#f9f6f6"
+                    BtWaitColor = "#dedede"
                 } else if (item.status === 3) {
                     // xác nhận
                     BtSusscesCursor = "not-allowed"
-                    BtSusscessColor = "#f9f6f6"
+                    BtSusscessColor = "#dedede"
                 } else if (item.status === 4) {
                     // hủy
                     BtFailureCursor = "not-allowed"
-                    BtFailureColor = "#f9f6f6"
+                    BtFailureColor = "#dedede"
                 }
                 return (
-                    <Space size="middle">
-                        <Tooltip title="Đang diễn ra">
-                            <Button style={{ border: "none", cursor: BtSusscesCursor, color: BtSusscessColor }} shape="circle" >
-                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="3" class="far fa-clock"></i></Button>
-                        </Tooltip>
-                        <Tooltip title="Hoàn thành">
-                            <Button style={{ border: "none", cursor: BtFailureCursor, color: BtFailureColor }} shape="circle" ><i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="4" class="far fa-check-circle"></i></Button>
-                        </Tooltip>
-                        <Tooltip title="Khách không đến">
-                            <Button style={{ border: "none", cursor: BtWaitCursor, color: BtWaitColor }} shape="circle" >
-                                <i style={{ fontSize: "25px" }} onClick={showModal} dataId={item._id} data="5" class="fas fa-exclamation-circle"></i>
-                            </Button>
-                        </Tooltip>
-
-                    </Space>
+                 
+                    <Select
+                    style={{ width: "170px" , color:"blue", textAlign:"center"}}
+                    value="Đổi trạng thái"
+                    >
+                        <Option value="3"> <Button onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
+                            Đang diễn ra
+                        </Button></Option>
+                        <Option value="4">  <Button onClick={showModal} dataId={item._id} data="4" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
+                            Hoàn thành
+                        </Button></Option>
+                        <Option value="5"><Button onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
+                            Khách không đến
+                        </Button></Option>
+                    </Select>
                 )
             },
         },
@@ -540,7 +553,7 @@ const ListBookingByEmployee = (props) => {
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
         console.log(item);
-        if (item.employeeId?._id == isEmploye?._id && item.status != 0 && item.status != 2) { 
+        if (item.employeeId?._id == isEmploye?._id && item.status != 0 && item.status != 2) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -555,6 +568,7 @@ const ListBookingByEmployee = (props) => {
             })
         }
     })
+    
     useEffect(() => {
         const getEmployee = async () => {
             const res = await httpGetOne(isEmployee.id)
@@ -562,6 +576,7 @@ const ListBookingByEmployee = (props) => {
             console.log(res);
         }
         getEmployee()
+        
     }, [])
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
@@ -579,6 +594,7 @@ const ListBookingByEmployee = (props) => {
             <p>Giờ đến: {renderTime(handleBooking?.time)}</p>
             <p>Nhân viên: {handleBooking?.employeeId.name}</p>
             <p>Dịch vụ: {handleBooking?.serviceId[0].name}</p>
+            <p>Thanh toán: {formatCash(handleBooking?.bookingPrice || "0")}</p>
             <p>Note: {handleBooking?.note}</p>
         </Modal>
     </div>;

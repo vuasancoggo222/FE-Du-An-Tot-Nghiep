@@ -105,14 +105,6 @@ message.error(`${error.message}`,2)
   //   console.log(prefixs);
   //   getPrefix();
   // }, []);
-
-  const prefixSelector = (
-    <Form.Item name={['user','prefix']} noStyle>
-    <Select style={{ width: 70 }}>
-      <Option value="84">+84</Option>
-    </Select>
-  </Form.Item>
-  );
   // console.log(shift);
   // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
@@ -151,10 +143,9 @@ message.error(`${error.message}`,2)
     }
   };
   const onSubmit = async (data) => {
-    const phone = `+${data.user.prefix}${data.user.phoneNumber}`
+    const phone = data.user.phoneNumber.replace('0','+84')
     const dataValues = data.user
     setFormValues(dataValues)
-    console.log('a',dataValues);
     setPhoneNumber(phone)
     setIsModalOpen(true)
   };
@@ -238,10 +229,7 @@ message.error(`${error.message}`,2)
                       },
                     ]}
                   >
-                    <Input
-                      addonBefore={prefixSelector}
-                    
-                    />
+                    <Input/>
                   </Form.Item>
                   {/* Các dịch vụ */}
                   <Form.Item label="Lựa chọn dịch vụ">

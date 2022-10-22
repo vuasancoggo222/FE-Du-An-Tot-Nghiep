@@ -34,7 +34,10 @@ const SignIn = (props) => {
       message.success('Đăng nhập thành công')
       navigate('/')
     } catch (error) {
-      message.error(`${error.message}`, 2)
+      message.error(`${error.response.data.message}`, 2)
+      if(error.response.data.code == 'NEEDVERIFY'){
+         return navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
+      }
     }
   };
   const validateMessages = {

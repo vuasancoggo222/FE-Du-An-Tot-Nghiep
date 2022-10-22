@@ -21,13 +21,6 @@ const SignUp = () => {
       span: 16,
     },
   };
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="84">+84</Option>
-      </Select>
-    </Form.Item>
-  );
   const validateMessages = {
     required: '${label} Không được bỏ trống!',
     types: {
@@ -41,17 +34,17 @@ const SignUp = () => {
   }
   const onFinish = async (values) => {
     console.log(values);
-    const phoneNumber = `${values.prefix}${values.phoneNumber.phoneNumber}`
+    
     const userValues = {
       name: values.name.name,
-      phoneNumber: phoneNumber,
+      phoneNumber: values.phoneNumber.phoneNumber,
       password: values.password.password
     }
     console.log(userValues);
     try {
        await register(userValues)
        message.success('Đăng ký thành công')
-       navigate(`/verify?prefix=${values.prefix}&phone=${values.phoneNumber.phoneNumber}`)
+       navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
     } catch (error) {
       console.log(error);
       message.error(`${error.response.data.message}`,2)
@@ -99,7 +92,7 @@ const SignUp = () => {
                   message:"Số điện thoại không đúng định dạng!"
                 }]}
               >
-                <Input addonBefore={prefixSelector} style={{ width: '100%' }}/>
+                <Input style={{ width: '100%' }}/>
               </Form.Item>
               <Form.Item
                 name={['password', 'password']}

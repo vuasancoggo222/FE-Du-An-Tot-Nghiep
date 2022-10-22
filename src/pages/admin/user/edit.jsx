@@ -20,30 +20,34 @@ const normFile = (e) => {
   return e?.fileList;
 };
 const { Option } = Select;
-const EditUsers = () => {
+const EditUsers =() => {
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const { id } = useParams();
   const [form] = Form.useForm();
 
   useEffect(() => {
-     async () => {
-      const dataService = await httpGetOneUser(id);
-      console.log("log service :", dataService);
-      setUrl(dataService?.image);
-      form.setFieldsValue({
-        name: dataService?.name,
-        description: dataService?.description,
-        price: dataService?.price,
-        status: dataService?.status,
-        // image: dataService?.image,
-        role:dataService?.role,
-        age: dataService?.age,
-        address:dataService?.address,
-        phone:dataService?.phoneNumber
-      });
-    };
-
+    // const getData = async () => {
+    
+    //   setUrl(dataUser?.image);
+    //   form.setFieldsValue({
+    //     name: dataUser?.name,
+    //     description: dataUser?.description,
+    //     price: dataUser?.price,
+    //     status: dataUser?.status,
+    //     // image: dataUser?.image,
+    //     role:dataUser?.role,
+    //     age: dataUser?.age,
+    //     address:dataUser?.address,
+    //     phone:dataUser?.phoneNumber
+    //   });
+    // }
+    // getData()
+    const a =async()=>{
+      const dataUser = await httpGetOneUser(id);
+      console.log("log user :", dataUser);
+    }
+    a()
   }, []);
 
   const uploadImage = async (options) => {
@@ -67,7 +71,7 @@ const EditUsers = () => {
     try {
       await updateService(id, a).then(() => {
         message.success("cap nhat thành công", 4);
-        navigate("/admin/service");
+        navigate("/admin/user");
       });
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);

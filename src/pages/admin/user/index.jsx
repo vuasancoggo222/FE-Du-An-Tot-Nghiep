@@ -8,7 +8,7 @@ import useUsers from "../../../hooks/use-user";
 
 const ListUser = () => {
     const { data, error } = useUsers();
-
+    console.log(data);
     const columns = [
         {
             title: "Name",

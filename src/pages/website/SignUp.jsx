@@ -1,10 +1,9 @@
-import { Button,  Form, Input,message, Select } from "antd";
-import { Option } from "antd/lib/mentions";
+import { Button,  Form, Input,message } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../api/user";
 
-const SignUp = () => {
+const SignUp = (props) => {
   const navigate = useNavigate()
   const bgStaff = {
     width: "100%",
@@ -45,6 +44,9 @@ const SignUp = () => {
        await register(userValues)
        message.success('Đăng ký thành công')
        navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
+      //  eslint-disable-next-line react/prop-types
+      props.handleSignUp()
+       
     } catch (error) {
       console.log(error);
       message.error(`${error.response.data.message}`,2)

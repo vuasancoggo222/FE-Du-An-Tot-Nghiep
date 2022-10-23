@@ -4,12 +4,13 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Select,
   Upload,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { getProfile } from "../../api/user";
+import { getProfile, updateProfile } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
 const layout = {
   labelCol: {
@@ -36,11 +37,10 @@ const validateMessages = {
 const Userinformation = () => {
   const user = isAuthenticate();
   const [form] = Form.useForm();
-  // const { id } = useParams();
   useEffect(() => {
-    const getSerVice = async () => {
+    const getProfiles = async () => {
       const datauser = await getProfile(user.token);
-      console.log("log service :", datauser);
+      console.log("log profile :", datauser);
       form.setFieldsValue({
         name: datauser?.name,
         address: datauser?.address,
@@ -50,11 +50,17 @@ const Userinformation = () => {
       });
     };
 
-    getSerVice();
+    getProfiles();
   }, []);
-
   const onFinish = async (data) => {
     console.log(data);
+    try {
+      await updateProfile(user.token, data).then(() => {
+        message.success("cap nhat thành công", 4);
+      });
+    } catch (error) {
+      message.error(`${error.response.data.message}`, 4);
+    }
   };
   const [componentDisabled, setComponentDisabled] = useState(true);
   const onFormLayoutChange = ({ disabled }) => {
@@ -114,7 +120,7 @@ const Userinformation = () => {
                 <Select.Option value={1}>2</Select.Option>
               </Select>
             </Form.Item>
-            <Form.Item name="" label="Address">
+            <Form.Item name="address" label="Address">
               <Input />
             </Form.Item>
             <Form.Item label="Upload" valuePropName="fileList" name="avatar">

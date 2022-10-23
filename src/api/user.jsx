@@ -27,7 +27,7 @@ export const updateProfile = (token) => {
       Authorization: `${token}`,
     },
   };
-  return instance.put(url, header);
+  return instance.put(url, null, header);
 };
 export const changeAccountStatus = (phoneNumber, status, token) => {
   const url = `change-account-status?phone=${phoneNumber}&status=${status}`;

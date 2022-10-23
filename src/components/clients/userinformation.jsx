@@ -9,9 +9,10 @@ import {
   Upload,
 } from "antd";
 import React, { useEffect, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
 import { getProfile, updateProfile } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
+import ImgCrop from "antd-img-crop";
+import { uploadCloudinary } from "../../api/upload";
 const layout = {
   labelCol: {
     span: 4,
@@ -37,35 +38,67 @@ const validateMessages = {
 const Userinformation = () => {
   const user = isAuthenticate();
   const [form] = Form.useForm();
+  const [url, setUrl] = useState("");
   useEffect(() => {
     const getProfiles = async () => {
       const datauser = await getProfile(user.token);
       console.log("log profile :", datauser);
+      setFileList([{ url: datauser.avatar }]);
       form.setFieldsValue({
         name: datauser?.name,
         address: datauser?.address,
         age: datauser?.age,
         gender: datauser?.gender,
-        // avatar: datauser?.avatar,
+        avatar: datauser?.avatar,
       });
     };
 
     getProfiles();
   }, []);
+
+  const onSubmit = async (data) => {
+    var res = await updateProfile(user.token, data);
+    if (res._id !== undefined) {
+      message.success("Add employee success", 4);
+    }
+  };
+  const [fileList, setFileList] = useState([]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+
   const onFinish = async (data) => {
-    console.log(data);
+    const dataPost = { ...data, avatar: url };
     try {
-      await updateProfile(user.token, data).then(() => {
+      await onSubmit(dataPost).then(() => {
         message.success("cap nhat thành công", 4);
       });
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
     }
   };
+
+  const uploadImage = async (options) => {
+    const { onSuccess, onError, file } = options;
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("upload_preset", "my_upload");
+    try {
+      const res = await uploadCloudinary(formData);
+      onSuccess("Ok");
+      message.success("Upload successfully !");
+      console.log("server res: ", res);
+      setUrl(res.data.secure_url);
+    } catch (err) {
+      onError({ err });
+    }
+  };
   const [componentDisabled, setComponentDisabled] = useState(true);
   const onFormLayoutChange = ({ disabled }) => {
     setComponentDisabled(disabled);
   };
+
   return (
     <>
       <div className="border border-[#00502b] rounded-md ">
@@ -123,20 +156,20 @@ const Userinformation = () => {
             <Form.Item name="address" label="Address">
               <Input />
             </Form.Item>
-            <Form.Item label="Upload" valuePropName="fileList" name="avatar">
-              <Upload listType="picture-card">
-                <div>
-                  <PlusOutlined />
-                  <div
-                    style={{
-                      marginTop: 8,
-                    }}
-                  >
-                    Upload
-                  </div>
-                </div>
-              </Upload>
+            <Form.Item label="image">
+              <ImgCrop>
+                <Upload
+                  customRequest={uploadImage}
+                  listType="picture-card"
+                  fileList={fileList}
+                  onChange={onChange}
+                  name="avatar"
+                >
+                  {fileList.length < 1 && "+ Upload"}
+                </Upload>
+              </ImgCrop>
             </Form.Item>
+
             <Form.Item
               wrapperCol={{
                 ...layout.wrapperCol,

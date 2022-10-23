@@ -12,32 +12,32 @@ const Header = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
   const [user, setUser] = useState({});
-  useEffect(() => {
-    const user = isAuthenticate();
-    if (user) {
-      setAuth(true);
-      setUser(user);
-    }
-  }, []);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [modalText, setModalText] = useState("Content of the modal");
   const [ismolDal, setIsModal] = useState();
-  const showModal = async (e) => {
-    await setOpen(true);
-    const footerModal = document.querySelector(".ant-modal-footer");
-    footerModal.style.display = "none";
+
+  const showModal =  (e) => {
+    setOpen(true);
     setIsModal(e.target.getAttribute("data"));
   };
 
-  const handleSignIn = () => {
-    const user = isAuthenticate();
+  const handleSignIn = async () => {
+    const user = await isAuthenticate();
     if (user) {
       setAuth(true);
       setUser(user);
+      setOpen(false);
     }
-    setOpen(false);
+  };
+
+  const handleSignUp = async () => {
+    const signUp = await JSON.parse(localStorage.getItem('signup'))
+    if (signUp) {
+      setOpen(false);
+    }
+    localStorage.removeItem("signup")
   };
 
   const handleOk = () => {
@@ -50,18 +50,12 @@ const Header = () => {
   };
 
   // Kiểm tra nhấn signin/signup
-  const checkInUp = () => {
-    if (ismolDal === "signin") {
-      return <SignIn handleSignIn={handleSignIn} />;
-    } else {
-      return <SignUp />;
-    }
-  };
 
   const handleCancel = () => {
     console.log("Clicked cancel button");
     setOpen(false);
   };
+
   const handleLogout = () => {
     console.log(1);
     localStorage.removeItem("user");
@@ -108,6 +102,13 @@ const Header = () => {
       ]}
     />
   );
+  useEffect(() => {
+    const user = isAuthenticate();
+    if (user) {
+      setAuth(true);
+      setUser(user);
+    }
+  }, []);
   return (
     <>
       <div className="bg-[#005E2E] ">
@@ -147,7 +148,7 @@ const Header = () => {
                 </div>
                 <div>
                   {auth ? (
-                    <div className="sm:flex-auto">
+                    <div style={{ justifyItems: "center", display: "flex" }} className="">
                       <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
                         <Link className="text-[#fff]" to={`/booking`}>
                           Đặt Lịch
@@ -156,6 +157,7 @@ const Header = () => {
                       <Dropdown overlay={menu} placement="bottom">
                         <Avatar
                           style={{
+                            marginLeft: "5px",
                             color: "#f56a00",
                             backgroundColor: "#fde3cf",
                           }}
@@ -169,19 +171,19 @@ const Header = () => {
                       <button
                         data="signin"
                         onClick={showModal}
-                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff]"
+                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff] "
                       >
                         Đăng nhập
                       </button>
                       <button
                         data="signup"
                         onClick={showModal}
-                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff]"
+                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff] ml-3"
                       >
                         Đăng ký
                       </button>
 
-                      <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
+                      <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 ml-3">
                         <Link className="text-[#fff]" to={`/booking`}>
                           Đặt Lịch
                         </Link>
@@ -198,8 +200,9 @@ const Header = () => {
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             width={1000}
+            footer={false}
           >
-            <p>{checkInUp()}</p>
+            <p>{ismolDal == "signin" ? <SignIn handleSignIn={handleSignIn()} /> : ismolDal == "signup" ? <SignUp handleSignUp={handleSignUp()} /> :""}</p>
           </Modal>
         </header>
       </div>

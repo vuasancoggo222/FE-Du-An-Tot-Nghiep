@@ -1,4 +1,4 @@
-import { Button,  Form, Input,message } from "antd";
+import { Button, Form, Input, message } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../api/user";
@@ -32,24 +32,25 @@ const SignUp = (props) => {
     opacity: 0.8
   }
   const onFinish = async (values) => {
-    console.log(values);
-    
+    // console.log(values);
+
     const userValues = {
       name: values.name.name,
       phoneNumber: values.phoneNumber.phoneNumber,
       password: values.password.password
     }
-    console.log(userValues);
+    // console.log(userValues);
     try {
-       await register(userValues)
-       message.success('Đăng ký thành công')
-       navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
+      await register(userValues)
+      message.success('Đăng ký thành công')
+      await navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
+      localStorage.setItem("signup", "true")
       //  eslint-disable-next-line react/prop-types
-      props.handleSignUp()
-       
+      props.handleSignUp(userValues)
+
     } catch (error) {
-      console.log(error);
-      message.error(`${error.response.data.message}`,2)
+      // console.log(error);  
+      message.error(`${error.response.data.message}`, 2)
     }
   };
 
@@ -72,7 +73,7 @@ const SignUp = (props) => {
         <div style={{ width: "100%" }} className="pl-5">
           <h3 className="font-bold text-2xl text-center mt-5 ...">Đăng Ký Tài Khoản</h3>
           <div className="pt-5 p-10">
-            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} initialValues={{ prefix : +84}}>
+            <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages} initialValues={{ prefix: +84 }}>
 
               <Form.Item
                 name={['name', 'name']}
@@ -86,15 +87,15 @@ const SignUp = (props) => {
                 <Input />
               </Form.Item>
               <Form.Item
-                 name={['phoneNumber','phoneNumber']}
-                 label="PhoneNumber"
-                  rules={[{
+                name={['phoneNumber', 'phoneNumber']}
+                label="PhoneNumber"
+                rules={[{
                   required: true,
                   pattern: new RegExp(/((9|3|7|8|5)+([0-9]{8})\b)/g),
-                  message:"Số điện thoại không đúng định dạng!"
+                  message: "Số điện thoại không đúng định dạng!"
                 }]}
               >
-                <Input style={{ width: '100%' }}/>
+                <Input style={{ width: '100%' }} />
               </Form.Item>
               <Form.Item
                 name={['password', 'password']}
@@ -116,7 +117,7 @@ const SignUp = (props) => {
                   span: 16,
                 }}
               >
-                <Button type="primary" htmlType="submit">
+                <Button id="submitBtn" type="primary" htmlType="submit">
                   Đăng ký
                 </Button>
               </Form.Item>

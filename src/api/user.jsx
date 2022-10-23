@@ -20,14 +20,14 @@ export const getProfile = (token) => {
   };
   return instance.get(url, header);
 };
-export const updateProfile = (token) => {
+export const updateProfile = (token,data) => {
   const url = `/user/my-profile/edit`;
   const header = {
     headers: {
       Authorization: `${token}`,
     },
   };
-  return instance.put(url, null, header);
+  return instance.put(url,data,header);
 };
 export const changeAccountStatus = (phoneNumber, status, token) => {
   const url = `change-account-status?phone=${phoneNumber}&status=${status}`;

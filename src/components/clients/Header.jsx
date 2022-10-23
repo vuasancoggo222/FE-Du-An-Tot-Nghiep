@@ -12,16 +12,14 @@ const Header = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
   const [user, setUser] = useState({});
-
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [modalText, setModalText] = useState("Content of the modal");
   const [ismolDal, setIsModal] = useState();
-  const showModal = async (e) => {
-    await setOpen(true);
-    const footerModal = document.querySelector(".ant-modal-footer");
-    footerModal.style.display = "none";
+
+  const showModal =  (e) => {
+    setOpen(true);
     setIsModal(e.target.getAttribute("data"));
   };
 
@@ -35,11 +33,11 @@ const Header = () => {
   };
 
   const handleSignUp = async () => {
-    // const isNa = document.querySelector(".ant-message-notice");
-    // console.log(isNa);
-    // if(isNa) {
-    //   setOpen(false);
-    // }
+    const signUp = await JSON.parse(localStorage.getItem('signup'))
+    if (signUp) {
+      setOpen(false);
+    }
+    localStorage.removeItem("signup")
   };
 
   const handleOk = () => {
@@ -52,14 +50,6 @@ const Header = () => {
   };
 
   // Kiểm tra nhấn signin/signup
-  const checkInUp = () => {
-    if (ismolDal === "signin") {
-      return <SignIn handleSignIn={handleSignIn()} />;
-    } else {
-      // eslint-disable-next-line no-undef
-      return <SignUp handleSignUp={handleSignUp()} />;
-    }
-  };
 
   const handleCancel = () => {
     console.log("Clicked cancel button");
@@ -210,8 +200,9 @@ const Header = () => {
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             width={1000}
+            footer={false}
           >
-            <p>{checkInUp()}</p>
+            <p>{ismolDal == "signin" ? <SignIn handleSignIn={handleSignIn()} /> : ismolDal == "signup" ? <SignUp handleSignUp={handleSignUp()} /> :""}</p>
           </Modal>
         </header>
       </div>

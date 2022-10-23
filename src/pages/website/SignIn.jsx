@@ -114,7 +114,7 @@ const SignIn = (props) => {
                   span: 16,
                 }}
               >
-                <Button onClick={(() => {
+                <Button id="sub" onClick={(() => {
                   // eslint-disable-next-line react/prop-types
                 })} type="primary" htmlType="submit">
                   Đăng nhập

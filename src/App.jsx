@@ -29,6 +29,7 @@ import ContactList from "./pages/admin/contact/index";
 import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
 import Userinformation from "./components/clients/userinformation";
+import ReplyFeedback from "./pages/admin/feedback";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -77,6 +78,7 @@ function App() {
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
           <Route
             path="admin"
@@ -129,6 +131,9 @@ function App() {
             </Route>
             <Route path="user">
               <Route index element={<ListUser />}></Route>
+            </Route>
+            <Route path="feedback">
+              <Route index element={<ReplyFeedback />}></Route>
             </Route>
           </Route>
         </Routes>

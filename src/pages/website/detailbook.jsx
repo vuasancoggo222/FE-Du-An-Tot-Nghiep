@@ -361,11 +361,7 @@ const Detaibooking = () => {
       </div>
       <div className="formcomment w-[1200px] m-auto">
         <div className="">
-          {user ? (
-            <Formcomment serviceId={service?._id} feedbackData={feedback} />
-          ) : (
-            <span className="">Vui lòng đăng nhập để đánh giá !</span>
-          )}
+          <Formcomment serviceId={service?._id} feedbackData={feedback} />
         </div>
       </div>
     </>

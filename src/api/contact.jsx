@@ -7,3 +7,7 @@ export const httpAddContact = (data) => {
 export const httpListContact = () => {
     return instance.post(`contact`);
 }
+
+export const httpDeleteContact = (id) => {
+    return instance.delete(`contact/${id}`);
+}

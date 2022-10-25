@@ -38,7 +38,7 @@ const columns = [
     render: (item) => {
       return (
         <div className="text-center">
-          <button className="text-red-600 font-bold w-full h-full" onClick={() => onRemove(item)}>Xóa</button>
+          <Button className="font-bold w-full h-full" onClick={() => onRemove(item)}>Xóa</Button>
         </div>
       );
     },

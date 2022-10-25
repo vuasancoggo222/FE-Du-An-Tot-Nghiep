@@ -13,7 +13,7 @@ const WebsiteLayout = () => {
         <div className="fixed w-full z-40">
           <Header />
         </div>
-        <div style={{maxWidth:"1000px"}} className="z-30 pt-20 m-auto">
+        <div className="z-30 pt-20 m-auto">
           <Content>
             <Outlet />
           </Content>

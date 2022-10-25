@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import "./index.css"
+import "./index.css";
 import WebsiteLayout from "./layouts/WebsiteLayout";
 import HomePage from "./pages/website/Home";
 import BookingPage from "./pages/website/BookingPage";
@@ -25,9 +25,11 @@ import VerifyPage from "./pages/website/VerifyPage";
 import ListBooking from "./pages/admin/booking";
 import EditEmployee from "./pages/admin/employee/edit";
 import UserHistory from "./pages/website/user/UserHistory";
-import ContactList from "./pages/admin/contact/index"
+import ContactList from "./pages/admin/contact/index";
 import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
+import Userinformation from "./components/clients/userinformation";
+import ReplyFeedback from "./pages/admin/feedback";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -36,7 +38,7 @@ function App() {
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
-      console.log(res);
+
       setBooking(res);
     };
     getBooking();
@@ -55,7 +57,7 @@ function App() {
 
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
-    console.log(res);
+
     setBooking(res);
   };
 
@@ -69,12 +71,14 @@ function App() {
 
             <Route element={<UserInfo />}>
               <Route path="booking-history/me" element={<UserHistory />} />
+              <Route path="user-information/me" element={<Userinformation />} />
             </Route>
 
             <Route path="/contact" element={<Contact />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
           <Route
             path="admin"
@@ -123,10 +127,13 @@ function App() {
               <Route path=":id/edit" element={<EditService />} />
             </Route>
             <Route path="contact">
-                <Route index element={<ContactList/>}/>
+              <Route index element={<ContactList />} />
             </Route>
             <Route path="user">
               <Route index element={<ListUser />}></Route>
+            </Route>
+            <Route path="feedback">
+              <Route index element={<ReplyFeedback />}></Route>
             </Route>
           </Route>
         </Routes>

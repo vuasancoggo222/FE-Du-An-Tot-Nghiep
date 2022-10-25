@@ -11,6 +11,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "antd": "^4.23.6",
+    "antd-img-crop": "^4.2.8",
     "axios": "^0.27.2",
     "firebase": "^9.11.0",
     "icons": "^1.0.0",

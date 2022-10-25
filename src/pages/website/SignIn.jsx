@@ -30,12 +30,18 @@ const SignIn = (props) => {
     try {
       const data = await login(userValues)
       console.log(data);
-      localStorage.setItem('user', JSON.stringify(data))
+      await localStorage.setItem('user', JSON.stringify(data))
       message.success('Đăng nhập thành công')
       navigate('/')
+      // eslint-disable-next-line react/prop-types
+      props.handleSignIn()
     } catch (error) {
-      message.error(`${error.message}`, 2)
+      message.error(`${error.response.data.message}`, 2)
+      if(error.response.data.code == 'NEEDVERIFY'){
+         return navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
+      }
     }
+
   };
   const validateMessages = {
     required: '${label} Không được bỏ trống!',
@@ -108,9 +114,8 @@ const SignIn = (props) => {
                   span: 16,
                 }}
               >
-                <Button onClick={(() => {
+                <Button id="sub" onClick={(() => {
                   // eslint-disable-next-line react/prop-types
-                  props.handleSignIn()
                 })} type="primary" htmlType="submit">
                   Đăng nhập
                 </Button>

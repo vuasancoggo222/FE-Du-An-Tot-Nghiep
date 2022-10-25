@@ -1,13 +1,17 @@
 import { Table, Image, Space, Tooltip, Button } from "antd";
-import React from "react";import { Link } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import useContact from "../../../hooks/use-contact";
 import { httpDeleteContact } from "../../../api/contact";
 import "antd/dist/antd.css";
 
 const columns = [
   {
-    title: "Mã Khách Hàng",
+    title: "Index",
     dataIndex: "_id",
+    render: (text, object, index) => {
+      return index + 1;
+    },
   },
   {
     title: "Name",
@@ -27,42 +31,14 @@ const columns = [
     dataIndex: "address",
   },
   {
-    title: "Create Time",
-    dataIndex: "createdAt",
-  },
-  {
-    title: "Update Time",
-    dataIndex: "updatedAt",
-  },
-  {
     title: "Action",
     dataIndex: "_id",
     key: "action",
     colapse: 1,
     render: (item) => {
-      let BtFailureCursor;
-      let BtFailureColor = "red";
       return (
         <div className="text-center">
-          <Space size="middle">
-            <Tooltip title="Xóa">
-                <Button
-                  style={{
-                    border: "none",
-                    cursor: BtFailureCursor,
-                    color: BtFailureColor,
-                  }}
-                  shape="circle"
-                  onClick={() => onRemove(item)}
-                >
-                  <i
-                    style={{ fontSize: "25px" }}
-                    data="1"
-                    className="far fa-times-circle"
-                  ></i>
-                </Button>
-            </Tooltip>
-          </Space>
+          <button className="text-red-600 font-bold w-full h-full" onClick={() => onRemove(item)}>Xóa</button>
         </div>
       );
     },

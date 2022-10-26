@@ -377,9 +377,11 @@ const ListBooking = (props) => {
         setIsHouseNoneBlock("none")
         let isButon = e.target.getAttribute("data");
         let idBooking = e.target.getAttribute("dataId");
+        let show = e.target.getAttribute("isshow");
         if (isButon == null) {
             isButon = e.target.offsetParent.getAttribute("data");
             idBooking = e.target.offsetParent.getAttribute("dataId");
+            show =e.target.offsetParent.getAttribute("isshow");
         }
         let count = 0;
         let isBooking;
@@ -400,7 +402,7 @@ const ListBooking = (props) => {
         booking.map(async (item) => {
 
             if (item._id == idBooking) {
-                if (item.status == isButon) {
+                if (item.status == isButon || show == "false") {
                     return
                 }
                 await seDateBooking(item.date.toString())
@@ -602,52 +604,50 @@ const ListBooking = (props) => {
             dataIndex: "action",
             key: 'action',
             render: (item) => {
-                // chờ
-                let BtWaitCursor = "pointer"
-                let BtWaitColor = "#e4ed36"
-                // xác nhận
+                let isShowCucess = "false";
+                let isShowFailure = "false";
+                let isShowPay = "false";
                 let BtSusscesCursor = "pointer"
-                let BtSusscessColor = "#26cbe8"
+                let BtSusscessColor = "#dedede"
+                // let BtSusscessColor = "#26cbe8"
                 // hủy
-                let BtFailureCursor = "pointer"
-                let BtFailureColor = "#db5656"
+                let BtFailureCursor = "not-allowed"
+                let BtFailureColor = "#dedede"
+                // let BtFailureColor = "#db5656"
                 // thanh toán
-                let BtPayCursor = "pointer"
-                let BtPayColor = "#09857e"
+                let BtPayCursor = "not-allowed"
+                let BtPayColor = "#dedede"
+                // let BtPayColor = "#09857e"
 
                 if (item.status === 0) {
-                    // chờ
-                    BtWaitCursor = "not-allowed"
-                    BtWaitColor = "#dedede"
-                } else if (item.status === 1) {
-                    // xác nhận
-                    BtSusscesCursor = "not-allowed"
-                    BtSusscessColor = "#dedede"
-                } else if (item.status === 2) {
+                    // xac nhan
+                    isShowCucess = "true"
+                    isShowFailure = "true"
+                    BtSusscesCursor = "pointer"
+                    BtSusscessColor = "#26cbe8"
+                    BtFailureCursor = "pointer"
+                    BtFailureColor = "#db5656"
+                } else if (item.status === 4) {
                     // hủy
-                    BtFailureCursor = "not-allowed"
-                    BtFailureColor = "#dedede"
-                }
-                else if (item.status === 6) {
-                    // thanh toán
-                    BtPayCursor = "not-allowed"
-                    BtPayColor = "#dedede"
+                    BtPayCursor = "pointer"
+                    BtPayColor = "#09857e"
+                    isShowPay ="true"
                 }
                 return (
                     <Select className="selectChangeSatus"
-                        style={{ width: "150px" , color:"blue" , textAlign:"center" }}
+                        style={{ width: "150px", color: "blue", textAlign: "center" }}
                         value="Đổi trạng thái"
                     >
-                        <Option value="1"> <Button onClick={showModal} dataId={item._id} data="1" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="1"> <Button isshow={isShowCucess} onClick={showModal} dataId={item._id} data="1" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
                             Xác nhận
                         </Button></Option>
-                        <Option value="2">  <Button onClick={showModal} dataId={item._id} data="2" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="2">  <Button isshow={isShowFailure} onClick={showModal} dataId={item._id} data="2" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
                             Hủy
                         </Button></Option>
-                        <Option value="0"><Button onClick={showModal} dataId={item._id} data="0" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
+                        {/* <Option value="0"><Button onClick={showModal} dataId={item._id} data="0" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
                             Chờ xác nhận
-                        </Button></Option>
-                        <Option value="6"><Button onClick={showModal} dataId={item._id} data="6" style={{ cursor: BtPayCursor, backgroundColor: BtPayColor, border: "none", color: "white", width: "100%" }} >
+                        </Button></Option> */}
+                        <Option value="6"><Button isshow={isShowPay} onClick={showModal} dataId={item._id} data="6" style={{ cursor:BtPayCursor, backgroundColor: BtPayColor, border: "none", color: "white", width: "100%" }} >
                             Thanh toán
                         </Button></Option>
 

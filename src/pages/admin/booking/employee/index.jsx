@@ -86,15 +86,17 @@ const ListBookingByEmployee = (props) => {
         // eslint-disable-next-line react/prop-types
         let isButon = e.target.getAttribute("data");
         let idBooking = e.target.getAttribute("dataId");
+        let show = e.target.getAttribute("isshow");
         if (isButon == null) {
             isButon = e.target.offsetParent.getAttribute("data");
             idBooking = e.target.offsetParent.getAttribute("dataId");
+            show = e.target.offsetParent.getAttribute("isshow");
         }
         console.log(idBooking);
         // eslint-disable-next-line react/prop-types
         booking.map(async (item) => {
             if (item._id == idBooking) {
-                if (item.status == isButon) {
+                if (item.status == isButon || show == "false") {
                     return
                 }
                 await setIsModalOpen(true);
@@ -507,41 +509,49 @@ const ListBookingByEmployee = (props) => {
             key: 'action',
             render: (item) => {
                 // chờ
-                let BtWaitCursor
-                let BtWaitColor = "#cd3e3e"
+                let showWait = "false"
+                let showSussces = "false"
+                let showFailure = "false"
+                let BtWaitCursor = "not-allowed"
+                let BtWaitColor = "#dedede"
+                // let BtWaitColor = "#cd3e3e"
                 // xác nhận
-                let BtSusscesCursor
-                let BtSusscessColor = "#da0cc8"
+                let BtSusscesCursor = "not-allowed"
+                let BtSusscessColor = "#dedede"
+                // let BtSusscessColor = "#da0cc8"
                 // hủy
-                let BtFailureCursor
-                let BtFailureColor = "green"
+                let BtFailureCursor = "not-allowed"
+                let BtFailureColor = "#dedede"
+                // let BtFailureColor = "green"
 
-                if (item.status === 5) {
+                if (item.status === 1) {
                     // chờ
+                    showSussces = "true"
+                    showWait = "true"
+                    BtSusscesCursor = "pointer"
+                    BtSusscessColor = "#da0cc8"
                     BtWaitCursor = "not-allowed"
-                    BtWaitColor = "#dedede"
+                    BtWaitColor = "#cd3e3e"
                 } else if (item.status === 3) {
+                    BtFailureCursor = "pointer"
+                    BtFailureColor = "green"
+                    showFailure = "true"
                     // xác nhận
-                    BtSusscesCursor = "not-allowed"
-                    BtSusscessColor = "#dedede"
-                } else if (item.status === 4) {
-                    // hủy
-                    BtFailureCursor = "not-allowed"
-                    BtFailureColor = "#dedede"
-                }
+                   
+                } 
                 return (
                  
                     <Select
                     style={{ width: "170px" , color:"blue", textAlign:"center"}}
                     value="Đổi trạng thái"
                     >
-                        <Option value="3"> <Button onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="3"> <Button isshow={showSussces} onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
                             Đang diễn ra
                         </Button></Option>
-                        <Option value="4">  <Button onClick={showModal} dataId={item._id} data="4" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="4">  <Button isshow={showFailure} onClick={showModal} dataId={item._id} data="4" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
                             Hoàn thành
                         </Button></Option>
-                        <Option value="5"><Button onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="5"><Button isshow={showWait} onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
                             Khách không đến
                         </Button></Option>
                     </Select>

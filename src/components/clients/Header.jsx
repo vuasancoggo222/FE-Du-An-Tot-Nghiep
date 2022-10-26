@@ -29,6 +29,11 @@ const Header = () => {
       setAuth(true);
       setUser(user);
       setOpen(false);
+      if(user.role === 1) {
+        navigate("/admin/booking/employee")
+      }else if(user.role === 2) {
+        navigate("/admin")
+      }
     }
   };
 

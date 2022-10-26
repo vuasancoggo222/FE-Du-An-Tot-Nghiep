@@ -1,21 +1,26 @@
-import { Table } from "antd";
+import { Table, Image, Space, Tooltip, Button } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 import useContact from "../../../hooks/use-contact";
+import { httpDeleteContact } from "../../../api/contact";
 import "antd/dist/antd.css";
 
 const columns = [
   {
-    title: "Mã Khách Hàng",
+    title: "Index",
     dataIndex: "_id",
+    render: (text, object, index) => {
+      return index + 1;
+    },
   },
   {
     title: "Name",
     dataIndex: "name",
-    className:"ant-descriptions-title"
+    className: "ant-descriptions-title",
   },
   {
     title: "Phone",
-    dataIndex: "phoneNumber"
+    dataIndex: "phoneNumber",
   },
   {
     title: "Content",
@@ -26,15 +31,29 @@ const columns = [
     dataIndex: "address",
   },
   {
-    title: "Create Time",
-    dataIndex: "createdAt"
-  },
-  {
-    title: "Update Time",
-    dataIndex: "updatedAt",
+    title: "Action",
+    dataIndex: "_id",
+    key: "action",
+    colapse: 1,
+    render: (item) => {
+      return (
+        <div className="text-center">
+          <Button className="font-bold w-full h-full" onClick={() => onRemove(item)}>Xóa</Button>
+        </div>
+      );
+    },
   },
 ];
-
+const onRemove = async (id) => {
+  console.log(id);
+  const confirm = window.confirm("Bạn muốn xóa liên hệ ?");
+  if (confirm) {
+    await httpDeleteContact(id);
+  }
+};
+const onChange = (pagination, filters, sorter, extra) => {
+  console.log("params", pagination, filters, sorter, extra);
+};
 const ContactList = () => {
   const { data, error } = useContact();
   if (!data) return <div>loading</div>;
@@ -49,7 +68,16 @@ const ContactList = () => {
         </div>
       </div>
       <div className="w-full px-6 py-6 mx-auto">
-        <Table bordered className="bold" rowClassName={(record, index) => index % 2 === 0 ? 'ant-tag-blue' : 'ant-tag-green'}  columns={columns} dataSource={data} />
+        <Table
+          bordered
+          className="bold"
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "ant-tag-blue" : "ant-tag-green"
+          }
+          columns={columns}
+          dataSource={data}
+          onChange={onChange}
+        />
       </div>
     </>
   );

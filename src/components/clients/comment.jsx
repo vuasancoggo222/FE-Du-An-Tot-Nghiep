@@ -10,11 +10,12 @@ import {
   Tooltip,
 } from "antd";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { isAuthenticate } from "../../utils/LocalStorage";
 
 import { feedbackAdd } from "../../api/feedback";
 import moment from "moment";
+import { getProfile } from "../../api/user";
 const { TextArea } = Input;
 
 const desc = ["Tệ", "Không hài lòng", "Bình thường", "Hài lòng", "Tuyệt vời"];
@@ -55,12 +56,21 @@ const Editor = ({ onChange, onSubmit, submitting, text, rate, rateValue }) => (
 const Formcomment = (props) => {
   const id = props?.serviceId;
   const listfeedback = props?.feedbackData;
-  console.log("listfeedback", listfeedback);
+  const [dataUser, setDataUser] = useState();
   const user = isAuthenticate();
-
+  // console.log("listfeedback", listfeedback?.listFeedback);
   const [submitting, setSubmitting] = useState(false);
   const [value, setValue] = useState("");
   const [rate, setRate] = useState(0);
+  useEffect(() => {
+    const getProfiles = async () => {
+      const res = await getProfile(user.token);
+      console.log("log profile :", res);
+      setDataUser(res);
+    };
+
+    getProfiles();
+  }, []);
 
   const handleSubmit = async () => {
     if (!rate)
@@ -85,6 +95,19 @@ const Formcomment = (props) => {
           },
         })
       );
+    const accept = dataUser.serviceUsed;
+    if (!accept.includes(id)) {
+      return (
+        message &&
+        message.error({
+          content: "Bạn chưa sử dụng dịch vụ này",
+          className: "custom-class",
+          style: {
+            marginTop: "20vh",
+          },
+        })
+      );
+    }
 
     setSubmitting(true);
     const data = {
@@ -143,87 +166,82 @@ const Formcomment = (props) => {
           Khách hàng chấm điểm, đánh giá và nhận xét{" "}
         </h3>
         <div className="px-5">
-          <Comment
-            avatar={
-              <Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-            }
-            content={
-              <Editor
-                onChange={handleChange}
-                onSubmit={handleSubmit}
-                submitting={submitting}
-                text={value}
-                rate={handleRate}
-                rateValue={rate}
-              />
-            }
-          />
-          <div className="">
-            {listfeedback?.map((item, index) => (
-              <>
-                <Comment
-                  key={index}
-                  actions={[<span key="comment-nested-reply-to">Trả lời</span>]}
-                  author={
-                    <a>
-                      <p className="">{item.user?.name}</p>
-                      {/* date ở đây */}
-                      <Tooltip title={`asds`}>
-                        <span>{convertDate(item?.createdAt)}</span>
-                      </Tooltip>
-                    </a>
-                  }
-                  datetime={
-                    // đổi thành rate
-                    <span className="mx-3">
-                      <Rate
-                        value={item.stars}
-                        disabled
-                        style={{ fontSize: 15 }}
-                      />
-                    </span>
-                  }
-                  avatar={
-                    <Avatar src={item.user?.avatar} alt={item.user?.name} />
-                  }
-                  content={<p>{item.content}</p>}
-                >
-                  {
-                    // <Comment
-                    //   actions={[<span key="comment-nested-reply-to">Trả lời</span>]}
-                    //   author={
-                    //     <a>
-                    //       <p>Han Solo</p>
-                    //       {/* date ở đây */}
-                    //       <Tooltip title="2016-11-22 11:22:33">
-                    //         <span>8 hours ago</span>
-                    //       </Tooltip>
-                    //     </a>
-                    //   }
-                    //   datetime={
-                    //     // đổi thành rate
-                    //     <span className="mx-3">
-                    //       <Rate value={3} disabled style={{ fontSize: 15 }} />
-                    //     </span>
-                    //   }
-                    //   avatar={
-                    //     <Avatar
-                    //       src="https://joeschmoe.io/api/v1/random"
-                    //       alt="Han Solo"
-                    //     />
-                    //   }
-                    //   content={
-                    //     <p>
-                    //       We supply a series of design principles, practical
-                    //       patterns and high quality design resources (Sketch and
-                    //       Axure).
-                    //     </p>
-                    //   }
-                    // ></Comment>
-                  }
-                </Comment>
-              </>
-            ))}
+          {user ? (
+            <Comment
+              avatar={<Avatar src={dataUser?.avatar} alt="Han Solo" />}
+              content={
+                <Editor
+                  onChange={handleChange}
+                  onSubmit={handleSubmit}
+                  submitting={submitting}
+                  text={value}
+                  rate={handleRate}
+                  rateValue={rate}
+                />
+              }
+            />
+          ) : (
+            <span className="text-lg text-red-600 font-semibold underline">
+              Vui lòng đăng nhập để đánh giá !
+            </span>
+          )}
+          <div className="mt-4 border-t pt-3 ">
+            <h2>Đánh giá và nhận xét của khách hàng:</h2>
+          </div>
+          <div className=" overflow-auto max-h-[800px]">
+            <div className="">
+              {listfeedback?.listFeedback?.map((item, index) => (
+                <div className="" key={index}>
+                  <Comment
+                    author={
+                      <a>
+                        <p className="">{item.user?.name}</p>
+                        {/* date ở đây */}
+                        <Tooltip title={`asds`}>
+                          <span>{convertDate(item?.createdAt)}</span>
+                        </Tooltip>
+                      </a>
+                    }
+                    datetime={
+                      // đổi thành rate
+                      <span className="mx-3">
+                        <Rate
+                          value={item.stars}
+                          disabled
+                          style={{ fontSize: 15 }}
+                        />
+                      </span>
+                    }
+                    avatar={
+                      <Avatar src={item.user?.avatar} alt={item.user?.name} />
+                    }
+                    content={<p>{item.content}</p>}
+                  >
+                    {item?.reply !== null &&
+                    item?.reply !== undefined &&
+                    item?.reply !== "" ? (
+                      <Comment
+                        author={
+                          <a>
+                            <p>{item.userReply.name}</p>
+                          </a>
+                        }
+                        datetime={
+                          // đổi thành rate
+                          <span className="border rounded-md border-red-400 bg-red-400 text-white px-1">
+                            Quản trị viên
+                          </span>
+                        }
+                        avatar={
+                          <Avatar src={item.userReply?.avatar} alt="Han Solo" />
+                        }
+                        content={<p>{item?.reply}</p>}
+                      ></Comment>
+                    ) : null}
+                  </Comment>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

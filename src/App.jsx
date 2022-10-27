@@ -30,6 +30,7 @@ import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
 import Userinformation from "./components/clients/userinformation";
 import ReplyFeedback from "./pages/admin/feedback";
+import News from "./pages/website/News";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -75,6 +76,7 @@ function App() {
             </Route>
 
             <Route path="/contact" element={<Contact />} />
+            <Route path="/news" element={<News />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />

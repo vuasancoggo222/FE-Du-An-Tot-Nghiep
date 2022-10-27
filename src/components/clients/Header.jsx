@@ -112,7 +112,7 @@ const Header = () => {
   return (
     <>
       <div className="bg-[#005E2E] ">
-        <header className="h-[80px] sm:w-[1000px] max-w-full m-auto py-[29px] justify-center">
+        <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[29px] justify-center">
           <div className="header-menu">
             <nav>
               <div className=" flex">
@@ -143,6 +143,11 @@ const Header = () => {
                   <Link to={"/contact"}>
                     <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
                       Liên Hệ
+                    </button>
+                  </Link>
+                  <Link to={"/news"}>
+                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                      Tin tức
                     </button>
                   </Link>
                 </div>

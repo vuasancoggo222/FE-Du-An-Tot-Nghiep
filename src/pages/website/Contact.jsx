@@ -1,8 +1,9 @@
 import React from "react";
 import { ArrowRightOutlined, BgColorsOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Row, Col, Space, message } from "antd";
+import { Button, Form, Input, Row, Col, Space, message} from "antd";
 import { httpAddContact } from "../../api/contact";
 import { useNavigate } from "react-router-dom";
+import TextArea from "antd/lib/input/TextArea";
 
 function Contact() {
   const navigate = useNavigate();
@@ -24,11 +25,11 @@ function Contact() {
 
   return (
     <>
-      <div className="bg-gray-100 min-w-fit">
+      <div className="bg-gray-100">
         <div className="w-full h-96 bg-green-800 z-30"></div>
-        <div className="block my-8 m-auto w-3/4 max-w-fit">
-          <div className="register-wrapper">
-            <div className="register-right -mt-32 w-full">
+        <div className="block mb-8 m-auto w-3/4 max-w-fit">
+          <div className="register-wrapper -mt-32">
+            <div className="register-right w-full">
               <div className="flex">
                 <div
                   style={{ width: "30%" }}
@@ -57,7 +58,7 @@ function Contact() {
                     <span>
                       {" "}
                       <svg
-                        class="bg-black w-6 h-6 mx-auto text-white rounded-full inline-block"
+                        class="w-6 h-6 mx-auto text-white rounded-full inline-block"
                         viewBox="6 0 10 25"
                         stroke-width="2"
                         stroke="currentColor"
@@ -96,15 +97,15 @@ function Contact() {
                       <line x1="16" y1="12" x2="16" y2="12.01" />
                     </svg>
                   </div>
-                  <h6 className="text-center text-xl">Tư vấn</h6>
+                  <h6 className="text-center text-xl">Chăm sóc</h6>
                   <p className="text-center">
-                    Tư vấn về các dịch vụ làm đẹp tại Beauty
+                    Lắng nghe, thay đổi để phát triển
                   </p>
                   <p className="text-center bg-green-900 text-white w-1/2 mx-auto">
                     <span>
                       {" "}
                       <svg
-                        class="bg-black w-6 h-6 mx-auto text-white rounded-full inline-block"
+                        class="w-6 h-6 mx-auto text-white rounded-full inline-block"
                         viewBox="6 0 10 25"
                         stroke-width="2"
                         stroke="currentColor"
@@ -114,7 +115,10 @@ function Contact() {
                       >
                         {" "}
                         <path stroke="none" d="M0 0h24v24H0z" />{" "}
-                        <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
+                      <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />{" "}
+                      <line x1="12" y1="12" x2="12" y2="12.01" />{" "}
+                      <line x1="8" y1="12" x2="8" y2="12.01" />{" "}
+                      <line x1="16" y1="12" x2="16" y2="12.01" />
                       </svg>
                     </span>{" "}
                     0123456789
@@ -122,7 +126,7 @@ function Contact() {
                 </div>
               </div>
             </div>
-            <div className="register-right mt-32">
+            <div className="register-right -mt-7">
               <div className="form-wrapper block bg-white mt-12">
                 <Form
                   name="basic"
@@ -190,9 +194,10 @@ function Contact() {
                             ]}
                             style={{ marginRight: "10px" }}
                           >
-                            <Input
+                            <TextArea
                               placeholder="Your Context"
                               className="form-input shadow-inner shadow-gray-300"
+                              type=""
                             />
                           </Form.Item>
                         </Col>
@@ -223,10 +228,12 @@ function Contact() {
                   <Form.Item>
                     <Button
                       htmlType="submit"
-                      className="w-5/12 block m-12 ml-[16.5%]"
+                      className="w-[15%] block m-12 ml-[16.5%]"
                       style={{
-                        backgroundColor:
-                          "rgb(59 130 246 / var(--tw-bg-opacity))",
+                        backgroundColor: "rgb(20 80 45 / var(--tw-bg-opacity))",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                        color: "white",
                       }}
                     >
                       Thêm

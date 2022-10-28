@@ -30,6 +30,7 @@ import UserInfo from "./components/clients/UserInfo";
 import ListUser from "./pages/admin/user";
 import Userinformation from "./components/clients/userinformation";
 import ReplyFeedback from "./pages/admin/feedback";
+import ListBanner from "./pages/admin/banner";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -134,6 +135,9 @@ function App() {
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>
+            </Route>
+            <Route path="banner">
+              <Route index element={<ListBanner />}></Route>
             </Route>
           </Route>
         </Routes>

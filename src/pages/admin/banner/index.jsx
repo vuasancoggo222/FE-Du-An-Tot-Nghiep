@@ -1,19 +1,28 @@
-import { Button, Image,  Table, Select } from 'antd';
-import React, {useState} from "react";
+import { Button, Image,  Table, Select, message } from 'antd';
+import React, {useEffect, useState} from "react";
 import useService from "../../../hooks/use-service";
 import Description from "../../../components/admin/detaiservice";
 import { BiEdit } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import { httpDeleteBanner, httpListBanner} from '../../../api/banner';
 
 
 const ListBanner = () => {
     const { Option } = Select;
-  const { data, error } = useService();
+  const [data,setData] = useState()
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
+  useEffect(()=>{
+    const data = async()=>{
+      const res =  await httpListBanner()
+      console.log(res);
+      setData(res)
+    }
+    data()
+  },[])
   const columns = [
   
     {
@@ -35,37 +44,7 @@ const ListBanner = () => {
         key: "action",
         colapse: 2,
         render: (item) => {
-            // chờ
-            let showWait = "false"
-            let showSussces = "false"
-            let showFailure = "false"
-            let BtWaitCursor = "not-allowed"
-            let BtWaitColor = "#dedede"
-            // let BtWaitColor = "#cd3e3e"
-            // xác nhận
-            let BtSusscesCursor = "not-allowed"
-            let BtSusscessColor = "#dedede"
-            // let BtSusscessColor = "#da0cc8"
-            // hủy
-            let BtFailureCursor = "not-allowed"
-            let BtFailureColor = "#dedede"
-            // let BtFailureColor = "green"
-
-            if (item.status === 1) {
-                // chờ
-                showSussces = "true"
-                showWait = "true"
-                BtSusscesCursor = "pointer"
-                BtSusscessColor = "#da0cc8"
-                BtWaitCursor = "not-allowed"
-                BtWaitColor = "#cd3e3e"
-            } else if (item.status === 3) {
-                BtFailureCursor = "pointer"
-                BtFailureColor = "green"
-                showFailure = "true"
-                // xác nhận
-               
-            } 
+      
             return (
              
                 <Select
@@ -73,22 +52,28 @@ const ListBanner = () => {
                 value="Đổi trạng thái"
                 >
                   
-                    <Option value="4">  <Button isshow={showFailure} onClick={showModal} dataId={item._id} data="4" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
+                    <Option > <Button  onClick={showModal} dataId={item._id}  type="danger" style={{  border: "none", color: "white", width: "100%" }} >
                        Sửa
                     </Button></Option>
-                    <Option value="5"><Button isshow={showWait} onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
-                        Xóa
-                    </Button></Option>
+                    <Option >   <button onClick={()=>{onRemove(item)}}>xoa</button></Option>
                 </Select>
             )
         },
     },
   ];
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
+  const onRemove = async (id) => {
+   
+    const confirm = window.confirm("Bạn muốn xóa banner không ?");
+    if (confirm) {
+      console.log(id);
+      await httpDeleteBanner(id);
+      data.filter((item)=>item.id !== id  )
+      message.success("xoa thanh cong")
+    }
+  
   };
-  if (!data) return <div>loading</div>;
-  if (error) return <div>Failed loading</div>;
+
+
   return (
     <>
       <div className="w-full px-6 py-6 mx-auto">
@@ -102,7 +87,7 @@ const ListBanner = () => {
         </Link>
       </div>
       <div className="w-full px-6 py-6 mx-auto">
-        <Table columns={columns} dataSource={data} onChange={onChange} />
+        <Table columns={columns} dataSource={data} />
       </div>
       ;
     </>

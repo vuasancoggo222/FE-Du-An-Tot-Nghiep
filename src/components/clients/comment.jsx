@@ -13,7 +13,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { isAuthenticate } from "../../utils/LocalStorage";
 
-import { feedbackAdd } from "../../api/feedback";
+import { feedbackAdd, feedbackReply } from "../../api/feedback";
 import moment from "moment";
 import { getProfile } from "../../api/user";
 const { TextArea } = Input;
@@ -53,24 +53,65 @@ const Editor = ({ onChange, onSubmit, submitting, text, rate, rateValue }) => (
     </Form.Item>
   </>
 );
+const FormReply = ({ onChange, onSubmit, text }) => (
+  <>
+    <Form.Item>
+      <TextArea
+        rows={4}
+        onChange={onChange}
+        value={text}
+        placeholder=""
+        style={{ marginTop: "10px" }}
+      />
+    </Form.Item>
+    <Form.Item>
+      <Button
+        htmlType="submit"
+        onClick={onSubmit}
+        type="primary"
+        style={{ background: "#00502b", border: "none" }}
+      >
+        Gửi
+      </Button>
+    </Form.Item>
+  </>
+);
+const ButtonReply = ({ onClick, user, id, getId }) => (
+  <>
+    <span key="comment-nested-reply-to" onClick={onClick}>
+      {/* {user && user.role !== 0 ? `Trả lời` : ""} */}
+      {user && user.role !== 0 ? (
+        <span onClick={() => getId(id)}>Trả lời</span>
+      ) : (
+        ""
+      )}
+    </span>
+    ,
+  </>
+);
 const Formcomment = (props) => {
   const id = props?.serviceId;
-  const listfeedback = props?.feedbackData;
+  // const listfeedback = props?.feedbackData;
+  const [listfeedback, setListfeedback] = useState();
+
   const [dataUser, setDataUser] = useState();
   const user = isAuthenticate();
-  // console.log("listfeedback", listfeedback?.listFeedback);
   const [submitting, setSubmitting] = useState(false);
+
+  const [valueRep, setValueRep] = useState("");
   const [value, setValue] = useState("");
   const [rate, setRate] = useState(0);
+  const [openformReply, setOpenFormReply] = useState(false);
+  const [isActive, setIsActive] = useState("");
   useEffect(() => {
     const getProfiles = async () => {
       const res = await getProfile(user.token);
       console.log("log profile :", res);
       setDataUser(res);
     };
-
+    setListfeedback(props.feedbackData);
     getProfiles();
-  }, []);
+  }, [props.feedbackData, listfeedback, openformReply]);
 
   const handleSubmit = async () => {
     if (!rate)
@@ -115,7 +156,6 @@ const Formcomment = (props) => {
       user: user?.id,
       stars: rate,
       content: value,
-      feedbackType: "unknown",
     };
     const redata = {
       user: { name: user?.name, avatar: user?.avatar },
@@ -124,7 +164,7 @@ const Formcomment = (props) => {
     };
     try {
       await feedbackAdd(user.token, data);
-      listfeedback.push(redata);
+
       message.success({
         content: "Cảm ơn bạn đã đánh giá dịch vụ",
         className: "custom-class",
@@ -132,7 +172,7 @@ const Formcomment = (props) => {
           marginTop: "20vh",
         },
       });
-
+      listfeedback.listFeedback.push(redata);
       setTimeout(() => {
         setSubmitting(false);
         setValue("");
@@ -150,14 +190,59 @@ const Formcomment = (props) => {
         });
     }
   };
+  const handleSubmitRep = async () => {
+    if (!valueRep)
+      return (
+        message &&
+        message.error({
+          content: "Vui lòng nhập phản hồi",
+          className: "custom-class",
+          style: {
+            marginTop: "20vh",
+          },
+        })
+      );
+    try {
+      await feedbackReply(user.token, isActive, { reply: valueRep });
+
+      message.success({
+        content: "Trả lời thành công",
+        className: "custom-class",
+        style: {
+          marginTop: "20vh",
+        },
+      });
+    } catch (error) {
+      message &&
+        message.error({
+          content: error?.response?.data?.message,
+          className: "custom-class",
+          style: {
+            marginTop: "20vh",
+          },
+        });
+    }
+    setOpenFormReply(!openformReply);
+    setValueRep("");
+  };
   const handleChange = (e) => {
     setValue(e.target.value);
+  };
+  const handleChangeRep = (e) => {
+    setValueRep(e.target.value);
   };
   const handleRate = (e) => {
     setRate(e);
   };
+  const onReply = () => {
+    setOpenFormReply(!openformReply);
+  };
   const convertDate = (date) => {
     return moment(date).fromNow();
+  };
+  const getId = (e) => {
+    console.log("log", e);
+    setIsActive(e);
   };
   return (
     <>
@@ -193,6 +278,15 @@ const Formcomment = (props) => {
               {listfeedback?.listFeedback?.map((item, index) => (
                 <div className="" key={index}>
                   <Comment
+                    actions={[
+                      // eslint-disable-next-line react/jsx-key
+                      <ButtonReply
+                        onClick={onReply}
+                        user={user}
+                        id={item._id}
+                        getId={getId}
+                      />,
+                    ]}
                     author={
                       <a>
                         <p className="">{item.user?.name}</p>
@@ -237,7 +331,25 @@ const Formcomment = (props) => {
                         }
                         content={<p>{item?.reply}</p>}
                       ></Comment>
-                    ) : null}
+                    ) : (
+                      <div className="">
+                        {openformReply == true ? (
+                          <div
+                            className={`${
+                              isActive === item._id ? "" : "hidden"
+                            }`}
+                          >
+                            <FormReply
+                              onChange={handleChangeRep}
+                              onSubmit={handleSubmitRep}
+                              text={valueRep}
+                            />
+                          </div>
+                        ) : (
+                          <div className=""></div>
+                        )}
+                      </div>
+                    )}
                   </Comment>
                 </div>
               ))}

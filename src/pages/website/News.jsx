@@ -60,28 +60,25 @@ const News = () => {
           <p className="text-base mt-4">
             Mông lép có thể do một số nguyên nhân sau:
           </p>
-          <p>
+          <p className="text-base">
             - Do di truyền đặc điểm vòng 3 khiêm tốn từ phái nữ trong gia đình
             (bà, mẹ, cô, dì,…)
           </p>
-          <p>
+          <p className="text-base">
             - Do ngồi nhiều, ngồi lì một chỗ quá lâu, lười vận động khiến các cơ
-            vòng 3 bị đè nén dẫn tới tình trạng mông chảy xệ hoặc phẳng lì.
+            vòng 3 bị đè nén dẫn tới tình trạng mông chảy xệ.
           </p>
-          <p>
+          <p className="text-base">
             - Mặc quần quá chật, quá bó khiến quá trình tuần hoàn máu và chất
-            dinh dưỡng bị ảnh hưởng, bờ mông không tăng trưởng được và ngày càng
-            tóp đi.
+            dinh dưỡng bị ảnh hưởng.
           </p>
-          <p>
+          <p className="text-base">
             - Tinh thần căng thẳng khiến cho hormone cortisol sản sinh nhiều
-            hơn, hormone này có khả năng tiêu thụ lượng mỡ trong cơ thể khiến
-            vòng mông bị hao hụt đi nhanh chóng.
+            hơn.
           </p>
-          <p>
+          <p className="text-base">
             - Chế độ ăn kém khoa học với thực đơn giảm cân cấp tốc không đảm bảo
-            dinh dưỡng cũng là lý do khiến vòng 3 và cả vòng 1 của chị em ngày
-            càng teo nhỏ.
+            dinh dưỡng.
           </p>
           <img
             className="m-auto"
@@ -91,7 +88,7 @@ const News = () => {
         </div>
         <div className="mt-8">
           <h2 className="text-2xl">Mông lép làm sao để to ra?</h2>
-          <p>
+          <p className="text-base">
             Để cải thiện được số đo vòng 3 lý tưởng bạn cần thay đổi các thói
             quen xấu ảnh hưởng đến sự phát triển của vòng 3. Dưới đây là một số
             cách hiệu quả đang được nhiều người áp dụng:
@@ -161,7 +158,7 @@ const News = () => {
             alt=""
           />
           <p className="text-base mt-4">Phẫu thuật mông lép</p>
-          <p>
+          <p className="text-base">
             Với những người mông lép bẩm sinh hay mông không có độ nhô thì các
             cách trên sẽ khó để cải thiện tình hình. Hoặc có thì sẽ cần rất
             nhiều thời gian cùng sự kiên trì để thực hiện. Bởi vậy, một cách
@@ -219,9 +216,9 @@ const News = () => {
             chuyên gia của Sanhoobeauty hỗ trợ bạn trong quá trình cải thiện
             mông lép hiệu quả nhé!
           </p>
-          <p className="text-base mt-4 mb-0">Xem thêm</p>
+          <p className="text-base mt-10 mb-0 font-semibold">Xem thêm</p>
           <a
-            className="text-[#00502b] hover:text-[#366f55] mt-2 block text-base"
+            className="text-[#00502b] hover:text-[#366f55] mt-1 block text-base"
             href=""
           >
             {" "}

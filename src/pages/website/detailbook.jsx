@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Select, DatePicker, message } from "antd";
+import { Button, Form, Input, Select, DatePicker, message, Modal } from "antd";
 import useEmployee from "../../hooks/use-employee";
 import { httpGetOne } from "../../api/employee";
 import { httpAddBooking } from "../../api/booking";
@@ -8,34 +8,85 @@ import { getSerViceBySlug, httpGet } from "../../api/services";
 import { TimePicker } from "antd";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import Formcomment from "../../components/clients/comment";
+import { generateCaptcha } from "../../utils/GenerateCaptcha";
+import { signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../../firebase/config";
 const Detaibooking = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: employees, error } = useEmployee();
   const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
+  const [formData, setFormData] = useState();
+  const [titleModal, setTitleModal] = useState();
+  const [timeReload, setTimeReload] = useState('');
+  const [titleStatusConfirm, setTitleStatusConfirm] = useState("Vui lòng chờ trong giây lát");
   const [feedback, setFeedback] = useState();
   const format = "HH";
   const user = isAuthenticate();
+  const getValueOtp = (data) => {
+    const otp = data.otp
+    const confirmationResult = window.confirmationResult
+    confirmationResult.confirm(otp).then(async (result) => {
+      console.log(result._tokenResponse.idToken);
+      const token = result._tokenResponse.idToken
+      await httpAddBooking(token, { ...formData, serviceId: service?._id, bookingPrice: service?.price });
+      message.success('Đặt lịch thành công', 2)
+      navigate('/')
+
+    }).catch((error) => {
+      message.error(`${error.message}`, 2)
+      let timeDown = 60
+        message.error(`${error.message}`, 2)
+        const timerId = setInterval(() => {
+          setTimeReload(timeDown--)
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(timerId) 
+          setIsModalOpen(false)
+        }, 60000);
+
+      setTitleStatusConfirm("Đặt lịch thất bại, mời thao tác lại")
+      message.error(`${error.message}`, 2)
+    });
+  }
   const onSubmit = async (data) => {
-    console.log("submit", data);
-    console.log(employeeBooking);
-    try {
-      console.log(service._id);
-      await httpAddBooking({ ...data, serviceId: service?._id });
-      // await httpAddShift(data.employeeId, { shiftId: data?.shiftId, date: dateBooking })
-      message.success("Đã đặt lịch, chờ Spa xác nhận cái đã");
-      navigate("/");
-    } catch (error) {
-      message.error(`${error.response.data.message}`);
-    }
+    setTitleModal("Mã xác nhận sẽ được gửi về số " + data.phoneNumber)
+    await setIsModalOpen(true)
+    generateCaptcha()
+    let appVerifier = window.recaptchaVerifier
+    signInWithPhoneNumber(auth, data.phoneNumber.replace("0", "+84"), appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        message.success('Gửi OTP thành công')
+        setTitleStatusConfirm("Mã xác nhận đã gửi thành công")
+        console.log('success');
+      }).catch( (error) => {
+        let timeDown = 60
+        message.error(`${error.message}`, 2)
+        const timerId = setInterval(() => {
+          setTimeReload(timeDown--)
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(timerId) 
+          setIsModalOpen(false)
+        }, 60000);
+
+        setTitleStatusConfirm("Gửi mã xác thực thất bại, mời thao tác lại")
+      });
+    setFormData(data)
     // const d = new Date(data.time._d)
     // console.log(d.getHours());
   };
   const onChange = (time, timeString) => {
     console.log(time, timeString);
   };
-
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   // console.log(user);
   const layout = {
     labelCol: {
@@ -45,7 +96,6 @@ const Detaibooking = () => {
       span: 16,
     },
   };
-  const { Option } = Select;
   const validateMessages = {
     required: "${label} không được để trống!",
     types: {
@@ -56,19 +106,6 @@ const Detaibooking = () => {
       range: "${label} must be between ${min} and ${max}",
     },
   };
-
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select
-        style={{
-          width: 70,
-        }}
-      >
-        <Option value="84">+84</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    </Form.Item>
-  );
 
   const onOk = (value) => {
     console.log("onOk: ", value);
@@ -230,7 +267,6 @@ const Detaibooking = () => {
                     ]}
                   >
                     <Input
-                      addonBefore={prefixSelector}
                       style={{
                         width: "100%",
                       }}
@@ -292,9 +328,9 @@ const Detaibooking = () => {
                           {item.name}
                           <div
                             className=""
-                            // onClick={() => {
-                            //   setOpen(true);
-                            // }}
+                          // onClick={() => {
+                          //   setOpen(true);
+                          // }}
                           ></div>
                         </Select.Option>
                       ))}
@@ -303,11 +339,11 @@ const Detaibooking = () => {
                   <Form.Item
                     label="Chọn giờ đến"
                     name="time"
-                    rules={[
-                      {
-                        required: true,
-                      },
-                    ]}
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //   },
+                  // ]}
                   >
                     {/* <Select onChange={onChangeSelected}>
                       {shift?.map((item, index) => {
@@ -349,9 +385,11 @@ const Detaibooking = () => {
                       type="primary"
                       style={{ backgroundColor: "#00502b", border: "none" }}
                       htmlType="submit"
+                      disabled = {timeReload > 0 ? true : false}
                     >
-                      Đặt lịch
+                      Đặt lịch 
                     </Button>
+                    <span style={{color: "red", marginLeft: "5px"}}>{timeReload > 0 ? timeReload + "s" : ""}</span>
                   </Form.Item>
                 </Form>
               </div>
@@ -364,6 +402,31 @@ const Detaibooking = () => {
           <Formcomment serviceId={service?._id} feedbackData={feedback} />
         </div>
       </div>
+      <Modal footer={false} title={titleModal} onCancel={handleCancel} open={isModalOpen}>
+
+        <>
+          <p style={{ color: titleStatusConfirm == "Mã xác nhận đã gửi thành công" ? "green" : titleStatusConfirm == "Vui lòng chờ trong giây lát" ? "black" : "red" }}>* {titleStatusConfirm + " "}{timeReload != "" ? timeReload + "s" : ""}</p>
+          <Form className="mt-10" onFinish={getValueOtp} name="otpvalue">
+            <Form.Item
+              name="otp" label="Mã xác nhận"
+              rules={[
+                {
+                  required: "true",
+                  message: "Bắt buộc nhập"
+                }
+              ]}
+            >
+              <Input style={{ width: 'calc(100% - 200px)' }} />
+            </Form.Item>
+            {/* <Form.Item>
+            <Button type="primary" onClick={onGetOtp}>Nhận mã</Button>
+          </Form.Item> */}
+            <Form.Item>
+              <Button success htmlType="submit">Xác thực</Button>
+            </Form.Item>
+          </Form>
+          <div id="recaptcha"></div></>
+      </Modal>
     </>
   );
 };

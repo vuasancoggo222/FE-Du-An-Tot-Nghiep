@@ -13,8 +13,12 @@ else{
 const httpGetAll = () => {
   return instance.get(`booking`);
 };
-const httpAddBooking = (data) => {
-  return instance.post(`booking?user=${userId}`, data);
+const httpAddBooking = (data,token) => {
+  const header = {
+    headers: {
+      "Authorization": `${token}`,
+    }}
+  return instance.post(`booking?user=${userId}`,data,header);
 };
 const httpGetOne = (id) => {
   return instance.get(`booking/${id}`);

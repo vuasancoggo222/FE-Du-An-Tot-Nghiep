@@ -175,7 +175,7 @@ const Header = () => {
                             backgroundColor: "#fde3cf",
                           }}
                         >
-                          {user.name.slice(0, 2)}
+                          {user.name}
                         </Avatar>
                       </Dropdown>
                     </div>

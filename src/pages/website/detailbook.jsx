@@ -16,7 +16,7 @@ const Detaibooking = () => {
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: employees, error } = useEmployee();
-  const [employeeBooking, setEmployeeBooking] = useState();
+  // const [employeeBooking, setEmployeeBooking] = useState();
   const [service, setService] = useState();
   const [formData, setFormData] = useState();
   const [titleModal, setTitleModal] = useState();
@@ -121,7 +121,7 @@ const Detaibooking = () => {
     // await setEmployeeBooking(employees[e]);
     const employeesOne = await httpGetOne(e);
     console.log(employeesOne);
-    setEmployeeBooking(employeesOne);
+    // setEmployeeBooking(employeesOne);
     if (!employees) return <div>Loading...</div>;
     if (error) return <div>Failed to loading</div>;
   };

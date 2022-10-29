@@ -148,7 +148,7 @@ const BookingPage = () => {
     console.log("dataSubmit form", dataValues);
     setFormValues(dataValues);
     setPhoneNumber(phone);
-    // setIsModalOpen(true);
+    setIsModalOpen(true);
   };
 
   const onRemoveService = () => {

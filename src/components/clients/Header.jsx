@@ -18,7 +18,7 @@ const Header = () => {
   const [modalText, setModalText] = useState("Content of the modal");
   const [ismolDal, setIsModal] = useState();
 
-  const showModal =  (e) => {
+  const showModal = (e) => {
     setOpen(true);
     setIsModal(e.target.getAttribute("data"));
   };
@@ -29,20 +29,20 @@ const Header = () => {
       setAuth(true);
       setUser(user);
       setOpen(false);
-      if(user.role === 1) {
-        navigate("/admin/booking/employee")
-      }else if(user.role === 2) {
-        navigate("/admin")
+      if (user.role === 1) {
+        navigate("/admin/booking/employee");
+      } else if (user.role === 2) {
+        navigate("/admin");
       }
     }
   };
 
   const handleSignUp = async () => {
-    const signUp = await JSON.parse(localStorage.getItem('signup'))
+    const signUp = await JSON.parse(localStorage.getItem("signup"));
     if (signUp) {
       setOpen(false);
     }
-    localStorage.removeItem("signup")
+    localStorage.removeItem("signup");
   };
 
   const handleOk = () => {
@@ -117,7 +117,7 @@ const Header = () => {
   return (
     <>
       <div className="bg-[#005E2E] ">
-        <header className="h-[80px] sm:w-[1000px] max-w-full m-auto py-[29px] justify-center">
+        <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[29px] justify-center">
           <div className="header-menu">
             <nav>
               <div className=" flex">
@@ -150,10 +150,18 @@ const Header = () => {
                       Liên Hệ
                     </button>
                   </Link>
+                  <Link to={"/news"}>
+                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                      Tin tức
+                    </button>
+                  </Link>
                 </div>
                 <div>
                   {auth ? (
-                    <div style={{ justifyItems: "center", display: "flex" }} className="">
+                    <div
+                      style={{ justifyItems: "center", display: "flex" }}
+                      className=""
+                    >
                       <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
                         <Link className="text-[#fff]" to={`/booking`}>
                           Đặt Lịch
@@ -167,7 +175,7 @@ const Header = () => {
                             backgroundColor: "#fde3cf",
                           }}
                         >
-                          {user.name.slice(0, 2)}
+                          {user.name}
                         </Avatar>
                       </Dropdown>
                     </div>
@@ -207,7 +215,15 @@ const Header = () => {
             width={1000}
             footer={false}
           >
-            <p>{ismolDal == "signin" ? <SignIn handleSignIn={handleSignIn()} /> : ismolDal == "signup" ? <SignUp handleSignUp={handleSignUp()} /> :""}</p>
+            <p>
+              {ismolDal == "signin" ? (
+                <SignIn handleSignIn={handleSignIn()} />
+              ) : ismolDal == "signup" ? (
+                <SignUp handleSignUp={handleSignUp()} />
+              ) : (
+                ""
+              )}
+            </p>
           </Modal>
         </header>
       </div>

@@ -100,7 +100,7 @@ const Detaibooking = () => {
       setService(data);
     };
     getSerVice();
-  }, [feedback]);
+  }, []);
   return (
     <>
       <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cole-keister-8V1gfeaPP1Y-unsplash.jpg')] b-centerg bg-no-repeat bg-cover py-[100px] ">

@@ -92,10 +92,10 @@ const Dashboard = () => {
       return 0
     })
     booking?.forEach((item) => {
-      if (item.status == 6 && renderYear(item.date) == year) {
+      if (item.status == 4 && renderYear(item.date) == year) {
         service?.forEach((itemS, index) => {
-          if (item.serviceId[0]._id == itemS._id) {
-            arrData[index] += item.serviceId[0].price
+          if (item.serviceId[0]?._id == itemS._id) {
+            arrData[index] += item.serviceId[0]?.price
           }
         })
       }
@@ -129,16 +129,16 @@ const Dashboard = () => {
     //   }
     //   booking?.map((item) => {
     //     if (isChart == "turnover") {
-    //       if (renderMonth(item.date) == month && item.status == 6) {
-    //         count += item?.serviceId[0].price
+    //       if (renderMonth(item.date) == month && item.status == 4) {
+    //         count += item?.serviceId[0]?.price
     //       }
     //     } else if (isChart == "booking") {
-    //       if (renderMonth(item.date) == month && item.status == 6) {
+    //       if (renderMonth(item.date) == month && item.status == 4) {
     //         count += 1
     //       }
     //     }
     //     else if (isChart == "userBad") {
-    //       if (renderMonth(item.date) == month && item.status == 5) {
+    //       if (renderMonth(item.date) == month && item.status == 2) {
     //         count += 1
     //       }
     //     }
@@ -170,10 +170,10 @@ const Dashboard = () => {
       return 0
     })
     booking?.forEach((item) => {
-      if (item.status == 6 && renderMonth(item.date) == year) {
+      if (item.status == 4 && renderMonth(item.date) == year) {
         service?.forEach((itemS, index) => {
-          if (item.serviceId[0]._id == itemS._id) {
-            arrData[index] += item.serviceId[0].price
+          if (item.serviceId[0]?._id == itemS._id) {
+            arrData[index] += item.serviceId[0]?.price
           }
         })
       }
@@ -267,16 +267,16 @@ const Dashboard = () => {
       }
       booking?.map((item) => {
         if (isChart == "turnover") {
-          if (renderMonth(item.date) == month && item.status == 6) {
-            count += item?.serviceId[0].price
+          if (renderMonth(item.date) == month && item.status == 4) {
+            count += item?.serviceId[0]?.price
           }
         } else if (isChart == "booking") {
-          if (renderMonth(item.date) == month && item.status == 6) {
+          if (renderMonth(item.date) == month && item.status == 4) {
             count += 1
           }
         }
         else if (isChart == "userBad") {
-          if (renderMonth(item.date) == month && item.status == 5) {
+          if (renderMonth(item.date) == month && item.status == 2) {
             count += 1
           }
         }
@@ -315,7 +315,7 @@ const Dashboard = () => {
     const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1}-${thisday.getDate()}`
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date)
-      if (idEmployee == item.employeeId?._id && dayItem == today && item.status == 6) {
+      if (idEmployee == item.employeeId?._id && dayItem == today && item.status == 4) {
         coutn += 1
       }
     })
@@ -347,12 +347,12 @@ const Dashboard = () => {
         timeItem = renderYear(item.date)
         isCheck = chartYear
       } else {
-        if (item.status == 6) {
+        if (item.status == 4) {
           coutn++
         }
         return coutn
       }
-      if (item.status == 6 && timeItem == isCheck) {
+      if (item.status == 4 && timeItem == isCheck) {
         coutn += 1
       }
     })
@@ -379,25 +379,25 @@ const Dashboard = () => {
     let count = 0;
     if (employeeFilterDate != "") {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee && renderDate(item.date) == employeeFilterDate) {
+        if (item.status == 4 && item.employeeId?._id == idEmployee && renderDate(item.date) == employeeFilterDate) {
           count++
         }
       })
     } else if (employeeFilterMonth != "") {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee && renderMonth(item.date) == employeeFilterMonth) {
+        if (item.status == 4 && item.employeeId?._id == idEmployee && renderMonth(item.date) == employeeFilterMonth) {
           count++
         }
       })
     } else if (employeeFilterYear != "") {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee && renderYear(item.date) == employeeFilterYear) {
+        if (item.status == 4 && item.employeeId?._id == idEmployee && renderYear(item.date) == employeeFilterYear) {
           count++
         }
       })
     } else {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee) {
+        if (item.status == 4 && item.employeeId?._id == idEmployee) {
           count++
         }
       })
@@ -409,26 +409,26 @@ const Dashboard = () => {
     let sum = 0;
     if (employeeFilterDate != "") {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee && renderDate(item.date) == employeeFilterDate) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId?._id == idEmployee && renderDate(item.date) == employeeFilterDate) {
+          sum += item.serviceId[0]?.price
         }
       })
     } else if (employeeFilterMonth != "") {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee && renderMonth(item.date) == employeeFilterMonth) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId?._id == idEmployee && renderMonth(item.date) == employeeFilterMonth) {
+          sum += item.serviceId[0]?.price
         }
       })
     } else if (employeeFilterYear != "") {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee && renderYear(item.date) == employeeFilterYear) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId?._id == idEmployee && renderYear(item.date) == employeeFilterYear) {
+          sum += item.serviceId[0]?.price
         }
       })
     } else {
       booking?.map((item) => {
-        if (item.status == 6 && item.employeeId?._id == idEmployee) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId?._id == idEmployee) {
+          sum += item.serviceId[0]?.price
         }
       })
     }
@@ -476,12 +476,12 @@ const Dashboard = () => {
         timeItem = renderYear(item.date)
         isCheck = chartYear
       } else {
-        if (item.status == 5) {
+        if (item.status == 2) {
           coutn++
         }
         return coutn
       }
-      if (item.status == 5 && timeItem == isCheck) {
+      if (item.status == 2 && timeItem == isCheck) {
         coutn += 1
       }
     })
@@ -518,21 +518,21 @@ const Dashboard = () => {
     let sum = 0;
     if (serviceFilter != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && item.serviceId[0]._id == IdService && renderYear(item.date) == serviceFilter) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.serviceId[0]?._id == IdService && renderYear(item.date) == serviceFilter) {
+          sum += item.serviceId[0]?.price
         }
       })
     } else if (serviceFilterMonth != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && item.serviceId[0]._id == IdService && renderMonth(item.date) == serviceFilterMonth) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.serviceId[0]?._id == IdService && renderMonth(item.date) == serviceFilterMonth) {
+          sum += item.serviceId[0]?.price
         }
       })
     }
     else {
       booking?.forEach((item) => {
-        if (item.status == 6 && item.serviceId[0]._id == IdService) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && item.serviceId[0]?._id == IdService) {
+          sum += item.serviceId[0]?.price
         }
       })
     }
@@ -543,20 +543,20 @@ const Dashboard = () => {
     let sum = 0;
     if (serviceFilter != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && item.serviceId[0]._id == IdService && renderYear(item.date) == serviceFilter) {
+        if (item.status == 4 && item.serviceId[0]?._id == IdService && renderYear(item.date) == serviceFilter) {
           sum++
         }
       })
     } else if (serviceFilterMonth != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && item.serviceId[0]._id == IdService && renderMonth(item.date) == serviceFilterMonth) {
+        if (item.status == 4 && item.serviceId[0]?._id == IdService && renderMonth(item.date) == serviceFilterMonth) {
           sum++
         }
       })
     }
     else {
       booking?.forEach((item) => {
-        if (item.status == 6 && item.serviceId[0]._id == IdService) {
+        if (item.status == 4 && item.serviceId[0]?._id == IdService) {
           sum++
         }
       })
@@ -568,21 +568,21 @@ const Dashboard = () => {
     let sum = 0;
     if (serviceFilter != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderYear(item.date) == serviceFilter) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && renderYear(item.date) == serviceFilter) {
+          sum += item.serviceId[0]?.price
         }
       })
     } else if (serviceFilterMonth != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderMonth(item.date) == serviceFilterMonth) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 && renderMonth(item.date) == serviceFilterMonth) {
+          sum += item.serviceId[0]?.price
         }
       })
     }
     else {
       booking?.forEach((item) => {
-        if (item.status == 6 ) {
-          sum += item.serviceId[0].price
+        if (item.status == 4 ) {
+          sum += item.serviceId[0]?.price
         }
       })
     }
@@ -595,29 +595,29 @@ const Dashboard = () => {
     let totalRevenue = 0;
     if (serviceFilter != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderYear(item.date) == serviceFilter) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4 && renderYear(item.date) == serviceFilter) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.serviceId[0]._id == IdService && renderYear(item.date) == serviceFilter) {
-          totalService += item.serviceId[0].price
+        if (item.status == 4 && item.serviceId[0]?._id == IdService && renderYear(item.date) == serviceFilter) {
+          totalService += item.serviceId[0]?.price
         }
       })
     } else if (serviceFilterMonth != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderMonth(item.date) == serviceFilterMonth) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4 && renderMonth(item.date) == serviceFilterMonth) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.serviceId[0]._id == IdService && renderMonth(item.date) == serviceFilterMonth) {
-          totalService += item.serviceId[0].price
+        if (item.status == 4 && item.serviceId[0]?._id == IdService && renderMonth(item.date) == serviceFilterMonth) {
+          totalService += item.serviceId[0]?.price
         }
       })
     } else {
       booking?.forEach((item) => {
-        if (item.status == 6) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.serviceId[0]._id == IdService) {
-          totalService += item.serviceId[0].price
+        if (item.status == 4 && item.serviceId[0]?._id == IdService) {
+          totalService += item.serviceId[0]?.price
         }
       })
     }
@@ -632,38 +632,38 @@ const Dashboard = () => {
     let totalRevenue = 0;
     if (employeeFilterYear != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderYear(item.date) == employeeFilterYear) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4 && renderYear(item.date) == employeeFilterYear) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.employeeId._id == idEmployee && renderYear(item.date) == employeeFilterYear) {
-          totalEmployee += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId._id == idEmployee && renderYear(item.date) == employeeFilterYear) {
+          totalEmployee += item.serviceId[0]?.price
         }
       })
     } else if (employeeFilterMonth != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderMonth(item.date) == employeeFilterMonth) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4 && renderMonth(item.date) == employeeFilterMonth) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.employeeId._id == idEmployee && renderMonth(item.date) == employeeFilterMonth) {
-          totalEmployee += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId._id == idEmployee && renderMonth(item.date) == employeeFilterMonth) {
+          totalEmployee += item.serviceId[0]?.price
         }
       })
     } else if (employeeFilterDate != "") {
       booking?.forEach((item) => {
-        if (item.status == 6 && renderDate(item.date) == employeeFilterDate) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4 && renderDate(item.date) == employeeFilterDate) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.employeeId._id == idEmployee && renderDate(item.date) == employeeFilterDate) {
-          totalEmployee += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId._id == idEmployee && renderDate(item.date) == employeeFilterDate) {
+          totalEmployee += item.serviceId[0]?.price
         }
       })
     } else {
       booking?.forEach((item) => {
-        if (item.status == 6) {
-          totalRevenue += item.serviceId[0].price
+        if (item.status == 4) {
+          totalRevenue += item.serviceId[0]?.price
         }
-        if (item.status == 6 && item.employeeId._id == idEmployee) {
-          totalEmployee += item.serviceId[0].price
+        if (item.status == 4 && item.employeeId._id == idEmployee) {
+          totalEmployee += item.serviceId[0]?.price
         }
       })
     }
@@ -688,13 +688,13 @@ const Dashboard = () => {
         timeItem = renderYear(item.date)
         isCheck = chartYear
       } else {
-        if (item.status == 6) {
-          coutn += item?.serviceId[0].price
+        if (item.status == 4) {
+          coutn += item?.serviceId[0]?.price
         }
         return coutn
       }
-      if (item.status == 6 && timeItem == isCheck) {
-        coutn += item?.serviceId[0].price
+      if (item.status == 4 && timeItem == isCheck) {
+        coutn += item?.serviceId[0]?.price
       }
     })
     return coutn
@@ -762,25 +762,25 @@ const Dashboard = () => {
       }
       booking?.map((item) => {
         if (isChart == "turnover") {
-          if (renderMonth(item.date) == month && item.status == 6) {
-            count += item?.serviceId[0].price
+          if (renderMonth(item.date) == month && item.status == 4) {
+            count += item?.serviceId[0]?.price
           }
-          if (renderMonth(item.date) == monthBefor && item.status == 6) {
-            countBefor += item?.serviceId[0].price
+          if (renderMonth(item.date) == monthBefor && item.status == 4) {
+            countBefor += item?.serviceId[0]?.price
           }
         } else if (isChart == "booking") {
-          if (renderMonth(item.date) == month && item.status == 6) {
+          if (renderMonth(item.date) == month && item.status == 4) {
             count += 1
           }
-          if (renderMonth(item.date) == monthBefor && item.status == 6) {
+          if (renderMonth(item.date) == monthBefor && item.status == 4) {
             countBefor += 1
           }
         }
         else if (isChart == "userBad") {
-          if (renderMonth(item.date) == month && item.status == 5) {
+          if (renderMonth(item.date) == month && item.status == 2) {
             count += 1
           }
-          if (renderMonth(item.date) == monthBefor && item.status == 5) {
+          if (renderMonth(item.date) == monthBefor && item.status == 2) {
             countBefor += 1
           }
         }
@@ -829,11 +829,11 @@ const Dashboard = () => {
           monthBefor = `${year - 1}-${i + 1}`
         }
         res?.map((item) => {
-          if (renderMonth(item.date) == month && item.status == 6) {
-            count += item?.serviceId[0].price
+          if (renderMonth(item.date) == month && item.status == 4) {
+            count += item?.serviceId[0]?.price
           }
-          if (renderMonth(item.date) == monthBefor && item.status == 6) {
-            countBefor += item?.serviceId[0].price
+          if (renderMonth(item.date) == monthBefor && item.status == 4) {
+            countBefor += item?.serviceId[0]?.price
           }
         })
 
@@ -905,10 +905,10 @@ const Dashboard = () => {
       //   return 0
       // })
       // booking.forEach((item) => {
-      //   if (item.status == 6 && renderYear(item.date) == year) {
+      //   if (item.status == 4 && renderYear(item.date) == year) {
       //     res.forEach((itemS, index) => {
-      //       if (item.serviceId[0]._id == itemS._id) {
-      //         arrData[index] += item.serviceId[0].price
+      //       if (item.serviceId[0]?._id == itemS._id) {
+      //         arrData[index] += item.serviceId[0]?.price
       //       }
       //     })
       //   }
@@ -1079,16 +1079,16 @@ const Dashboard = () => {
                     }
                     booking?.map((item) => {
                       if (isChart == "turnover") {
-                        if (renderMonth(item.date) == month && item.status == 6) {
-                          count += item?.serviceId[0].price
+                        if (renderMonth(item.date) == month && item.status == 4) {
+                          count += item?.serviceId[0]?.price
                         }
                       } else if (isChart == "booking") {
-                        if (renderMonth(item.date) == month && item.status == 6) {
+                        if (renderMonth(item.date) == month && item.status == 4) {
                           count += 1
                         }
                       }
                       else if (isChart == "userBad") {
-                        if (renderMonth(item.date) == month && item.status == 5) {
+                        if (renderMonth(item.date) == month && item.status == 2) {
                           count += 1
                         }
                       }

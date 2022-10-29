@@ -4,10 +4,14 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useRef, useState } from "react";
 import { SearchOutlined } from '@ant-design/icons';
+import { ColumnDirective, ColumnsDirective, GridComponent, Inject, ExcelExport } from '@syncfusion/ej2-react-grids';
 import { Button, DatePicker, Form, Input, message, Modal, Select, Space, Table, Tag, TimePicker } from 'antd';
 import { httpGetChangeStatus } from "../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import moment from "moment";
+import { ChangeToSlug } from "../../../utils/ConvertStringToSlug";
+import { isAuthenticate } from "../../../utils/LocalStorage";
+import { readMoney } from "../../../utils/ReadMoney";
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
     const [form] = Form.useForm();
@@ -16,6 +20,7 @@ const ListBooking = (props) => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [girl, setGirl] = useState(false);
     const [titleModal, setTitleModal] = useState("Xác nhận");
     const [handleBooking, setHandleBooking] = useState();
     const [ishouse, setIsHouse] = useState();
@@ -45,6 +50,7 @@ const ListBooking = (props) => {
         }
     })
 
+    const user = isAuthenticate()
     // eslint-disable-next-line react/prop-types
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -70,6 +76,9 @@ const ListBooking = (props) => {
         }
         console.log(count);
     }
+
+    const ReadMoney = new readMoney();
+
     const onchangeDateBooking = (value) => {
         let count = 0;
         console.log(employeeBooking);
@@ -378,10 +387,11 @@ const ListBooking = (props) => {
         let isButon = e.target.getAttribute("data");
         let idBooking = e.target.getAttribute("dataId");
         let show = e.target.getAttribute("isshow");
+
         if (isButon == null) {
             isButon = e.target.offsetParent.getAttribute("data");
             idBooking = e.target.offsetParent.getAttribute("dataId");
-            show =e.target.offsetParent.getAttribute("isshow");
+            show = e.target.offsetParent.getAttribute("isshow");
         }
         let count = 0;
         let isBooking;
@@ -402,14 +412,16 @@ const ListBooking = (props) => {
         booking.map(async (item) => {
 
             if (item._id == idBooking) {
-                if (item.status == isButon || show == "false") {
+                if (item.status == isButon
+                    || show == "false"
+                ) {
                     return
                 }
                 await seDateBooking(item.date.toString())
                 form.setFieldsValue({
                     name: item?.name,
                     phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
-                    serviceId: item?.serviceId[0]._id,
+                    serviceId: item?.serviceId[0]?._id,
                     employeeId: item?.employeeId?._id,
                     note: item?.note,
                     bookingPrice: item?.bookingPrice,
@@ -417,6 +429,11 @@ const ListBooking = (props) => {
                     time: item?.time != undefined ? (moment(renderTime(item?.time), format)) : "",
                 });
                 await setIsModalOpen(true);
+                document.getElementById("js-licensing").style.display = "none";
+                document.getElementById("grid_1281791375_0").style.display = "none";
+                // const btnNew =  btninvoice.parentNode.removeChild(btninvoice)
+                // bodyModal.appendChild(btnNew)
+                // btninvoice.className("ant-btn ant-btn-primary")
             }
         })
 
@@ -428,8 +445,8 @@ const ListBooking = (props) => {
         } else if (isButon === "0") {
             setTitleModal("Chờ xác nhận")
         }
-        else if (isButon === "6") {
-            setTitleModal("Thanh toán")
+        else if (isButon === "4") {
+            setTitleModal("Thanh toán và in hóa đơn")
         }
 
         if (isButon == 1) {
@@ -520,14 +537,14 @@ const ListBooking = (props) => {
             dataIndex: 'employeeId',
             key: 'employeeId',
             filters: employee,
-            onFilter: (value, record) => record.employeeId.indexOf(value) === 0,
+            onFilter: (value, record) => record.employeeId?.indexOf(value) === 0,
         },
         {
             title: 'Dịch vụ',
             dataIndex: 'serviceId',
             key: 'serviceId',
             filters: service,
-            onFilter: (value, record) => record.serviceId.indexOf(value) === 0,
+            onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
         },
         {
             title: 'Trạng Thái',
@@ -547,20 +564,12 @@ const ListBooking = (props) => {
                     value: '2',
                 },
                 {
-                    text: 'Đang diễn ra',
+                    text: 'Chờ thanh toán',
                     value: '3',
                 },
                 {
-                    text: 'Chờ thanh toán',
-                    value: '4',
-                },
-                {
-                    text: 'Khách không đến',
-                    value: '5',
-                },
-                {
                     text: 'Hoàn thành',
-                    value: '6',
+                    value: '4',
                 }
             ],
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
@@ -577,16 +586,10 @@ const ListBooking = (props) => {
                     key = "Hủy"
                     color = "red"
                 } else if (status === 3) {
-                    key = "Đang diễn ra"
-                    color = "#da0cc8"
-                } else if (status === 4) {
                     key = "Chờ thanh toán"
                     color = "#69c20a"
                 }
-                else if (status == 5) {
-                    key = "Khách không đến"
-                    color = "#bc0808"
-                } else {
+                else {
                     key = "Hoàn thành"
                     color = "#09857e"
                 }
@@ -627,11 +630,16 @@ const ListBooking = (props) => {
                     BtSusscessColor = "#26cbe8"
                     BtFailureCursor = "pointer"
                     BtFailureColor = "#db5656"
-                } else if (item.status === 4) {
+                }else if (item.status === 1) {
+                    // hủy
+                    isShowFailure = "true"
+                    BtFailureCursor = "pointer"
+                    BtFailureColor = "#db5656"
+                } else if (item.status === 3) {
                     // hủy
                     BtPayCursor = "pointer"
                     BtPayColor = "#09857e"
-                    isShowPay ="true"
+                    isShowPay = "true"
                 }
                 return (
                     <Select className="selectChangeSatus"
@@ -647,7 +655,7 @@ const ListBooking = (props) => {
                         {/* <Option value="0"><Button onClick={showModal} dataId={item._id} data="0" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
                             Chờ xác nhận
                         </Button></Option> */}
-                        <Option value="6"><Button isshow={isShowPay} onClick={showModal} dataId={item._id} data="6" style={{ cursor:BtPayCursor, backgroundColor: BtPayColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="4"><Button isshow={isShowPay} onClick={showModal} dataId={item._id} data="4" style={{ cursor: BtPayCursor, backgroundColor: BtPayColor, border: "none", color: "white", width: "100%" }} >
                             Thanh toán
                         </Button></Option>
 
@@ -668,7 +676,7 @@ const ListBooking = (props) => {
             date: date,
             time: time,
             employeeId: item.employeeId?.name,
-            serviceId: item.serviceId[0].name,
+            serviceId: item.serviceId[0]?.name,
             action: (item)
         }
     })
@@ -682,6 +690,7 @@ const ListBooking = (props) => {
             range: "${label} must be between ${min} and ${max}",
         },
     };
+
     const onSubmit = async (data) => {
         console.log("submit", data);
         console.log(timeUpdate, dateUpdate);
@@ -708,7 +717,7 @@ const ListBooking = (props) => {
                 message.error(`${error.response.data.message}`)
             }
         }
-        else if (ishandle === "6") {
+        else if (ishandle === "4") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 6 })
                 message.success(`${titleModal} khách hàng ${handleBooking.name}`)
@@ -743,6 +752,56 @@ const ListBooking = (props) => {
             span: 16,
         },
     };
+    const handleToolbarClick = async () => {
+        const sliceId = handleBooking?._id.slice(-7, handleBooking._id.length);
+        if (girl) {
+            girl.excelExport({
+                fileName: `${ChangeToSlug(handleBooking?.name)}-${sliceId}.xlsx`,
+                header: {
+                    headerRows: 10,
+                    rows: [
+                        { cells: [{ colSpan: 2, value: "Dịch vụ Tuyến Spa", style: { fontSize: 20, hAlign: 'Center', bold: true, girlLine: "bol" } }] },
+                        { cells: [{ colSpan: 2, value: "Web: http://tuyenspa.com", style: { fontSize: 10, hAlign: 'Center', bold: true, } }] },
+                        { cells: [{ colSpan: 2, value: "Tel: 012344567 / 012344567", style: { fontSize: 10, hAlign: 'Center', bold: true, } }] },
+                        { cells: [{ colSpan: 2, value: "", style: { fontSize: 10, hAlign: 'Center', bold: true, wrapperCol: true } }] },
+                        { cells: [{ colSpan: 2, value: "HÓA ĐƠN THANH TOÁN", style: { fontSize: 20, hAlign: 'Center', bold: true, } }] },
+                        { cells: [{ colSpan: 2, value: "", style: { fontSize: 10, hAlign: 'Center', bold: true, wrapperCol: true } }] },
+                        {
+                            cells: [
+                                {
+                                    colSpan: 1, value: "Ngày tạo: " + moment().format("DD/MM/YYYY"), style: {
+                                        hAlign: "left", wrapText: true, bold: true,
+                                    }
+                                },
+                                { colSpan: 1, value: "Số: " + sliceId, style: { hAlign: "right", bold: true, } },
+                            ]
+                        },
+                        {
+                            cells: [
+                                { colSpan: 1, value: "Thu ngân: " + user?.name, style: { hAlign: "left", bold: true, } },
+                                { colSpan: 1, value: "In lúc: " + moment().format("h:mm"), style: { hAlign: "right", bold: true, } },
+                            ]
+                        },
+                        { cells: [{ colSpan: 2, value: `Khách hàng: ${handleBooking?.name} - ${handleBooking?.phoneNumber}`, style: { fontSize: 10, hAlign: 'Center', bold: true } }] },
+
+                    ]
+                },
+                footer: {
+                    footerRows: 3,
+                    rows: [
+                        {
+                            cells: [{ colSpan: 1, value: `Thanh toán:`, style: { bold: true, wrapText: true, fontSize: 15 } },
+                            { colSpan: 1, value: formatCash(handleBooking?.serviceId[0].price), style: { bold: true, hAlign: 'right', fontSize: 15 } }]
+                        },
+                        { cells: [{ colSpan: 2, value: "", style: { fontSize: 10, hAlign: 'Center', bold: true, wrapperCol: true } }] },
+                        { cells: [{ rowSpan: 2, colSpan: 2, value: `( ${ReadMoney.doc(handleBooking?.serviceId[0].price)} )`, style: { hAlign: 'center', bold: true, wrapText: true } }] },
+
+                    ]
+                }
+            })
+        }
+
+    }
 
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
@@ -753,8 +812,27 @@ const ListBooking = (props) => {
 
         <Table columns={columns} dataSource={datatable} />;
         <Modal footer={null} style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <GridComponent style={{ display: titleModal == "Thanh toán và in hóa đơn" ? "block" : "none" }}
+                ref={g => setGirl(g)}
+                toolbar={[titleModal]}
+
+                allowExcelExport={true}
+                wrapText={true}
+                dataSource={handleBooking?.serviceId.map((item) => {
+                    return { ...item, price: formatCash(item.price) }
+                })}
+                // toolbarClick={handleToolbarClick}
+                allowPaging={true} >
+                <ColumnsDirective>
+                    <ColumnDirective indent="1" field='name' headerText='Dịch vụ' width='200' textAlign="left" />
+                    <ColumnDirective field='price' headerText='Đơn Giá' width='110' textAlign="right" />
+                </ColumnsDirective>
+                <Inject services={[ExcelExport]} />
+            </GridComponent>
+
 
             <Form
+                id="html2pdf"
                 form={form}
                 onAdd={onHandleAdd}
                 {...layout}
@@ -765,6 +843,7 @@ const ListBooking = (props) => {
                 }}
                 onFinish={onSubmit}
             >
+
                 {/* Tên */}
                 <Form.Item
                     name="name"
@@ -894,9 +973,14 @@ const ListBooking = (props) => {
                     <Input.TextArea disabled={ishandle == 1 ? false : true} />
                 </Form.Item>
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button style={{ display: titleModal == "Thanh toán và in hóa đơn" ? "none" : "block" }} type="primary" htmlType="submit">
                         {titleModal}
                     </Button>
+
+                    <Button onClick={handleToolbarClick} style={{ display: titleModal == "Thanh toán và in hóa đơn" ? "block" : "none" }} type="primary" htmlType="submit">
+                        {titleModal}
+                    </Button>
+
                 </Form.Item>
             </Form>
         </Modal>

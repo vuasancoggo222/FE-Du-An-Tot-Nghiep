@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import EmployeeModal from "../../components/clients/EmployeeModal";
 import {
   Button,
   Form,
@@ -18,11 +17,12 @@ import ServiceModal from "../../components/clients/ServiceModal";
 import useBooking from "../../hooks/use-booking";
 import { useNavigate } from "react-router-dom";
 import { httpGetOneService } from "../../api/services";
-import { getPrefixPhoneNumber } from "../../api/prefix";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/config";
+import { socket } from "../../main";
+import { httpAddBooking } from "../../api/booking";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -32,7 +32,6 @@ const layout = {
     span: 16,
   },
 };
-const { Option } = Select;
 const validateMessages = {
   required: "${label} không được để trống!",
   types: {
@@ -67,27 +66,31 @@ message.error(`${error.message}`,2)
 
   const user = isAuthenticate()
   console.log(user);
-  const getValueOtp = (data) => {
-    const otp = data.otp
+  const getValueOtp = async (data) => {
+    try {
+      const otp = data.otp
     const confirmationResult = window.confirmationResult
-    confirmationResult.confirm(otp).then(async (result) => {
-        console.log(result._tokenResponse.idToken);
-        const token = result._tokenResponse.idToken
+    const result = await confirmationResult.confirm(otp)
+    const token = result._tokenResponse.idToken
+    const response =  await httpAddBooking({
+            ...formValues,
+            serviceId,
+          },token)
+        const newNotification = {
+          id : response._id,
+          type : 'booking',
+          text : `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`
+        }    
+        socket.emit('newNotification',newNotification)
         message.success('Đặt lịch thành công',2)
-        await create({
-          ...formValues,
-          serviceId,
-        },token)
         navigate('/')
-
-      }).catch((error) => {
-        message.error(`${error.message}`,2)
-      });
+    } catch (error) {
+      console.log(error);
+    }
   }
   const [form2] = Form.useForm()
   const { data: employees, error } = useEmployee();
   const navigate = useNavigate();
-  const { create } = useBooking();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -96,17 +99,6 @@ message.error(`${error.message}`,2)
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  // const [prefixs, setPrefixs] = useState();
-  // useEffect(() => {
-  //   const getPrefix = async () => {
-  //     const { data } = await getPrefixPhoneNumber();
-  //     setPrefixs(data);
-  //   };
-  //   console.log(prefixs);
-  //   getPrefix();
-  // }, []);
-  // console.log(shift);
-  // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
   const [date, setDate] = useState("");
   const [open, setOpen] = useState(false);

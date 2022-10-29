@@ -13,7 +13,7 @@ const ListBookingByEmployee = (props) => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [titleModal, setTitleModal] = useState("Đang diễn ra");
+    const [titleModal, setTitleModal] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
     const [isEmploye, setIsemploye] = useState();
@@ -96,7 +96,9 @@ const ListBookingByEmployee = (props) => {
         // eslint-disable-next-line react/prop-types
         booking.map(async (item) => {
             if (item._id == idBooking) {
-                if (item.status == isButon || show == "false") {
+                if (item.status == isButon 
+                    || show == "false"
+                    ) {
                     return
                 }
                 await setIsModalOpen(true);
@@ -112,10 +114,8 @@ const ListBookingByEmployee = (props) => {
             }
         })
         setIshandle(isButon)
-        if (isButon === "3") {
-            setTitleModal("Chuyển sang Đang diễn ra")
-        } else if (isButon === "4") {
-            setTitleModal("Chuyển sang Hoàn thành")
+        if (isButon === "4") {
+            setTitleModal("Hoàn thành")
         } else {
             setTitleModal("Chuyển sang khách không đến")
         }
@@ -125,17 +125,10 @@ const ListBookingByEmployee = (props) => {
     const handleOk = async () => {
         setIsModalOpen(false);
         console.log(ishandle);
-        if (ishandle === "3") {
+        if (ishandle === "4") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3 })
-                message.success(`Xác nhận khách hàng "${handleBooking.name}"`)
-            } catch (error) {
-                message.error(`${error.response.data.message}`)
-            }
-        } else if (ishandle === "4") {
-            try {
-                await httpGetChangeStatus(handleBooking._id, { status: 4 })
-                message.success(`Hủy khách hàng "${handleBooking.name}"`)
+                message.success(`Hoàn thành "${handleBooking.name}"`)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
@@ -445,7 +438,7 @@ const ListBookingByEmployee = (props) => {
             dataIndex: 'serviceId',
             key: 'serviceId',
             filters: service,
-            onFilter: (value, record) => record.serviceId.indexOf(value) === 0,
+            onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
         },
         {
             title: 'Trạng thái',
@@ -458,17 +451,9 @@ const ListBookingByEmployee = (props) => {
                 },
 
                 {
-                    text: 'Đang diễn ra',
-                    value: '3',
-                },
-                {
                     text: 'Hoàn thành',
                     value: '4',
                 },
-                {
-                    text: 'Khách không đến',
-                    value: '5',
-                }
             ],
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
             render: (status) => {
@@ -483,17 +468,16 @@ const ListBookingByEmployee = (props) => {
                 else if (status === 2) {
                     key = "Hủy"
                     color = "Silver"
-                } else if (status === 3) {
-                    key = "Đang diễn ra"
-                    color = "#da0cc8"
-                } else if (status === 4) {
+                } 
+                else if (status === 3) {
                     key = "Hoàn thành"
                     color = "#69c20a"
                 }
-                else {
-                    key = "Khách không đến"
-                    color = "#cd3e3e"
+                else if (status === 4) {
+                    key = "Hoàn thành"
+                    color = "#69c20a"
                 }
+                
                 return (
                     <Tag color={color} key={key}>
                         {key.toUpperCase()}
@@ -509,30 +493,30 @@ const ListBookingByEmployee = (props) => {
             key: 'action',
             render: (item) => {
                 // chờ
-                let showWait = "false"
-                let showSussces = "false"
+                // let showWait = "false"
+                // let showSussces = "false"
                 let showFailure = "false"
-                let BtWaitCursor = "not-allowed"
-                let BtWaitColor = "#dedede"
-                // let BtWaitColor = "#cd3e3e"
-                // xác nhận
-                let BtSusscesCursor = "not-allowed"
-                let BtSusscessColor = "#dedede"
+                // let BtWaitCursor = "not-allowed"
+                // let BtWaitColor = "#dedede"
+                // // let BtWaitColor = "#cd3e3e"
+                // // xác nhận
+                // let BtSusscesCursor = "not-allowed"
+                // let BtSusscessColor = "#dedede"
                 // let BtSusscessColor = "#da0cc8"
                 // hủy
                 let BtFailureCursor = "not-allowed"
                 let BtFailureColor = "#dedede"
                 // let BtFailureColor = "green"
 
-                if (item.status === 1) {
+                if (item.status === 0) {
                     // chờ
-                    showSussces = "true"
-                    showWait = "true"
-                    BtSusscesCursor = "pointer"
-                    BtSusscessColor = "#da0cc8"
-                    BtWaitCursor = "not-allowed"
-                    BtWaitColor = "#cd3e3e"
-                } else if (item.status === 3) {
+                    // showSussces = "true"
+                    // showWait = "true"
+                    // BtSusscesCursor = "pointer"
+                    // BtSusscessColor = "#da0cc8"
+                    // BtWaitCursor = "not-allowed"
+                    // BtWaitColor = "#cd3e3e"
+                } else if (item.status === 1) {
                     BtFailureCursor = "pointer"
                     BtFailureColor = "green"
                     showFailure = "true"
@@ -545,15 +529,15 @@ const ListBookingByEmployee = (props) => {
                     style={{ width: "170px" , color:"blue", textAlign:"center"}}
                     value="Đổi trạng thái"
                     >
-                        <Option value="3"> <Button isshow={showSussces} onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
+                        {/* <Option value="3"> <Button isshow={showSussces} onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
                             Đang diễn ra
-                        </Button></Option>
+                        </Button></Option> */}
                         <Option value="4">  <Button isshow={showFailure} onClick={showModal} dataId={item._id} data="4" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
                             Hoàn thành
                         </Button></Option>
-                        <Option value="5"><Button isshow={showWait} onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
+                        {/* <Option value="5"><Button isshow={showWait} onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
                             Khách không đến
-                        </Button></Option>
+                        </Button></Option> */}
                     </Select>
                 )
             },
@@ -563,7 +547,7 @@ const ListBookingByEmployee = (props) => {
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
         console.log(item);
-        if (item.employeeId?._id == isEmploye?._id && item.status != 0 && item.status != 2) {
+        if (item.employeeId?._id == isEmploye?._id && item.status == 1 || item.status == 4) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({

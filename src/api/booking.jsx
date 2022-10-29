@@ -13,12 +13,13 @@ else{
 const httpGetAll = () => {
   return instance.get(`booking`);
 };
-const httpAddBooking = (data,token) => {
+const httpAddBooking = (token, data) => {
   const header = {
     headers: {
-      "Authorization": `${token}`,
-    }}
-  return instance.post(`booking?user=${userId}`,data,header);
+      Authorization: `${token}`,
+    },
+  };
+  return instance.post(`booking?user=${userId}`, data, header);
 };
 const httpGetOne = (id) => {
   return instance.get(`booking/${id}`);
@@ -27,7 +28,7 @@ const httpGetChangeStatus = (id, data) => {
   return instance.patch(`booking/${id}`, data);
 };
 
-export const userHistory = (id) =>  {
+export const userHistory = (id) => {
   const url = `booking-history/${id}`
   return instance.get(url)
 }
@@ -39,6 +40,7 @@ export const userHistory = (id) =>  {
 //   return instance.delete(`${endpoint}/${id}`);
 // };
 
-export { httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus,
-    //  httpPut, httpDelete 
-    };
+export {
+  httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus,
+  //  httpPut, httpDelete 
+};

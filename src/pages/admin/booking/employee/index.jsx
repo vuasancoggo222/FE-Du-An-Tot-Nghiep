@@ -452,7 +452,7 @@ const ListBookingByEmployee = (props) => {
 
                 {
                     text: 'Hoàn thành',
-                    value: '4',
+                    value: '3',
                 },
             ],
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
@@ -473,11 +473,7 @@ const ListBookingByEmployee = (props) => {
                     key = "Hoàn thành"
                     color = "#69c20a"
                 }
-                else if (status === 4) {
-                    key = "Hoàn thành"
-                    color = "#69c20a"
-                }
-                
+
                 return (
                     <Tag color={color} key={key}>
                         {key.toUpperCase()}
@@ -532,7 +528,7 @@ const ListBookingByEmployee = (props) => {
                         {/* <Option value="3"> <Button isshow={showSussces} onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
                             Đang diễn ra
                         </Button></Option> */}
-                        <Option value="4">  <Button isshow={showFailure} onClick={showModal} dataId={item._id} data="4" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
+                        <Option value="3">  <Button isshow={showFailure} onClick={showModal} dataId={item._id} data="3" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
                             Hoàn thành
                         </Button></Option>
                         {/* <Option value="5"><Button isshow={showWait} onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
@@ -547,7 +543,7 @@ const ListBookingByEmployee = (props) => {
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
         console.log(item);
-        if (item.employeeId?._id == isEmploye?._id && item.status == 1 || item.status == 4) {
+        if (item.employeeId?._id == isEmploye?._id && item.status == 1 || item.status == 3) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({

@@ -47,7 +47,7 @@ const Detaibooking = (props) => {
       let timeDown = 60
       message.error(`${error.message}`, 2)
       const timerId = setInterval(() => {
-        setTimeReload(timeDown - 1)
+        setTimeReload(--timeDown)
         if (timeDown == 0) {
           clearInterval(timerId)
           setIsModalOpen(false)

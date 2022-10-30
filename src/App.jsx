@@ -32,6 +32,7 @@ import Userinformation from "./components/clients/userinformation";
 import ReplyFeedback from "./pages/admin/feedback";
 import ListBanner from "./pages/admin/banner";
 import News from "./pages/website/News";
+import AddBanner from "./pages/admin/banner/add";
 
 
 function App() {
@@ -140,7 +141,8 @@ function App() {
               <Route index element={<ReplyFeedback />}></Route>
             </Route>
             <Route path="banner">
-              <Route index element={<ListBanner />}></Route>
+              <Route index element={<ListBanner />} />
+              <Route path="add" element={<AddBanner />}/>
             </Route>
           </Route>
         </Routes>

@@ -84,7 +84,7 @@ const ListBanner = () => {
           </h1>
         </div>
         <Link to={"/admin/banner/add"}>
-          <Button type="primary">Primary Button</Button>
+          <Button type="primary">Thêm banner</Button>
         </Link>
       </div>
       <div className="w-full px-6 py-6 mx-auto">

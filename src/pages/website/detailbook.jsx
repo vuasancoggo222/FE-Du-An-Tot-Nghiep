@@ -11,7 +11,7 @@ import Formcomment from "../../components/clients/comment";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/config";
-const Detaibooking = () => {
+const Detaibooking = (props) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,11 +20,16 @@ const Detaibooking = () => {
   const [service, setService] = useState();
   const [formData, setFormData] = useState();
   const [titleModal, setTitleModal] = useState();
-  const [timeReload, setTimeReload] = useState('');
+  // eslint-disable-next-line react/prop-types
+  const [timeReload, setTimeReload] = useState(props.countDown);
   const [titleStatusConfirm, setTitleStatusConfirm] = useState("Vui lòng chờ trong giây lát");
   const [feedback, setFeedback] = useState();
   const format = "HH";
   const user = isAuthenticate();
+
+  // eslint-disable-next-line react/prop-types
+  const countDown = props.countDown
+
   const getValueOtp = (data) => {
     const otp = data.otp
     const confirmationResult = window.confirmationResult
@@ -36,24 +41,26 @@ const Detaibooking = () => {
       navigate('/')
 
     }).catch((error) => {
-      message.error(`${error.message}`, 2)
+      setTitleStatusConfirm("Đặt lịch thất bại, mời thao tác lại sau")
+      // eslint-disable-next-line react/prop-types
+      props.handleSetCountDown()
       let timeDown = 60
-        message.error(`${error.message}`, 2)
-        const timerId = setInterval(() => {
-          setTimeReload(timeDown--)
-        }, 1000);
-
-        setTimeout(() => {
-          clearInterval(timerId) 
+      message.error(`${error.message}`, 2)
+      const timerId = setInterval(() => {
+        setTimeReload(timeDown - 1)
+        if (timeDown == 0) {
+          clearInterval(timerId)
           setIsModalOpen(false)
-        }, 60000);
+          setTimeReload("")
+        }
+      }, 1000);
 
-      setTitleStatusConfirm("Đặt lịch thất bại, mời thao tác lại")
       message.error(`${error.message}`, 2)
     });
   }
   const onSubmit = async (data) => {
     setTitleModal("Mã xác nhận sẽ được gửi về số " + data.phoneNumber)
+    setTitleStatusConfirm("Vui lòng chờ trong giây lát")
     await setIsModalOpen(true)
     generateCaptcha()
     let appVerifier = window.recaptchaVerifier
@@ -63,19 +70,20 @@ const Detaibooking = () => {
         message.success('Gửi OTP thành công')
         setTitleStatusConfirm("Mã xác nhận đã gửi thành công")
         console.log('success');
-      }).catch( (error) => {
+      }).catch((error) => {
+        // eslint-disable-next-line react/prop-types
+        props.handleSetCountDown()
+        setTitleStatusConfirm("Gửi mã xác thực thất bại, mời thao tác lại sau")
         let timeDown = 60
         message.error(`${error.message}`, 2)
         const timerId = setInterval(() => {
-          setTimeReload(timeDown--)
+          setTimeReload(--timeDown)
+          if (timeDown == 0) {
+            clearInterval(timerId)
+            setIsModalOpen(false)
+            setTimeReload("")
+          }
         }, 1000);
-
-        setTimeout(() => {
-          clearInterval(timerId) 
-          setIsModalOpen(false)
-        }, 60000);
-
-        setTitleStatusConfirm("Gửi mã xác thực thất bại, mời thao tác lại")
       });
     setFormData(data)
     // const d = new Date(data.time._d)
@@ -130,6 +138,7 @@ const Detaibooking = () => {
   };
 
   useEffect(() => {
+    console.log(countDown);
     const getSerVice = async () => {
       const data = await getSerViceBySlug(id);
       const feedbackData = await httpGet("/feedback/service", data._id);
@@ -137,6 +146,31 @@ const Detaibooking = () => {
       setService(data);
     };
     getSerVice();
+    if (countDown > 0) {
+      let timeDown = countDown
+      const timerId = setInterval(() => {
+        // eslint-disable-next-line react/prop-types
+        setTimeReload(--timeDown)
+        if (timeDown == 0) {
+          clearInterval(timerId)
+          setTimeReload("")
+        }
+      }, 1000);
+    }else if (localStorage.getItem("countDown")) {
+      let timeDown = localStorage.getItem("countDown")
+      console.log(timeDown);
+      const timerId = setInterval(() => {
+        // eslint-disable-next-line react/prop-types
+        setTimeReload(--timeDown)
+        if (timeDown == 0) {
+          clearInterval(timerId)
+          setTimeReload("")
+          localStorage.removeItem("countDown")
+        }
+      }, 1000);
+    }
+
+   
   }, []);
   return (
     <>
@@ -385,11 +419,11 @@ const Detaibooking = () => {
                       type="primary"
                       style={{ backgroundColor: "#00502b", border: "none" }}
                       htmlType="submit"
-                      disabled = {timeReload > 0 ? true : false}
+                      disabled={timeReload > 0 ? true : false}
                     >
-                      Đặt lịch 
+                      Đặt lịch
                     </Button>
-                    <span style={{color: "red", marginLeft: "5px"}}>{timeReload > 0 ? timeReload + "s" : ""}</span>
+                    <span style={{ color: "red", marginLeft: "5px" }}>{timeReload > 0 ? timeReload + "s" : ""}</span>
                   </Form.Item>
                 </Form>
               </div>

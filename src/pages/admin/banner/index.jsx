@@ -1,7 +1,6 @@
 import { Button, Image,  Table, Select, message } from 'antd';
 import React, {useEffect, useState} from "react";
-import useService from "../../../hooks/use-service";
-import Description from "../../../components/admin/detaiservice";
+
 import { BiEdit } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { httpDeleteBanner, httpListBanner} from '../../../api/banner';
@@ -52,10 +51,12 @@ const ListBanner = () => {
                 value="Đổi trạng thái"
                 >
                   
-                    <Option > <Button  onClick={showModal} dataId={item._id}  type="danger" style={{  border: "none", color: "white", width: "100%" }} >
+                    <Option > <Button  onClick={showModal} dataId={item._id}  type="primary" style={{  border: "none", color: "white", width: "100%" }} >
                        Sửa
                     </Button></Option>
-                    <Option >   <button onClick={()=>{onRemove(item)}}>xoa</button></Option>
+                    <Option >  <Button  onClick={()=>{onRemove(item)}}  type="danger" style={{  border: "none", color: "white", width: "100%" }} >
+                       Xóa
+                    </Button>  </Option>
                 </Select>
             )
         },
@@ -65,10 +66,10 @@ const ListBanner = () => {
    
     const confirm = window.confirm("Bạn muốn xóa banner không ?");
     if (confirm) {
-      console.log(id);
       await httpDeleteBanner(id);
-      data.filter((item)=>item.id !== id  )
-      message.success("xoa thanh cong")
+      setData(data.filter((item) => item._id !== id));
+      console.log(data);
+      message.success("Xóa thành công")
     }
   
   };

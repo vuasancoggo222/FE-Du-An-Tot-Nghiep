@@ -57,7 +57,12 @@ const ListBookingByEmployee = (props) => {
         const d = new Date(value)
         let time = d.getHours();
         if (time.toString().length == 1) {
-            time = `0${time}`
+            time = `0${time}: 00`
+        } else {
+            time = `${time}: 00`
+        }
+        if (value == undefined) {
+            return ""
         }
         return time
     }
@@ -114,7 +119,7 @@ const ListBookingByEmployee = (props) => {
             }
         })
         setIshandle(isButon)
-        if (isButon === "4") {
+        if (isButon === "3") {
             setTitleModal("Hoàn thành")
         } else {
             setTitleModal("Chuyển sang khách không đến")
@@ -125,7 +130,7 @@ const ListBookingByEmployee = (props) => {
     const handleOk = async () => {
         setIsModalOpen(false);
         console.log(ishandle);
-        if (ishandle === "4") {
+        if (ishandle === "3") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3 })
                 message.success(`Hoàn thành "${handleBooking.name}"`)

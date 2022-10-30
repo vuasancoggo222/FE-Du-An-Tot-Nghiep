@@ -109,7 +109,10 @@ const ListBooking = (props) => {
         setSearchText('');
     };
     const onchangeTimeBooking = async (value) => {
+        console.log(value);
+        alert()
         setTimeUpdate(value)
+        console.log(timeUpdate);
         let count = 0;
         booking?.map((item) => {
             if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(value)) {
@@ -693,7 +696,7 @@ const ListBooking = (props) => {
 
     const onSubmit = async (data) => {
         console.log("submit", data);
-        console.log(timeUpdate, dateUpdate);
+        console.log(timeUpdate);
         if (ishandle === "1") {
             try {
                 await httpGetChangeStatus(handleBooking?._id, { ...data, date: dateUpdate, time: timeUpdate, status: 1 })
@@ -897,7 +900,7 @@ const ListBooking = (props) => {
                         disabled={ishandle == 1 ? false : true}
                         showTime
                         format={dateFormat}
-                        onOk={onchangeDateBooking}
+                        onChange={onchangeDateBooking}
                     // onOk={onOk}
                     />
                 </Form.Item>
@@ -937,7 +940,7 @@ const ListBooking = (props) => {
                     <TimePicker
                         disabled={ishandle == 1 ? false : true}
                         format={format}
-                        onOk={onchangeTimeBooking}
+                        onChange={onchangeTimeBooking}
                     />
                 </Form.Item>
 

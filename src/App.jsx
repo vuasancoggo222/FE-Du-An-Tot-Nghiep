@@ -36,29 +36,64 @@ function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
+  const [countDown, setCountDown] = useState("");
+
+
+  window.addEventListener("unload", () => {
+    if (countDown > 0) {
+      localStorage.setItem("countDown", countDown)
+    }else{
+      localStorage.removeItem("countDown")
+    }
+  })
+
+  const handleSetCountDown = () => {
+    let timeDown = 60
+    let timerId = setInterval(() => {
+      setCountDown(--timeDown)
+      if (timeDown == 0) {
+        clearInterval(timerId)
+        setCountDown("")
+      }
+    }, 1000);
+  }
+
   useEffect(() => {
+
     const getBooking = async () => {
       const res = await httpGetAll();
-
       setBooking(res);
     };
     getBooking();
+
     const getEmployee = async () => {
       const res = await httpGetEmployees();
       setEmployees(res);
     };
     getEmployee();
+
     const getService = async () => {
       const res = await httpGetAllService();
       setService(res);
     };
-
     getService();
+
+    if (localStorage.getItem("countDown")) {
+      let timeDown = localStorage.getItem("countDown")
+      let timerId = setInterval(() => {
+        setCountDown(--timeDown)
+        if (timeDown == 0) {
+          clearInterval(timerId)
+          setCountDown("")
+          localStorage.removeItem("countDown")
+        }
+      }, 1000);
+    }
+
   }, []);
 
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
-
     setBooking(res);
   };
 
@@ -78,7 +113,9 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/news" element={<News />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking />} />
+            <Route path="/detail-booking/:id" element={<Detaibooking countDown={countDown}
+              handleSetCountDown={handleSetCountDown}
+            />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>

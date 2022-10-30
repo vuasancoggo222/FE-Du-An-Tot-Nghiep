@@ -732,18 +732,6 @@ const ListBooking = (props) => {
     const onHandleAdd = (value) => {
         console.log("cha:", value);
     };
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-            <Select
-                style={{
-                    width: 70,
-                }}
-            >
-                <Option value="84">+84</Option>
-            </Select>
-        </Form.Item>
-    );
-
     const layout = {
         labelCol: {
             span: 7,
@@ -871,7 +859,6 @@ const ListBooking = (props) => {
                 >
                     <Input
                         disabled={ishandle == 1 ? false : true}
-                        addonBefore={prefixSelector}
                         style={{
                             width: "100%",
                         }}

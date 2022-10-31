@@ -63,7 +63,7 @@ const ListBooking = (props) => {
         setEmployeeBooking(e)
         booking?.map((item) => {
             // console.log(renderDate(value._d) == renderDate(item.date));
-            if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId._id == e && renderTime(item.time) == renderTime(timeUpdate)) {
+            if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId?._id == e && renderTime(item.time) == renderTime(timeUpdate)) {
                 count = Number(count) + 1;
             }
         })
@@ -86,7 +86,7 @@ const ListBooking = (props) => {
         setDateUpdate(value)
         booking?.map((item) => {
             // console.log(renderDate(value._d) == renderDate(item.date));
-            if (item.status == 1 && renderDate(item.date) == renderDate(value) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(timeUpdate)) {
+            if (item.status == 1 && renderDate(item.date) == renderDate(value) && item.employeeId?._id == employeeBooking && renderTime(item.time) == renderTime(timeUpdate)) {
                 count = Number(count) + 1;
 
             }
@@ -109,10 +109,12 @@ const ListBooking = (props) => {
         setSearchText('');
     };
     const onchangeTimeBooking = async (value) => {
+        console.log(value);
         setTimeUpdate(value)
+        console.log(timeUpdate);
         let count = 0;
         booking?.map((item) => {
-            if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId._id == employeeBooking && renderTime(item.time) == renderTime(value)) {
+            if (item.status == 1 && renderDate(item.date) == renderDate(dateUpdate) && item.employeeId?._id == employeeBooking && renderTime(item.time) == renderTime(value)) {
                 count = Number(count) + 1;
             }
         })
@@ -404,7 +406,7 @@ const ListBooking = (props) => {
                 await setHandleBooking(item)
                 setDateUpdate(item.date)
                 setTimeUpdate(item.time)
-                setEmployeeBooking(item.employeeId._id || "")
+                setEmployeeBooking(item.employeeId?._id || "")
                 return
             }
         })
@@ -424,7 +426,7 @@ const ListBooking = (props) => {
                     serviceId: item?.serviceId[0]?._id,
                     employeeId: item?.employeeId?._id,
                     note: item?.note,
-                    bookingPrice: item?.bookingPrice,
+                    bookingPrice: formatCash(item?.bookingPrice),
                     date: (moment(renderDate(item?.date), dateFormat)),
                     time: item?.time != undefined ? (moment(renderTime(item?.time), format)) : "",
                 });
@@ -451,7 +453,7 @@ const ListBooking = (props) => {
 
         if (isButon == 1) {
             booking?.map((item) => {
-                if (item.status == 1 && renderDate(item.date) == renderDate(isBooking.date) && renderTime(item.time) == renderTime(isBooking.time) && item.employeeId._id == isBooking.employeeId._id) {
+                if (item.status == 1 && renderDate(item.date) == renderDate(isBooking.date) && renderTime(item.time) == renderTime(isBooking.time) && item.employeeId?._id == isBooking.employeeId?._id) {
                     count = Number(count) + 1;
                 }
             })
@@ -693,10 +695,10 @@ const ListBooking = (props) => {
 
     const onSubmit = async (data) => {
         console.log("submit", data);
-        console.log(timeUpdate, dateUpdate);
+        console.log(timeUpdate);
         if (ishandle === "1") {
             try {
-                await httpGetChangeStatus(handleBooking?._id, { ...data, date: dateUpdate, time: timeUpdate, status: 1 })
+                await httpGetChangeStatus(handleBooking?._id, { ...data, date: dateUpdate, time: timeUpdate, status: 1, bookingPrice: handleBooking?.bookingPrice })
                 message.success(`${titleModal} khách hàng ${handleBooking.name}`)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
@@ -779,10 +781,10 @@ const ListBooking = (props) => {
                     rows: [
                         {
                             cells: [{ colSpan: 1, value: `Thanh toán:`, style: { bold: true, wrapText: true, fontSize: 15 } },
-                            { colSpan: 1, value: formatCash(handleBooking?.serviceId[0].price), style: { bold: true, hAlign: 'right', fontSize: 15 } }]
+                            { colSpan: 1, value: formatCash(handleBooking?.bookingPrice), style: { bold: true, hAlign: 'right', fontSize: 15 } }]
                         },
                         { cells: [{ colSpan: 2, value: "", style: { fontSize: 10, hAlign: 'Center', bold: true, wrapperCol: true } }] },
-                        { cells: [{ rowSpan: 2, colSpan: 2, value: `( ${ReadMoney.doc(handleBooking?.serviceId[0].price)} )`, style: { hAlign: 'center', bold: true, wrapText: true } }] },
+                        { cells: [{ rowSpan: 2, colSpan: 2, value: `( ${ReadMoney.doc(handleBooking?.bookingPrice)} )`, style: { hAlign: 'center', bold: true, wrapText: true } }] },
 
                     ]
                 }
@@ -806,9 +808,9 @@ const ListBooking = (props) => {
 
                 allowExcelExport={true}
                 wrapText={true}
-                dataSource={handleBooking?.serviceId.map((item) => {
-                    return { ...item, price: formatCash(item.price) }
-                })}
+                // dataSource={handleBooking?.serviceId.map((item) => {
+                //     return { ...item, price: formatCash(item?.price) }
+                // })}
                 // toolbarClick={handleToolbarClick}
                 allowPaging={true} >
                 <ColumnsDirective>
@@ -897,7 +899,7 @@ const ListBooking = (props) => {
                         disabled={ishandle == 1 ? false : true}
                         showTime
                         format={dateFormat}
-                        onOk={onchangeDateBooking}
+                        onChange={onchangeDateBooking}
                     // onOk={onOk}
                     />
                 </Form.Item>
@@ -937,7 +939,7 @@ const ListBooking = (props) => {
                     <TimePicker
                         disabled={ishandle == 1 ? false : true}
                         format={format}
-                        onOk={onchangeTimeBooking}
+                        onChange={onchangeTimeBooking}
                     />
                 </Form.Item>
 
@@ -952,7 +954,6 @@ const ListBooking = (props) => {
                 <Form.Item
                     name="bookingPrice"
                     label="Thanh toán"
-                    initialValue={formatCash(handleBooking?.bookingPrice || "0")}
                 >
                     <Input disabled />
                 </Form.Item>

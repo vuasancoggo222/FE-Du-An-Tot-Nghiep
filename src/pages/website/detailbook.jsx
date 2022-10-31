@@ -36,7 +36,7 @@ const Detaibooking = (props) => {
     confirmationResult.confirm(otp).then(async (result) => {
       console.log(result._tokenResponse.idToken);
       const token = result._tokenResponse.idToken
-      await httpAddBooking(token, { ...formData, serviceId: service?._id, bookingPrice: service?.price });
+      await httpAddBooking(token, {...formData, serviceId: service._id, bookingPrice: service.price});
       message.success('Đặt lịch thành công', 2)
       navigate('/')
 
@@ -58,6 +58,14 @@ const Detaibooking = (props) => {
       message.error(`${error.message}`, 2)
     });
   }
+
+  function formatCash(str) {
+    const string = str.toString()
+    return string.split('').reverse().reduce((prev, next, index) => {
+      return ((index % 3) ? next : (next + ',')) + prev
+    })
+  }
+
   const onSubmit = async (data) => {
     setTitleModal("Mã xác nhận sẽ được gửi về số " + data.phoneNumber)
     setTitleStatusConfirm("Vui lòng chờ trong giây lát")
@@ -144,6 +152,7 @@ const Detaibooking = (props) => {
       const feedbackData = await httpGet("/feedback/service", data._id);
       setFeedback(feedbackData);
       setService(data);
+      console.log(data);
     };
     getSerVice();
     if (countDown > 0) {
@@ -156,7 +165,7 @@ const Detaibooking = (props) => {
           setTimeReload("")
         }
       }, 1000);
-    }else if (localStorage.getItem("countDown")) {
+    } else if (localStorage.getItem("countDown")) {
       let timeDown = localStorage.getItem("countDown")
       console.log(timeDown);
       const timerId = setInterval(() => {
@@ -170,7 +179,7 @@ const Detaibooking = (props) => {
       }, 1000);
     }
 
-   
+
   }, []);
   return (
     <>
@@ -321,6 +330,21 @@ const Detaibooking = (props) => {
                       readOnly
                     />
                   </Form.Item>
+                  <Form.Item
+                    name="servicePrice"
+                    label="Giá tiền"
+                    rules={[
+                      {
+                        // eslint-disable-next-line no-undef
+                      },
+                    ]}
+                  >
+                    <Input
+                      value={service?.price}
+                      placeholder={ service?.price ? formatCash(service?.price) : ""}
+                      readOnly
+                    />
+                  </Form.Item>
                   {/* chọn nhân viên */}
                   {/* <Form.Item
                   label="Chọn dịch vụ"
@@ -456,7 +480,7 @@ const Detaibooking = (props) => {
             <Button type="primary" onClick={onGetOtp}>Nhận mã</Button>
           </Form.Item> */}
             <Form.Item>
-              <Button success htmlType="submit">Xác thực</Button>
+              <Button disabled={timeReload > 0 ? true : false} success htmlType="submit">Xác thực</Button>
             </Form.Item>
           </Form>
           <div id="recaptcha"></div></>

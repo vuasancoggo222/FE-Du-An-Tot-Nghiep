@@ -90,13 +90,26 @@ const Sidenav = () => {
             <li className="mt-0.5 w-full">
               <Link
                 className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
-                href="../pages/rtl.html"
+                to="/admin/contact"
               >
                 <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <i className="relative top-0 text-sm leading-normal text-red-600 ni ni-world-2" />
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                  RTL
+                  Contact
+                </span>
+              </Link>
+            </li>
+            <li className="mt-0.5 w-full">
+              <Link
+                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                to="/admin/banner"
+              >
+                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <i className="fa fa-area-chart" aria-hidden="true"></i>
+                </div>
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                  Banner
                 </span>
               </Link>
             </li>

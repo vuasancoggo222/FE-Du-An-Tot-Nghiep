@@ -10,7 +10,7 @@ function Contact() {
   const onSubmit = async (data) => {
     var res = await httpAddContact(data);
     if (res._id !== undefined) {
-      message.success("Add contact success");
+      message.success("Cám ơn ban đã để lại lời nhắn");
     }
     navigate("/contact");
   };
@@ -30,7 +30,9 @@ function Contact() {
           <div className={styles.sectiondart}>
             <section className="py-[120px] ">
               <div className="text-center text-[#FFF]">
-                <h2 className="text-[#FFF] text-[30px] ">Liên Hệ</h2>
+                <h2 className="text-[#FFF] text-[30px] ">
+                  Để lại lời nhắn cho Beauty
+                </h2>
                 <p className="text-base">
                   Beauty luôn lắng nghe, luôn luôn thấu hiểu
                 </p>
@@ -95,15 +97,13 @@ function Contact() {
                       onFinishFailed={onFinishFailed}
                       autoComplete="off"
                       layout="vertical"
-                      className="shadow-2xl"
                     >
                       <Row className="w-2/3 block mx-auto">
                         <Col className="w-full">
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className="shadow-2xl shadow-gray-300"
-                                label="Your Name"
+                                label="Name"
                                 name="name"
                                 rules={[
                                   {
@@ -113,17 +113,13 @@ function Contact() {
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <Input
-                                  placeholder="Your Name"
-                                  className="form-input shadow-inner shadow-gray-300"
-                                />
+                                <Input placeholder="Your Name" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className="shadow-2xl shadow-gray-300"
                                 label="Your Address"
                                 name="address"
                                 rules={[
@@ -134,39 +130,13 @@ function Contact() {
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <Input
-                                  placeholder="Your Address"
-                                  className="form-input shadow-inner shadow-gray-300"
-                                />
+                                <Input placeholder="Your Address" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className="shadow-2xl shadow-gray-300"
-                                label="Your Context"
-                                name="content"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please input your content !",
-                                  },
-                                ]}
-                                style={{ marginRight: "10px" }}
-                              >
-                                <TextArea
-                                  placeholder="Your Context"
-                                  className="form-input shadow-inner shadow-gray-300"
-                                  type=""
-                                />
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col className="w-full">
-                              <Form.Item
-                                className="shadow-2xl shadow-gray-300"
                                 label="Your PhoneNumber"
                                 name="phoneNumber"
                                 rules={[
@@ -177,10 +147,24 @@ function Contact() {
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <Input
-                                  placeholder="Your PhoneNumber"
-                                  className="form-input shadow-inner shadow-blue-300"
-                                />
+                                <Input placeholder="Your PhoneNumber" />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col className="w-full">
+                              <Form.Item
+                                label="Your Context"
+                                name="content"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Please input your content !",
+                                  },
+                                ]}
+                                style={{ marginRight: "10px" }}
+                              >
+                                <TextArea placeholder="Your Context" type="" />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -198,7 +182,7 @@ function Contact() {
                             color: "white",
                           }}
                         >
-                          Thêm
+                          Submit
                         </Button>
                       </Form.Item>
                     </Form>

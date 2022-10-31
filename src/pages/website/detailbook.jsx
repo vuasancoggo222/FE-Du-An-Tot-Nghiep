@@ -22,78 +22,94 @@ const Detaibooking = (props) => {
   const [titleModal, setTitleModal] = useState();
   // eslint-disable-next-line react/prop-types
   const [timeReload, setTimeReload] = useState(props.countDown);
-  const [titleStatusConfirm, setTitleStatusConfirm] = useState("Vui lòng chờ trong giây lát");
+  const [titleStatusConfirm, setTitleStatusConfirm] = useState(
+    "Vui lòng chờ trong giây lát"
+  );
   const [feedback, setFeedback] = useState();
   const format = "HH";
   const user = isAuthenticate();
 
   // eslint-disable-next-line react/prop-types
-  const countDown = props.countDown
+  const countDown = props.countDown;
 
   const getValueOtp = (data) => {
-    const otp = data.otp
-    const confirmationResult = window.confirmationResult
-    confirmationResult.confirm(otp).then(async (result) => {
-      console.log(result._tokenResponse.idToken);
-      const token = result._tokenResponse.idToken
-      await httpAddBooking(token, {...formData, serviceId: service._id, bookingPrice: service.price});
-      message.success('Đặt lịch thành công', 2)
-      navigate('/')
+    const otp = data.otp;
+    const confirmationResult = window.confirmationResult;
+    confirmationResult
+      .confirm(otp)
+      .then(async (result) => {
+        console.log(result._tokenResponse.idToken);
+        const token = result._tokenResponse.idToken;
+        await httpAddBooking(token, {
+          ...formData,
+          serviceId: service._id,
+          bookingPrice: service.price,
+        });
+        message.success("Đặt lịch thành công", 2);
+        navigate("/");
+      })
+      .catch((error) => {
+        setTitleStatusConfirm("Đặt lịch thất bại, mời thao tác lại sau");
+        // eslint-disable-next-line react/prop-types
+        props.handleSetCountDown();
+        let timeDown = 6;
+        message.error(`${error.message}`, 2);
+        const timerId = setInterval(() => {
+          setTimeReload(--timeDown);
+          if (timeDown == 0) {
+            clearInterval(timerId);
+            setIsModalOpen(false);
+            setTimeReload("");
+          }
+        }, 1000);
 
-    }).catch((error) => {
-      setTitleStatusConfirm("Đặt lịch thất bại, mời thao tác lại sau")
-      // eslint-disable-next-line react/prop-types
-      props.handleSetCountDown()
-      let timeDown = 60
-      message.error(`${error.message}`, 2)
-      const timerId = setInterval(() => {
-        setTimeReload(--timeDown)
-        if (timeDown == 0) {
-          clearInterval(timerId)
-          setIsModalOpen(false)
-          setTimeReload("")
-        }
-      }, 1000);
-
-      message.error(`${error.message}`, 2)
-    });
-  }
+        message.error(`${error.message}`, 2);
+      });
+  };
 
   function formatCash(str) {
-    const string = str.toString()
-    return string.split('').reverse().reduce((prev, next, index) => {
-      return ((index % 3) ? next : (next + ',')) + prev
-    })
+    const string = str.toString();
+    return string
+      .split("")
+      .reverse()
+      .reduce((prev, next, index) => {
+        return (index % 3 ? next : next + ",") + prev;
+      });
   }
 
   const onSubmit = async (data) => {
-    setTitleModal("Mã xác nhận sẽ được gửi về số " + data.phoneNumber)
-    setTitleStatusConfirm("Vui lòng chờ trong giây lát")
-    await setIsModalOpen(true)
-    generateCaptcha()
-    let appVerifier = window.recaptchaVerifier
-    signInWithPhoneNumber(auth, data.phoneNumber.replace("0", "+84"), appVerifier)
+    setTitleModal("Mã xác nhận sẽ được gửi về số " + data.phoneNumber);
+    setTitleStatusConfirm("Vui lòng chờ trong giây lát");
+    await setIsModalOpen(true);
+    generateCaptcha();
+    let appVerifier = window.recaptchaVerifier;
+    signInWithPhoneNumber(
+      auth,
+      data.phoneNumber.replace("0", "+84"),
+      appVerifier
+    )
       .then((confirmationResult) => {
         window.confirmationResult = confirmationResult;
-        message.success('Gửi OTP thành công')
-        setTitleStatusConfirm("Mã xác nhận đã gửi thành công")
-        console.log('success');
-      }).catch((error) => {
+        message.success("Gửi OTP thành công");
+        setTitleStatusConfirm("Mã xác nhận đã gửi thành công");
+        console.log("success");
+      })
+      .catch((error) => {
         // eslint-disable-next-line react/prop-types
-        props.handleSetCountDown()
-        setTitleStatusConfirm("Gửi mã xác thực thất bại, mời thao tác lại sau")
-        let timeDown = 60
-        message.error(`${error.message}`, 2)
+        props.handleSetCountDown();
+        setTitleStatusConfirm("Gửi mã xác thực thất bại, mời thao tác lại sau");
+        let timeDown = 60;
+        message.error(`${error.message}`, 2);
         const timerId = setInterval(() => {
-          setTimeReload(--timeDown)
+          setTimeReload(--timeDown);
           if (timeDown == 0) {
-            clearInterval(timerId)
-            setIsModalOpen(false)
-            setTimeReload("")
+            clearInterval(timerId);
+            setIsModalOpen(false);
+            setTimeReload("");
           }
         }, 1000);
       });
-    setFormData(data)
+    setFormData(data);
     // const d = new Date(data.time._d)
     // console.log(d.getHours());
   };
@@ -156,30 +172,28 @@ const Detaibooking = (props) => {
     };
     getSerVice();
     if (countDown > 0) {
-      let timeDown = countDown
+      let timeDown = countDown;
       const timerId = setInterval(() => {
         // eslint-disable-next-line react/prop-types
-        setTimeReload(--timeDown)
+        setTimeReload(--timeDown);
         if (timeDown == 0) {
-          clearInterval(timerId)
-          setTimeReload("")
+          clearInterval(timerId);
+          setTimeReload("");
         }
       }, 1000);
     } else if (localStorage.getItem("countDown")) {
-      let timeDown = localStorage.getItem("countDown")
+      let timeDown = localStorage.getItem("countDown");
       console.log(timeDown);
       const timerId = setInterval(() => {
         // eslint-disable-next-line react/prop-types
-        setTimeReload(--timeDown)
+        setTimeReload(--timeDown);
         if (timeDown == 0) {
-          clearInterval(timerId)
-          setTimeReload("")
-          localStorage.removeItem("countDown")
+          clearInterval(timerId);
+          setTimeReload("");
+          localStorage.removeItem("countDown");
         }
       }, 1000);
     }
-
-
   }, []);
   return (
     <>
@@ -341,7 +355,9 @@ const Detaibooking = (props) => {
                   >
                     <Input
                       value={service?.price}
-                      placeholder={ service?.price ? formatCash(service?.price) : ""}
+                      placeholder={
+                        service?.price ? formatCash(service?.price) : ""
+                      }
                       readOnly
                     />
                   </Form.Item>
@@ -386,9 +402,9 @@ const Detaibooking = (props) => {
                           {item.name}
                           <div
                             className=""
-                          // onClick={() => {
-                          //   setOpen(true);
-                          // }}
+                            // onClick={() => {
+                            //   setOpen(true);
+                            // }}
                           ></div>
                         </Select.Option>
                       ))}
@@ -397,11 +413,11 @@ const Detaibooking = (props) => {
                   <Form.Item
                     label="Chọn giờ đến"
                     name="time"
-                  // rules={[
-                  //   {
-                  //     required: true,
-                  //   },
-                  // ]}
+                    // rules={[
+                    //   {
+                    //     required: true,
+                    //   },
+                    // ]}
                   >
                     {/* <Select onChange={onChangeSelected}>
                       {shift?.map((item, index) => {
@@ -447,7 +463,9 @@ const Detaibooking = (props) => {
                     >
                       Đặt lịch
                     </Button>
-                    <span style={{ color: "red", marginLeft: "5px" }}>{timeReload > 0 ? timeReload + "s" : ""}</span>
+                    <span style={{ color: "red", marginLeft: "5px" }}>
+                      {timeReload > 0 ? timeReload + "s" : ""}
+                    </span>
                   </Form.Item>
                 </Form>
               </div>
@@ -460,30 +478,54 @@ const Detaibooking = (props) => {
           <Formcomment serviceId={service?._id} feedbackData={feedback} />
         </div>
       </div>
-      <Modal footer={false} title={titleModal} onCancel={handleCancel} open={isModalOpen}>
-
+      <Modal
+        footer={false}
+        title={titleModal}
+        onCancel={handleCancel}
+        open={isModalOpen}
+      >
         <>
-          <p style={{ color: titleStatusConfirm == "Mã xác nhận đã gửi thành công" ? "green" : titleStatusConfirm == "Vui lòng chờ trong giây lát" ? "black" : "red" }}>* {titleStatusConfirm + " "}{timeReload != "" ? timeReload + "s" : ""}</p>
+          <p
+            style={{
+              color:
+                titleStatusConfirm == "Mã xác nhận đã gửi thành công"
+                  ? "green"
+                  : titleStatusConfirm == "Vui lòng chờ trong giây lát"
+                  ? "black"
+                  : "red",
+            }}
+          >
+            * {titleStatusConfirm + " "}
+            {timeReload != "" ? timeReload + "s" : ""}
+          </p>
           <Form className="mt-10" onFinish={getValueOtp} name="otpvalue">
             <Form.Item
-              name="otp" label="Mã xác nhận"
+              name="otp"
+              label="Mã xác nhận"
               rules={[
                 {
                   required: "true",
-                  message: "Bắt buộc nhập"
-                }
+                  message: "Bắt buộc nhập",
+                },
               ]}
             >
-              <Input style={{ width: 'calc(100% - 200px)' }} />
+              <Input style={{ width: "calc(100% - 200px)" }} />
             </Form.Item>
             {/* <Form.Item>
             <Button type="primary" onClick={onGetOtp}>Nhận mã</Button>
           </Form.Item> */}
             <Form.Item>
-              <Button disabled={timeReload > 0 ? true : false} success htmlType="submit">Xác thực</Button>
+              <Button
+                disabled={timeReload > 0 ? true : false}
+                success
+                htmlType="submit"
+              >
+                Xác thực
+              </Button>
             </Form.Item>
           </Form>
-          <div id="recaptcha"></div></>
+          <div id="recaptcha"></div>
+        </>
       </Modal>
     </>
   );

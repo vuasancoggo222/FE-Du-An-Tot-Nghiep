@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import EmployeeModal from "../../components/clients/EmployeeModal";
 import {
   Button,
   Form,
@@ -18,11 +17,12 @@ import ServiceModal from "../../components/clients/ServiceModal";
 import useBooking from "../../hooks/use-booking";
 import { useNavigate } from "react-router-dom";
 import { httpGetOneService } from "../../api/services";
-import { getPrefixPhoneNumber } from "../../api/prefix";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/config";
+import { socket } from "../../main";
+import { httpAddBooking } from "../../api/booking";
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -32,7 +32,6 @@ const layout = {
     span: 16,
   },
 };
-const { Option } = Select;
 const validateMessages = {
   required: "${label} không được để trống!",
   types: {
@@ -53,41 +52,47 @@ const disabledDate = (current) => {
 // ------------------------------------------------------------------------------------------------
 
 const BookingPage = () => {
-  const onGetOtp = () =>{
-    generateCaptcha()
-    let appVerifier =  window.recaptchaVerifier
+  const onGetOtp = () => {
+    generateCaptcha();
+    let appVerifier = window.recaptchaVerifier;
     signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-     window.confirmationResult = confirmationResult;
-     message.success('Gửi OTP thành công')
-}).catch((error) => {
-message.error(`${error.message}`,2)
-});
-  }
-
-  const user = isAuthenticate()
-  console.log(user);
-  const getValueOtp = (data) => {
-    const otp = data.otp
-    const confirmationResult = window.confirmationResult
-    confirmationResult.confirm(otp).then(async (result) => {
-        console.log(result._tokenResponse.idToken);
-        const token = result._tokenResponse.idToken
-        message.success('Đặt lịch thành công',2)
-        await create({
-          ...formValues,
-          serviceId,
-        },token)
-        navigate('/')
-
-      }).catch((error) => {
-        message.error(`${error.message}`,2)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        message.success("Gửi OTP thành công");
+      })
+      .catch((error) => {
+        message.error(`${error.message}`, 2);
       });
-  }
-  const [form2] = Form.useForm()
+  };
+
+  const user = isAuthenticate();
+  console.log(user);
+  const getValueOtp = async (data) => {
+    try {
+      const otp = data.otp;
+      const confirmationResult = window.confirmationResult;
+      const result = await confirmationResult.confirm(otp);
+      const token = result._tokenResponse.idToken;
+      console.log(token);
+      const response = await httpAddBooking(token, {
+        ...formValues,
+        serviceId,
+      });
+      const newNotification = {
+        id: response._id,
+        type: "booking",
+        text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
+      };
+      socket.emit("newNotification", newNotification);
+      message.success("Đặt lịch thành công", 2);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [form2] = Form.useForm();
   const { data: employees, error } = useEmployee();
   const navigate = useNavigate();
-  const { create } = useBooking();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -96,24 +101,13 @@ message.error(`${error.message}`,2)
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  // const [prefixs, setPrefixs] = useState();
-  // useEffect(() => {
-  //   const getPrefix = async () => {
-  //     const { data } = await getPrefixPhoneNumber();
-  //     setPrefixs(data);
-  //   };
-  //   console.log(prefixs);
-  //   getPrefix();
-  // }, []);
-  // console.log(shift);
-  // ------------------------------------------------------------------------------------------------
   const [id, setId] = useState("");
   const [date, setDate] = useState("");
   const [open, setOpen] = useState(false);
   const [serviceDetail, setServiceDetail] = useState(null);
   const [time, setTime] = useState();
-  const [phoneNumber,setPhoneNumber] = useState('')
-  const [formValues,setFormValues] = useState({})
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [formValues, setFormValues] = useState({});
   const onChangeSelected = (value) => {
     setId(value);
   };
@@ -123,12 +117,12 @@ message.error(`${error.message}`,2)
     // setDate(Number(dateString.replace("-", "").replace("-", "")));
     setDate(value);
   };
- 
+
   const [serviceId, setServiceId] = useState([]);
   const ParentServiceID = (id) => {
     console.log(id);
-    const serviceId = []
-    serviceId.push(id)
+    const serviceId = [];
+    serviceId.push(id);
     console.log(serviceId);
     setServiceId(serviceId);
     getServiceName(id);
@@ -143,13 +137,13 @@ message.error(`${error.message}`,2)
     }
   };
   const onSubmit = async (data) => {
-    const phone = data.user.phoneNumber.replace('0','+84')
-    const dataValues = data.user
-    setFormValues(dataValues)
-    setPhoneNumber(phone)
-    setIsModalOpen(true)
+    const phone = data.user.phoneNumber.replace("0", "+84");
+    const dataValues = data.user;
+    setFormValues(dataValues);
+    setPhoneNumber(phone);
+    setIsModalOpen(true);
   };
- 
+
   const onRemoveService = () => {
     setServiceDetail(null);
     setServiceId([]);
@@ -159,7 +153,7 @@ message.error(`${error.message}`,2)
     console.log("giờ", time, timeString);
     setTime(timeString);
   };
-  
+
   // ------------------------------------------------------------------------------------------------
 
   if (!employees) return <div>Loading...</div>;
@@ -187,7 +181,6 @@ message.error(`${error.message}`,2)
                   validateMessages={validateMessages}
                   initialValues={{
                     prefix: "84",
-                  
                   }}
                   onFinish={onSubmit}
                 >
@@ -229,7 +222,7 @@ message.error(`${error.message}`,2)
                       },
                     ]}
                   >
-                    <Input/>
+                    <Input />
                   </Form.Item>
                   {/* Các dịch vụ */}
                   <Form.Item label="Lựa chọn dịch vụ">
@@ -238,9 +231,23 @@ message.error(`${error.message}`,2)
                   {/* Chọn ngày đặt lich */}
                   {serviceDetail ? (
                     <Form.Item label="Dịch vụ đã chọn">
-                      <Tag closable onClose={onRemoveService}>
-                        {serviceDetail.name}
-                      </Tag>
+                      <div className="border p-1">
+                        <div className="">
+                          <Tag closable onClose={onRemoveService}>
+                            {serviceDetail.name}
+                          </Tag>
+                        </div>
+
+                        <div className="mt-3 pt-3 border-t">
+                          <span>Tạm tính: </span>{" "}
+                          <span className="font-semibold">
+                            {serviceDetail.price.toLocaleString("vi", {
+                              style: "currency",
+                              currency: "VND",
+                            })}
+                          </span>
+                        </div>
+                      </div>
                     </Form.Item>
                   ) : (
                     ""
@@ -312,22 +319,32 @@ message.error(`${error.message}`,2)
                       Đặt lịch
                     </Button>
                   </Form.Item>
-            
-                  <Modal title="Xác nhận số điện thoại" onCancel={handleCancel} open={isModalOpen}>
-                 
-      <> <Form form={form2} onFinish={getValueOtp} name="otpvalue">
-        <Form.Item name="otp" label="Mã xác nhận">
-        <Input style={{ width: 'calc(100% - 200px)' }} />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" onClick={onGetOtp}>Nhận mã</Button>
-        </Form.Item>
-        <Form.Item>
-          <Button success htmlType="submit">Xác thực</Button>
-        </Form.Item>
-      </Form>
-   <div id="recaptcha"></div></>
-                </Modal>
+
+                  <Modal
+                    title="Xác nhận số điện thoại"
+                    onCancel={handleCancel}
+                    open={isModalOpen}
+                  >
+                    <>
+                      {" "}
+                      <Form form={form2} onFinish={getValueOtp} name="otpvalue">
+                        <Form.Item name="otp" label="Mã xác nhận">
+                          <Input style={{ width: "calc(100% - 200px)" }} />
+                        </Form.Item>
+                        <Form.Item>
+                          <Button type="primary" onClick={onGetOtp}>
+                            Nhận mã
+                          </Button>
+                        </Form.Item>
+                        <Form.Item>
+                          <Button success htmlType="submit">
+                            Xác thực
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                      <div id="recaptcha"></div>
+                    </>
+                  </Modal>
                 </Form>
               </div>
             </div>

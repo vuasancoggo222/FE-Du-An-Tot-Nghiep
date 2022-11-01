@@ -29,6 +29,7 @@ const UserHistory = () => {
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
   };
+
   return (
     <>
       <div className="border border-[#00502b] rounded-md ">

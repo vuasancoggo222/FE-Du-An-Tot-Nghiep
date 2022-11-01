@@ -138,15 +138,10 @@ const BookingPage = () => {
   const [bookingPrice, setBookingPrice] = useState(0);
 
   const ParentServiceID = (id) => {
-    // console.log(id);
-    // const serviceId = [];
-    // serviceId.push(id);
-    // console.log(serviceId);
     setServiceId(id);
     getServiceName(id);
-
-    console.log("multiservice", serviceId);
   };
+
   let total = 0;
   const getServiceName = async (id) => {
     try {
@@ -297,6 +292,7 @@ const BookingPage = () => {
                               <Tag
                                 closable
                                 onClose={() => onRemoveService(item._id)}
+                                key={item._id}
                               >
                                 {item.name}
                               </Tag>

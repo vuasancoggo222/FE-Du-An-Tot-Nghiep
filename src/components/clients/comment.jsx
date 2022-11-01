@@ -164,7 +164,7 @@ const Formcomment = (props) => {
     };
     try {
       await feedbackAdd(user.token, data);
-
+      // listfeedback.listFeedback.push(redata);
       message.success({
         content: "Cảm ơn bạn đã đánh giá dịch vụ",
         className: "custom-class",
@@ -250,7 +250,146 @@ const Formcomment = (props) => {
         <h3 className="text-white text-lg font-semibold bg-[#00502b] p-2 rounded-t-lg">
           Khách hàng chấm điểm, đánh giá và nhận xét{" "}
         </h3>
-        <div className="px-5">
+
+        <div className="p-5 ">
+          <div className="border rounded-lg flex p-5 justify-around">
+            <div className="ml-20">
+              <Progress
+                type="circle"
+                percent={100}
+                format={() => {
+                  return (
+                    <>
+                      <div className="flex justify-center text-4xl font-semibold ">
+                        <span className="">
+                          {listfeedback?.ratingAvg.toFixed(1)}/5
+                        </span>
+                        <StarFilled className="ml-2" />
+                      </div>
+                    </>
+                  );
+                }}
+                strokeColor={{
+                  "0%": "#00563B",
+                  "100%": "#9ACD32",
+                }}
+                width={200}
+              />
+            </div>
+            <div
+              style={{
+                width: 170,
+              }}
+              className="mt-6"
+            >
+              <div className="flex gap-3">
+                <div className="inline-flex align-middle ">
+                  <span>5</span>
+                  <StarFilled />
+                </div>
+
+                <Progress
+                  percent={listfeedback?.starsByLevel.star5 * 10}
+                  size="small"
+                  className=""
+                  format={(percent) => {
+                    return (
+                      <>
+                        <span className="font-bold">{percent / 10}</span>
+                        <span className="ml-1">đánh giá</span>
+                      </>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex gap-3">
+                <div className="inline-flex align-middle ">
+                  <span>4</span>
+                  <StarFilled />
+                </div>
+
+                <Progress
+                  percent={listfeedback?.starsByLevel.star4 * 10}
+                  size="small"
+                  className=""
+                  format={(percent) => {
+                    return (
+                      <>
+                        <span className="font-bold">{percent / 10}</span>
+                        <span className="ml-1">đánh giá</span>
+                      </>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex gap-3">
+                <div className="inline-flex align-middle ">
+                  <span>3</span>
+                  <StarFilled />
+                </div>
+
+                <Progress
+                  percent={listfeedback?.starsByLevel.star3 * 10}
+                  size="small"
+                  className=""
+                  format={(percent) => {
+                    return (
+                      <>
+                        <span className="font-bold">{percent / 10}</span>
+                        <span className="ml-1">đánh giá</span>
+                      </>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex gap-3">
+                <div className="inline-flex align-middle ">
+                  <span>2</span>
+                  <StarFilled />
+                </div>
+
+                <Progress
+                  percent={listfeedback?.starsByLevel.star2 * 10}
+                  size="small"
+                  className=""
+                  format={(percent) => {
+                    return (
+                      <>
+                        <span className="font-bold">{percent / 10}</span>
+                        <span className="ml-1">đánh giá</span>
+                      </>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex gap-3">
+                <div className="inline-flex align-middle ">
+                  <span>1</span>
+                  <StarFilled />
+                </div>
+
+                <Progress
+                  percent={listfeedback?.starsByLevel.star1 * 10}
+                  size="small"
+                  className=""
+                  format={(percent) => {
+                    return (
+                      <>
+                        <span className="font-bold">{percent / 10}</span>
+                        <span className="ml-1">đánh giá</span>
+                      </>
+                    );
+                  }}
+                />
+              </div>
+            </div>
+            <div className="font-bold text-lg mt-6">
+              {" "}
+              Để lại đánh giá của bạn bên dưới !
+            </div>
+          </div>
+        </div>
+        <div className="p-5">
           {user ? (
             <Comment
               avatar={<Avatar src={dataUser?.avatar} alt="Han Solo" />}

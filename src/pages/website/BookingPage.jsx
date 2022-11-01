@@ -16,7 +16,7 @@ import useEmployee from "../../hooks/use-employee";
 import ServiceModal from "../../components/clients/ServiceModal";
 import useBooking from "../../hooks/use-booking";
 import { useNavigate } from "react-router-dom";
-import { httpGetOneService } from "../../api/services";
+import { httpGetAllService, httpGetOneService } from "../../api/services";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
@@ -50,7 +50,7 @@ const disabledDate = (current) => {
 };
 
 // ------------------------------------------------------------------------------------------------
-
+let timeLeft = 30;
 const BookingPage = () => {
   const onGetOtp = () => {
     generateCaptcha();
@@ -63,6 +63,34 @@ const BookingPage = () => {
       .catch((error) => {
         message.error(`${error.message}`, 2);
       });
+    // time disabled
+    setLoadings((prevLoadings) => {
+      countdown();
+      const newLoadings = [...prevLoadings];
+      newLoadings[0] = true;
+      return newLoadings;
+    });
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[0] = false;
+        return newLoadings;
+      });
+    }, 30000);
+
+    // ---- time count down
+
+    function countdown() {
+      timeLeft--;
+      document.getElementById("seconds").innerHTML = String(timeLeft + "s");
+      if (timeLeft > 0) {
+        setTimeout(countdown, 1000);
+      }
+      if (timeLeft == 0) {
+        timeLeft = 30;
+        document.getElementById("seconds").innerHTML = String("");
+      }
+    }
   };
 
   const user = isAuthenticate();
@@ -77,6 +105,7 @@ const BookingPage = () => {
       const response = await httpAddBooking(token, {
         ...formValues,
         serviceId,
+        bookingPrice,
       });
       const newNotification = {
         id: response._id,
@@ -101,41 +130,69 @@ const BookingPage = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const [id, setId] = useState("");
-  const [date, setDate] = useState("");
-  const [open, setOpen] = useState(false);
-  const [serviceDetail, setServiceDetail] = useState(null);
-  const [time, setTime] = useState();
+  const [loadings, setLoadings] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [formValues, setFormValues] = useState({});
-  const onChangeSelected = (value) => {
-    setId(value);
-  };
-
-  const onChange1 = (value, dateString) => {
-    console.log("Selected Time: ", value);
-    // setDate(Number(dateString.replace("-", "").replace("-", "")));
-    setDate(value);
-  };
-
+  const [serviceDetail, setServiceDetail] = useState();
   const [serviceId, setServiceId] = useState([]);
+  const [bookingPrice, setBookingPrice] = useState(0);
+
   const ParentServiceID = (id) => {
-    console.log(id);
-    const serviceId = [];
-    serviceId.push(id);
-    console.log(serviceId);
-    setServiceId(serviceId);
+    // console.log(id);
+    // const serviceId = [];
+    // serviceId.push(id);
+    // console.log(serviceId);
+    setServiceId(id);
     getServiceName(id);
+
+    console.log("multiservice", serviceId);
   };
+  let total = 0;
   const getServiceName = async (id) => {
     try {
-      const data = await httpGetOneService(id);
-      console.log(data);
-      setServiceDetail(data);
+      if (id) {
+        const data = await httpGetAllService();
+        const fildata = data.filter((item) => {
+          return (
+            item._id === id[0] ||
+            item._id === id[1] ||
+            item._id === id[2] ||
+            item._id === id[3] ||
+            item._id === id[4] ||
+            item._id === id[5] ||
+            item._id === id[6] ||
+            item._id === id[7] ||
+            item._id === id[8] ||
+            item._id === id[9] ||
+            item._id === id[10] ||
+            item._id === id[11] ||
+            item._id === id[12] ||
+            item._id === id[13] ||
+            item._id === id[14] ||
+            item._id === id[15] ||
+            item._id === id[16] ||
+            item._id === id[17] ||
+            item._id === id[18] ||
+            item._id === id[19] ||
+            item._id === id[20]
+          );
+        });
+        setServiceDetail([...fildata]);
+
+        for (let i = 0; i < fildata.length; i++) {
+          total += fildata[i].price;
+        }
+        setBookingPrice(total);
+        console.log("total", total);
+        console.log("data list service", fildata);
+      }
+
+      // serviceDetail.push(fildata);
     } catch (error) {
       console.log(error);
     }
   };
+
   const onSubmit = async (data) => {
     const phone = data.user.phoneNumber.replace("0", "+84");
     const dataValues = data.user;
@@ -144,14 +201,16 @@ const BookingPage = () => {
     setIsModalOpen(true);
   };
 
-  const onRemoveService = () => {
-    setServiceDetail(null);
-    setServiceId([]);
-  };
+  const onRemoveService = (id) => {
+    const newTags = serviceDetail.filter((item) => item._id !== id);
+    setServiceDetail(newTags);
 
-  const onChange = (time, timeString) => {
-    console.log("giờ", time, timeString);
-    setTime(timeString);
+    for (let i = 0; i < newTags.length; i++) {
+      total += newTags[i].price;
+    }
+
+    setBookingPrice(total);
+    // setServiceId([]);
   };
 
   // ------------------------------------------------------------------------------------------------
@@ -233,15 +292,22 @@ const BookingPage = () => {
                     <Form.Item label="Dịch vụ đã chọn">
                       <div className="border p-1">
                         <div className="">
-                          <Tag closable onClose={onRemoveService}>
-                            {serviceDetail.name}
-                          </Tag>
+                          {serviceDetail?.map((item) => (
+                            <>
+                              <Tag
+                                closable
+                                onClose={() => onRemoveService(item._id)}
+                              >
+                                {item.name}
+                              </Tag>
+                            </>
+                          ))}
                         </div>
 
                         <div className="mt-3 pt-3 border-t">
                           <span>Tạm tính: </span>{" "}
                           <span className="font-semibold">
-                            {serviceDetail.price.toLocaleString("vi", {
+                            {bookingPrice?.toLocaleString("vi", {
                               style: "currency",
                               currency: "VND",
                             })}
@@ -262,8 +328,9 @@ const BookingPage = () => {
                     ]}
                   >
                     <DatePicker
+                      showTime
+                      format="YYYY-MM-DD "
                       disabledDate={disabledDate}
-                      onChange={onChange1}
                       size="large"
                     />
                   </Form.Item>
@@ -277,33 +344,20 @@ const BookingPage = () => {
                       },
                     ]}
                   >
-                    <Select onChange={onChangeSelected} defaultValue="default">
+                    <Select defaultValue="default">
                       <Select.Option disabled value="default">
                         Vui lòng chọn nhân viên
                       </Select.Option>
                       {employees?.map((item, index) => (
                         <Select.Option value={item._id} key={index}>
-                          <div
-                            className=""
-                            onClick={() => {
-                              setOpen(true);
-                            }}
-                          >
-                            {item.name}
-                          </div>
+                          <div className="">{item.name}</div>
                         </Select.Option>
                       ))}
                     </Select>
                   </Form.Item>
                   {/* chọn ca  */}
                   <Form.Item label="Chọn giờ đến" name={["user", "time"]}>
-                    {/* <EmployeeModal
-                      date={date}
-                      id={id}
-                      open={open}
-                      ParentShiftId={ParentShiftID}
-                    /> */}
-                    <TimePicker onChange={onChange} format={format} />
+                    <TimePicker format={format} />
                   </Form.Item>
                   {/* Ghi chú */}
                   <Form.Item name={["user", "note"]} label="Ghi chú">
@@ -324,6 +378,7 @@ const BookingPage = () => {
                     title="Xác nhận số điện thoại"
                     onCancel={handleCancel}
                     open={isModalOpen}
+                    footer={null}
                   >
                     <>
                       {" "}
@@ -332,9 +387,17 @@ const BookingPage = () => {
                           <Input style={{ width: "calc(100% - 200px)" }} />
                         </Form.Item>
                         <Form.Item>
-                          <Button type="primary" onClick={onGetOtp}>
+                          <Button
+                            loading={loadings[0]}
+                            onClick={onGetOtp}
+                            type="primary"
+                          >
                             Nhận mã
                           </Button>
+                          <span
+                            id="seconds"
+                            className="text-red-600 ml-3"
+                          ></span>
                         </Form.Item>
                         <Form.Item>
                           <Button success htmlType="submit">

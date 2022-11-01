@@ -126,7 +126,7 @@ const Formcomment = (props) => {
     };
     try {
       await feedbackAdd(user.token, data);
-      listfeedback.push(redata);
+      // listfeedback.listFeedback.push(redata);
       message.success({
         content: "Cảm ơn bạn đã đánh giá dịch vụ",
         className: "custom-class",
@@ -177,8 +177,10 @@ const Formcomment = (props) => {
                 format={() => {
                   return (
                     <>
-                      <div className="flex justify-center text-4xl font-semibold">
-                        <span className="">{listfeedback?.ratingAvg}/5</span>
+                      <div className="flex justify-center text-4xl font-semibold ">
+                        <span className="">
+                          {listfeedback?.ratingAvg.toFixed(1)}/5
+                        </span>
                         <StarFilled className="ml-2" />
                       </div>
                     </>
@@ -188,7 +190,7 @@ const Formcomment = (props) => {
                   "0%": "#00563B",
                   "100%": "#9ACD32",
                 }}
-                width={170}
+                width={200}
               />
             </div>
             <div

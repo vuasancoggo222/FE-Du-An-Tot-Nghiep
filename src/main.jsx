@@ -5,14 +5,13 @@ import "./index.css";
 import "antd/dist/antd.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter } from "react-router-dom";
-import {io} from 'socket.io-client'
-export const socket = io('localhost:5000')
+import { io } from "socket.io-client";
+export const socket = io("localhost:5000");
 
-import { ConfigProvider } from "antd";
+import ScrollToTop from "./components/clients/Scrolltotop";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <ConfigProvider>
-      <App />
-    </ConfigProvider>
+    <App />
+    <ScrollToTop />
   </BrowserRouter>
 );

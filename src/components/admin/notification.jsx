@@ -6,22 +6,21 @@ const notification = () => {
   const [show, setShow] = React.useState(false);
   const [notification, setNotification] = React.useState();
 
-  socket.on(
-    "newNotification",
-    getListNotification().then((res) => {
-      console.log(res);
-    })
-  );
+  socket.on("notification", (data) => {
+    console.log(data);
+    setNotification(data);
+  });
+
   const onClick = () => {
     setShow(!show);
   };
   useEffect(() => {
-    const req = async () => {
-      const res = await getListNotification();
-      setNotification(res.data);
-      console.log(res.data);
-    };
-    req();
+    // const req = async () => {
+    //   const res = await getListNotification();
+    //   setNotification(res.data);
+    //   console.log(res.data);
+    // };
+    // req();
   });
   return (
     <>

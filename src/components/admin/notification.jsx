@@ -1,16 +1,28 @@
 import { Badge } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import { socket } from "../../main";
+import { getListNotification } from "../../api/notification";
 const notification = () => {
   const [show, setShow] = React.useState(false);
   const [notification, setNotification] = React.useState();
-  socket.on("newNotification", (data) => {
-    alert(data);
-    console.log(data);
-  });
+
+  socket.on(
+    "newNotification",
+    getListNotification().then((res) => {
+      console.log(res);
+    })
+  );
   const onClick = () => {
     setShow(!show);
   };
+  useEffect(() => {
+    const req = async () => {
+      const res = await getListNotification();
+      setNotification(res.data);
+      console.log(res.data);
+    };
+    req();
+  });
   return (
     <>
       <li className="relative flex items-center pr-2">

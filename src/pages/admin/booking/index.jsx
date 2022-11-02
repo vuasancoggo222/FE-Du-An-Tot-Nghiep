@@ -13,11 +13,14 @@ import {
 } from "@syncfusion/ej2-react-grids";
 import {
   Button,
+  Col,
   DatePicker,
   Form,
   Input,
+  InputNumber,
   message,
   Modal,
+  Row,
   Select,
   Space,
   Table,
@@ -30,6 +33,7 @@ import moment from "moment";
 import { ChangeToSlug } from "../../../utils/ConvertStringToSlug";
 import { isAuthenticate } from "../../../utils/LocalStorage";
 import { readMoney } from "../../../utils/ReadMoney";
+import { formatPrice } from "../../../utils/formatCash";
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
   const [form] = Form.useForm();
@@ -44,6 +48,7 @@ const ListBooking = (props) => {
   const [ishouse, setIsHouse] = useState();
   const [ishouseNoneBlock, setIsHouseNoneBlock] = useState();
   const [timeUpdate, setTimeUpdate] = useState();
+  const [bookingPrice, setBookingPirce] = useState();
   const [dateUpdate, setDateUpdate] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   // eslint-disable-next-line no-unused-vars
@@ -61,12 +66,6 @@ const ListBooking = (props) => {
     };
   });
   // eslint-disable-next-line react/prop-types
-  const service = props.dataService?.map((item) => {
-    return {
-      text: item.name,
-      value: item.name,
-    };
-  });
 
   const user = isAuthenticate();
   // eslint-disable-next-line react/prop-types
@@ -479,10 +478,17 @@ const ListBooking = (props) => {
         form.setFieldsValue({
           name: item?.name,
           phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
-          serviceId: item?.serviceId[0]?._id,
+          serviceId: item.serviceId?.map((item) => {
+            return {
+              lable: item.name,
+              value: item._id
+            }
+          }),
           employeeId: item?.employeeId?._id,
           note: item?.note,
-          bookingPrice: formatCash(item?.bookingPrice),
+          age: item?.age,
+          gender: item?.gender,
+          // bookingPrice:item?.bookingPrice ? formatCash(item?.bookingPrice) : "",
           date: moment(renderDate(item?.date), dateFormat),
           time:
             item?.time != undefined
@@ -532,7 +538,7 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => {};
+  const handleOk = async () => { };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -599,13 +605,13 @@ const ListBooking = (props) => {
       filters: employee,
       onFilter: (value, record) => record.employeeId?.indexOf(value) === 0,
     },
-    {
-      title: "Dịch vụ",
-      dataIndex: "serviceId",
-      key: "serviceId",
-      filters: service,
-      onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
-    },
+    // {
+    //   title: "Dịch vụ",
+    //   dataIndex: "serviceId",
+    //   key: "serviceId",
+    //   filters: service,
+    //   onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
+    // },
     {
       title: "Trạng Thái",
       key: "status",
@@ -674,7 +680,7 @@ const ListBooking = (props) => {
         let BtFailureCursor = "not-allowed";
         let BtFailureColor = "#dedede";
         // let BtFailureColor = "#db5656"
-        // thanh toán
+        // thanh toánisShowCucess
         let BtPayCursor = "not-allowed";
         let BtPayColor = "#dedede";
         // let BtPayColor = "#09857e"
@@ -786,7 +792,7 @@ const ListBooking = (props) => {
     required: "${label} không được để trống!",
     types: {
       email: "${label} không đúng định dạng!",
-      number: "${label} is not a valid number!",
+      number: ""
     },
     number: {
       range: "${label} must be between ${min} and ${max}",
@@ -798,12 +804,19 @@ const ListBooking = (props) => {
     console.log(timeUpdate);
     if (ishandle === "1") {
       try {
+        let res = ""
+        if (data.serviceId[0].lable) {
+          res = data.serviceId.map((item) => {
+            return item.value
+          })
+        }
         await httpGetChangeStatus(handleBooking?._id, {
           ...data,
           date: dateUpdate,
           time: timeUpdate,
           status: 1,
-          bookingPrice: handleBooking?.bookingPrice,
+          bookingPrice: bookingPrice,
+          serviceId:res != "" ? res : data.serviceId
         });
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
       } catch (error) {
@@ -1012,7 +1025,25 @@ const ListBooking = (props) => {
       });
     }
   };
-
+  const handleChange = (value) => {
+    let total = 0;
+    const arrOption = value.toString().split(',')
+    arrOption.forEach((item) => {
+      props.dataService?.map((service) => {
+        if (item == service._id) {
+          total += service.price
+        }
+      })
+    })
+    console.log(total);
+    setBookingPirce(total)
+  };
+  const options = props.dataService?.map((item) => {
+    return {
+      label: item.name,
+      value: item._id,
+    }
+  });
   return (
     <div className="w-full px-6 py-6 mx-auto">
       <div>
@@ -1067,11 +1098,9 @@ const ListBooking = (props) => {
           form={form}
           onAdd={onHandleAdd}
           {...layout}
+
           name="nest-messages"
           validateMessages={validateMessages}
-          initialValues={{
-            prefix: "+84",
-          }}
           onFinish={onSubmit}
         >
           {/* Tên */}
@@ -1085,6 +1114,41 @@ const ListBooking = (props) => {
             ]}
           >
             <Input disabled={ishandle == 1 ? false : true} />
+          </Form.Item>
+          <Form.Item
+            style={{ margin: "0px" }}
+            label="Tuổi - Giới tính"
+          >
+            <Input.Group >
+              <Row>
+                <Col style={{ width: "45%" }}>
+                  <Form.Item
+                    name="age"
+                  >
+                    <InputNumber disabled={ishandle == 1 ? false : true} style={{ width: "100%" }} placeholder="Tuổi" min={1} max={100} />
+                  </Form.Item>
+                </Col>
+                <Col style={{ width: "50%", marginLeft: "5%" }} >
+                  <Form.Item
+                    name="gender"
+                  >
+                    <Select disabled={ishandle == 1 ? false : true} style={{ width: "100%" }}
+                      placeholder="Giới tính"
+                      options={[
+                        {
+                          label: 'Nam',
+                          value: '0',
+                        },
+                        {
+                          label: 'Nữ',
+                          value: '1',
+                        }
+                      ]}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Input.Group>
           </Form.Item>
 
           <Form.Item
@@ -1115,6 +1179,29 @@ const ListBooking = (props) => {
               },
             ]}
           >
+            <Select
+              mode="multiple"
+              allowClear
+
+              placeholder="Please select"
+              onChange={handleChange}
+              options={options}
+              disabled={ishandle == 1 ? false : true}
+            />
+
+          </Form.Item>
+
+
+          {/* <Form.Item
+            name="serviceId"
+            label="Dịch vụ"
+            rules={[
+              {
+                required: ishandle == 1 ? true : false,
+                // eslint-disable-next-line no-undef
+              },
+            ]}
+          >
             <Select disabled={ishandle == 1 ? false : true}>
               {props.dataService?.map((item, index) => (
                 <Select.Option value={item._id} key={index}>
@@ -1122,7 +1209,7 @@ const ListBooking = (props) => {
                 </Select.Option>
               ))}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name="date"
             label="Ngày đến"
@@ -1138,7 +1225,7 @@ const ListBooking = (props) => {
               showTime
               format={dateFormat}
               onChange={onchangeDateBooking}
-              // onOk={onOk}
+            // onOk={onOk}
             />
           </Form.Item>
 
@@ -1195,11 +1282,14 @@ const ListBooking = (props) => {
             </div>
           </Form.Item>
           {/* chọn ca  */}
-          <Form.Item name="bookingPrice" label="Thanh toán">
-            <Input disabled />
-          </Form.Item>
+
           <Form.Item name="note" label="Ghi chú">
             <Input.TextArea disabled={ishandle == 1 ? false : true} />
+          </Form.Item>
+          <Form.Item name="bookingPrice" label="Thanh toán">
+            <span className="font-semibold">
+              {formatPrice(bookingPrice || bookingPrice == 0 ? bookingPrice : handleBooking?.bookingPrice)}
+            </span>
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button
@@ -1227,7 +1317,7 @@ const ListBooking = (props) => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </div >
   );
 };
 export default ListBooking;

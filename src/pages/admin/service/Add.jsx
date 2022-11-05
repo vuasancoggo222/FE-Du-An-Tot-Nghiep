@@ -36,14 +36,12 @@ const AddService = () => {
     formData.append("upload_preset", "my_upload");
     try {
       const res = await uploadCloudinary(formData);
-      onSuccess("Ok");
+
       message.success("Upload successfully !");
-      console.log("server res: ", res);
+
       setUrl(res.data.secure_url);
     } catch (err) {
-      console.log("Error: ", err);
-      const error = new Error("Some error");
-      onError({ err });
+      message.error("Upload failed !");
     }
   };
   const onFinish = async (data) => {

@@ -2,17 +2,17 @@ import { Badge } from "antd";
 import React, { useEffect } from "react";
 
 import { getListNotification } from "../../api/notification";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 const notification = () => {
-  const socket = io("localhost:5000");
+  // const socket = io("localhost:5000");
 
   const [show, setShow] = React.useState(false);
   const [notification, setNotification] = React.useState();
 
-  socket.on("notification", (data) => {
-    console.log("data", data);
-    setNotification(data);
-  });
+  // socket.on("notification", (data) => {
+  //   console.log("data", data);
+  //   setNotification(data);
+  // });
 
   const onClick = () => {
     setShow(!show);

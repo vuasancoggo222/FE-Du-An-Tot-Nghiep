@@ -30,16 +30,16 @@ const SignIn = (props) => {
     try {
       const data = await login(userValues)
       console.log(data);
-      await localStorage.setItem('user', JSON.stringify(data))
+      localStorage.setItem('user', JSON.stringify(data))
       message.success('Đăng nhập thành công')
       navigate('/')
       // eslint-disable-next-line react/prop-types
-      props.handleSignIn()
+      props.parentCallback(data);
     } catch (error) {
       message.error(`${error.response.data.message}`, 2)
-      if(error.response.data.code == 'NEEDVERIFY'){
-         return navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
-      }
+      // if(error.response.data.code == 'NEEDVERIFY'){
+      //    return navigate(`/verify?phone=${values.phoneNumber.phoneNumber}`)
+      // }
     }
 
   };

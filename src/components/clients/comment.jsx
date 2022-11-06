@@ -94,7 +94,6 @@ const Formcomment = (props) => {
   const id = props?.serviceId;
   // const listfeedback = props?.feedbackData;
   const [listfeedback, setListfeedback] = useState();
-  console.log("data", listfeedback);
   const [dataUser, setDataUser] = useState();
   const user = isAuthenticate();
   // console.log("listfeedback", listfeedback?.listFeedback);
@@ -107,7 +106,6 @@ const Formcomment = (props) => {
   useEffect(() => {
     const getProfiles = async () => {
       const res = await getProfile(user.token);
-      console.log("log profile :", res);
       setDataUser(res);
     };
     setListfeedback(props.feedbackData);

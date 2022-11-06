@@ -581,7 +581,7 @@ const Dashboard = () => {
     }
     else {
       booking?.forEach((item) => {
-        if (item.status == 4 ) {
+        if (item.status == 4) {
           sum += item.serviceId[0]?.price
         }
       })
@@ -734,7 +734,7 @@ const Dashboard = () => {
     let year = moment().format("YYYY")
     if (chartYear != "") {
       year = chartYear
-    }else{
+    } else {
       setChartYear(year)
     }
     let arrData = []
@@ -1055,60 +1055,60 @@ const Dashboard = () => {
           </h1>
         </div>
         <div style={{ marginTop: "20px", fontWeight: "bold" }} >
-          <span style={{ fontSize: "20px", color: "white", textDecoration:"underline", }}> Thống kê {monthFilter != "" ? monthFilter : dateFilter != "" ? dateFilter : chartYear != "" ? chartYear : "từ trước đến nay"}</span>
+          <span style={{ fontSize: "20px", color: "white", textDecoration: "underline", }}> Thống kê {monthFilter != "" ? monthFilter : dateFilter != "" ? dateFilter : chartYear != "" ? chartYear : "từ trước đến nay"}</span>
           <Button onClick={() => {
-                  const  year = moment().format("YYYY")
-                  let arrData = []
-                  let count;
-                  for (let i = 0; i <= 11; i++) {
-                    count = 0;
-                    let month;
-                    if ((i + 1).toString().length == 1) {
-                      month = `${year}-0${i + 1}`
-                    } else {
-                      month = `${year}-${i + 1}`
-                    }
-                    if (isChart == "turnover") {
-                      setChartLable("Doanh thu")
-                    } else if (isChart == "booking") {
-                      setChartLable("Hoàn thành")
-                    } else if (isChart == "userBad") {
-                      setChartLable("Hẹn xấu")
-                    } else if (isChart == "newUser") {
-                      setChartLable("Khách mới")
-                    }
-                    booking?.map((item) => {
-                      if (isChart == "turnover") {
-                        if (renderMonth(item.date) == month && item.status == 4) {
-                          count += item?.serviceId[0]?.price
-                        }
-                      } else if (isChart == "booking") {
-                        if (renderMonth(item.date) == month && item.status == 4) {
-                          count += 1
-                        }
-                      }
-                      else if (isChart == "userBad") {
-                        if (renderMonth(item.date) == month && item.status == 2) {
-                          count += 1
-                        }
-                      }
-                    })
-                    if (isChart == "newUser") {
-                      user?.map((item) => {
-                        if (renderMonth(item.createdAt) == month) {
-                          count += 1
-                        }
-                      })
-                    }
-                    arrData.push(count)
+            const year = moment().format("YYYY")
+            let arrData = []
+            let count;
+            for (let i = 0; i <= 11; i++) {
+              count = 0;
+              let month;
+              if ((i + 1).toString().length == 1) {
+                month = `${year}-0${i + 1}`
+              } else {
+                month = `${year}-${i + 1}`
+              }
+              if (isChart == "turnover") {
+                setChartLable("Doanh thu")
+              } else if (isChart == "booking") {
+                setChartLable("Hoàn thành")
+              } else if (isChart == "userBad") {
+                setChartLable("Hẹn xấu")
+              } else if (isChart == "newUser") {
+                setChartLable("Khách mới")
+              }
+              booking?.map((item) => {
+                if (isChart == "turnover") {
+                  if (renderMonth(item.date) == month && item.status == 4) {
+                    count += item?.serviceId[0]?.price
                   }
-                  setDataChart(arrData)
-                  setChartYear("")
-                  setMonthFilter("")
-                  setDateFilter("")
-                }} style={{ float: "right", marginLeft: "3px", backgroundColor: "#525252", fontFamily: "monospace", color: "#fbff08", fontWeight:"bold" }} >
-                  Làm mới
-                </Button>
+                } else if (isChart == "booking") {
+                  if (renderMonth(item.date) == month && item.status == 4) {
+                    count += 1
+                  }
+                }
+                else if (isChart == "userBad") {
+                  if (renderMonth(item.date) == month && item.status == 2) {
+                    count += 1
+                  }
+                }
+              })
+              if (isChart == "newUser") {
+                user?.map((item) => {
+                  if (renderMonth(item.createdAt) == month) {
+                    count += 1
+                  }
+                })
+              }
+              arrData.push(count)
+            }
+            setDataChart(arrData)
+            setChartYear("")
+            setMonthFilter("")
+            setDateFilter("")
+          }} style={{ float: "right", marginLeft: "3px", backgroundColor: "#525252", fontFamily: "monospace", color: "#fbff08", fontWeight: "bold" }} >
+            Làm mới
+          </Button>
           < DatePicker value={chartYear == "" ? null : moment(chartYear)} placeholder="Chọn năm" status="warning"
             style={{ float: "right", marginLeft: "3px" }} onChange={onChangeYearChart} picker="year" />
           < DatePicker placeholder="Chọn tháng" value={monthFilter == "" ? null : moment(monthFilter)} status="warning"
@@ -1116,7 +1116,7 @@ const Dashboard = () => {
           <DatePicker placeholder="Chọn ngày" style={{ float: "right", }}
             status="warning" value={dateFilter == "" ? null : moment(dateFilter)} onChange={changeDateFilter}
           />
-          
+
         </div> <br />
         <div className="flex flex-wrap -mx-3 mt-3">
           {/* card1 */}
@@ -1375,7 +1375,7 @@ const Dashboard = () => {
             <div className="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
               <div className="">
                 <div style={{ justifyContent: "center", alignItems: "center" }} className="flex " >
-                  <span className="mb-0 font-bold text-black capitalize text-center text-[50px]" style={{ fontSize: "20px" }}> Biểu đồ <span style={{textDecoration:"underline", textDecorationColor:"blue"}}>{chartLable} {chartYear ? "năm " + chartYear : "Năm Nay"}</span></span>
+                  <span className="mb-0 font-bold text-black capitalize text-center text-[50px]" style={{ fontSize: "20px" }}> Biểu đồ <span style={{ textDecoration: "underline", textDecorationColor: "blue" }}>{chartLable} {chartYear ? "năm " + chartYear : "Năm Nay"}</span></span>
                 </div>
                 <div>
                   < DatePicker placeholder="Chọn năm" status="warning"
@@ -1389,11 +1389,8 @@ const Dashboard = () => {
 
             </div>
 
-            <div className="flex-auto p-4">
-              <div id="boxChart">
-                <canvas id="myChart" height="110px" ></canvas>
-              </div>
-            </div>
+
+
           </div>
         </div>
 
@@ -1401,7 +1398,7 @@ const Dashboard = () => {
           <div className="flex-none w-full max-w-full px-3">
             <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div className="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                <h6 style={{ float: "left", fontSize:"20px", fontWeight:"bold" }} className="dark:text-white">Thống kê nhân viên <span style={{ textDecoration: "underline", textDecorationColor:"blue" }}>{employeeFilterDate == moment().format("YYYY-MM-DD") ? "hôm nay" : employeeFilterDate != "" ? employeeFilterDate : employeeFilterMonth != "" ? employeeFilterMonth : employeeFilterYear != "" ? employeeFilterYear : "từ trước đến nay"}</span></h6>
+                <h6 style={{ float: "left", fontSize: "20px", fontWeight: "bold" }} className="dark:text-white">Thống kê nhân viên <span style={{ textDecoration: "underline", textDecorationColor: "blue" }}>{employeeFilterDate == moment().format("YYYY-MM-DD") ? "hôm nay" : employeeFilterDate != "" ? employeeFilterDate : employeeFilterMonth != "" ? employeeFilterMonth : employeeFilterYear != "" ? employeeFilterYear : "từ trước đến nay"}</span></h6>
                 <Button onClick={() => {
                   setEmployeeFilterDate(""), setEmployeeFilterMonth(""), setEmployeeFilterYear("")
                 }} style={{ float: "right", marginLeft: "3px", backgroundColor: "#168ea0", fontFamily: "monospace", color: "white" }} >
@@ -1513,7 +1510,7 @@ const Dashboard = () => {
           <div className="flex-none w-full max-w-full px-3">
             <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
               <div className="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                <h6 style={{ float: "left" , fontSize:"20px", fontWeight:"bold"}} className="dark:text-white">Thống kê dịch vụ <span style={{ textDecoration: "underline",textDecorationColor:"blue", }}>{serviceFilter != "" ? ` vào ${serviceFilter}` : serviceFilterMonth != "" ? serviceFilterMonth : "từ trước đến nay"}</span> <br /><span style={{color:"red",fontSize:"16px"}}>  Tổng {formatCash(totalTurnover()) } vnđ</span> </h6> <Button onClick={() => {
+                <h6 style={{ float: "left", fontSize: "20px", fontWeight: "bold" }} className="dark:text-white">Thống kê dịch vụ <span style={{ textDecoration: "underline", textDecorationColor: "blue", }}>{serviceFilter != "" ? ` vào ${serviceFilter}` : serviceFilterMonth != "" ? serviceFilterMonth : "từ trước đến nay"}</span> <br /><span style={{ color: "red", fontSize: "16px" }}>  Tổng {formatCash(totalTurnover())} vnđ</span> </h6> <Button onClick={() => {
                   setServiceFilter(""), setServiceFilterMonth("")
                 }} style={{ float: "right", marginLeft: "3px", backgroundColor: "#168ea0", fontFamily: "monospace", color: "white" }} >
                   Làm mới

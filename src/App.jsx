@@ -48,7 +48,7 @@ function App() {
   });
 
   const handleSetCountDown = () => {
-    let timeDown = 6;
+    let timeDown = 60;
     let timerId = setInterval(() => {
       setCountDown(--timeDown);
       if (timeDown == 0) {

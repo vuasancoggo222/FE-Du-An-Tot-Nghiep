@@ -1,4 +1,4 @@
-import { Table, Image, Space, Tooltip, Button } from "antd";
+import { Table, Image, Space, Tooltip, Button, Tag } from "antd";
 import React from "react";
 import { httpGetAllUser } from "../../../api/user";
 import Description from "../../../components/admin/detaiservice";
@@ -35,6 +35,14 @@ const ListUser = () => {
     {
       title: "gender",
       dataIndex: "gender",
+      render: (gender) => {
+        if (gender === 1) {
+          return <span>Nam</span>;
+        }
+        if (gender === 0) {
+          return <span>Nữ</span>;
+        }
+      },
     },
     {
       title: "role",
@@ -54,11 +62,23 @@ const ListUser = () => {
       dataIndex: "status",
       render: (status) => {
         if (status === 1) {
-          return <span>Đã kích hoạt</span>;
+          return (
+            <Tag color="#87d068" className="p-1">
+              Đã kích hoạt
+            </Tag>
+          );
         } else if (status === 2) {
-          return <span>Đã khóa</span>;
+          return (
+            <Tag color="#f50" className="p-1">
+              Đã khóa
+            </Tag>
+          );
         } else {
-          return <span>Chưa kích hoạt</span>;
+          return (
+            <Tag color="gold" className="p-1">
+              Chưa kích hoạt
+            </Tag>
+          );
         }
       },
     },

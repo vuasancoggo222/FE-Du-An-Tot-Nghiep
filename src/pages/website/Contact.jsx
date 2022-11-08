@@ -103,12 +103,13 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Name"
+                                className="shadow-2xl shadow-gray-300"
+                                label="Họ tên"
                                 name="name"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your name !",
+                                    message: "Vui lòng nhập họ tên của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
@@ -120,12 +121,13 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Your Address"
+                                className="shadow-2xl shadow-gray-300"
+                                label="Địa chỉ"
                                 name="address"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your address !",
+                                    message: "Vui lòng nhập địa chỉ của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
@@ -137,34 +139,41 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Your PhoneNumber"
-                                name="phoneNumber"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Please input your phone number !",
-                                  },
-                                ]}
-                                style={{ marginRight: "10px" }}
-                              >
-                                <Input placeholder="Your PhoneNumber" />
+                                  className="shadow-2xl shadow-gray-300"
+                                  label="Số điện thoại"
+                                  name="phoneNumber"
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message:
+                                        "Vui lòng nhập số điện thoại của bạn !",
+                                    },
+                                  ]}
+                                  style={{ marginRight: "10px" }}
+                                >
+                                  <Input placeholder="Your PhoneNumber" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Your Context"
+                                className="shadow-2xl shadow-gray-300"
+                                label="Nội dung"
                                 name="content"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your content !",
+                                    message: "Vui lòng nhập nội dung của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <TextArea placeholder="Your Context" type="" />
+                                <TextArea
+                                  placeholder="Your Context"
+                                  className="form-input shadow-inner shadow-gray-300"
+                                  type=""
+                                />
                               </Form.Item>
                             </Col>
                           </Row>

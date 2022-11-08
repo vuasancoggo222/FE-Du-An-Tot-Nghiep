@@ -34,6 +34,7 @@ import ListBanner from "./pages/admin/banner";
 import News from "./pages/website/News";
 import ListPost from "./pages/admin/post";
 import AddPost from "./pages/admin/post/add";
+import DetailNews from "./pages/website/DetailNews";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -112,6 +113,7 @@ function App() {
 
             <Route path="/contact" element={<Contact />} />
             <Route path="/news" element={<News />} />
+            <Route path="/news/detail" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route
               path="/detail-booking/:id"

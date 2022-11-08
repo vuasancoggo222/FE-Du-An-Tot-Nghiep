@@ -34,6 +34,7 @@ import ListBanner from "./pages/admin/banner";
 import News from "./pages/website/News";
 import ListPost from "./pages/admin/post";
 import AddPost from "./pages/admin/post/add";
+import UserEdit from "./pages/admin/user/edit";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -176,6 +177,7 @@ function App() {
             </Route>
             <Route path="user">
               <Route index element={<ListUser />}></Route>
+              <Route path=":id/edit" element={<UserEdit />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>

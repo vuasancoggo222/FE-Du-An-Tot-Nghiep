@@ -1,7 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { isAuthenticate } from "../../utils/LocalStorage";
+import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 const Sidenav = () => {
+  const user = isAuthenticate();
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (user.role === 2) {
+      navigate("/admin/employee");
+    } else {
+      message.error("Bạn không có quyền truy cập");
+    }
+  };
+  const handleClick2 = () => {
+    if (user.role === 2) {
+      navigate("/admin/user");
+    } else {
+      message.error("Bạn không có quyền truy cập");
+    }
+  };
   return (
     <>
       {/* sidenav  */}
@@ -48,11 +66,8 @@ const Sidenav = () => {
                 </span>
               </Link>
             </li>
-            <li className="mt-0.5 w-full">
-              <Link
-                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
-                to="/admin/employee"
-              >
+            <li className="mt-0.5 w-full" onClick={handleClick}>
+              <Link className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors">
                 <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <i className="relative top-0 text-sm leading-normal text-orange-500 ni ni-calendar-grid-58" />
                 </div>
@@ -90,13 +105,26 @@ const Sidenav = () => {
             <li className="mt-0.5 w-full">
               <Link
                 className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
-                href="../pages/rtl.html"
+                to="/admin/contact"
               >
                 <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <i className="relative top-0 text-sm leading-normal text-red-600 ni ni-world-2" />
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                  RTL
+                  Contact
+                </span>
+              </Link>
+            </li>
+            <li className="mt-0.5 w-full">
+              <Link
+                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                to="/admin/banner"
+              >
+                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <i className="fa fa-area-chart" aria-hidden="true"></i>
+                </div>
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                  Banner
                 </span>
               </Link>
             </li>
@@ -105,11 +133,8 @@ const Sidenav = () => {
                 Account pages
               </h6>
             </li>
-            <li className="mt-0.5 w-full">
-              <Link
-                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
-                to="/admin/user"
-              >
+            <li className="mt-0.5 w-full" onClick={handleClick2}>
+              <Link className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors">
                 <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <i className="relative top-0 text-sm leading-normal text-slate-700 ni ni-single-02" />
                 </div>

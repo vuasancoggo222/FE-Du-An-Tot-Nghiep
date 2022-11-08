@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
   ClockCircleFilled,
-  ClockCircleOutlined,
   SettingFilled,
-  SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Image, Menu } from "antd";
 
 import { isAuthenticate } from "../../utils/LocalStorage";
+import { getProfile } from "../../api/user";
 const UserInfo = () => {
   const user = isAuthenticate();
+  useEffect(() => {
+    const getProfiles = async () => {
+      const datauser = await getProfile(user.token);
+      console.log("log profile :", datauser);
+    };
+
+    getProfiles();
+  }, []);
   function getItem(label, key, icon, children) {
     return {
       key,
@@ -54,12 +61,7 @@ const UserInfo = () => {
                     xl: 80,
                     xxl: 100,
                   }}
-                  src={
-                    <Image
-                      src="https://joeschmoe.io/api/v1/random"
-                      preview={false}
-                    />
-                  }
+                  src={<Image src={user.avatar} preview={false} />}
                   icon={<UserOutlined />}
                 />
               </div>

@@ -32,6 +32,8 @@ import Userinformation from "./components/clients/userinformation";
 import ReplyFeedback from "./pages/admin/feedback";
 import ListBanner from "./pages/admin/banner";
 import News from "./pages/website/News";
+import ListPost from "./pages/admin/post";
+import AddPost from "./pages/admin/post/add";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -180,6 +182,10 @@ function App() {
             </Route>
             <Route path="banner">
               <Route index element={<ListBanner />}></Route>
+            </Route>
+            <Route path="post">
+              <Route index element={<ListPost />}></Route>
+              <Route path="add" element={<AddPost />}></Route>
             </Route>
           </Route>
         </Routes>

@@ -250,48 +250,7 @@ const News = () => {
             * Lấy lại đôi tay thon gọn nhờ hút mỡ tay
           </a>
         </div>
-        <div className="flex justify-between mt-10 border-t-2 border-black">
-          {/* <a
-className="text-base text-[#00502B] hover:text-[#366f55] flex"
-            href=""
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5L8.25 12l7.5-7.5"
-              />
-            </svg>
-            Bí quyết tăng vòng 3 hiệu quả nhất hiện nay
-          </a>
-          <a
-            className="text-base text-[#00502B] hover:text-[#366f55] flex"
-            href=""
-          >
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.25 4.5l7.5 7.5-7.5 7.5"
-              />
-            </svg>
-          </a> */}
-        </div>
+        <div className="flex justify-between mt-10 border-t-2 border-black"></div>
         <div className="w-[100%]">
           <h3 className="text-xl text-[#00502b] mt-6">Tin liên quan</h3>
           <div className="flex justify-between">
@@ -320,7 +279,7 @@ className="text-base text-[#00502B] hover:text-[#366f55] flex"
           </p>
           <p className="text-base mt-2 font-semibold">Bình luận *</p>
           <textarea
-            className="border-2 border-[#e7e3e3] p-5 outline-[#ccc] text-lg"
+            className="border-2 border-[#e7e3e3] p-5 outline-[#ccc] text-lg w-[100%]"
             name=""
             id=""
             cols="80"

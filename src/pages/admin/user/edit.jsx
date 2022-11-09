@@ -55,7 +55,7 @@ const UserEdit = () => {
     });
   };
   const onFinish = async (data) => {
-    const a = { ...data, avatar: url };
+    const a = { ...data, avatar: url != "" ? url : fileList[0].url };
     try {
       await httpUpdateOneUser(user.token, id, a).then(() => {
         message.success("cập nhật thành công", 4);

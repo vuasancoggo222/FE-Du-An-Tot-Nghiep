@@ -20,14 +20,14 @@ export const getProfile = (token) => {
   };
   return instance.get(url, header);
 };
-export const updateProfile = (token,data) => {
+export const updateProfile = (token, data) => {
   const url = `/user/my-profile/edit`;
   const header = {
     headers: {
       Authorization: `${token}`,
     },
   };
-  return instance.put(url,data,header);
+  return instance.put(url, data, header);
 };
 export const changeAccountStatus = (phoneNumber, status, token) => {
   const url = `change-account-status?phone=${phoneNumber}&status=${status}`;
@@ -37,4 +37,20 @@ export const changeAccountStatus = (phoneNumber, status, token) => {
     },
   };
   return instance.put(url, null, header);
+};
+export const httpGetOneUser = (token, id) => {
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  return instance.get(`user/${id}`, header);
+};
+export const httpUpdateOneUser = (token, id, data) => {
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  return instance.put(`user/edit/${id}`, data, header);
 };

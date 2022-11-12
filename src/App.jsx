@@ -39,6 +39,9 @@ import { isAuthenticate } from "./utils/LocalStorage";
 export const socket = io(REALTIME_SERVER,{
   autoConnect:false
 })
+import DetailNews from "./pages/website/DetailNews";
+import UserEdit from "./pages/admin/user/edit";
+
 function App() {
   const [notification,setNotification] = useRecoilState(notificationState)
   const user = isAuthenticate()
@@ -93,6 +96,7 @@ function App() {
 
             <Route path="/contact" element={<Contact />} />
             <Route path="/news" element={<News />} />
+            <Route path="/news/detail" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />
@@ -149,6 +153,7 @@ function App() {
             </Route>
             <Route path="user">
               <Route index element={<ListUser />}></Route>
+              <Route path=":id/edit" element={<UserEdit />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>

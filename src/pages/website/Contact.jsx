@@ -107,12 +107,13 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Name"
+                                className=""
+                                label="Họ tên"
                                 name="name"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your name !",
+                                    message: "Vui lòng nhập họ tên của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
@@ -124,12 +125,13 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Your Address"
+                                className=""
+                                label="Địa chỉ"
                                 name="address"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your address !",
+                                    message: "Vui lòng nhập địa chỉ của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
@@ -141,12 +143,14 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Your PhoneNumber"
+                                className=""
+                                label="Số điện thoại"
                                 name="phoneNumber"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your phone number !",
+                                    message:
+                                      "Vui lòng nhập số điện thoại của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
@@ -158,17 +162,22 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                label="Your Context"
+                                className=""
+                                label="Nội dung"
                                 name="content"
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please input your content !",
+                                    message: "Vui lòng nhập nội dung của bạn !",
                                   },
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <TextArea placeholder="Your Context" type="" />
+                                <TextArea
+                                  placeholder="Your Context"
+                                  className="form-input"
+                                  type=""
+                                />
                               </Form.Item>
                             </Col>
                           </Row>

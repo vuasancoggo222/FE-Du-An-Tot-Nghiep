@@ -4,8 +4,12 @@ import { httpAddContact } from "../../api/contact";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
 import styles from "../../../assets/css/style.module.css";
+import { useRecoilValue } from "recoil";
+import { notificationState } from "../../recoil/notificationState";
 
 function Contact() {
+  const count = useRecoilValue(notificationState);
+  console.log(count);
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     var res = await httpAddContact(data);

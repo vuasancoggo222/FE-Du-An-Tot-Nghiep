@@ -21,8 +21,10 @@ import { isAuthenticate } from "../../utils/LocalStorage";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/config";
-import { socket } from "../../main";
 import { httpAddBooking } from "../../api/booking";
+import { socket } from "../../App";
+import { SocketEvent } from "../../utils/SocketConstant";
+
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -112,7 +114,7 @@ const BookingPage = () => {
         type: "booking",
         text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
       };
-      socket.emit("newNotification", newNotification);
+      socket.emit(SocketEvent.NEWNOTIFICATION,newNotification)
       message.success("Đặt lịch thành công", 2);
       navigate("/");
     } catch (error) {

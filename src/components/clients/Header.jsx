@@ -23,11 +23,10 @@ const Header = () => {
     setIsModal(e.target.getAttribute("data"));
   };
 
-  const handleSignIn = async () => {
-    const user = await isAuthenticate();
-    if (user) {
+  const callbackFunction = (childData) => {
+    if (childData) {
       setAuth(true);
-      setUser(user);
+      setUser(childData);
       setOpen(false);
       if (user.role === 1) {
         navigate("/admin/booking/employee");
@@ -35,7 +34,7 @@ const Header = () => {
         navigate("/admin");
       }
     }
-  };
+  }
 
   const handleSignUp = async () => {
     const signUp = await JSON.parse(localStorage.getItem("signup"));
@@ -211,7 +210,7 @@ const Header = () => {
           >
             <p>
               {ismolDal == "signin" ? (
-                <SignIn handleSignIn={handleSignIn()} />
+                <SignIn parentCallback={callbackFunction} />
               ) : ismolDal == "signup" ? (
                 <SignUp handleSignUp={handleSignUp()} />
               ) : (

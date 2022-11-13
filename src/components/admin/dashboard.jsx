@@ -3,15 +3,20 @@ import { Button, DatePicker } from "antd";
 import React, { useEffect, useState } from "react";
 import { httpGetAll } from "../../api/booking";
 import { httpGetEmployees } from "../../api/employee";
-import { httpGetAllService } from "../../api/services";
-import { httpGetAllUser } from "../../api/user";
+import { groupAgeByService, groupGenderByService, httpGetAllService, servicesStatistic, turnoverServicesMonth } from "../../api/services";
+import { httpGetAllUser, userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
+import { text } from "express";
 const Dashboard = () => {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [user, setUser] = useState();
   const [service, setService] = useState();
+  const [acCount, setaccCount] = useState();
+  const [turnover, setTurnover] = useState();
+  const [ageByService, setAgeByService] = useState();
+  const [genderByService, setGenderByService] = useState();
   const [serviceFilter, setServiceFilter] = useState("");
   const [employeeFilterDate, setEmployeeFilterDate] = useState("");
   const [employeeFilterMonth, setEmployeeFilterMonth] = useState("");
@@ -21,6 +26,7 @@ const Dashboard = () => {
   const [dateFilter, setDateFilter] = useState("");
   const [chartLable, setChartLable] = useState("Doanh thu");
   const [dataChart, setDataChart] = useState();
+  const [lableChart, setLableChart] = useState();
   // const [dataChartService, setDataChartService] = useState();
   const [dataChartFirst, setDataChartFirst] = useState();
   const [chartYear, setChartYear] = useState(moment().format("YYYY"));
@@ -37,24 +43,17 @@ const Dashboard = () => {
       });
   }
   const datavl = {
-    series: [
-      {
-        name: "PRODUCT A",
-        data: [44, 55, 41, 67, 22, 43, 12, 16, 17, 89, 90, 99],
-      },
-      {
-        name: "PRODUCT B",
-        data: [13, 23, 20, 8, 13, 27, 44, 55, 41, 67, 22, 43],
-      },
-      {
-        name: "PRODUCT C",
-        data: [11, 17, 15, 15, 21, 14, 43, 12, 16, 17, 89, 90],
-      },
-      {
-        name: "PRODUCT D",
-        data: [21, 7, 25, 13, 22, 43, 12, 16, 17, 89, 90, 99],
-      },
-    ],
+    series:
+      // {
+      //   name: "PRODUCT A",
+      //   data: [44, 55],
+      // },  {
+      //   name: "PRODUCT A",
+      //   data: [44, 55],
+      // },
+      dataChart != undefined ? dataChart : ""
+    // this
+    ,
     options: {
       chart: {
         type: "bar",
@@ -94,23 +93,7 @@ const Dashboard = () => {
           },
         },
       },
-      xaxis: {
-        type: "datetime",
-        categories: [
-          "01/01/2011 GMT",
-          "01/02/2011 GMT",
-          "01/03/2011 GMT",
-          "01/04/2011 GMT",
-          "01/05/2011 GMT",
-          "01/06/2011 GMT",
-          "01/07/2011 GMT",
-          "01/08/2011 GMT",
-          "01/09/2011 GMT",
-          "01/10/2011 GMT",
-          "01/11/2011 GMT",
-          "01/12/2011 GMT",
-        ],
-      },
+      xaxis: lableChart != undefined ? lableChart : "",
       legend: {
         position: "right",
         offsetY: 40,
@@ -142,9 +125,8 @@ const Dashboard = () => {
   const countCustomerByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.employeeId != undefined) {
@@ -277,15 +259,15 @@ const Dashboard = () => {
     // setDataChartService(arrData)
   };
 
-  const onChangeDateEmployee = (date, dateString) => {
-    if (dateString == "") {
-      setEmployeeFilterDate("");
-    } else {
-      setEmployeeFilterDate(dateString);
-    }
-    setEmployeeFilterMonth("");
-    setEmployeeFilterYear("");
-  };
+  // const onChangeDateEmployee = (date, dateString) => {
+  //   if (dateString == "") {
+  //     setEmployeeFilterDate("");
+  //   } else {
+  //     setEmployeeFilterDate(dateString);
+  //   }
+  //   setEmployeeFilterMonth("");
+  //   setEmployeeFilterYear("");
+  // };
 
   const onChangeMonthEmployee = (date, dateString) => {
     if (dateString == "") {
@@ -317,86 +299,26 @@ const Dashboard = () => {
       return "#13c2c2";
     }
   };
-  const changeDateFilter = (date, dateString) => {
-    if (dateString == "") {
-      setDateFilter("");
-    } else {
-      setMonthFilter("");
-      setDateFilter(dateString);
-      setChartYear("");
-    }
-  };
 
-  const changeMonthFilter = (date, dateString) => {
-    if (dateString == "") {
-      setMonthFilter("");
-    } else {
-      setMonthFilter(dateString);
-      setDateFilter("");
-      setChartYear("");
-    }
-  };
+  // const changeMonthFilter = (date, dateString) => {
+  //   if (dateString == "") {
+  //     setMonthFilter("");
+  //   } else {
+  //     setMonthFilter(dateString);
+  //     setDateFilter("");
+  //     setChartYear("");
+  //   }
+  // };
 
   const onChangeYearChart = (date, dateString) => {
-    let year = dateString;
-    if (dateString == "") {
-      year = moment().format("YYYY");
-    }
-    let arrData = [];
-    let count;
-    for (let i = 0; i <= 11; i++) {
-      count = 0;
-      let month;
-      if ((i + 1).toString().length == 1) {
-        month = `${year}-0${i + 1}`;
-      } else {
-        month = `${year}-${i + 1}`;
-      }
-      if (isChart == "turnover") {
-        setChartLable("Doanh thu");
-      } else if (isChart == "booking") {
-        setChartLable("Hoàn thành");
-      } else if (isChart == "userBad") {
-        setChartLable("Hẹn xấu");
-      } else if (isChart == "newUser") {
-        setChartLable("Khách mới");
-      }
-      booking?.map((item) => {
-        if (isChart == "turnover") {
-          if (renderMonth(item.date) == month && item.status == 4) {
-            count += item?.serviceId[0]?.price;
-          }
-        } else if (isChart == "booking") {
-          if (renderMonth(item.date) == month && item.status == 4) {
-            count += 1;
-          }
-        } else if (isChart == "userBad") {
-          if (renderMonth(item.date) == month && item.status == 2) {
-            count += 1;
-          }
-        }
-      });
-      if (isChart == "newUser") {
-        user?.map((item) => {
-          if (renderMonth(item.createdAt) == month) {
-            count += 1;
-          }
-        });
-      }
-      arrData.push(count);
-    }
-    setDataChart(arrData);
     setChartYear(dateString);
-    setMonthFilter("");
-    setDateFilter("");
   };
 
   const countCustomerSpaIngByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (
@@ -413,9 +335,8 @@ const Dashboard = () => {
   const countCustomerSpaSuccessByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (
@@ -439,44 +360,42 @@ const Dashboard = () => {
   //   }
   // }
 
-  const countCustomerDone = () => {
-    let coutn = 0;
-    let isCheck = "";
-    booking?.forEach((item) => {
-      let timeItem;
-      if (monthFilter != "") {
-        timeItem = renderMonth(item.date);
-        isCheck = monthFilter;
-      } else if (dateFilter != "") {
-        timeItem = renderDate(item.date);
-        isCheck = dateFilter;
-      } else if (chartYear != "") {
-        timeItem = renderYear(item.date);
-        isCheck = chartYear;
-      } else {
-        if (item.status == 4) {
-          coutn++;
-        }
-        return coutn;
-      }
-      if (item.status == 4 && timeItem == isCheck) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
+  // const countCustomerDone = () => {
+  //   let coutn = 0;
+  //   let isCheck = "";
+  //   booking?.forEach((item) => {
+  //     let timeItem;
+  //     if (monthFilter != "") {
+  //       timeItem = renderMonth(item.date);
+  //       isCheck = monthFilter;
+  //     } else if (dateFilter != "") {
+  //       timeItem = renderDate(item.date);
+  //       isCheck = dateFilter;
+  //     } else if (chartYear != "") {
+  //       timeItem = renderYear(item.date);
+  //       isCheck = chartYear;
+  //     } else {
+  //       if (item.status == 4) {
+  //         coutn++;
+  //       }
+  //       return coutn;
+  //     }
+  //     if (item.status == 4 && timeItem == isCheck) {
+  //       coutn += 1;
+  //     }
+  //   });
+  //   return coutn;
+  // };
 
   const thisday = new Date();
-  const today = `${thisday.getFullYear()}-${
-    thisday.getMonth() + 1
-  }-${thisday.getDate()}`;
+  const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
 
   const countCustomerIng = () => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.status == 3 && dayItem == today) {
@@ -626,9 +545,8 @@ const Dashboard = () => {
   const countBookingWait = () => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.status == 0 && dayItem == today) {
@@ -641,9 +559,8 @@ const Dashboard = () => {
   const countBookingSuccess = () => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.status == 1 && dayItem == today) {
@@ -719,26 +636,15 @@ const Dashboard = () => {
 
   const totalTurnover = () => {
     let sum = 0;
-    if (serviceFilter != "") {
-      booking?.forEach((item) => {
-        if (item.status == 4 && renderYear(item.date) == serviceFilter) {
-          sum += item.serviceId[0]?.price;
-        }
+    turnover?.map((item) => {
+      item.datas.map((current) => {
+        sum += current
       });
-    } else if (serviceFilterMonth != "") {
-      booking?.forEach((item) => {
-        if (item.status == 4 && renderMonth(item.date) == serviceFilterMonth) {
-          sum += item.serviceId[0]?.price;
-        }
-      });
-    } else {
-      booking?.forEach((item) => {
-        if (item.status == 4) {
-          sum += item.serviceId[0]?.price;
-        }
-      });
-    }
-    return sum;
+    })
+    return sum.toLocaleString("vi", {
+      style: "currency",
+      currency: "VND",
+    });
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -882,26 +788,26 @@ const Dashboard = () => {
     return count;
   };
 
-  const renderPreviousChart = () => {
-    let sum = 0;
+  // const renderPreviousChart = () => {
+  //   let sum = 0;
 
-    if (!dataChart) {
-      dataChartFirst?.forEach((item) => {
-        sum += item;
-      });
-    } else {
-      dataChart?.forEach((item) => {
-        sum += item;
-      });
-    }
-    const result = sum - tatalChartBefor * 100;
-    if (result.toString().indexOf(".")) {
-      return result.toString().substring(0, 5);
-    }
-    return result;
-  };
+  //   if (!dataChart) {
+  //     dataChartFirst?.forEach((item) => {
+  //       sum += item;
+  //     });
+  //   } else {
+  //     dataChart?.forEach((item) => {
+  //       sum += item;
+  //     });
+  //   }
+  //   const result = sum - tatalChartBefor * 100;
+  //   if (result.toString().indexOf(".")) {
+  //     return result.toString().substring(0, 5);
+  //   }
+  //   return result;
+  // };
 
-  const handleChooseChart = (e) => {
+  const handleChooseChart = async (e) => {
     const isChart = e.target.getAttribute("data");
     let year = moment().format("YYYY");
     if (chartYear != "") {
@@ -909,163 +815,129 @@ const Dashboard = () => {
     } else {
       setChartYear(year);
     }
-    let arrData = [];
-    let count = 0;
-    let countBefor = 0;
-    for (let i = 0; i <= 11; i++) {
-      count = 0;
-      let month;
-      let monthBefor;
-      if ((i + 1).toString().length == 1) {
-        month = `${year}-0${i + 1}`;
-        monthBefor = `${year - 1}-0${i + 1}`;
-      } else {
-        month = `${year}-${i + 1}`;
-        monthBefor = `${year - 1}-${i + 1}`;
-      }
-      if (isChart == "turnover") {
-        setChartLable("Doanh thu");
-      } else if (isChart == "booking") {
-        setChartLable("Lượt hoàn thành");
-      } else if (isChart == "userBad") {
-        setChartLable("Khách hẹn xấu");
-      } else if (isChart == "newUser") {
-        setChartLable("Khách mới");
-      }
-      booking?.map((item) => {
-        if (isChart == "turnover") {
-          if (renderMonth(item.date) == month && item.status == 4) {
-            count += item?.serviceId[0]?.price;
+    if (isChart == "turnover") {
+      setChartLable("Doanh thu");
+      setDataChart(
+        turnover.map((item) => {
+          return {
+            name: item.name,
+            data: item.datas
           }
-          if (renderMonth(item.date) == monthBefor && item.status == 4) {
-            countBefor += item?.serviceId[0]?.price;
-          }
-        } else if (isChart == "booking") {
-          if (renderMonth(item.date) == month && item.status == 4) {
-            count += 1;
-          }
-          if (renderMonth(item.date) == monthBefor && item.status == 4) {
-            countBefor += 1;
-          }
-        } else if (isChart == "userBad") {
-          if (renderMonth(item.date) == month && item.status == 2) {
-            count += 1;
-          }
-          if (renderMonth(item.date) == monthBefor && item.status == 2) {
-            countBefor += 1;
-          }
-        }
-      });
-      if (isChart == "newUser") {
-        user?.map((item) => {
-          if (renderMonth(item.createdAt) == month) {
-            count += 1;
-          }
-          if (renderMonth(item.createdAt) == monthBefor) {
-            countBefor += 1;
-          }
-        });
-      }
-      arrData.push(count);
+        })
+      )
+      // 
+      setLableChart({
+        type: "",
+        categories: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+      })
+    } else if (isChart == "user") {
+      setChartLable("Thống kê tài khoản");
+      setDataChart(
+        [
+          {
+            name: "Tài khoản kích hoạt",
+            data: [acCount.availableUser]
+          },
+          {
+            name: "Tài khoản bị khóa",
+            data: [acCount.lockUser]
+          },
+          {
+            name: "Tài khoản chưa kích hoạt",
+            data: [acCount.unActiveUser]
+          },
+
+        ]
+      )
+      // 
+      setLableChart({
+        type: "",
+        categories: ["Tất cả thời gian"],
+      })
+    } else if (isChart == "ageBySerVice") {
+      setChartLable("Thống kê độ tuổi theo dịch vụ");
+      setDataChart(
+        ageByService.groupAge
+      )
+      // 
+      setLableChart({
+        type: "",
+        categories: ageByService.categories,
+      })
+    } else if (isChart == "genderBySerVice") {
+      setChartLable("Thống kê giới tính theo dịch vụ");
+      setDataChart(
+        genderByService.groupGender
+
+      )
+      // 
+      setLableChart({
+        type: "",
+        categories: genderByService.categories,
+      })
     }
-    setIsChart(isChart);
-    setDataChart(arrData);
-    setTatalChartBefor(countBefor);
+
   };
-
-  // const thismonth = new Date();
-  // const month = `${thismonth.getFullYear()}-${thismonth.getMonth() + 1}`
-  // setMonthFilter(month)
-
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
       await setBooking(res);
-      const d = new Date();
-      let year = d.getFullYear();
-      let arrData = [];
-      let count = 0;
-      let countBefor = 0;
-      for (let i = 0; i <= 11; i++) {
-        count = 0;
-        let month;
-        let monthBefor;
-        if ((i + 1).toString().length == 1) {
-          month = `${year}-0${i + 1}`;
-          monthBefor = `${year - 1}-0${i + 1}`;
-        } else {
-          month = `${year}-${i + 1}`;
-          monthBefor = `${year - 1}-${i + 1}`;
-        }
-        res?.map((item) => {
-          if (renderMonth(item.date) == month && item.status == 4) {
-            count += item?.serviceId[0]?.price;
-          }
-          if (renderMonth(item.date) == monthBefor && item.status == 4) {
-            countBefor += item?.serviceId[0]?.price;
-          }
-        });
-
-        arrData.push(count);
-      }
-      setTatalChartBefor(countBefor);
-      setDataChartFirst(arrData);
-
-      if (document.querySelector("#myChart")) {
-        const ctx = document.getElementById("myChart").getContext("2d");
-        // eslint-disable-next-line no-undef
-        myChart = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ],
-            datasets: [
-              {
-                label: chartLable,
-                data: arrData,
-                backgroundColor: [
-                  "rgba(255, 99, 132, 0.2)",
-                  "rgba(54, 162, 235, 0.2)",
-                  "rgba(255, 206, 86, 0.2)",
-                  "rgba(75, 192, 192, 0.2)",
-                  "rgba(153, 102, 255, 0.2)",
-                  "rgba(255, 159, 64, 0.2)",
-                ],
-                borderColor: [
-                  "rgba(255, 99, 132, 1)",
-                  "rgba(54, 162, 235, 1)",
-                  "rgba(255, 206, 86, 1)",
-                  "rgba(75, 192, 192, 1)",
-                  "rgba(153, 102, 255, 1)",
-                  "rgba(255, 159, 64, 1)",
-                ],
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
-          },
-        });
-      }
+      // setTatalChartBefor(countBefor);
+      // setDataChartFirst(arrData);
     };
     getBooking();
+
+    const getAgeByService = async () => {
+      const res = await groupAgeByService();
+      setAgeByService(res);
+    };
+    getAgeByService();
+
+    const getGenderByService = async () => {
+      const res = await groupGenderByService();
+      setGenderByService(res);
+      console.log(res);
+    };
+    getGenderByService();
+
+    const getTurnover = async () => {
+      let year = moment().format("YYYY")
+      if (chartYear != '') {
+        year = chartYear
+      }
+      const res = await turnoverServicesMonth(year);
+      await setTurnover(res);
+      console.log(res);
+      setChartLable("Doanh thu");
+      setChartLable("Thống kê tài khoản");
+      setDataChart(
+        res.map((item) => {
+          return {
+            name: item.name,
+            data: item.datas
+          }
+        })
+      )
+      // 
+      setLableChart({
+        type: "",
+        categories: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+      })
+    };
+    getTurnover();
+
+    const getServicesStatistic = async () => {
+      const res = await httpGetAllService();
+      await setService(res);
+      console.log(res);
+    };
+    getServicesStatistic();
+
+    const getAccount = async () => {
+      const res = await userAccountStatistics();
+      await setaccCount(res);
+    };
+    getAccount();
 
     const getEmployee = async () => {
       const res = await httpGetEmployees();
@@ -1077,181 +949,15 @@ const Dashboard = () => {
       const res = await httpGetAllUser();
       setUser(res);
     };
-    getUser();
-
-    const getService = async () => {
-      const res = await httpGetAllService();
-      // const booking = await httpGetAll();
-      setService(res);
-      // const d = new Date();
-      // let year = d.getFullYear();
-      // let arrData = res.map(() => {
-      //   return 0
-      // })
-      // booking.forEach((item) => {
-      //   if (item.status == 4 && renderYear(item.date) == year) {
-      //     res.forEach((itemS, index) => {
-      //       if (item.serviceId[0]?._id == itemS._id) {
-      //         arrData[index] += item.serviceId[0]?.price
-      //       }
-      //     })
-      //   }
-      // })
-
-      // const ctx = document.getElementById('chartService').getContext('2d');
-      // // eslint-disable-next-line no-undef
-      // chartService = new Chart(ctx, {
-      //   type: 'polarArea',
-      //   data: {
-      //     labels: res?.map((item) => {
-      //       return item.name
-      //     }),
-      //     datasets: [{
-      //       label: "My First Dataset",
-      //       data: arrData,
-      //       backgroundColor: [
-      //         'rgba(255, 99, 132, 0.2)',
-      //         'rgba(54, 162, 235, 0.2)',
-      //         'rgba(255, 206, 86, 0.2)',
-      //         'rgba(75, 192, 192, 0.2)',
-      //         'rgba(153, 102, 255, 0.2)',
-      //         'rgba(255, 159, 64, 0.2)'
-      //       ],
-      //       borderColor: [
-      //         'rgba(255, 99, 132, 1)',
-      //         'rgba(54, 162, 235, 1)',
-      //         'rgba(255, 206, 86, 1)',
-      //         'rgba(75, 192, 192, 1)',
-      //         'rgba(153, 102, 255, 1)',
-      //         'rgba(255, 159, 64, 1)'
-      //       ],
-      //       borderWidth: 1
-      //     }]
-      //   },
-      //   options: {
-      //     scales: {
-      //       y: {
-      //         beginAtZero: true
-      //       }
-      //     }
-      //   }
-      // })
-    };
-    getService();
-
-    let myChart;
-    // let chartService;
-    if (dataChart) {
-      if (document.querySelector("#myChart")) {
-        const ctx = document.getElementById("myChart").getContext("2d");
-        // eslint-disable-next-line no-undef
-        myChart = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ],
-            datasets: [
-              {
-                label: chartLable,
-                data: dataChart,
-                backgroundColor: [
-                  "rgba(255, 99, 132, 0.2)",
-                  "rgba(54, 162, 235, 0.2)",
-                  "rgba(255, 206, 86, 0.2)",
-                  "rgba(75, 192, 192, 0.2)",
-                  "rgba(153, 102, 255, 0.2)",
-                  "rgba(255, 159, 64, 0.2)",
-                ],
-                borderColor: [
-                  "rgba(255, 99, 132, 1)",
-                  "rgba(54, 162, 235, 1)",
-                  "rgba(255, 206, 86, 1)",
-                  "rgba(75, 192, 192, 1)",
-                  "rgba(153, 102, 255, 1)",
-                  "rgba(255, 159, 64, 1)",
-                ],
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
-          },
-        });
-      }
-      //   if (dataChartService) {
-      //     const ctx = document.getElementById('chartService').getContext('2d');
-      //     // eslint-disable-next-line no-undef
-      //     chartService = new Chart(ctx, {
-      //       type: 'polarArea',
-      //       data: {
-      //         labels: service?.map((item) => {
-      //           return item.name
-      //         }),
-      //         datasets: [{
-      //           label: "My First Dataset",
-      //           data: dataChartService,
-      //           backgroundColor: [
-      //             'rgba(255, 99, 132, 0.2)',
-      //             'rgba(54, 162, 235, 0.2)',
-      //             'rgba(255, 206, 86, 0.2)',
-      //             'rgba(75, 192, 192, 0.2)',
-      //             'rgba(153, 102, 255, 0.2)',
-      //             'rgba(255, 159, 64, 0.2)'
-      //           ],
-      //           borderColor: [
-      //             'rgba(255, 99, 132, 1)',
-      //             'rgba(54, 162, 235, 1)',
-      //             'rgba(255, 206, 86, 1)',
-      //             'rgba(75, 192, 192, 1)',
-      //             'rgba(153, 102, 255, 1)',
-      //             'rgba(255, 159, 64, 1)'
-      //           ],
-      //           borderWidth: 1
-      //         }]
-      //       },
-      //       options: {
-      //         scales: {
-      //           y: {
-      //             beginAtZero: true
-      //           }
-      //         }
-      //       }
-      //     });
-      //   }
-    }
-    return () => {
-      if (myChart) {
-        myChart.destroy();
-      }
-      // if (chartService) {
-      //   chartService.destroy()
-      // }
-    };
-  }, [dataChart]);
+    getUser()
+  }, [chartYear]);
   return (
     <>
       <div className="w-full px-6  mx-auto">
         <div style={{ height: "" }}>
           <h1
             style={{ justifyContent: "space-between", alignItems: "center" }}
-            className="mb-0 font-bold text-white text-center text-[50px]"
+            className="mb-0 font-bold text-white text-center setChartLabletext-[50px]"
           >
             <span>Dashboard</span>
           </h1>
@@ -1269,10 +975,10 @@ const Dashboard = () => {
             {monthFilter != ""
               ? monthFilter
               : dateFilter != ""
-              ? dateFilter
-              : chartYear != ""
-              ? chartYear
-              : "từ trước đến nay"}
+                ? dateFilter
+                : chartYear != ""
+                  ? chartYear
+                  : "từ trước đến nay"}
           </span>
           <Button
             onClick={() => {
@@ -1344,21 +1050,21 @@ const Dashboard = () => {
             onChange={onChangeYearChart}
             picker="year"
           />
-          <DatePicker
+          {/* <DatePicker
             placeholder="Chọn tháng"
             value={monthFilter == "" ? null : moment(monthFilter)}
             status="warning"
             style={{ float: "right", marginLeft: "3px" }}
             onChange={changeMonthFilter}
-            picker="month"
-          />
-          <DatePicker
+            picker="month" */}
+          {/* /> */}
+          {/* <DatePicker
             placeholder="Chọn ngày"
             style={{ float: "right" }}
             status="warning"
             value={dateFilter == "" ? null : moment(dateFilter)}
             onChange={changeDateFilter}
-          />
+          /> */}
         </div>{" "}
         <br />
         <div className="flex flex-wrap -mx-3 mt-3">
@@ -1524,7 +1230,9 @@ const Dashboard = () => {
                         style={{ color: isChart == "turnover" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        {formatCash(getMoneyThisDay())}
+                        {
+                          totalTurnover()
+                        }
                       </h5>
                       <p
                         style={{
@@ -1538,7 +1246,7 @@ const Dashboard = () => {
                             onClick={handleChooseChart}
                             className="text-sm font-bold leading-normal "
                           >
-                            Xem biểu đồ năm
+                            Xem biểu đồ năm {chartYear}
                           </span>
                         </button>
                         {/* since yesterday */}
@@ -1558,8 +1266,8 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "booking" ? "#525252" : "",
-                color: isChart == "booking" ? "white" : "",
+                backgroundColor: isChart == "user" ? "#525252" : "",
+                color: isChart == "user" ? "white" : "",
               }}
               className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
@@ -1568,17 +1276,17 @@ const Dashboard = () => {
                   <div className="flex-none w-2/3 max-w-full px-3">
                     <div>
                       <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Khách hoàn thành
+                        Tài khoản
                       </p>
                       <h5
-                        style={{ color: isChart == "booking" ? "white" : "" }}
+                        style={{ color: isChart == "user" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        {countCustomerDone()}
+                        {acCount?.totalUser}
                       </h5>
                       <p
                         style={{
-                          color: isChart != "booking" ? "#168ea0" : "#fbff08",
+                          color: isChart != "user" ? "#168ea0" : "#fbff08",
                         }}
                         className="mb-0 dark:text-white dark:opacity-60"
                       >
@@ -1586,10 +1294,10 @@ const Dashboard = () => {
                           {" "}
                           <span
                             onClick={handleChooseChart}
-                            data="booking"
+                            data="user"
                             className="text-sm font-bold leading-normal "
                           >
-                            Xem biểu đồ năm
+                            Xem biểu đồ
                           </span>
                         </button>
                         {/* since last week */}
@@ -1610,8 +1318,8 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "userBad" ? "#525252" : "",
-                color: isChart == "userBad" ? "white" : "",
+                backgroundColor: isChart == "genderBySerVice" ? "#525252" : "",
+                color: isChart == "genderBySerVice" ? "white" : "",
               }}
               className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
@@ -1620,27 +1328,26 @@ const Dashboard = () => {
                   <div className="flex-none w-2/3 max-w-full px-3">
                     <div>
                       <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Khách hẹn xấu
+                        Giới tính
                       </p>
                       <h5
-                        style={{ color: isChart == "userBad" ? "white" : "" }}
+                        style={{ color: isChart == "genderBySerVice" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        {countCustomerBad()}
                       </h5>
                       <p
                         style={{
-                          color: isChart != "userBad" ? "#168ea0" : "#fbff08",
+                          color: isChart != "genderBySerVice" ? "#168ea0" : "#fbff08",
                         }}
                         className="mb-0 dark:text-white dark:opacity-60"
                       >
                         <button>
                           <span
-                            data="userBad"
+                            data="genderBySerVice"
                             onClick={handleChooseChart}
                             className="text-sm font-bold leading-normal "
                           >
-                            Xem biểu đồ năm
+                            Xem biểu đồ
                           </span>
                         </button>
                         {/* than last month */}
@@ -1654,14 +1361,15 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
           {/* card4 */}
           <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "newUser" ? "#525252" : "",
-                color: isChart == "newUser" ? "white" : "",
+                backgroundColor: isChart == "ageBySerVice" ? "#525252" : "",
+                color: isChart == "ageBySerVice" ? "white" : "",
               }}
               className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
@@ -1670,27 +1378,27 @@ const Dashboard = () => {
                   <div className="flex-none w-2/3 max-w-full px-3">
                     <div>
                       <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Khách hàng mới
+                        Độ tuổi
                       </p>
                       <h5
-                        style={{ color: isChart == "newUser" ? "white" : "" }}
+                        style={{ color: isChart == "ageBySerVice" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        {countUserNew()}
+
                       </h5>
                       <p
                         style={{
-                          color: isChart != "newUser" ? "#168ea0" : "#fbff08",
+                          color: isChart != "ageBySerVice" ? "#168ea0" : "#fbff08",
                         }}
                         className="mb-0 dark:text-white dark:opacity-60"
                       >
                         <button>
                           <span
-                            data="newUser"
+                            data="ageBySerVice"
                             onClick={handleChooseChart}
                             className="text-sm font-bold leading-normal "
                           >
-                            Xem biểu đồ năm
+                            Xem biểu đồ
                           </span>
                         </button>
                       </p>
@@ -1704,6 +1412,18 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
+
+            </div>
+          </div>
+          <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
+            <div
+              style={{
+                backgroundColor: isChart == "employee" ? "#525252" : "",
+                color: isChart == "employee" ? "white" : "",
+              }}
+              className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+            >
+
             </div>
           </div>
         </div>
@@ -1726,7 +1446,7 @@ const Dashboard = () => {
 
       <div className="w-full px-3 py-6 mx-auto">
         {/* table 1 */}
-        <div className="w-full max-w-full px-3 mt-0 lg:w-12/12 lg:flex-none">
+        {/* <div className="w-full max-w-full px-3 mt-0 lg:w-12/12 lg:flex-none">
           <div className="border-black/12.5 dark:bg-slate-850 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
             <div className="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
               <div className="">
@@ -1777,7 +1497,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="flex flex-wrap -mx-3 ">
           <div className="flex-none w-full max-w-full px-3">
@@ -1801,12 +1521,12 @@ const Dashboard = () => {
                     {employeeFilterDate == moment().format("YYYY-MM-DD")
                       ? "hôm nay"
                       : employeeFilterDate != ""
-                      ? employeeFilterDate
-                      : employeeFilterMonth != ""
-                      ? employeeFilterMonth
-                      : employeeFilterYear != ""
-                      ? employeeFilterYear
-                      : "từ trước đến nay"}
+                        ? employeeFilterDate
+                        : employeeFilterMonth != ""
+                          ? employeeFilterMonth
+                          : employeeFilterYear != ""
+                            ? employeeFilterYear
+                            : "từ trước đến nay"}
                   </span>
                 </h6>
                 <Button
@@ -1855,7 +1575,7 @@ const Dashboard = () => {
                   onChange={onChangeMonthEmployee}
                   picker="month"
                 />
-                <DatePicker
+                {/* <DatePicker
                   value={
                     employeeFilterDate == "" ? null : moment(employeeFilterDate)
                   }
@@ -1863,7 +1583,7 @@ const Dashboard = () => {
                   status="warning"
                   style={{ float: "right", fontWeight: "bold" }}
                   onChange={onChangeDateEmployee}
-                />
+                /> */}
               </div>
               <div className="flex-auto px-0 pt-0 pb-2">
                 <div className="p-0 overflow-x-auto">
@@ -1877,7 +1597,7 @@ const Dashboard = () => {
                           style={{
                             display:
                               employeeFilterDate ==
-                              moment().format("YYYY-MM-DD")
+                                moment().format("YYYY-MM-DD")
                                 ? "block"
                                 : "none",
                           }}
@@ -1931,7 +1651,7 @@ const Dashboard = () => {
                               style={{
                                 display:
                                   employeeFilterDate ==
-                                  moment().format("YYYY-MM-DD")
+                                    moment().format("YYYY-MM-DD")
                                     ? ""
                                     : "none",
                               }}
@@ -1950,7 +1670,7 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                moment().format("YYYY-MM-DD")
+                                  moment().format("YYYY-MM-DD")
                                   ? countCustomerByEmployee(item._id)
                                   : getTotalGuestEmployee(item._id)}
                               </span>
@@ -1958,17 +1678,17 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                moment().format("YYYY-MM-DD")
+                                  moment().format("YYYY-MM-DD")
                                   ? countCustomerSpaIngByEmployee(item._id)
                                   : formatCash(
-                                      getTotalTurnoverEmployee(item._id)
-                                    )}
+                                    getTotalTurnoverEmployee(item._id)
+                                  )}
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                moment().format("YYYY-MM-DD") ? (
+                                  moment().format("YYYY-MM-DD") ? (
                                   countCustomerSpaSuccessByEmployee(item._id)
                                 ) : (
                                   <div className="flex items-center justify-center">
@@ -2032,13 +1752,13 @@ const Dashboard = () => {
                     {serviceFilter != ""
                       ? ` vào ${serviceFilter}`
                       : serviceFilterMonth != ""
-                      ? serviceFilterMonth
-                      : "từ trước đến nay"}
+                        ? serviceFilterMonth
+                        : "từ trước đến nay"}
                   </span>{" "}
                   <br />
                   <span style={{ color: "red", fontSize: "16px" }}>
                     {" "}
-                    Tổng {formatCash(totalTurnover())} vnđ
+                    Tổng {totalTurnover()}
                   </span>{" "}
                 </h6>{" "}
                 <Button
@@ -2150,7 +1870,7 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               {countService(item._id)}
                             </td>
-                            <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <td id="totalserviceID" className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               {formatCash(totalService(item._id))}
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">

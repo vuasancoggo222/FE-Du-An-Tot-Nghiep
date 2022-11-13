@@ -838,7 +838,7 @@ const ListBooking = (props) => {
       }
     } else if (ishandle === "4") {
       try {
-        await httpGetChangeStatus(handleBooking._id, { status: 6 });
+        await httpGetChangeStatus(handleBooking._id, { status: 4 });
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
       } catch (error) {
         message.error(`${error.response.data.message}`);

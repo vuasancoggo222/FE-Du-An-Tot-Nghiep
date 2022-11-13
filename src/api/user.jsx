@@ -54,3 +54,8 @@ export const httpUpdateOneUser = (token, id, data) => {
   };
   return instance.put(`user/edit/${id}`, data, header);
 };
+
+export const userAccountStatistics = () => {
+  const url = `/users/acccount-status-statistics`;
+  return instance.get(url);
+}

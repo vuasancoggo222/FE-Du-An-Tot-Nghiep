@@ -52,7 +52,7 @@ const Detaibooking = (props) => {
         setTitleStatusConfirm("Đặt lịch thất bại, mời thao tác lại sau");
         // eslint-disable-next-line react/prop-types
         props.handleSetCountDown();
-        let timeDown = 6;
+        let timeDown = 60;
         message.error(`${error.message}`, 2);
         const timerId = setInterval(() => {
           setTimeReload(--timeDown);
@@ -110,8 +110,6 @@ const Detaibooking = (props) => {
         }, 1000);
       });
     setFormData(data);
-    // const d = new Date(data.time._d)
-    // console.log(d.getHours());
   };
   const onChange = (time, timeString) => {
     console.log(time, timeString);
@@ -162,15 +160,17 @@ const Detaibooking = (props) => {
   };
 
   useEffect(() => {
-    console.log(countDown);
     const getSerVice = async () => {
       const data = await getSerViceBySlug(id);
       const feedbackData = await httpGet("/feedback/service", data._id);
       setFeedback(feedbackData);
       setService(data);
-      console.log(data);
     };
     getSerVice();
+    
+  }, [feedback]);
+
+  useEffect(() => {
     if (countDown > 0) {
       let timeDown = countDown;
       const timerId = setInterval(() => {
@@ -183,7 +183,6 @@ const Detaibooking = (props) => {
       }, 1000);
     } else if (localStorage.getItem("countDown")) {
       let timeDown = localStorage.getItem("countDown");
-      console.log(timeDown);
       const timerId = setInterval(() => {
         // eslint-disable-next-line react/prop-types
         setTimeReload(--timeDown);
@@ -194,7 +193,7 @@ const Detaibooking = (props) => {
         }
       }, 1000);
     }
-  }, [feedback]);
+  },[])
   return (
     <>
       <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cole-keister-8V1gfeaPP1Y-unsplash.jpg')] b-centerg bg-no-repeat bg-cover py-[100px] ">

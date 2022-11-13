@@ -48,6 +48,27 @@ function App() {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
+  const [countDown, setCountDown] = useState("");
+
+  window.addEventListener("unload", () => {
+    if (countDown > 0) {
+      localStorage.setItem("countDown", countDown);
+    } else {
+      localStorage.removeItem("countDown");
+    }
+  });
+
+  const handleSetCountDown = () => {
+    let timeDown = 60;
+    let timerId = setInterval(() => {
+      setCountDown(--timeDown);
+      if (timeDown == 0) {
+        clearInterval(timerId);
+        setCountDown("");
+      }
+    }, 1000);
+  };
+
   useEffect(() => {
     socket.connect()
     socket.on(SocketEvent.NOTIFICATION,(data)=>{
@@ -98,7 +119,7 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/news/detail" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking />} />
+            <Route path="/detail-booking/:id" element={<Detaibooking  />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>

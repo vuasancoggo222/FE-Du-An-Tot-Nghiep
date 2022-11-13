@@ -1,23 +1,16 @@
 import { Badge } from "antd";
-import React, { useEffect } from "react";
-
-import { getListNotification } from "../../api/notification";
-// import { io } from "socket.io-client";
+import React from "react";
+import { useRecoilValue } from "recoil";
+import { notificationState } from "../../recoil/notificationState";
 const notification = () => {
-  // const socket = io("localhost:5000");
-
+  const listNotification = useRecoilValue(notificationState)
+  console.log(listNotification);
   const [show, setShow] = React.useState(false);
-  const [notification, setNotification] = React.useState();
-
-  // socket.on("notification", (data) => {
-  //   console.log("data", data);
-  //   setNotification(data);
-  // });
 
   const onClick = () => {
     setShow(!show);
   };
-  useEffect(() => {}, []);
+ 
   return (
     <>
       <li className="relative flex items-center pr-2">
@@ -43,7 +36,7 @@ const notification = () => {
           <li className="relative mb-2">
             <a
               className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors"
-              href="javascript:;"
+              
             >
               <div className="flex py-1">
                 <div className="my-auto">
@@ -54,7 +47,7 @@ const notification = () => {
                 </div>
                 <div className="flex flex-col justify-center">
                   <h6 className="mb-1 text-sm font-normal leading-normal dark:text-white">
-                    <span className="font-semibold">{notification?.text}</span>{" "}
+                    <span className="font-semibold"></span>{" "}
                     from Laur
                   </h6>
                   <p className="mb-0 text-xs leading-tight text-slate-400 dark:text-white/80">

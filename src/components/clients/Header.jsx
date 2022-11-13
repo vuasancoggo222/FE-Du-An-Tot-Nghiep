@@ -7,8 +7,7 @@ import SignUp from "../../pages/website/SignUp";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
-
-
+import Notification from "../admin/notification";
 const Header = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
@@ -129,15 +128,10 @@ const Header = () => {
                     />
                   </Link>
                 </div>
-                <div className="flex-auto w-84">
+                <div className="flex-auto w-84 text-center">
                   <Link to={"/"}>
                     <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
                       Trang chủ
-                    </button>
-                  </Link>
-                  <Link to={`/products`}>
-                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff] ">
-                      Sản phẩm
                     </button>
                   </Link>
                   <Link to={"/price-list"}>
@@ -160,24 +154,24 @@ const Header = () => {
                   {auth ? (
                     <div
                       style={{ justifyItems: "center", display: "flex" }}
-                      className=""
+                      className="items-center"
                     >
+                      <span className="text-white">Xin chao {user.name}</span>
+                      <div className="mx-[20px]">
+                        <Dropdown overlay={menu} placement="bottom">
+                          <Avatar src={user.avatar}></Avatar>
+                        </Dropdown>
+                      </div>
+                      <div>
+                        <div className="mr-[50px]">
+                          <Notification />
+                        </div>
+                      </div>
                       <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
                         <Link className="text-[#fff]" to={`/booking`}>
                           Đặt Lịch
                         </Link>
                       </button>
-                      <Dropdown overlay={menu} placement="bottom">
-                        <Avatar
-                          style={{
-                            marginLeft: "5px",
-                            color: "#f56a00",
-                            backgroundColor: "#fde3cf",
-                          }}
-                        >
-                          {user.name}
-                        </Avatar>
-                      </Dropdown>
                     </div>
                   ) : (
                     <div className="sm:flex-auto">
@@ -195,7 +189,6 @@ const Header = () => {
                       >
                         Đăng ký
                       </button>
-
                       <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 ml-3">
                         <Link className="text-[#fff]" to={`/booking`}>
                           Đặt Lịch

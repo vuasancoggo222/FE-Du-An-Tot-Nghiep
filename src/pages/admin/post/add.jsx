@@ -82,7 +82,8 @@ const AddPost = () => {
     if (values) {
       const data = {
         ...values,
-        content: sanitizeHtml(content),
+        // content: sanitizeHtml(content),
+        content: content,
         thumbnail: imageUrl,
       };
       try {
@@ -91,7 +92,7 @@ const AddPost = () => {
         navigate("/admin/post");
       } catch (error) {
         message.error("Thêm bài viết thất bại");
-        medthod.createPost(data).destroy();
+        // medthod.createPost(data).destroy();
       }
     }
   };

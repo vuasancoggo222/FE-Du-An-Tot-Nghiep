@@ -4,8 +4,12 @@ import { httpAddContact } from "../../api/contact";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
 import styles from "../../../assets/css/style.module.css";
+import { useRecoilValue } from "recoil";
+import { notificationState } from "../../recoil/notificationState";
 
 function Contact() {
+  const count = useRecoilValue(notificationState);
+  console.log(count);
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     var res = await httpAddContact(data);
@@ -103,7 +107,7 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className="shadow-2xl shadow-gray-300"
+                                className=""
                                 label="Họ tên"
                                 name="name"
                                 rules={[
@@ -121,7 +125,7 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className="shadow-2xl shadow-gray-300"
+                                className=""
                                 label="Địa chỉ"
                                 name="address"
                                 rules={[
@@ -139,26 +143,26 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                  className="shadow-2xl shadow-gray-300"
-                                  label="Số điện thoại"
-                                  name="phoneNumber"
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message:
-                                        "Vui lòng nhập số điện thoại của bạn !",
-                                    },
-                                  ]}
-                                  style={{ marginRight: "10px" }}
-                                >
-                                  <Input placeholder="Your PhoneNumber" />
+                                className=""
+                                label="Số điện thoại"
+                                name="phoneNumber"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message:
+                                      "Vui lòng nhập số điện thoại của bạn !",
+                                  },
+                                ]}
+                                style={{ marginRight: "10px" }}
+                              >
+                                <Input placeholder="Your PhoneNumber" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className="shadow-2xl shadow-gray-300"
+                                className=""
                                 label="Nội dung"
                                 name="content"
                                 rules={[
@@ -171,7 +175,7 @@ function Contact() {
                               >
                                 <TextArea
                                   placeholder="Your Context"
-                                  className="form-input shadow-inner shadow-gray-300"
+                                  className="form-input"
                                   type=""
                                 />
                               </Form.Item>

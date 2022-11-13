@@ -584,6 +584,8 @@ const ListBookingByEmployee = (props) => {
 
         <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <p>Tên Khách hàng: {handleBooking?.name}</p>
+            <p>Tuổi: {handleBooking?.age}</p>
+            <p>Giới tính: {handleBooking?.gender == 1 ? 'Nữ': "Nam"}</p>
             <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
             <p>Ngày: {renderDate(handleBooking?.date)}</p>
             <p>Giờ đến: {renderTime(handleBooking?.time)}</p>

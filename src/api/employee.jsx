@@ -37,3 +37,8 @@ export const removeEmployees = (id, data) => {
   const url = `employees/${id}`;
   return instance.delete(url, data);
 };
+
+export const employeeOrderStatistics = () => {
+  const url = `employee/order-statistics`;
+  return instance.get(url);
+}

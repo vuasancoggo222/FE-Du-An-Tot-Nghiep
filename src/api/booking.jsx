@@ -13,6 +13,11 @@ else{
 const httpGetAll = () => {
   return instance.get(`booking`);
 };
+
+const bookingGenderStatistics = () => {
+  const url = `booking-gender-statistics`
+  return instance.get(url);
+};
 const httpAddBooking = (token, data) => {
   const header = {
     headers: {
@@ -41,6 +46,6 @@ export const userHistory = (id) => {
 // };
 
 export {
-  httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus,
+  httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus, bookingGenderStatistics
   //  httpPut, httpDelete 
 };

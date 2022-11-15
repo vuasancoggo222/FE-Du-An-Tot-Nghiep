@@ -13,7 +13,7 @@ export const removePost = (id, data) => {
   const url = `blog/${id}`;
   return instance.delete(url, data);
 };
-export const getPostBySlug = (id) => {
+export const getOnePost = (id) => {
   const url = `blogs/${id}`;
   return instance.get(url);
 };

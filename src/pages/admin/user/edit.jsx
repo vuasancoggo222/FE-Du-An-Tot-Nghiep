@@ -80,7 +80,6 @@ const UserEdit = () => {
   useEffect(() => {
     const getListUser = async () => {
       const res = await httpGetOneUser(user.token, id);
-
       form.setFieldsValue({
         name: res?.name,
         avatar: res?.avatar,

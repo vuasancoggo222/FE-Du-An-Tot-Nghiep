@@ -34,17 +34,24 @@ import News from "./pages/website/News";
 import { io } from "socket.io-client";
 import { REALTIME_SERVER, SocketEvent } from "./utils/SocketConstant";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { listNotification, newNotificationState, notificationState } from "./recoil/notificationState";
+import {
+  listNotification,
+  newNotificationState,
+  notificationState,
+} from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
-export const socket = io(REALTIME_SERVER,{
-  autoConnect:false
-})
+export const socket = io(REALTIME_SERVER, {
+  autoConnect: false,
+});
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
+import ListPost from "./pages/admin/post";
+import AddPost from "./pages/admin/post/add";
+import EditPost from "./pages/admin/post/edit";
 
 function App() {
-  const [notification,setNotification] = useRecoilState(notificationState)
-  const user = isAuthenticate()
+  const [notification, setNotification] = useRecoilState(notificationState);
+  const user = isAuthenticate();
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
@@ -70,10 +77,10 @@ function App() {
   };
 
   useEffect(() => {
-    socket.connect()
-    socket.on(SocketEvent.NOTIFICATION,(data)=>{
-      setNotification(data)
-    })
+    socket.connect();
+    socket.on(SocketEvent.NOTIFICATION, (data) => {
+      setNotification(data);
+    });
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -91,8 +98,8 @@ function App() {
     };
     getService();
     return () => {
-      socket.off(SocketEvent.NOTIFICATION)
-    }
+      socket.off(SocketEvent.NOTIFICATION);
+    };
   }, []);
 
   useEffect(() => {
@@ -119,7 +126,7 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/news/detail" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking  />} />
+            <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
@@ -175,6 +182,11 @@ function App() {
             <Route path="user">
               <Route index element={<ListUser />}></Route>
               <Route path=":id/edit" element={<UserEdit />} />
+            </Route>
+            <Route path="post">
+              <Route index element={<ListPost />}></Route>
+              <Route path=":id/edit" element={<EditPost />} />
+              <Route path="add" element={<AddPost />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>

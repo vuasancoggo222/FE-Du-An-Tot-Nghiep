@@ -19,7 +19,7 @@ import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
 import ListService from "./pages/admin/service";
 import AddService from "./pages/admin/service/Add";
-import { PrivateRouter } from "./utils/PrivateRouter";
+import { PrivateRouter, PrivateRouter2 } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
 import ListBooking from "./pages/admin/booking";
@@ -164,7 +164,14 @@ function App() {
               />
             </Route>
             <Route path="employee">
-              <Route index element={<ListEmployee />} />
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListEmployee />
+                  </PrivateRouter2>
+                }
+              />
               <Route path="add" element={<AddEmployee />} />
               <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
@@ -180,7 +187,14 @@ function App() {
               <Route index element={<ContactList />} />
             </Route>
             <Route path="user">
-              <Route index element={<ListUser />}></Route>
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListUser />
+                  </PrivateRouter2>
+                }
+              ></Route>
               <Route path=":id/edit" element={<UserEdit />} />
             </Route>
             <Route path="post">

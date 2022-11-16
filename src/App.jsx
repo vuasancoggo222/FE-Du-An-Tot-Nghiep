@@ -35,13 +35,16 @@ import { io } from "socket.io-client";
 import { REALTIME_SERVER, SocketEvent } from "./utils/SocketConstant";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  listNotification,
-  newNotificationState,
+  userNotificationState,
   notificationState,
 } from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
+const user = isAuthenticate()
 export const socket = io(REALTIME_SERVER, {
   autoConnect: false,
+  query : {
+    token : user?.token
+  }
 });
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
@@ -51,6 +54,7 @@ import EditPost from "./pages/admin/post/edit";
 
 function App() {
   const [notification, setNotification] = useRecoilState(notificationState);
+  const [userNotification,setUserNotification] = useRecoilState(userNotificationState)
   const user = isAuthenticate();
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -79,8 +83,17 @@ function App() {
   useEffect(() => {
     socket.connect();
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-      setNotification(data);
+      if(data.length){
+        setNotification(data);
+        console.log(data);
+      }
     });
+    socket.on(SocketEvent.USERLISTNOTIFICATION,(data)=>{
+      if(data.length){
+        setUserNotification(data)
+      }
+      console.log(data);
+    })
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -99,10 +112,12 @@ function App() {
     getService();
     return () => {
       socket.off(SocketEvent.NOTIFICATION);
+      socket.off(SocketEvent.USERLISTNOTIFICATION)
     };
   }, []);
 
   useEffect(() => {
+    
     socket?.emit("newUser", user ? user.id : "");
   }, [socket, user]);
   const changeStatusBooking = async () => {

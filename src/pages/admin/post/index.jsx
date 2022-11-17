@@ -1,31 +1,29 @@
-import { EditFilled, EditOutlined } from "@ant-design/icons";
-import { async } from "@firebase/util";
-import { Button, message, Modal, Popconfirm, Space, Table, Tag } from "antd";
-import Tooltip from "antd/es/tooltip";
+import { Button, message, Select, Space, Table } from "antd";
+
+import { Option } from "antd/lib/mentions";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { BiEdit } from "react-icons/bi";
+
 import { Link } from "react-router-dom";
 import { getPosts, removePost } from "../../../api/post";
 const ListPost = () => {
   const [posts, setPosts] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
   const [id, setId] = useState();
-  const confirm = async (e) => {
-    try {
-      await removePost(id);
-      setLoading(!loading);
-    } catch (error) {
-      return message.success("Xóa thất bại");
-    }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    message.success("Xóa thành công");
-  };
-  const cancel = (e) => {
-    message.error("Xóa thất bại");
+  const showModal = () => {
+    setIsModalOpen(true);
   };
   const onRemove = async (id) => {
-    // await removePost(id);
+    const confirm = window.confirm("Bạn muốn xóa banner không ?");
+    if (confirm) {
+      console.log("sldas", id);
+      await removePost(id);
+      setPosts(posts.filter((item) => item._id !== id));
+      console.log(posts);
+      message.success("Xóa thành công");
+    }
   };
   const columns = [
     {
@@ -64,82 +62,59 @@ const ListPost = () => {
       colapse: 2,
       render: (_, item) => {
         // Thêm
-        let BtSusscesCursor;
-        let BtSusscessColor = "#3b82f6";
-        // hủy
-        let BtFailureCursor;
-        let BtFailureColor = "red";
+
         return (
           <div className="text-center">
             <Space size="middle">
-              <Tooltip title="Sửa">
-                <Link to={`/admin/post/${item.slug}/edit`}>
+              <Select
+                style={{ width: "170px", color: "blue", textAlign: "center" }}
+                value="Đổi trạng thái"
+              >
+                <Option>
                   {" "}
                   <Button
+                    onClick={showModal}
+                    dataId={item._id}
+                    type="primary"
+                    style={{ border: "none", color: "white", width: "100%" }}
+                  >
+                    <Link to={`/admin/post/${item.slug}/edit`}>Sửa</Link>
+                  </Button>
+                </Option>
+                <Option>
+                  {" "}
+                  <Button
+                    onClick={() => {
+                      onRemove(item._id);
+                    }}
+                    type="danger"
+                    style={{ border: "none", color: "white", width: "100%" }}
+                  >
+                    Xóa
+                  </Button>{" "}
+                </Option>
+                <Option>
+                  {" "}
+                  <Button
+                    onClick={showModal}
+                    dataId={item.content}
+                    type=""
                     style={{
                       border: "none",
-                      cursor: BtSusscesCursor,
-                      color: BtSusscessColor,
+                      color: "white",
+                      width: "100%",
+
+                      backgroundColor: "#f1c232",
                     }}
-                    shape="circle"
                   >
-                    <BiEdit style={{ fontSize: "25px" }} data="1" />
+                    <Link to={`/admin/post/${item.slug}`}>Chi Tiết</Link>
                   </Button>
-                </Link>
-              </Tooltip>
-
-              <Popconfirm
-                title="Bạn có chắc muốn xóa ?"
-                onConfirm={confirm}
-                onCancel={cancel}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button
-                  style={{
-                    border: "none",
-                    cursor: BtFailureCursor,
-                    color: BtFailureColor,
-                  }}
-                  shape="circle"
-                  onClick={() => setId(item._id)}
-                >
-                  <i
-                    style={{ fontSize: "25px" }}
-                    data="2"
-                    className="far fa-times-circle"
-                  ></i>
-                </Button>
-              </Popconfirm>
-
-              <Link />
+                </Option>
+              </Select>
             </Space>
           </div>
         );
       },
-    },
-  ];
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      tags: ["loser"],
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sidney No. 1 Lake Park",
-      tags: ["cool", "teacher"],
     },
   ];
   useEffect(() => {

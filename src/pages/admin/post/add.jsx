@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import ReactQuill from "react-quill";
-import sanitizeHtml from "sanitize-html";
 import * as medthod from "../../../api/post";
-import { Button, message, Checkbox, Form, Input, Space } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, message, Form, Input } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import Upload from "antd/lib/upload/Upload";
 import TextArea from "antd/lib/input/TextArea";
 import { useNavigate } from "react-router-dom";
-import { uploadCloudinary } from "../../../api/upload";
 
 const modules = {
   toolbar: [
@@ -21,6 +19,7 @@ const modules = {
     ],
     ["link", "image"],
     ["clean"],
+    [{ align: [] }],
   ],
 };
 
@@ -36,6 +35,7 @@ const formats = [
   "indent",
   "link",
   "image",
+  "imageBlot",
 ];
 
 const getBase64 = (img, callback) => {
@@ -80,6 +80,7 @@ const AddPost = () => {
         message.error("Thêm bài viết thất bại");
       }
     }
+    console.log(content);
   };
 
   const handleChange = async (info) => {
@@ -193,7 +194,7 @@ const AddPost = () => {
               value={content}
               onChange={setContent}
               modules={modules}
-              formats={formats}
+              // formats={formats}
               className="h-screen mb-20"
             ></ReactQuill>
           </Form.Item>

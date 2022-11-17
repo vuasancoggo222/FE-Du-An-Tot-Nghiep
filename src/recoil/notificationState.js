@@ -7,17 +7,7 @@ export const notificationState = atom({
     default : false
 })
 
-export const listNotification = selector({
-  key : 'listNotification',
-  get : ({get}) => {
-    const notification = get(notificationState)
-    const list = notification.listNotification
-    return {
-      list
-    }
-  }
-})
-export const newNotificationState = atom({
-  key: 'newNotification',
+export const userNotificationState = atom({
+  key: 'userNotification',
   default : false
 })

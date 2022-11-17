@@ -51,7 +51,8 @@ import UserEdit from "./pages/admin/user/edit";
 import ListPost from "./pages/admin/post";
 import AddPost from "./pages/admin/post/add";
 import EditPost from "./pages/admin/post/edit";
-
+import ListBanner from "./pages/admin/banner";
+import Detailpost from "./pages/admin/post/detail";
 function App() {
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification,setUserNotification] = useRecoilState(userNotificationState)
@@ -201,6 +202,9 @@ function App() {
             <Route path="contact">
               <Route index element={<ContactList />} />
             </Route>
+            <Route path="banner">
+              <Route index element={<ListBanner />} />
+            </Route>
             <Route path="user">
               <Route
                 index
@@ -216,6 +220,7 @@ function App() {
               <Route index element={<ListPost />}></Route>
               <Route path=":id/edit" element={<EditPost />} />
               <Route path="add" element={<AddPost />} />
+              <Route path=":id" element={<Detailpost />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>

@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { updateService } from "../../../api/service";
 
 import { uploadCloudinary } from "../../../api/upload";
+import ReactQuill from "react-quill";
 
 const normFile = (e) => {
   console.log("Upload event:", e);
@@ -17,21 +18,38 @@ const normFile = (e) => {
 
   return e?.fileList;
 };
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image"],
+    ["clean"],
+    [{ align: [] }],
+  ],
+};
+
 const { Option } = Select;
 const EditService = () => {
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const { id } = useParams();
   const [form] = Form.useForm();
-
+  const [content, setContent] = useState("");
   useEffect(() => {
     const getSerVice = async () => {
       const dataService = await httpGetOneService(id);
       console.log("log service :", dataService);
       setUrl(dataService?.image);
+      setContent(dataService?.content);
       form.setFieldsValue({
         name: dataService?.name,
-        description: dataService?.description,
+
         price: dataService?.price,
         status: dataService?.status,
         // image: dataService?.image,
@@ -58,7 +76,7 @@ const EditService = () => {
   };
   const onFinish = async (data) => {
     console.log(data);
-    const a = { ...data, image: url };
+    const a = { ...data, image: url, description: content };
     try {
       await updateService(id, a).then(() => {
         message.success("cap nhat thành công", 4);
@@ -104,8 +122,8 @@ const EditService = () => {
 
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
-          <Link to={"/admin/service/add"}>
-            <Button type="primary">Primary Button</Button>
+          <Link to={"/admin/service"}>
+            <Button type="primary">Quay lại</Button>
           </Link>
         </div>
         <Form
@@ -174,7 +192,14 @@ const EditService = () => {
               { required: true, message: "Please input your description" },
             ]}
           >
-            <Input.TextArea />
+            <ReactQuill
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              modules={modules}
+              // formats={formats}
+              className="h-screen mb-20"
+            ></ReactQuill>
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 10, span: 5 }}>

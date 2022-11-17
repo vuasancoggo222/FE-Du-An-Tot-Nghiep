@@ -34,7 +34,7 @@ const ServiceModal = (props) => {
   useEffect(() => {
     fetch(`http://localhost:5000/api/service`)
       .then((response) => response.json())
-      .then((data) => setService(data));
+      .then((data) => setService(data.filter((item) => item.status !== 2)));
   }, []);
   return (
     <>
@@ -53,26 +53,25 @@ const ServiceModal = (props) => {
         centered
       >
         <Checkbox.Group style={{ width: "100%" }} onChange={onChange}>
-          {service?.map((item) => (
-            <Descriptions bordered title=" " size={"small"} key={item._id}>
-              <Descriptions.Item
-                label={
-                  <Checkbox value={item._id}>{/* {item.name} */}</Checkbox>
-                }
-              >
-                {item.name}
-              </Descriptions.Item>
-
-              <Descriptions.Item label="Giá tiền">
-                <span className="ml-1">
-                  {item.price.toLocaleString("vi", {
-                    style: "currency",
-                    currency: "VND",
-                  })}
-                </span>
-              </Descriptions.Item>
-            </Descriptions>
-          ))}
+          {service?.map((item) => {
+            return (
+              <Descriptions bordered title=" " size={"small"} key={item._id}>
+                <Descriptions.Item
+                  label={<Checkbox value={item._id}></Checkbox>}
+                >
+                  {item.name}
+                </Descriptions.Item>
+                <Descriptions.Item label="Giá tiền">
+                  <span className="ml-1">
+                    {item.price.toLocaleString("vi", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </span>
+                </Descriptions.Item>
+              </Descriptions>
+            );
+          })}
         </Checkbox.Group>
         {/* <Radio.Group
           options={options}

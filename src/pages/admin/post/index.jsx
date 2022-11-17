@@ -68,7 +68,7 @@ const ListPost = () => {
             <Space size="middle">
               <Select
                 style={{ width: "170px", color: "blue", textAlign: "center" }}
-                value="Đổi trạng thái"
+                value="Hành động"
               >
                 <Option>
                   {" "}

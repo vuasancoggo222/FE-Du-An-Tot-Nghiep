@@ -78,7 +78,7 @@ const AddEmployee = () => {
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
           <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Add New Employee</div>
+            <div>Thêm mới nhân viên</div>
           </h1>
         </div>
       </div>
@@ -100,10 +100,13 @@ const AddEmployee = () => {
           <Row gutter={[4, 4]}>
             <Col xxl={24} xl={24} sm={24} xs={24}>
               <Form.Item
-                label="Username"
+                label="Tên tài khoản"
                 name="name"
                 rules={[
-                  { required: true, message: "Please input your username !" },
+                  {
+                    required: true,
+                    message: "Tên tài khoản không được để trống !",
+                  },
                 ]}
               >
                 <Input type="text" />
@@ -113,18 +116,23 @@ const AddEmployee = () => {
           {/* Number Phone */}
           <Form.Item
             name="phoneNumber"
-            label="phoneNumber"
+            label="Số điện thoại"
             rules={[
-              { required: true, message: "Please input your phone number !" },
+              {
+                required: true,
+                message: "Số điện thoại không được để trống !",
+              },
             ]}
           >
             <Input type="text" />
           </Form.Item>
           {/* Id Card */}
           <Form.Item
-            label="Id Card"
+            label="Card Id"
             name="idCard"
-            rules={[{ required: true, message: "Please input your id card !" }]}
+            rules={[
+              { required: true, message: "Card Id không được để trống !" },
+            ]}
           >
             <Input type="text" />
           </Form.Item>
@@ -132,28 +140,29 @@ const AddEmployee = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[{ required: true, message: "Please input your email !" }]}
+            rules={[{ required: true, message: "Email không được để trống !" }]}
           >
             <Input type="text" />
           </Form.Item>
           {/* Gender */}
           <Form.Item
             name="gender"
-            label="Gender"
+            label="Giới tính"
             hasFeedback
             rules={[
               {
                 required: true,
-                message: "Please select your gender",
+                message: "Nhập giới tính !",
               },
             ]}
           >
-            <Select placeholder="Please select a gender">
+            <Select placeholder="Chọn giới tính">
               <Option value={0}>Nam</Option>
               <Option value={1}>Nữ</Option>
             </Select>
           </Form.Item>
           {/* Avater */}
+
           <Form.Item>
             <Form.Item
               name="avatar"
@@ -171,9 +180,12 @@ const AddEmployee = () => {
                 </p>
               </Upload.Dragger>
             </Form.Item>
-            <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
+            <Form.Item
+              wrapperCol={{ offset: 10, span: 5 }}
+              style={{ marginTop: "20px" }}
+            >
               <Button type="primary" htmlType="submit">
-                Submit
+                Thêm mới
               </Button>
             </Form.Item>
           </Form.Item>

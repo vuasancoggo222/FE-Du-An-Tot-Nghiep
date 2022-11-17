@@ -21,6 +21,7 @@ const modules = {
     ],
     ["link", "image"],
     ["clean"],
+    [{ align: [] }],
   ],
 };
 

@@ -16,3 +16,15 @@
     bottom: 0.5rem;
     right: 0.5rem;
 } */
+.formrmd input {
+    width: 100%;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+.formrmd button:hover {
+    background-color: #00502b;
+    color: white;
+    transition: .4s;
+
+}

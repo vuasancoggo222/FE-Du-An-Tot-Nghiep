@@ -39,12 +39,12 @@ import {
   notificationState,
 } from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
-const user = isAuthenticate()
+const user = isAuthenticate();
 export const socket = io(REALTIME_SERVER, {
   autoConnect: false,
-  query : {
-    token : user?.token
-  }
+  query: {
+    token: user?.token,
+  },
 });
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
@@ -55,7 +55,9 @@ import ListBanner from "./pages/admin/banner";
 import Detailpost from "./pages/admin/post/detail";
 function App() {
   const [notification, setNotification] = useRecoilState(notificationState);
-  const [userNotification,setUserNotification] = useRecoilState(userNotificationState)
+  const [userNotification, setUserNotification] = useRecoilState(
+    userNotificationState
+  );
   const user = isAuthenticate();
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -84,17 +86,17 @@ function App() {
   useEffect(() => {
     socket.connect();
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-      if(data.length){
+      if (data.length) {
         setNotification(data);
         console.log(data);
       }
     });
-    socket.on(SocketEvent.USERLISTNOTIFICATION,(data)=>{
-      if(data.length){
-        setUserNotification(data)
+    socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
+      if (data.length) {
+        setUserNotification(data);
       }
       console.log(data);
-    })
+    });
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -113,12 +115,11 @@ function App() {
     getService();
     return () => {
       socket.off(SocketEvent.NOTIFICATION);
-      socket.off(SocketEvent.USERLISTNOTIFICATION)
+      socket.off(SocketEvent.USERLISTNOTIFICATION);
     };
   }, []);
 
   useEffect(() => {
-    
     socket?.emit("newUser", user ? user.id : "");
   }, [socket, user]);
   const changeStatusBooking = async () => {
@@ -140,7 +141,7 @@ function App() {
 
             <Route path="/contact" element={<Contact />} />
             <Route path="/news" element={<News />} />
-            <Route path="/news/detail" element={<DetailNews />} />
+            <Route path="/news/detail/:id" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
             <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />

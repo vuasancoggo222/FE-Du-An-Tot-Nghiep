@@ -1,254 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getOnePost } from "../../api/post";
 
 const News = () => {
+  const { id } = useParams();
+  const [post, setPosts] = useState();
+  useEffect(() => {
+    const data = async () => {
+      const res = await getOnePost(id);
+      setPosts(res);
+      console.log(res);
+    };
+    data();
+  }, []);
   return (
     <section className="flex bg-white max-w-[1200px] mx-auto mb-8 mt-8">
       <div className="w-[75%] pr-10">
         <div>
           <h1 className="text-[#00502b] text-center font-medium">Tin tức</h1>
-          <h2 className="text-[#00502b] text-center text-3xl">
-            Mông bao nhiêu là lép? mông lép làm sao để to ra?
-          </h2>
-          <img
-            className="w-[100%] mt-20"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/mong-teo-lep.jpg"
-            alt=""
-          />
-          <p className="text-base mt-8">
-            Mông lép, phẳng lì là một trong những nguyên nhân khiến bạn trông
-            thiếu sức hút và tự ti về ngoại hình. Bởi vậy hãy dành thời gian
-            cùng Sanhoobeauty tìm hiểu về nguyên nhân mông lép và cách để sở hữu
-            bờ mông căng mọng, to tròn nhé!
-          </p>
-          <img
-            className="m-auto"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/nang-mong12.jpg"
-            alt=""
-          />
-        </div>
-        <div className="mt-8">
-          <h2 className="text-2xl">Mông lép là gì?</h2>
-          <p className="text-base mt-4">
-            “Ngực có thể lép nhưng mông nhất định phải to”, do vậy người nào sở
-            hữu được cặp mông to tròn thường nhận được nhiều sự “ngưỡng mộ”. Tuy
-            nhiên, không phải ai sinh ra cũng may mắn sở hữu cặp mông lý tưởng
-            ngay từ đầu, nhất là một nước có tỉ lệ mông lép khá cao ở cả nữ giới
-            và nam giới như Việt Nam.
-          </p>
-          <p className="text-base mt-4">
-            Mông lép là tình trạng mông có số đo nhỏ, không có độ nhô, thiếu
-            căng tròn khiến vóc dáng mất đi sự cân đối. Để nhận diện bờ mông lép
-            bạn có thể xem kích thước vòng 3 có cân đối với chiều cao và vóc
-            dáng cơ thể hay không.
-          </p>
-          <img
-            className=""
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/142242305_3981582211894673_6995769663249363719_o-768x769-1.jpg"
-            alt=""
-          />
-          <p className="mt-4 text-base">
-            Theo tiêu chuẩn chung, vòng 3 tầm khoảng từ 88 – 94 cm là chuẩn đẹp.
-            Nếu dưới mức này mông bạn có thể hơi lép.
-          </p>
-          <p className="mt-4 text-base">
-            Mông lép có thể xảy ra ở cả những người có số đo vòng 3 khủng do bản
-            chất là xương chậu lớn nhưng cặp mông thiếu độ nảy nở và cong.
-          </p>
-        </div>
-        <div className="mt-8">
-          <h2 className="text-2xl">Nguyên nhân mông lép</h2>
-          <p className="text-base mt-4">
-            Mông lép có thể do một số nguyên nhân sau:
-          </p>
-          <p className="text-base">
-            - Do di truyền đặc điểm vòng 3 khiêm tốn từ phái nữ trong gia đình
-            (bà, mẹ, cô, dì,…)
-          </p>
-          <p className="text-base">
-            - Do ngồi nhiều, ngồi lì một chỗ quá lâu, lười vận động khiến các cơ
-            vòng 3 bị đè nén dẫn tới tình trạng mông chảy xệ.
-          </p>
-          <p className="text-base">
-            - Mặc quần quá chật, quá bó khiến quá trình tuần hoàn máu và chất
-            dinh dưỡng bị ảnh hưởng.
-          </p>
-          <p className="text-base">
-            - Tinh thần căng thẳng khiến cho hormone cortisol sản sinh nhiều
-            hơn.
-          </p>
-          <p className="text-base">
-            - Chế độ ăn kém khoa học với thực đơn giảm cân cấp tốc không đảm bảo
-            dinh dưỡng.
-          </p>
-          <img
-            className="m-auto"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/mong-teo-lep.jpg"
-            alt=""
-          />
-        </div>
-        <div className="mt-8">
-          <h2 className="text-2xl">Mông lép làm sao để to ra?</h2>
-          <p className="text-base">
-            Để cải thiện được số đo vòng 3 lý tưởng bạn cần thay đổi các thói
-            quen xấu ảnh hưởng đến sự phát triển của vòng 3. Dưới đây là một số
-            cách hiệu quả đang được nhiều người áp dụng:
-          </p>
-        </div>
-        <div className="mt-8">
-          <h2 className="text-2xl">Mặc váy/quần nâng mông</h2>
-          <p className="text-base mt-4">
-            Đây là cách đơn giản nhất giúp bạn có thể đánh lừa thị giác của
-            người xung quanh. Với bờ mông lép bạn nên ưu tiên các dáng quần cạp
-            cao, sáng màu, có họa tiết. Chọn chất liệu vải cứng cáp, dày dặn
-            thay vì vải quá mỏng sẽ để lộ khuyết điểm mông lép. Cụ thể:
-          </p>
-          <p className="text-base mt-4">- Quần âu dáng rộng ở mông và hông</p>
-          <p className="text-base mt-4">
-            - Quần Jean cạp cao, ôm sát cơ thể, sáng màu, có túi hậu với đường
-            vân nổi
-          </p>
-          <p className="text-base mt-4">
-            - Quần short chất liệu cứng cáp và hoa văn nổi bật, không nên chọn
-            quần vải mềm
-          </p>
-          <p className="text-base mt-4">
-            - Chân váy dáng xòe họa tiết chấm bi, hoa văn,…
-          </p>
-          <img
-            className="m-auto"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/quan-nang-mong-2.jpg"
-            alt=""
-          />
-        </div>
-        <div className="mt-8">
-          <h2 className="text-2xl">Luyện các bài tập nâng mông</h2>
-          <p className="text-base mt-4">
-            Việc luyện tập không những giúp vòng 3 săn chắc hơn và còn kích
-            thích tăng đáng kể số đo cũng như mức độ nảy nở.
-          </p>
-          <p className="text-base mt-4">
-            - Với người “đùi to mông nhỏ”: Kết hợp các bài tập tạ và cardio, hạn
-            chế tập các bài tác động vào cơ đùi
-          </p>
-          <p className="text-base mt-4">
-            - Với người “mỡ nhiều hơn cơ”: Luyện tập cardio để đốt mỡ thừa và
-            tập tạ để tăng cơ mông
-          </p>
-          <p className="text-base mt-4">
-            - Với người “hông nhỏ eo to”: Tập trung vào các bài tập giảm mỡ
-            quanh eo, lưng và nâng cơ mông gluteus medius
-          </p>
-          <img
-            className="m-auto"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/Tap-chong-day-cho-nu.jpg"
-            alt=""
-          />
-        </div>
-        <div className="mt-8">
-          <h2 className="text-2xl">Cải thiện chế độ ăn uống</h2>
-          <p className="text-base mt-4">
-            Việc bổ sung một chế độ ăn uống khoa học, đầy đủ dưỡng chất cũng là
-            một trong những cách khắc phục tình trạng mông lép hiệu quả. Một số
-            loại thực phẩm nên bổ sung vào bữa ăn hàng ngày để giúp cải thiện
-            kích thước mông như: các loại hạt, trứng gà, thịt gà, thịt bò,…
-          </p>
-          <img
-            className="m-auto"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/duong-chat-protein.png"
-            alt=""
-          />
-          <p className="text-base mt-4">Phẫu thuật mông lép</p>
-          <p className="text-base">
-            Với những người mông lép bẩm sinh hay mông không có độ nhô thì các
-            cách trên sẽ khó để cải thiện tình hình. Hoặc có thì sẽ cần rất
-            nhiều thời gian cùng sự kiên trì để thực hiện. Bởi vậy, một cách
-            nhanh chóng và hiệu quả hơn lúc này đó là phẫu thuật nâng mông nội
-            soi.
-          </p>
-          <img
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/nang-mong-bang-tui-don-polytech1-300x180.jpg"
-            alt=""
-          />
-          <p className="text-base mt-4">
-            Thẩm mỹ nâng mông nội soi là phương pháp sử dụng túi độn và kỹ thuật
-            nội soi giảm xâm lấn để tạo độ cong và đầy đặn cho bờ mông. Phương
-            pháp được giới chuyên gia đánh giá an toàn và hiệu quả lâu dài.
-          </p>
-          <p className="text-base mt-4">
-            Tại Việt Nam, Bệnh viện Thẩm mỹ Sanhoobeauty hiện là địa chỉ thực
-            hiện uy tín được nhiều khách hàng tin tưởng lựa chọn dịch vụ thẩm mỹ
-            nâng mông với các ưu điểm:
-          </p>
-          <p className="text-base mt-4">
-            - Sử dụng túi độn mông chuẩn, chính hãng, được FDA Hoa Kỳ chứng nhận
-            an toàn và có độ ổn định cao
-          </p>
-          <p className="text-base mt-4">
-            - Đội ngũ bác sĩ chuyên khoa đầu ngành giàu kinh nghiệm trực tiếp
-            thăm khám và tiến hành phẫu thuật
-          </p>
-          <p className="text-base mt-4">
-            - Cơ sở vật chất chuẩn 5 sao, công nghệ hiện đại, phòng mổ vô khuẩn
-            1 chiều{" "}
-          </p>
-          <p className="text-base mt-4">
-            - Hồi phục nhanh sau khi phẫu thuật, hiệu quả lâu dài, không để lại
-            sẹo xấu
-          </p>
-          <p className="text-base mt-4">
-            - Chính sách bảo hành dài hạn, trách nhiệm, bảo hành túi độn trọn
-            đời
-          </p>
-          <p className="text-base mt-4">
-            Chi tiết về dịch vụ thẩm mỹ nâng mông, khắc phục khuyết điểm mông
-            lép an toàn, hiệu quả
-          </p>
-          <img
-            className="m-auto"
-            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/nang-mong-1.jpg"
-            alt=""
-          />
-          <p className="text-base mt-4">
-            Trên đây là những thông tin liên quan đến vấn đề mông lép, nguyên
-            nhân và cách khắc phục hiệu quả mà Sanhoobeauty mong muốn gửi đến
-            bạn. Chúc các bạn sẽ sớm cải thiện tình trạng mông lép và sở hữu
-            đường cong hằng mong ước. Và đừng quên để lại thông tin phía dưới để
-            chuyên gia của Sanhoobeauty hỗ trợ bạn trong quá trình cải thiện
-            mông lép hiệu quả nhé!
-          </p>
-          <p className="text-base mt-10 mb-0 font-semibold">Xem thêm</p>
-          <a
-            className="text-[#00502b] hover:text-[#366f55] mt-1 block text-base"
-            href=""
-          >
-            {" "}
-            * Quốc tế phụ nữ 8/3: thả ga làm đẹp
-          </a>
-          <a
-            className="text-[#00502b] hover:text-[#366f55] mt-2 block text-base"
-            href=""
-          >
-            * Trị sẹo lồi bằng laser bao nhiêu tiền?
-          </a>
-          <a
-            className="text-[#00502b] hover:text-[#366f55] mt-2 block text-base"
-            href=""
-          >
-            * Tiêm filler và những khuyết điểm gương mặt?
-          </a>
-          <a
-            className="text-[#00502b] hover:text-[#366f55] mt-2 block text-base"
-            href=""
-          >
-            * Giảm 7kg trong 1 tuần đầy ngoạn mục| Giấc mơ về cái đẹp của bà mẹ
-            một con xuất hiện như một kì tích
-          </a>
-          <a
-            className="text-[#00502b] hover:text-[#366f55] mt-2 block text-base"
-            href=""
-          >
-            * Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-          </a>
+          <h2 className="text-[#00502b] text-center text-3xl">{post?.title}</h2>
+
+          <div className="centerimage">
+            <div dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+          </div>
         </div>
         <div className="flex justify-between mt-10 border-t-2 border-black"></div>
         <div className="w-[100%]">

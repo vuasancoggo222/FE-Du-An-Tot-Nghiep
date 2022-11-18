@@ -55,12 +55,11 @@ const AddService = () => {
     formData.append("upload_preset", "my_upload");
     try {
       const res = await uploadCloudinary(formData);
-
+      onSuccess("Ok");
       message.success("Upload successfully !");
-
       setUrl(res.data.secure_url);
     } catch (err) {
-      message.error("Upload failed !");
+      onError({ err });
     }
   };
   const onFinish = async (data) => {
@@ -143,7 +142,7 @@ const AddService = () => {
               noStyle
             >
               <Upload.Dragger {...setting} customRequest={uploadImage}>
-                <p className="ant-upload-drag-icon">
+                <p className="ant-upload-drag-icon h-[15px]">
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">

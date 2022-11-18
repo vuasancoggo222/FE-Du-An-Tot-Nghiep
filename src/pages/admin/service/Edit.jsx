@@ -1,4 +1,4 @@
-import { Button, Form, Input, Upload, Select, message } from "antd";
+import { Button, Form, Input, Upload, Select, message, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
@@ -8,6 +8,7 @@ import { updateService } from "../../../api/service";
 
 import { uploadCloudinary } from "../../../api/upload";
 import ReactQuill from "react-quill";
+import ImgCrop from "antd-img-crop";
 
 const normFile = (e) => {
   console.log("Upload event:", e);
@@ -41,18 +42,24 @@ const EditService = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
   const [content, setContent] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
   useEffect(() => {
     const getSerVice = async () => {
       const dataService = await httpGetOneService(id);
       console.log("log service :", dataService);
       setUrl(dataService?.image);
       setContent(dataService?.content);
+      setFileList([{ url: dataService.image }]);
       form.setFieldsValue({
         name: dataService?.name,
 
         price: dataService?.price,
         status: dataService?.status,
-        // image: dataService?.image,
+        image: dataService?.image,
+        description: dataService?.description,
       });
     };
 
@@ -62,6 +69,7 @@ const EditService = () => {
   const uploadImage = async (options) => {
     const { onSuccess, onError, file } = options;
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
@@ -152,22 +160,18 @@ const EditService = () => {
             <Input />
           </Form.Item>
 
-          <Form.Item label="Image">
-            <Form.Item
-              name="image"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload.Dragger {...setting} customRequest={uploadImage}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Nhấn hoặc kéo thả để tải ảnh lên
-                </p>
-              </Upload.Dragger>
-            </Form.Item>
+          <Form.Item label="image">
+            <ImgCrop>
+              <Upload
+                customRequest={uploadImage}
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                name="avatar"
+              >
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.Item
             name="status"
@@ -181,8 +185,13 @@ const EditService = () => {
             ]}
           >
             <Select placeholder="Please select a country">
-              <Option value={1}></Option>
-              <Option value={2}></Option>
+              <Option value={1}>
+                <Tag color="green">ĐANG KINH DOANH</Tag>
+              </Option>
+              <Option value={2}>
+                {" "}
+                <Tag color="red">DỪNG KINH DOANH</Tag>;
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item

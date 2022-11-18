@@ -1,8 +1,7 @@
-import { Table, Image, Space, Tooltip, Button, Select, Tag } from "antd";
+import { Table, Image, Button, Select, Tag } from "antd";
 import React from "react";
 import useService from "../../../hooks/use-service";
 import Description from "../../../components/admin/detaiservice";
-import { BiEdit } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { removeService } from "../../../api/service";
 import { Option } from "antd/lib/mentions";
@@ -84,12 +83,7 @@ const ListService = () => {
       colapse: 2,
       render: (_, item) => {
         console.log(item);
-        // Thêm
-        let BtSusscesCursor;
-        let BtSusscessColor = "#3b82f6";
-        // hủy
-        let BtFailureCursor;
-        let BtFailureColor = "red";
+
         return (
           <Select
             style={{ width: "170px", color: "blue", textAlign: "center" }}

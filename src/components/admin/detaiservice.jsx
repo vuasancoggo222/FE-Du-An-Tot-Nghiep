@@ -5,8 +5,6 @@ const Description = (props) => {
   // eslint-disable-next-line react/prop-types
   const data = props.ondetail;
 
-  // eslint-disable-next-line react/prop-types
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -46,13 +44,16 @@ const Description = (props) => {
         </Tooltip>
       </Space>
       <Modal
-        title="Basic Modal"
+        title="Chi tiết dịch vụ"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
-        <p>{data}</p>
+        <p>
+          {" "}
+          <div dangerouslySetInnerHTML={{ __html: data }}></div>
+        </p>
       </Modal>
     </>
   );

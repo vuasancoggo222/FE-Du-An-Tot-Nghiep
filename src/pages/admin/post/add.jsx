@@ -154,6 +154,12 @@ const AddPost = () => {
                 label="Mô tả ngắn"
                 name="shortDescription"
                 wrapperCol={{ span: 10 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Mô tả không được để trống !",
+                  },
+                ]}
               >
                 <TextArea
                   showCount
@@ -165,7 +171,16 @@ const AddPost = () => {
                   placeholder="disable resize"
                 />
               </Form.Item>
-              <Form.Item label="Ảnh">
+              <Form.Item
+                label="Ảnh"
+                name="thumbnail"
+                rules={[
+                  {
+                    required: true,
+                    message: "Ảnh không được để trống !",
+                  },
+                ]}
+              >
                 <Upload
                   name="thumbnail"
                   listType="picture-card"
@@ -188,14 +203,23 @@ const AddPost = () => {
               </Form.Item>
             </Input.Group>
           </Form.Item>
-          <Form.Item label="Nội dung">
+          <Form.Item
+            label="Nội dung"
+            name="content"
+            rules={[
+              {
+                required: true,
+                message: "Nội dung Không được để trống !",
+              },
+            ]}
+          >
             <ReactQuill
               theme="snow"
               value={content}
               onChange={setContent}
               modules={modules}
               // formats={formats}
-              className="h-screen mb-20"
+              className="h-80 mb-20"
             ></ReactQuill>
           </Form.Item>
         </Form>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { httpGetAllService } from "../../api/services";
-import useService from "../../hooks/use-service";
+
 const ServiceCategory = () => {
   const [service, setService] = React.useState([]);
 

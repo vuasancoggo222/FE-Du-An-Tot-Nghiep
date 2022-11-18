@@ -34,9 +34,12 @@ const DetailPost = () => {
 
       <div className="w-full px-6 py-6 mx-auto mt-[60px] ">
         <div className="myadmin">
-          <h2></h2>
+          <h2 className="text-[#00502b] text-center text-3xl">{post?.title}</h2>
         </div>
-        <div dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+        <div
+          className="centerimage img"
+          dangerouslySetInnerHTML={{ __html: post?.content }}
+        ></div>
       </div>
     </>
   );

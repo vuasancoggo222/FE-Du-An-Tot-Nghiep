@@ -5,49 +5,39 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select } from 'antd';
 import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
-import { httpGetOne } from "../../../../api/employee";
+import { employeeStatistics, httpGetOne } from "../../../../api/employee";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
     const { Option } = Select;
     const [searchText, setSearchText] = useState('');
+    const [employeeStatic, setEmpoyeeStatic] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [titleModal, setTitleModal] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
-    const [isEmploye, setIsemploye] = useState();
+    const [isEmployee, setIsemployee] = useState();
     // eslint-disable-next-line react/prop-types
     const booking = props.dataBooking
     // eslint-disable-next-line react/prop-types
 
-    const isEmployee = JSON.parse(localStorage.getItem('user'));
-    if (isEmployee) {
-        console.log(isEmployee
+    const employee = JSON.parse(localStorage.getItem('user'));
+    if (employee) {
+        console.log(employee
         );
     }
     // eslint-disable-next-line react/prop-types
-    const service = props.dataService?.map((item) => {
-        return {
-            text: item.name,
-            value: item.name,
-        }
-    })
+
     // eslint-disable-next-line react/prop-types
 
     // eslint-disable-next-line react/prop-types
-    console.log(props);
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
 
-    const onOk = (value) => {
-        // console.log("...."+ employeeBooking);
-
-        console.log("onOk: ", value);
-    };
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
@@ -97,13 +87,12 @@ const ListBookingByEmployee = (props) => {
             idBooking = e.target.offsetParent.getAttribute("dataId");
             show = e.target.offsetParent.getAttribute("isshow");
         }
-        console.log(idBooking);
         // eslint-disable-next-line react/prop-types
         booking.map(async (item) => {
             if (item._id == idBooking) {
-                if (item.status == isButon 
+                if (item.status == isButon
                     || show == "false"
-                    ) {
+                ) {
                     return
                 }
                 await setIsModalOpen(true);
@@ -114,7 +103,6 @@ const ListBookingByEmployee = (props) => {
         booking.map(async (item) => {
             if (item._id == idBooking) {
                 await setHandleBooking(item)
-                console.log(item);
                 return
             }
         })
@@ -122,14 +110,17 @@ const ListBookingByEmployee = (props) => {
         if (isButon === "3") {
             setTitleModal("Hoàn thành")
         } else {
-            setTitleModal("Chuyển sang khách không đến")
+            setTitleModal("Thông tin")
         }
     };
 
     // eslint-disable-next-line no-unused-vars
     const handleOk = async () => {
+        if (ishandle === "5") {
+            setIsModalOpen(false);
+            return
+        }
         setIsModalOpen(false);
-        console.log(ishandle);
         if (ishandle === "3") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3 })
@@ -245,9 +236,8 @@ const ListBookingByEmployee = (props) => {
 
                 <DatePicker
                     // disabledDate={disabledDate}
-                    onChange={async (e) => { console.log(renderDate(e._d)), setSelectedKeys([renderDate(e._d)]) }}
+                    onChange={async (e) => { setSelectedKeys([renderDate(e._d)]) }}
                     // onChange={setSelectedKeys([2022006])}
-                    onOk={onOk}
                     style={{
                         marginBottom: 8,
                         display: 'block',
@@ -327,7 +317,7 @@ const ListBookingByEmployee = (props) => {
                     padding: 8,
                 }}
             >
-                <TimePicker onChange={async (e) => { console.log(renderTime(e._d)), setSelectedKeys([renderTime(e._d).toString()]) }} style={{
+                <TimePicker onChange={async (e) => { setSelectedKeys([renderTime(e._d).toString()]) }} style={{
                     marginBottom: 8,
                     display: 'block',
                 }} format={format} />
@@ -438,13 +428,7 @@ const ListBookingByEmployee = (props) => {
             dataIndex: 'employeeId',
             key: 'employeeId',
         },
-        {
-            title: 'Dịch vụ',
-            dataIndex: 'serviceId',
-            key: 'serviceId',
-            filters: service,
-            onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
-        },
+
         {
             title: 'Trạng thái',
             key: 'status',
@@ -454,10 +438,13 @@ const ListBookingByEmployee = (props) => {
                     text: 'Đã xác nhận',
                     value: '1',
                 },
-
+                {
+                    text: 'Chờ thanh toán',
+                    value: '3',
+                },
                 {
                     text: 'Hoàn thành',
-                    value: '3',
+                    value: '4',
                 },
             ],
             onFilter: (value, record) => record.status.toString().indexOf(value) === 0,
@@ -473,10 +460,13 @@ const ListBookingByEmployee = (props) => {
                 else if (status === 2) {
                     key = "Hủy"
                     color = "Silver"
-                } 
+                }
                 else if (status === 3) {
-                    key = "Hoàn thành"
+                    key = "Chờ thanh toán"
                     color = "#69c20a"
+                } else if (status === 4) {
+                    key = "Hoàn thành"
+                    color = "#0a5dc2"
                 }
 
                 return (
@@ -497,6 +487,7 @@ const ListBookingByEmployee = (props) => {
                 // let showWait = "false"
                 // let showSussces = "false"
                 let showFailure = "false"
+                let isShowInfo = "true";
                 // let BtWaitCursor = "not-allowed"
                 // let BtWaitColor = "#dedede"
                 // // let BtWaitColor = "#cd3e3e"
@@ -504,6 +495,8 @@ const ListBookingByEmployee = (props) => {
                 // let BtSusscesCursor = "not-allowed"
                 // let BtSusscessColor = "#dedede"
                 // let BtSusscessColor = "#da0cc8"
+                let BtInfoCursor = "pointer";
+                let BtInfo = "#3934df";
                 // hủy
                 let BtFailureCursor = "not-allowed"
                 let BtFailureColor = "#dedede"
@@ -522,24 +515,39 @@ const ListBookingByEmployee = (props) => {
                     BtFailureColor = "green"
                     showFailure = "true"
                     // xác nhận
-                   
-                } 
+
+                }
                 return (
-                 
+
                     <Select
-                    style={{ width: "170px" , color:"blue", textAlign:"center"}}
-                    value="Đổi trạng thái"
+                        style={{ width: "170px", color: "blue", textAlign: "center" }}
+                        value="Đổi trạng thái"
                     >
                         {/* <Option value="3"> <Button isshow={showSussces} onClick={showModal} dataId={item._id} data="3" style={{ cursor: BtSusscesCursor, backgroundColor: BtSusscessColor, border: "none", color: "white", width: "100%" }} >
                             Đang diễn ra
                         </Button></Option> */}
                         <Option value="3">  <Button isshow={showFailure} onClick={showModal} dataId={item._id} data="3" type="danger" style={{ cursor: BtFailureCursor, backgroundColor: BtFailureColor, border: "none", color: "white", width: "100%" }} >
-                            Hoàn thành
+                            Chờ thanh toán
                         </Button></Option>
-                        {/* <Option value="5"><Button isshow={showWait} onClick={showModal} dataId={item._id} data="5" style={{ cursor: BtWaitCursor, backgroundColor: BtWaitColor, border: "none", color: "white", width: "100%" }} >
-                            Khách không đến
-                        </Button></Option> */}
-                    </Select>
+                        <Option value="5">
+                            <Button
+                                isshow={isShowInfo}
+                                onClick={showModal}
+                                dataId={item._id}
+                                data="5"
+                                style={{
+                                    cursor: BtInfoCursor,
+                                    backgroundColor: BtInfo,
+                                    border: "none",
+                                    color: "white",
+                                    width: "100%",
+                                }}
+                            >
+                                Thông tin
+                            </Button>
+                        </Option>
+
+                    </Select >
                 )
             },
         },
@@ -547,8 +555,7 @@ const ListBookingByEmployee = (props) => {
     let datatable = [];
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
-        console.log(item);
-        if (item.employeeId?._id == isEmploye?._id && item.status == 1 || item.status == 3) {
+        if (item.employeeId?._id == isEmployee?._id && item.status == 1 || item.status == 3 || item.status == 4) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -558,39 +565,190 @@ const ListBookingByEmployee = (props) => {
                 date: date,
                 time: time,
                 employeeId: item.employeeId.name,
-                serviceId: item.serviceId[0].name,
                 action: (item)
             })
         }
     })
-    
+
     useEffect(() => {
+
         const getEmployee = async () => {
-            const res = await httpGetOne(isEmployee.id)
-            setIsemploye(res)
-            console.log(res);
+            const res = await httpGetOne(employee.id)
+            setIsemployee(res)
         }
         getEmployee()
-        
+
+        const getEmployeeStatic = async () => {
+            const res = await employeeStatistics(employee.id)
+            console.log(res);
+            setEmpoyeeStatic(res)
+        }
+        getEmployeeStatic()
+
     }, [])
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
             <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-                List Booking By {isEmploye?.name}
+                List Booking By {isEmployee?.name}
             </h1>
         </div>
+        <div className="flex flex-wrap -mx-3 mt-3 ">
+            {/* card1 */}
+            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                    <div
 
-        <Table columns={columns} dataSource={datatable} />;
+                        className="flex-auto p-4"
+                    >
+                        <div className="flex flex-row -mx-3">
+                            <div className="flex-none w-2/3 max-w-full px-3">
+                                <div>
+                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                        Chờ Spa
+                                    </p>
+                                    <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.confirmed}
+                                    </h5>
+                                    <p className="mb-0 dark:text-white dark:opacity-60">
+                                        <span className="text-sm font-bold leading-normal text-emerald-500">
+                                            {/* +55% */}
+                                        </span>
+                                        {/* since yesterday */}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="px-3 text-right basis-1/3">
+                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
+                                    <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                    <div
+
+                        className="flex-auto p-4"
+                    >
+                        <div className="flex flex-row -mx-3">
+                            <div className="flex-none w-2/3 max-w-full px-3">
+                                <div>
+                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                        Chờ thanh toán
+                                    </p>
+                                    <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.waitToPay}
+                                    </h5>
+                                    <p className="mb-0 dark:text-white dark:opacity-60">
+                                        <span className="text-sm font-bold leading-normal text-emerald-500">
+                                            {/* +55% */}
+                                        </span>
+                                        {/* since yesterday */}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="px-3 text-right basis-1/3">
+                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
+                                    <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                    <div
+
+                        className="flex-auto p-4"
+                    >
+                        <div className="flex flex-row -mx-3">
+                            <div className="flex-none w-2/3 max-w-full px-3">
+                                <div>
+                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                        Hoàn thành
+                                    </p>
+                                    <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.finished}
+                                    </h5>
+                                    <p className="mb-0 dark:text-white dark:opacity-60">
+                                        <span className="text-sm font-bold leading-normal text-emerald-500">
+                                            {/* +55% */}
+                                        </span>
+                                        {/* since yesterday */}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="px-3 text-right basis-1/3">
+                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
+                                    <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* card2 */}
+            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                    <div
+
+                        className="flex-auto p-4"
+                    >
+                        <div className="flex flex-row -mx-3">
+                            <div className="flex-none w-2/3 max-w-full px-3">
+                                <div>
+                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                        Đóng góp
+                                    </p>
+                                    <h5 className="mb-2 font-bold dark:text-white">
+                                        {employeeStatic?.turnover?.toLocaleString("vi", {
+                                            style: "currency",
+                                            currency: "VND",
+                                        })}
+                                    </h5>
+                                    <p className="mb-0 dark:text-white dark:opacity-60">
+                                        <span className="text-sm font-bold leading-normal text-emerald-500">
+                                            {/* +3% */}
+                                        </span>
+                                        {/* since last week */}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="px-3 text-right basis-1/3">
+                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
+                                    <img src="https://img.icons8.com/color/48/000000/reviewer-female.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* card3 */}
+
+            {/* card4 */}
+
+        </div>
+        <Table className="mt-5" columns={columns} dataSource={datatable} />;
 
         <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             <p>Tên Khách hàng: {handleBooking?.name}</p>
             <p>Tuổi: {handleBooking?.age}</p>
-            <p>Giới tính: {handleBooking?.gender == 1 ? 'Nữ': "Nam"}</p>
+            <p>Giới tính: {handleBooking?.gender == 1 ? 'Nữ' : "Nam"}</p>
             <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
             <p>Ngày: {renderDate(handleBooking?.date)}</p>
             <p>Giờ đến: {renderTime(handleBooking?.time)}</p>
             <p>Nhân viên: {handleBooking?.employeeId.name}</p>
-            <p>Dịch vụ: {handleBooking?.serviceId[0].name}</p>
+            <p>Dịch vụ:
+                <ul>
+                    {handleBooking?.serviceId?.map((item) => {
+                        return (
+                            // eslint-disable-next-line react/jsx-key
+                            <li>{item.name}</li>
+                        )
+                      
+                    })}
+                </ul>
+            </p>
             <p>Thanh toán: {formatCash(handleBooking?.bookingPrice || "0")}</p>
             <p>Note: {handleBooking?.note}</p>
         </Modal>

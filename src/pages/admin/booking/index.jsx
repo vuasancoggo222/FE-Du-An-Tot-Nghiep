@@ -513,6 +513,8 @@ const ListBooking = (props) => {
       setTitleModal("Chờ xác nhận");
     } else if (isButon === "4") {
       setTitleModal("Thanh toán và in hóa đơn");
+    } else if (isButon === "5") {
+      setTitleModal("Thông tin");
     }
 
     if (isButon == 1) {
@@ -673,8 +675,12 @@ const ListBooking = (props) => {
         let isShowCucess = "false";
         let isShowFailure = "false";
         let isShowPay = "false";
+        let isShowInfo = "true";
         let BtSusscesCursor = "pointer";
         let BtSusscessColor = "#dedede";
+        // thong tin
+        let BtInfoCursor = "pointer";
+        let BtInfo = "#3934df";
         // let BtSusscessColor = "#26cbe8"
         // hủy
         let BtFailureCursor = "not-allowed";
@@ -767,6 +773,23 @@ const ListBooking = (props) => {
                 Thanh toán
               </Button>
             </Option>
+            <Option value="5">
+              <Button
+                isshow={isShowInfo}
+                onClick={showModal}
+                dataId={item._id}
+                data="5"
+                style={{
+                  cursor: BtInfoCursor,
+                  backgroundColor: BtInfo,
+                  border: "none",
+                  color: "white",
+                  width: "100%",
+                }}
+              >
+                Thông tin
+              </Button>
+            </Option>
           </Select>
         );
       },
@@ -816,7 +839,7 @@ const ListBooking = (props) => {
           time: timeUpdate,
           status: 1,
           bookingPrice: bookingPrice,
-          serviceId:res != "" ? res : data.serviceId
+          serviceId: res != "" ? res : data.serviceId
         });
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
       } catch (error) {
@@ -1051,6 +1074,7 @@ const ListBooking = (props) => {
           List Booking
         </h1>
       </div>
+
       <Table columns={columns} dataSource={datatable} />;
       <Modal
         footer={null}
@@ -1191,25 +1215,6 @@ const ListBooking = (props) => {
 
           </Form.Item>
 
-
-          {/* <Form.Item
-            name="serviceId"
-            label="Dịch vụ"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-                // eslint-disable-next-line no-undef
-              },
-            ]}
-          >
-            <Select disabled={ishandle == 1 ? false : true}>
-              {props.dataService?.map((item, index) => (
-                <Select.Option value={item._id} key={index}>
-                  {item.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item> */}
           <Form.Item
             name="date"
             label="Ngày đến"
@@ -1295,7 +1300,8 @@ const ListBooking = (props) => {
             <Button
               style={{
                 display:
-                  titleModal == "Thanh toán và in hóa đơn" ? "none" : "block",
+                  // eslint-disable-next-line no-constant-condition
+                  titleModal == "Thanh toán và in hóa đơn" || "thông tin" ? "none" : "block",
               }}
               type="primary"
               htmlType="submit"
@@ -1307,7 +1313,7 @@ const ListBooking = (props) => {
               onClick={handleToolbarClick}
               style={{
                 display:
-                  titleModal == "Thanh toán và in hóa đơn" ? "block" : "none",
+                  titleModal == "Thanh toán và in hóa đơn" ? "block" : titleModal == "Thông tin" ? "none" : "none",
               }}
               type="primary"
               htmlType="submit"

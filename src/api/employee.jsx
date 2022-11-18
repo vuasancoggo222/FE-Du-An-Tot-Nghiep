@@ -38,7 +38,17 @@ export const removeEmployees = (id, data) => {
   return instance.delete(url, data);
 };
 
-export const employeeOrderStatistics = () => {
-  const url = `employee/order-statistics`;
+export const employeeOrderStatistics = (timeStart, timeEnd) => {
+  let url
+  if(timeStart && timeEnd != undefined) {
+    url = `employee/order-statistics`;
+  }else{
+    url = `employee/order-statistics?timeStart=${timeStart}&timeEnd=${timeEnd}`;
+  }
+  return instance.get(url);
+}
+
+export const employeeStatistics = (id) => {
+  const url = `statistics-for-employee?id=${id}`;
   return instance.get(url);
 }

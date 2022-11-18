@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getPosts } from "../../api/post";
 
 const DetailNews = () => {
+  const [posts, setPosts] = React.useState([]);
+  useEffect(() => {
+    const getPost = async () => {
+      const res = await getPosts();
+      setPosts(res);
+    };
+    getPost();
+  });
+
   return (
     <section className="bg-white max-w-[1200px] mx-auto mb-8 mt-8">
       <div className="flex items-center ml-5">
@@ -25,150 +35,40 @@ const DetailNews = () => {
       <div className="flex">
         <div className="w-[75%] pr-10">
           <div className="flex flex-wrap">
-            <Link
-              to="/news/detail"
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/hut-mo-canh-tay-9.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/tri-seo-loi-6.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/mong-teo-lep.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cay-mo-mong-2-1.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/tri-ran-da4.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/244584160_4758697530849800_957965771340671551_n-768x768-1.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/252509017_4823535007699385_2615811310447600500_n-768x768-1.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
-            <Link
-              to=""
-              className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
-            >
-              <img
-                className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
-                src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/243181645_2092348744251302_1527671312089282676_n-768x768-1.jpg"
-                alt=""
-              />
-              <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
-                Lấy lại đôi tay thon gọn nhờ hút mỡ tay
-              </h2>
-              <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
-              <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
-                Cánh tay to hay bắp tay ngấn mỡ, da chùng ảnh hưởng nhiều đến
-                thẩm
-              </p>
-            </Link>
+            {/* <div>
+              <Link to={`/detail-booking/${item?.slug}`}>
+                <a>
+                  <img
+                    src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f2-small-dv1.jpg"
+                    alt=""
+                  />
+                  <div className="text-center py-[10px]">
+                    <button>{item?.name}</button>
+                  </div>
+                </a>
+              </Link>
+            </div> */}
+
+            {posts?.map((item) => (
+              <Link
+                key={item?._id}
+                to={`/news/detail/${item?.slug}`}
+                className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
+              >
+                <img
+                  className="rounded-t-[10px] w-[100%] h-[260px] object-cover"
+                  src={item?.thumbnail}
+                  alt=""
+                />
+                <h2 className="text-center text-lg font-semibold mx-3 text-[#00502b]">
+                  {item?.title}
+                </h2>
+                <div className="w-8 h-[2px] bg-[#ccc] mx-auto"></div>
+                <p className="text-center font-semibold mt-3 text-[14px] text-[#32394c]">
+                  {item?.shortDescription}
+                </p>
+              </Link>
+            ))}
           </div>
         </div>
         <div className="w-[25%] ">

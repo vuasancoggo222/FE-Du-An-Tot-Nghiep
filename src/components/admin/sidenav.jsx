@@ -1,25 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { isAuthenticate } from "../../utils/LocalStorage";
-import { useNavigate } from "react-router-dom";
-import { message } from "antd";
+
 const Sidenav = () => {
-  const user = isAuthenticate();
-  const navigate = useNavigate();
-  const handleClick = () => {
-    if (user.role === 2) {
-      navigate("/admin/employee");
-    } else {
-      message.error("Bạn không có quyền truy cập");
-    }
-  };
-  const handleClick2 = () => {
-    if (user.role === 2) {
-      navigate("/admin/user");
-    } else {
-      message.error("Bạn không có quyền truy cập");
-    }
-  };
   return (
     <>
       {/* sidenav  */}
@@ -36,17 +18,12 @@ const Sidenav = () => {
             rel="noreferrer"
           >
             <img
-              src="../assets/img/logo-ct-dark.png"
-              className="inline h-full max-w-full transition-all duration-200 dark:hidden ease-nav-brand max-h-8"
-              alt="main_logo"
-            />
-            <img
               src="../assets/img/logo-ct.png"
               className="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-8"
               alt="main_logo"
             />
             <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
-              Argon Dashboard 2
+              BeautySpa
             </span>
           </Link>
         </div>
@@ -58,18 +35,24 @@ const Sidenav = () => {
                 className="py-2.7 bg-blue-500/13 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors"
                 to={`/admin`}
               >
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                  <i className="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2" />
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img
+                    width="100%"
+                    src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-dashboard-mobile-app-development-flaticons-lineal-color-flat-icons-4.png"
+                  />
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   Dashboard
                 </span>
               </Link>
             </li>
-            <li className="mt-0.5 w-full" onClick={handleClick}>
-              <Link className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors">
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                  <i className="relative top-0 text-sm leading-normal text-orange-500 ni ni-calendar-grid-58" />
+            <li className="mt-0.5 w-full">
+              <Link
+                to="/admin/employee"
+                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+              >
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-spa-travel-agency-flaticons-lineal-color-flat-icons.png" />
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   Employee
@@ -81,8 +64,8 @@ const Sidenav = () => {
                 to="/admin/booking"
                 className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
               >
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center fill-current stroke-0 text-center xl:p-2.5">
-                  <i className="relative top-0 text-sm leading-normal text-emerald-500 ni ni-credit-card" />
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center fill-current stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-booking-spa-flaticons-lineal-color-flat-icons.png" />{" "}
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   Booking
@@ -94,8 +77,8 @@ const Sidenav = () => {
                 className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
                 to="/admin/service"
               >
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                  <i className="relative top-0 text-sm leading-normal text-cyan-500 ni ni-app" />
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hospitality-services-flaticons-lineal-color-flat-icons.png" />{" "}
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   Service
@@ -107,8 +90,8 @@ const Sidenav = () => {
                 className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
                 to="/admin/contact"
               >
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                  <i className="relative top-0 text-sm leading-normal text-red-600 ni ni-world-2" />
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/cotton/64/null/contact-card.png" />{" "}
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   Contact
@@ -120,11 +103,24 @@ const Sidenav = () => {
                 className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
                 to="/admin/banner"
               >
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                  <i className="fa fa-area-chart" aria-hidden="true"></i>
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/external-smashingstocks-isometric-smashing-stocks/55/null/external-Banner-sports-smashingstocks-isometric-smashing-stocks-2.png" />{" "}
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   Banner
+                </span>
+              </Link>
+            </li>
+            <li className="mt-0.5 w-full">
+              <Link
+                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                to="/admin/post"
+              >
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/nolan/64/us-news.png" />{" "}
+                </div>
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                  Post
                 </span>
               </Link>
             </li>
@@ -133,10 +129,13 @@ const Sidenav = () => {
                 Account pages
               </h6>
             </li>
-            <li className="mt-0.5 w-full" onClick={handleClick2}>
-              <Link className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors">
-                <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
-                  <i className="relative top-0 text-sm leading-normal text-slate-700 ni ni-single-02" />
+            <li className="mt-0.5 w-full">
+              <Link
+                to="/admin/user"
+                className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+              >
+                <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                  <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-alternative-medicine-flaticons-lineal-color-flat-icons.png" />{" "}
                 </div>
                 <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
                   User

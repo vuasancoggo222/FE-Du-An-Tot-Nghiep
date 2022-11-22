@@ -5,6 +5,9 @@ export const SocketEvent = {
   CONNECT: "connect",
   DISCONNECT: "disconnect",
   NOTIFICATION : 'notification',
-  NEWNOTIFICATION : 'newNotification'
+  NEWNOTIFICATION : 'newNotification',
+  CHANGESTATUSBOOKING : 'changeStatusBooking',
+  USERLISTNOTIFICATION : 'userListNotification',
+  NEWUSERNOTIFICATION : "newUserNotification"
 };
 Object.freeze(SocketEvent);

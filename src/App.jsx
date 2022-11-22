@@ -19,7 +19,7 @@ import { httpGetAllService } from "./api/services";
 import ListBookingByEmployee from "./pages/admin/booking/employee";
 import ListService from "./pages/admin/service";
 import AddService from "./pages/admin/service/Add";
-import { PrivateRouter } from "./utils/PrivateRouter";
+import { PrivateRouter, PrivateRouter2 } from "./utils/PrivateRouter";
 import EditService from "./pages/admin/service/Edit";
 import VerifyPage from "./pages/website/VerifyPage";
 import ListBooking from "./pages/admin/booking";
@@ -34,17 +34,31 @@ import News from "./pages/website/News";
 import { io } from "socket.io-client";
 import { REALTIME_SERVER, SocketEvent } from "./utils/SocketConstant";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { listNotification, newNotificationState, notificationState } from "./recoil/notificationState";
+import {
+  userNotificationState,
+  notificationState,
+} from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
-export const socket = io(REALTIME_SERVER,{
-  autoConnect:false
-})
+const user = isAuthenticate();
+export const socket = io(REALTIME_SERVER, {
+  autoConnect: false,
+  query: {
+    token: user?.token,
+  },
+});
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
-
+import ListPost from "./pages/admin/post";
+import AddPost from "./pages/admin/post/add";
+import EditPost from "./pages/admin/post/edit";
+import ListBanner from "./pages/admin/banner";
+import Detailpost from "./pages/admin/post/detail";
 function App() {
-  const [notification,setNotification] = useRecoilState(notificationState)
-  const user = isAuthenticate()
+  const [notification, setNotification] = useRecoilState(notificationState);
+  const [userNotification, setUserNotification] = useRecoilState(
+    userNotificationState
+  );
+  const user = isAuthenticate();
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
@@ -70,9 +84,15 @@ function App() {
   };
 
   useEffect(() => {
-    socket.connect()
-    socket.on(SocketEvent.NOTIFICATION,(data)=>{
-      setNotification(data)
+    socket.connect();
+    socket.on(SocketEvent.NOTIFICATION, (data) => {
+        setNotification(data);
+    });
+    socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
+        setUserNotification(data);
+    });
+    socket.on('myNewNotification',(data)=>{
+      console.log(data);
     })
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -91,13 +111,15 @@ function App() {
     };
     getService();
     return () => {
-      socket.off(SocketEvent.NOTIFICATION)
+      socket.off(SocketEvent.NOTIFICATION);
+      socket.off(SocketEvent.USERLISTNOTIFICATION)
+      socket.off('myNewNotification')
     }
   }, []);
 
   useEffect(() => {
     socket?.emit("newUser", user ? user.id : "");
-  }, [socket, user]);
+  }, [socket]);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);
@@ -117,9 +139,9 @@ function App() {
 
             <Route path="/contact" element={<Contact />} />
             <Route path="/news" element={<News />} />
-            <Route path="/news/detail" element={<DetailNews />} />
+            <Route path="/news/detail/:id" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking  />} />
+            <Route path="/detail-booking/:id" element={<Detaibooking />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
@@ -157,7 +179,14 @@ function App() {
               />
             </Route>
             <Route path="employee">
-              <Route index element={<ListEmployee />} />
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListEmployee />
+                  </PrivateRouter2>
+                }
+              />
               <Route path="add" element={<AddEmployee />} />
               <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
@@ -172,9 +201,25 @@ function App() {
             <Route path="contact">
               <Route index element={<ContactList />} />
             </Route>
+            <Route path="banner">
+              <Route index element={<ListBanner />} />
+            </Route>
             <Route path="user">
-              <Route index element={<ListUser />}></Route>
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListUser />
+                  </PrivateRouter2>
+                }
+              ></Route>
               <Route path=":id/edit" element={<UserEdit />} />
+            </Route>
+            <Route path="post">
+              <Route index element={<ListPost />}></Route>
+              <Route path=":id/edit" element={<EditPost />} />
+              <Route path="add" element={<AddPost />} />
+              <Route path=":id" element={<Detailpost />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>

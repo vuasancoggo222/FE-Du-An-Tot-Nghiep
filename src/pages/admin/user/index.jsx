@@ -1,8 +1,6 @@
 import { Table, Image, Space, Tooltip, Button, Tag } from "antd";
 import React from "react";
-import { httpGetAllUser } from "../../../api/user";
-import Description from "../../../components/admin/detaiservice";
-import { BiEdit } from "react-icons/bi";
+
 import { Link } from "react-router-dom";
 import useUsers from "../../../hooks/use-user";
 
@@ -63,20 +61,20 @@ const ListUser = () => {
       render: (status) => {
         if (status === 1) {
           return (
-            <Tag color="#87d068" className="p-1">
-              Đã kích hoạt
+            <Tag color="green" className="p-1">
+              ĐẪ KÍCH HOẠT
             </Tag>
           );
         } else if (status === 2) {
           return (
-            <Tag color="#f50" className="p-1">
-              Đã khóa
+            <Tag color="red" className="p-1">
+              ĐÃ KHÓA
             </Tag>
           );
         } else {
           return (
             <Tag color="gold" className="p-1">
-              Chưa kích hoạt
+              CHƯA KÍCH HOẠT
             </Tag>
           );
         }
@@ -90,27 +88,18 @@ const ListUser = () => {
       render: (item) => {
         console.log(item);
         // Thêm
-        let BtSusscesCursor;
-        let BtSusscessColor = "#3b82f6";
-        // hủy
-        let BtFailureCursor;
-        let BtFailureColor = "red";
+        // let BtSusscesCursor;
+        // let BtSusscessColor = "#3b82f6";
+        // // hủy
+        // let BtFailureCursor;
+        // let BtFailureColor = "red";
         return (
           <div className="text-center">
             <Space size="middle">
               <Tooltip title="Sửa">
                 <Link to={`/admin/user/${item}/edit`}>
                   {" "}
-                  <Button
-                    style={{
-                      border: "none",
-                      cursor: BtSusscesCursor,
-                      color: BtSusscessColor,
-                    }}
-                    shape="circle"
-                  >
-                    <BiEdit style={{ fontSize: "25px" }} data="1" />
-                  </Button>
+                  <Button type="primary">Sửa</Button>
                 </Link>
               </Tooltip>
             </Space>
@@ -132,9 +121,6 @@ const ListUser = () => {
             <div>User</div>
           </h1>
         </div>
-        <Link to={"/admin/user/add"}>
-          <Button type="primary">Primary Button</Button>
-        </Link>
       </div>
       <div className="w-full px-6 py-6 mx-auto">
         <Table columns={columns} dataSource={data} onChange={onChange} />

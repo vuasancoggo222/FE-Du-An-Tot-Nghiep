@@ -23,3 +23,17 @@ export const PrivateRouter = (props) => {
     }, []);
   }
 };
+export const PrivateRouter2 = (props) => {
+  const navigate = useNavigate();
+  if (localStorage.getItem("user")) {
+    const user = isAuthenticate();
+    if (user.role == 1) {
+      React.useEffect(() => {
+        message.error("Bạn không có quyền truy cập !", 2);
+        return navigate("/admin");
+      }, []);
+    } else {
+      return props.children;
+    }
+  }
+};

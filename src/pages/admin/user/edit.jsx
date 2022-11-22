@@ -80,7 +80,6 @@ const UserEdit = () => {
   useEffect(() => {
     const getListUser = async () => {
       const res = await httpGetOneUser(user.token, id);
-
       form.setFieldsValue({
         name: res?.name,
         avatar: res?.avatar,
@@ -106,8 +105,8 @@ const UserEdit = () => {
 
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
-          <Link to={"/admin/service/add"}>
-            <Button type="primary">Primary Button</Button>
+          <Link to={"/admin/user"}>
+            <Button type="primary">Quay lại</Button>
           </Link>
         </div>
         <div className="w-[1000px] m-auto">
@@ -204,7 +203,7 @@ const UserEdit = () => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Sửa tài khoản
               </Button>
             </Form.Item>
           </Form>

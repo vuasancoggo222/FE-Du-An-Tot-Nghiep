@@ -1,6 +1,129 @@
-import React from "react";
+import { Button, message, Select, Space, Table } from "antd";
 
+import { Option } from "antd/lib/mentions";
+import React, { useState } from "react";
+import { useEffect } from "react";
+
+import { Link } from "react-router-dom";
+import { getPosts, removePost } from "../../../api/post";
 const ListPost = () => {
+  const [posts, setPosts] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [id, setId] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const onRemove = async (id) => {
+    const confirm = window.confirm("Bạn muốn xóa banner không ?");
+    if (confirm) {
+      console.log("sldas", id);
+      await removePost(id);
+      setPosts(posts.filter((item) => item._id !== id));
+      console.log(posts);
+      message.success("Xóa thành công");
+    }
+  };
+  const columns = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Thumbnail",
+      dataIndex: "thumbnail",
+      key: "thumbnail",
+      render: (thumbnail) => {
+        return (
+          <img
+            src={thumbnail}
+            alt="thumbnail"
+            style={{ width: "100px", height: "100px" }}
+          />
+        );
+      },
+    },
+    {
+      title: "ShortDescription",
+      dataIndex: "shortDescription",
+      key: "shortDescription",
+      render: (shortDescription) => {
+        return <p>{shortDescription}</p>;
+      },
+    },
+
+    {
+      title: "Action",
+      dataIndex: "_id",
+      key: "action",
+      colapse: 2,
+      render: (_, item) => {
+        // Thêm
+
+        return (
+          <div className="text-center">
+            <Space size="middle">
+              <Select
+                style={{ width: "170px", color: "blue", textAlign: "center" }}
+                value="Hành động"
+              >
+                <Option>
+                  {" "}
+                  <Button
+                    onClick={showModal}
+                    dataId={item._id}
+                    type="primary"
+                    style={{ border: "none", color: "white", width: "100%" }}
+                  >
+                    <Link to={`/admin/post/${item.slug}/edit`}>Sửa</Link>
+                  </Button>
+                </Option>
+                <Option>
+                  {" "}
+                  <Button
+                    onClick={() => {
+                      onRemove(item._id);
+                    }}
+                    type="danger"
+                    style={{ border: "none", color: "white", width: "100%" }}
+                  >
+                    Xóa
+                  </Button>{" "}
+                </Option>
+                <Option>
+                  {" "}
+                  <Button
+                    onClick={showModal}
+                    dataId={item.content}
+                    type=""
+                    style={{
+                      border: "none",
+                      color: "white",
+                      width: "100%",
+
+                      backgroundColor: "#f1c232",
+                    }}
+                  >
+                    <Link to={`/admin/post/${item.slug}`}>Chi Tiết</Link>
+                  </Button>
+                </Option>
+              </Select>
+            </Space>
+          </div>
+        );
+      },
+    },
+  ];
+  useEffect(() => {
+    const getPost = async () => {
+      const res = await getPosts();
+      setPosts(res);
+    };
+    getPost();
+  }, [loading]);
   return (
     <>
       <div className="w-full px-6 py-6 mx-auto ">
@@ -9,9 +132,15 @@ const ListPost = () => {
             <div>List Post</div>
           </h1>
         </div>
+        <div className="">
+          <Link to={"/admin/post/add"}>
+            <Button type="primary">+ Thêm bài viết</Button>
+          </Link>
+        </div>
       </div>
+
       <div className="w-full px-6 py-6 mx-auto  ">
-        {/* <ReactQuill theme="snow" /> */}
+        <Table columns={columns} dataSource={posts} />
       </div>
     </>
   );

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
+import sanitizeHtml from "sanitize-html";
 import * as medthod from "../../../api/post";
-import { Button, message, Form, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, message, Checkbox, Form, Input, Space } from "antd";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import Upload from "antd/lib/upload/Upload";
 import TextArea from "antd/lib/input/TextArea";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { uploadCloudinary } from "../../../api/upload";
 
 const modules = {
   toolbar: [
@@ -23,20 +25,19 @@ const modules = {
   ],
 };
 
-// const formats = [
-//   "header",
-//   "bold",
-//   "italic",
-//   "underline",
-//   "strike",
-//   "blockquote",
-//   "list",
-//   "bullet",
-//   "indent",
-//   "link",
-//   "image",
-//   "imageBlot",
-// ];
+const formats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "blockquote",
+  "list",
+  "bullet",
+  "indent",
+  "link",
+  "image",
+];
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -57,30 +58,30 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-const AddPost = () => {
+const EditPost = () => {
   const [content, setContent] = useState("");
 
   const [imageUrl, setImageUrl] = useState();
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
+  const { id } = useParams();
+  const [IdUpdate, setIdUpdate] = useState();
   const onFinish = async (values) => {
     if (values) {
       const data = {
         ...values,
-
+        // content: sanitizeHtml(content),
         content: content,
         thumbnail: imageUrl,
       };
       try {
-        await medthod.createPost(data);
-        message.success("Thêm bài viết thành công");
+        await medthod.updatePost(IdUpdate, data);
+        message.success("Chỉnh sửa viết thành công");
         navigate("/admin/post");
       } catch (error) {
-        message.error("Thêm bài viết thất bại");
+        message.error("Chỉnh sửa viết thất bại");
       }
     }
-    console.log(content);
   };
 
   const handleChange = async (info) => {
@@ -103,13 +104,23 @@ const AddPost = () => {
       </div>
     </div>
   );
-
+  useEffect(() => {
+    const get = async () => {
+      const res = await medthod.getOnePost(id);
+      console.log(res);
+      form.setFieldsValue({ ...res });
+      setImageUrl(res.thumbnail);
+      setContent(res.content);
+      setIdUpdate(res._id);
+    };
+    get();
+  }, []);
   return (
     <>
       <div className="w-full px-6 py-6 mx-auto ">
         <div>
           <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px] ">
-            <div>Add Post</div>
+            <div>Edit Post</div>
           </h1>
         </div>
       </div>
@@ -131,7 +142,7 @@ const AddPost = () => {
               className="mb-3"
               htmlType="submit"
             >
-              Đăng bài viết
+              Sửa bài viết
             </Button>
           </Form.Item>
           <Form.Item>
@@ -218,8 +229,8 @@ const AddPost = () => {
               value={content}
               onChange={setContent}
               modules={modules}
-              // formats={formats}
-              className="h-80 mb-20"
+              formats={formats}
+              className="h-screen mb-20"
             ></ReactQuill>
           </Form.Item>
         </Form>
@@ -228,4 +239,4 @@ const AddPost = () => {
   );
 };
 
-export default AddPost;
+export default EditPost;

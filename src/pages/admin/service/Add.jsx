@@ -4,6 +4,7 @@ import { uploadCloudinary } from "../../../api/upload";
 import { InboxOutlined } from "@ant-design/icons";
 import { httpPost } from "../../../api/services";
 import { Link, useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill";
 const normFile = (e) => {
   console.log("Upload event:", e);
 
@@ -13,12 +14,30 @@ const normFile = (e) => {
 
   return e?.fileList;
 };
+
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image"],
+    ["clean"],
+    [{ align: [] }],
+  ],
+};
+
 const { Option } = Select;
 const AddService = () => {
   const [url, setUrl] = useState("");
 
   const navigate = useNavigate();
   // const { create } = useService();
+  const [content, setContent] = useState("");
   const create = async (data) => {
     try {
       await httpPost("/service", data).then(() => {
@@ -36,16 +55,15 @@ const AddService = () => {
     formData.append("upload_preset", "my_upload");
     try {
       const res = await uploadCloudinary(formData);
-
+      onSuccess("Ok");
       message.success("Upload successfully !");
-
       setUrl(res.data.secure_url);
     } catch (err) {
-      message.error("Upload failed !");
+      onError({ err });
     }
   };
   const onFinish = async (data) => {
-    const servicePost = { ...data, image: url };
+    const servicePost = { ...data, image: url, description: content };
     await create(servicePost);
     // console.log(imageFile);
     console.log(servicePost);
@@ -87,8 +105,8 @@ const AddService = () => {
 
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
-          <Link to={"/admin/service/add"}>
-            <Button type="primary">Primary Button</Button>
+          <Link to={"/admin/service"}>
+            <Button type="primary">Quay lại</Button>
           </Link>
         </div>
         <Form
@@ -124,7 +142,7 @@ const AddService = () => {
               noStyle
             >
               <Upload.Dragger {...setting} customRequest={uploadImage}>
-                <p className="ant-upload-drag-icon">
+                <p className="ant-upload-drag-icon h-[15px]">
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">
@@ -156,12 +174,19 @@ const AddService = () => {
               { required: true, message: "Please input your description" },
             ]}
           >
-            <Input.TextArea />
+            <ReactQuill
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              modules={modules}
+              // formats={formats}
+              className="h-screen mb-20"
+            ></ReactQuill>
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
             <Button type="primary" htmlType="submit">
-              Submit
+              Thêm dịch vụ
             </Button>
           </Form.Item>
         </Form>

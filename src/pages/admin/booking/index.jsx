@@ -34,6 +34,8 @@ import { ChangeToSlug } from "../../../utils/ConvertStringToSlug";
 import { isAuthenticate } from "../../../utils/LocalStorage";
 import { readMoney } from "../../../utils/ReadMoney";
 import { formatPrice } from "../../../utils/formatCash";
+import { socket } from "../../../App";
+import { SocketEvent } from "../../../utils/SocketConstant";
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
   const [form] = Form.useForm();
@@ -819,6 +821,15 @@ const ListBooking = (props) => {
           serviceId:res != "" ? res : data.serviceId
         });
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+        const notification = {
+          id : handleBooking._id,
+          notificationType : 'bookingStatus',
+          text : "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+          from : user.id,
+          userId : handleBooking.userId._id
+        }
+        socket.emit(SocketEvent.NEWUSERNOTIFICATION,notification)
+        socket.off(NEWUSERNOTIFICATION)
       } catch (error) {
         message.error(`${error.response.data.message}`);
       }

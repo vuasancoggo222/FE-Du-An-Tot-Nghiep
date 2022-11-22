@@ -16,7 +16,7 @@ const Dashboard = () => {
   const [turnover, setTurnover] = useState();
   const [ageByService, setAgeByService] = useState();
   const [genderByService, setGenderByService] = useState();
-  const [serviceFilter, setServiceFilter] = useState("");
+  const [serviceFilter, setServiceFilter] = useState(""); // năm
   const [employeeFilterDate, setEmployeeFilterDate] = useState("");
   const [employeeFilterMonth, setEmployeeFilterMonth] = useState("");
   const [employeeFilterYear, setEmployeeFilterYear] = useState("");
@@ -141,77 +141,66 @@ const Dashboard = () => {
     return `${d.getFullYear()}-${month}`;
   };
 
-  const onChangeYearService = (date, dateString) => {
-    if (dateString == "") {
-      setServiceFilter("");
+  const onChangeYearService = async (date, dateString) => {
+    if (date == "") {
+      setServiceFilter(""); 
     } else {
+      const year  = moment(date).format("YYYY")
+      const res = await servicesStatistic(undefined, year);
+      const arr = {
+        services: [
+          ...res
+        ]
+      }
+      setService(arr)
       setServiceFilter(dateString);
-    }
-    setServiceFilterMonth("");
-    let year = dateString;
-    const d = new Date();
-    if (dateString == "") {
-      year = d.getFullYear();
-    }
-    let arrData = service?.map(() => {
-      return 0;
-    });
-    booking?.forEach((item) => {
-      if (item.status == 4 && renderYear(item.date) == year) {
-        service?.forEach((itemS, index) => {
-          if (item.serviceId[0]?._id == itemS._id) {
-            arrData[index] += item.serviceId[0]?.price;
-          }
-        });
-      }
-    });
-
+      setServiceFilterMonth(""); 
+    } 
   };
 
-  const onChangeMonthService = (date, dateString) => {
-    if (dateString == "") {
-      setServiceFilterMonth("");
+  const onChangeMonthService = async (date, dateString) => {
+    if (date == "") {
+      setServiceFilterMonth(""); 
     } else {
-      setServiceFilterMonth(dateString);
-    }
-    setServiceFilter("");
-    let year = dateString;
-    const d = new Date();
-    if (dateString == "") {
-      year = d.getFullYear();
-    }
-    let arrData = service?.map(() => {
-      return 0;
-    });
-    booking?.forEach((item) => {
-      if (item.status == 4 && renderMonth(item.date) == year) {
-        service?.forEach((itemS, index) => {
-          if (item.serviceId[0]?._id == itemS._id) {
-            arrData[index] += item.serviceId[0]?.price;
-          }
-        });
+      const month  = moment(date).format("MM")
+      const year  = moment(date).format("YYYY")
+      const res = await servicesStatistic(month, year);
+      const arr = {
+        services: [
+          ...res
+        ]
       }
-    });
+      setService(arr)
+      setServiceFilter("");
+      setServiceFilterMonth(dateString); 
+    } 
   };
 
-  const onChangeMonthEmployee = (date) => {
-    console.log(moment().format());
+  const onChangeMonthEmployee = async (date, dateString) => {
     if (date == "") {
       setEmployeeFilterMonth(""); 
     } else {
-      setEmployeeFilterMonth(date._d);
+      const month  = moment(date).format("MM")
+      const year  = moment(date).format("YYYY")
+      const res = await employeeOrderStatistics(month, year);
+      setEmployees(res)
+      setEmployeeFilterMonth(dateString);
     } 
     setEmployeeFilterYear("");
   };
 
-  const onChangeYearEmployee = (date, dateString) => {
-    if (dateString == "") {
+  const onChangeYearEmployee = async (date, dateString) => {
+    if (date == "") {
       setEmployeeFilterYear("");
     } else {
+      const year  = moment(date).format("YYYY")
+      const res = await employeeOrderStatistics(undefined, year);
+      setEmployees(res)
+      console.log(res);
       setEmployeeFilterYear(dateString);
     }
-    setEmployeeFilterDate("");
     setEmployeeFilterMonth("");
+    setEmployeeFilterDate("")
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -383,7 +372,7 @@ const Dashboard = () => {
       setDataChart(
         turnover?.allData.map((item) => {
           return {
-            name: item.name,
+            name: item.service.name,
             data: item.datas
           }
         })
@@ -474,7 +463,7 @@ const Dashboard = () => {
       setDataChart(
         res.allData.map((item) => {
           return {
-            name: item.name,
+            name: item.service.name,
             data: item.datas
           }
         })
@@ -501,12 +490,7 @@ const Dashboard = () => {
     getAccount();
 
     const getEmployee = async () => {
-      let res
-      if(employeeFilterMonth != "") {
-        res = await employeeOrderStatistics();
-      }else{
-        res = await employeeOrderStatistics();
-      }
+      const res = await employeeOrderStatistics();
       setEmployees(res);
     };
     getEmployee();
@@ -544,7 +528,7 @@ const Dashboard = () => {
                 ? dateFilter
                 : chartYear != ""
                   ? chartYear
-                  : "từ trước đến nay"}
+                  : "tất cả thời tian"}
           </span>
           <Button
             onClick={() => {
@@ -876,7 +860,7 @@ const Dashboard = () => {
                         style={{ color: isChart == "genderBySerVice" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        <br />
+                        Biểu đồ
                       </h5>
                       <p
                         style={{
@@ -927,7 +911,7 @@ const Dashboard = () => {
                         style={{ color: isChart == "ageBySerVice" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        <br />
+                        Biểu đồ
                       </h5>
                       <p
                         style={{
@@ -1007,20 +991,14 @@ const Dashboard = () => {
                       textDecorationColor: "blue",
                     }}
                   >
-                    {employeeFilterDate == moment().format("YYYY-MM-DD")
-                      ? "hôm nay"
-                      : employeeFilterDate != ""
-                        ? employeeFilterDate
-                        : employeeFilterMonth != ""
-                          ? employeeFilterMonth
-                          : employeeFilterYear != ""
-                            ? employeeFilterYear
-                            : "từ trước đến nay"}
+                    { employeeFilterMonth != ""
+                        ? employeeFilterMonth:  employeeFilterYear != ""
+                        ? employeeFilterYear
+                            : "tất cả thời tian"}
                   </span>
                 </h6>
                 <Button
                   onClick={() => {
-                    setEmployeeFilterDate(""),
                       setEmployeeFilterMonth(""),
                       setEmployeeFilterYear("");
                   }}
@@ -1174,18 +1152,18 @@ const Dashboard = () => {
                                 ) : (
                                   <div className="flex items-center justify-center">
                                     <span className="mr-2 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
-                                      {item.percentage.toString().substring(0, 5)}%
+                                      {item.percentage == null ? 0 : item.percentage?.toString().substring(0, 5)}%
                                     </span>
                                     <div>
                                       <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                         <div
                                           style={{
-                                            width: `${item.percentage}%`,
+                                            width: `${item.percentage == null ? 0 : item.percentage?.toString().substring(0, 5)}%`,
                                             backgroundColor: colorbyRevenue(),
                                           }}
                                           className="flex flex-col justify-center h-auto overflow-hidden "
                                           role="progressbar"
-                                          aria-valuenow={item.percentage}
+                                          aria-valuenow={item.percentage == null ? 0 : item.percentage?.toString().substring(0, 5)}
                                           aria-valuemin={0}
                                           aria-valuemax={100}
                                         />
@@ -1227,10 +1205,10 @@ const Dashboard = () => {
                     }}
                   >
                     {serviceFilter != ""
-                      ? ` vào ${serviceFilter}`
+                      ? ` ${serviceFilter}`
                       : serviceFilterMonth != ""
                         ? serviceFilterMonth
-                        : "từ trước đến nay"}
+                        : "tất cả thời tian"}
                   </span>{" "}
                   <br />
                   <span style={{ color: "red", fontSize: "16px" }}>
@@ -1356,18 +1334,18 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <div className="flex items-center justify-center">
                                 <span className="mr-2 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
-                                  {item.percentage.toString().substring(0, 5)}%
+                                  {item.percentage == null ? 0 : item.percentage.toString().substring(0, 5)}%
                                 </span>
                                 <div>
                                   <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                     <div
                                       style={{
-                                        width: `${item.percentage}%`,
+                                        width: `${ item.percentage == null ? 0 : item.percentage}%`,
                                         backgroundColor: colorbyRevenue(),
                                       }}
                                       className="flex flex-col justify-center h-auto overflow-hidden "
                                       role="progressbar"
-                                      aria-valuenow={item.percentage}
+                                      aria-valuenow={item.percentage == null ? 0 : item.percentage}
                                       aria-valuemin={0}
                                       aria-valuemax={100}
                                     />

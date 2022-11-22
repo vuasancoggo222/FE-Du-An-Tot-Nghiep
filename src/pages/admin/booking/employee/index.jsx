@@ -6,6 +6,7 @@ import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicke
 import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import { employeeStatistics, httpGetOne } from "../../../../api/employee";
+import moment from "moment";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
     const { Option } = Select;
@@ -15,6 +16,8 @@ const ListBookingByEmployee = (props) => {
     const searchInput = useRef(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [titleModal, setTitleModal] = useState("");
+    const [fillerMonth, setFillterMonth] = useState("");
+    const [fillterYear, setFillterYear] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
     const [isEmployee, setIsemployee] = useState();
@@ -570,8 +573,32 @@ const ListBookingByEmployee = (props) => {
         }
     })
 
-    useEffect(() => {
+    const onChangeMonth = async (date, dateString) => {
+        if (date == "") {
+            setFillterMonth("");
+        } else {
+            const month = moment(date).format("MM")
+            const year = moment(date).format("YYYY")
+            const res = await employeeStatistics( employee.id , month, year);
+            setEmpoyeeStatic(res)
+            setFillterYear("");
+            setFillterMonth(dateString);
+        }
+    }
 
+    const onChangeYear = async (date, dateString) => {
+        if (date == "") {
+            setFillterYear("");
+        } else {
+            const year = moment(date).format("YYYY")
+            const res = await employeeStatistics( employee.id , undefined, year);
+            setEmpoyeeStatic(res)
+            setFillterMonth("");
+            setFillterYear(dateString);
+        }
+    }
+
+    useEffect(() => {
         const getEmployee = async () => {
             const res = await httpGetOne(employee.id)
             setIsemployee(res)
@@ -584,17 +611,55 @@ const ListBookingByEmployee = (props) => {
             setEmpoyeeStatic(res)
         }
         getEmployeeStatic()
-
     }, [])
     return <div className="w-full px-6 py-6 mx-auto">
         <div>
             <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-                List Booking By {isEmployee?.name}
+                Booking by {isEmployee?.name}
             </h1>
+
         </div>
-        <div className="flex flex-wrap -mx-3 mt-3 ">
+        <div className="b-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+
+            <Button
+                onClick={() => {
+                    fillerMonth(""), fillterYear("");
+                }}
+                style={{
+                    float: "right",
+                    marginLeft: "3px",
+                    backgroundColor: "#168ea0",
+                    fontFamily: "monospace",
+                    color: "white",
+                }}
+            >
+                Làm mới
+            </Button>
+            <DatePicker
+                value={fillterYear == "" ? null : moment(fillterYear)}
+                placeholder="Lọc năm"
+                status="warning"
+                style={{
+                    float: "right",
+                    fontWeight: "bold",
+                    marginLeft: "3px",
+                }}
+                onChange={onChangeYear}
+                picker="year"
+            />
+            <DatePicker
+                value={fillerMonth == "" ? null : moment(fillerMonth)}
+                placeholder="Lọc tháng "
+                status="warning"
+                style={{ float: "right", fontWeight: "bold" }}
+                onChange={onChangeMonth}
+                picker="month"
+            />
+        </div>
+        <br />
+        <div className="flex flex-wrap -mx-3 mt-7 ">
             {/* card1 */}
-            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 ">
                 <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
                     <div
 
@@ -618,7 +683,7 @@ const ListBookingByEmployee = (props) => {
                             </div>
                             <div className="px-3 text-right basis-1/3">
                                 <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                                    <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
+                                    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hairdresser-and-barber-shop-flaticons-lineal-color-flat-icons-3.png" />
                                 </div>
                             </div>
                         </div>
@@ -649,7 +714,7 @@ const ListBookingByEmployee = (props) => {
                             </div>
                             <div className="px-3 text-right basis-1/3">
                                 <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                                    <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
+                                    <img src="https://img.icons8.com/cotton/64/null/receive-cash--v1.png" />
                                 </div>
                             </div>
                         </div>
@@ -680,21 +745,25 @@ const ListBookingByEmployee = (props) => {
                             </div>
                             <div className="px-3 text-right basis-1/3">
                                 <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                                    <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
+                                    <img src="https://img.icons8.com/doodle/48/null/checkmark.png" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             {/* card2 */}
+
             <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
                 <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+
                     <div
 
                         className="flex-auto p-4"
                     >
                         <div className="flex flex-row -mx-3">
+
                             <div className="flex-none w-2/3 max-w-full px-3">
                                 <div>
                                     <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
@@ -716,7 +785,7 @@ const ListBookingByEmployee = (props) => {
                             </div>
                             <div className="px-3 text-right basis-1/3">
                                 <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
-                                    <img src="https://img.icons8.com/color/48/000000/reviewer-female.png" />
+                                    <img src="https://img.icons8.com/color/48/null/banknotes.png" />
                                 </div>
                             </div>
                         </div>
@@ -745,7 +814,7 @@ const ListBookingByEmployee = (props) => {
                             // eslint-disable-next-line react/jsx-key
                             <li>{item.name}</li>
                         )
-                      
+
                     })}
                 </ul>
             </p>

@@ -23,10 +23,19 @@ const turnoverServicesMonth = (year) => {
   return instance.get(`turnover-month-service?year=${year}`);
 };
 
-const servicesStatistic = () => {
-  return instance.get(`service-statistics`);
-};
-
+const servicesStatistic = (month, year) => {
+  console.log(month, year);
+  let url
+  if(month == undefined && year == undefined) {
+    url = `service-statistics`
+  }
+  else if(month != undefined && year != undefined) {
+    url = `service-statistics?month=${month}&year=${year}`;
+  }else if(month == undefined){
+    url = `service-statistics?year=${year}`;
+  }
+  return instance.get(url);
+}
 const httpGet = (endpoint, id) => {
   return instance.get(`${endpoint}/${id}`);
 };

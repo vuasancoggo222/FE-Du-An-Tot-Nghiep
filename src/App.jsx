@@ -86,17 +86,14 @@ function App() {
   useEffect(() => {
     socket.connect();
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-      if (data.length) {
         setNotification(data);
-        console.log(data);
-      }
     });
-    socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
-      if (data.length) {
+    socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
         setUserNotification(data);
-      }
-      console.log(data);
     });
+    socket.on('myNewNotification',(data)=>{
+      console.log(data);
+    })
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -115,13 +112,14 @@ function App() {
     getService();
     return () => {
       socket.off(SocketEvent.NOTIFICATION);
-      socket.off(SocketEvent.USERLISTNOTIFICATION);
-    };
+      socket.off(SocketEvent.USERLISTNOTIFICATION)
+      socket.off('myNewNotification')
+    }
   }, []);
 
   useEffect(() => {
     socket?.emit("newUser", user ? user.id : "");
-  }, [socket, user]);
+  }, [socket]);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);

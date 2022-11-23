@@ -66,19 +66,15 @@ const BookingPage = () => {
         message.error(`${error.message}`, 2);
       });
     // time disabled
-    setLoadings((prevLoadings) => {
+    setLoadings(() => {
       countdown();
-      const newLoadings = [...prevLoadings];
-      newLoadings[0] = true;
-      return newLoadings;
+      return true;
     });
     setTimeout(() => {
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-        return newLoadings;
+      setLoadings(() => {
+        return false;
       });
-    }, 30000);
+    }, 3000);
 
     // ---- time count down
 
@@ -114,7 +110,7 @@ const BookingPage = () => {
         type: "booking",
         text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
       };
-      socket.emit(SocketEvent.NEWNOTIFICATION,newNotification)
+      socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);
       message.success("Đặt lịch thành công", 2);
       navigate("/");
     } catch (error) {
@@ -132,7 +128,7 @@ const BookingPage = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const [loadings, setLoadings] = useState([]);
+  const [loadings, setLoadings] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [formValues, setFormValues] = useState({});
   const [serviceDetail, setServiceDetail] = useState();
@@ -386,7 +382,7 @@ const BookingPage = () => {
                         </Form.Item>
                         <Form.Item>
                           <Button
-                            loading={loadings[0]}
+                            loading={loadings}
                             onClick={onGetOtp}
                             type="primary"
                           >

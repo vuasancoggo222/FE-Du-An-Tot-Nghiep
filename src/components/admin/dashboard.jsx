@@ -1,10 +1,15 @@
 /* eslint-disable react/no-unknown-property */
 import { Button, DatePicker } from "antd";
 import React, { useEffect, useState } from "react";
-import { Spin } from 'antd';
+import { Spin } from "antd";
 import { httpGetAll } from "../../api/booking";
 import { employeeOrderStatistics } from "../../api/employee";
-import { groupAgeByService, groupGenderByService, servicesStatistic, turnoverServicesMonth } from "../../api/services";
+import {
+  groupAgeByService,
+  groupGenderByService,
+  servicesStatistic,
+  turnoverServicesMonth,
+} from "../../api/services";
 import { httpGetAllUser, userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
@@ -41,9 +46,7 @@ const Dashboard = () => {
       });
   }
   const datavl = {
-    series:
-      dataChart != undefined ? dataChart : ""
-    ,
+    series: dataChart != undefined ? dataChart : "",
     options: {
       chart: {
         type: "bar",
@@ -115,8 +118,9 @@ const Dashboard = () => {
   const countCustomerByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-      }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${
+      thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.employeeId != undefined) {
@@ -147,70 +151,66 @@ const Dashboard = () => {
     if (date == "") {
       setServiceFilter("");
     } else {
-      setLoading(true)
-      const year = moment(date).format("YYYY")
+      setLoading(true);
+      const year = moment(date).format("YYYY");
       const res = await servicesStatistic(undefined, year);
       const arr = {
-        services: [
-          ...res
-        ]
-      }
-      setService(arr)
+        services: [...res],
+      };
+      setService(arr);
       setServiceFilter(dateString);
       setServiceFilterMonth("");
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const onChangeMonthService = async (date, dateString) => {
     if (date == "") {
       setServiceFilterMonth("");
     } else {
-      setLoading(true)
-      const month = moment(date).format("MM")
-      const year = moment(date).format("YYYY")
+      setLoading(true);
+      const month = moment(date).format("MM");
+      const year = moment(date).format("YYYY");
       const res = await servicesStatistic(month, year);
       const arr = {
-        services: [
-          ...res
-        ]
-      }
-      setService(arr)
+        services: [...res],
+      };
+      setService(arr);
       setServiceFilter("");
       setServiceFilterMonth(dateString);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const onChangeMonthEmployee = async (date, dateString) => {
     if (date == "") {
       setEmployeeFilterMonth("");
     } else {
-      setLoading(true)
-      const month = moment(date).format("MM")
-      const year = moment(date).format("YYYY")
+      setLoading(true);
+      const month = moment(date).format("MM");
+      const year = moment(date).format("YYYY");
       const res = await employeeOrderStatistics(month, year);
-      setEmployees(res)
+      setEmployees(res);
       setEmployeeFilterMonth(dateString);
     }
     setEmployeeFilterYear("");
-    setLoading(false)
+    setLoading(false);
   };
 
   const onChangeYearEmployee = async (date, dateString) => {
     if (date == "") {
       setEmployeeFilterYear("");
     } else {
-      setLoading(true)
-      const year = moment(date).format("YYYY")
+      setLoading(true);
+      const year = moment(date).format("YYYY");
       const res = await employeeOrderStatistics(undefined, year);
-      setEmployees(res)
+      setEmployees(res);
       console.log(res);
       setEmployeeFilterYear(dateString);
     }
     setEmployeeFilterMonth("");
-    setEmployeeFilterDate("")
-    setLoading(false)
+    setEmployeeFilterDate("");
+    setLoading(false);
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -231,8 +231,9 @@ const Dashboard = () => {
   const countCustomerSpaIngByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-      }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${
+      thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (
@@ -249,8 +250,9 @@ const Dashboard = () => {
   const countCustomerSpaSuccessByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-      }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${
+      thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (
@@ -265,14 +267,16 @@ const Dashboard = () => {
   };
 
   const thisday = new Date();
-  const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+  const today = `${thisday.getFullYear()}-${
+    thisday.getMonth() + 1
+  }-${thisday.getDate()}`;
 
   const countCustomerIng = () => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-      }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${
+      thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.status == 3 && dayItem == today) {
@@ -285,8 +289,9 @@ const Dashboard = () => {
   const countBookingWait = () => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-      }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${
+      thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.status == 0 && dayItem == today) {
@@ -299,8 +304,9 @@ const Dashboard = () => {
   const countBookingSuccess = () => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
-      }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${
+      thisday.getMonth() + 1
+    }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.status == 1 && dayItem == today) {
@@ -314,9 +320,9 @@ const Dashboard = () => {
     let sum = 0;
     turnover?.allData.map((item) => {
       item.datas.map((current) => {
-        sum += current
+        sum += current;
       });
-    })
+    });
     return sum.toLocaleString("vi", {
       style: "currency",
       currency: "VND",
@@ -378,67 +384,71 @@ const Dashboard = () => {
       setChartYear(year);
     }
     if (isChart == "turnover") {
-      setIsChart("turnover")
+      setIsChart("turnover");
       setDataChart(
         turnover?.allData.map((item) => {
           return {
             name: item.service.name,
-            data: item.datas
-          }
+            data: item.datas,
+          };
         })
-      )
-      // 
+      );
+      //
       setLableChart({
         type: "",
-        categories: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-      })
+        categories: [
+          "Tháng 1",
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+          "Tháng 8",
+          "Tháng 9",
+          "Tháng 10",
+          "Tháng 11",
+          "Tháng 12",
+        ],
+      });
     } else if (isChart == "user") {
-      setIsChart("user")
-      setDataChart(
-        [
-          {
-            name: "Tài khoản kích hoạt",
-            data: [acCount.availableUser]
-          },
-          {
-            name: "Tài khoản bị khóa",
-            data: [acCount.lockUser]
-          },
-          {
-            name: "Tài khoản chưa kích hoạt",
-            data: [acCount.unActiveUser]
-          },
-
-        ]
-      )
-      // 
+      setIsChart("user");
+      setDataChart([
+        {
+          name: "Tài khoản kích hoạt",
+          data: [acCount.availableUser],
+        },
+        {
+          name: "Tài khoản bị khóa",
+          data: [acCount.lockUser],
+        },
+        {
+          name: "Tài khoản chưa kích hoạt",
+          data: [acCount.unActiveUser],
+        },
+      ]);
+      //
       setLableChart({
         type: "",
         categories: ["Tất cả thời gian"],
-      })
+      });
     } else if (isChart == "ageBySerVice") {
-      setIsChart("ageBySerVice")
-      setDataChart(
-        ageByService.groupAge
-      )
-      // 
+      setIsChart("ageBySerVice");
+      setDataChart(ageByService.groupAge);
+      //
       setLableChart({
         type: "",
         categories: ageByService.categories,
-      })
+      });
     } else if (isChart == "genderBySerVice") {
-      setIsChart("genderBySerVice")
-      setDataChart(
-        genderByService.groupGender
-
-      )
-      // 
+      setIsChart("genderBySerVice");
+      setDataChart(genderByService.groupGender);
+      //
       setLableChart({
         type: "",
         categories: genderByService.categories,
-      })
+      });
     }
-
   };
   useEffect(() => {
     const getBooking = async () => {
@@ -463,11 +473,11 @@ const Dashboard = () => {
     getGenderByService();
 
     const getTurnover = async () => {
-      let year = moment().format("YYYY")
-      if (chartYear != '') {
-        year = chartYear
+      let year = moment().format("YYYY");
+      if (chartYear != "") {
+        year = chartYear;
       }
-      setLoading(true)
+      setLoading(true);
       const res = await turnoverServicesMonth(year);
       await setTurnover(res);
       console.log(res);
@@ -475,16 +485,29 @@ const Dashboard = () => {
         res.allData.map((item) => {
           return {
             name: item.service.name,
-            data: item.datas
-          }
+            data: item.datas,
+          };
         })
-      )
-      // 
+      );
+      //
       setLableChart({
         type: "",
-        categories: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-      })
-      setLoading(false)
+        categories: [
+          "Tháng 1",
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+          "Tháng 8",
+          "Tháng 9",
+          "Tháng 10",
+          "Tháng 11",
+          "Tháng 12",
+        ],
+      });
+      setLoading(false);
     };
     getTurnover();
 
@@ -511,15 +534,17 @@ const Dashboard = () => {
       const res = await httpGetAllUser();
       setUser(res);
     };
-    getUser()
-
+    getUser();
   }, [chartYear]);
   return (
-    < Spin spinning={loading} style={{
-      position: "fixed",
-      top: "25%",
-      left: "8%"
-    }}>
+    <Spin
+      spinning={loading}
+      style={{
+        position: "fixed",
+        top: "25%",
+        left: "8%",
+      }}
+    >
       <div className="w-full px-6 mx-auto">
         <div style={{ height: "" }}>
           <h1
@@ -542,10 +567,10 @@ const Dashboard = () => {
             {monthFilter != ""
               ? monthFilter
               : dateFilter != ""
-                ? dateFilter
-                : chartYear != ""
-                  ? chartYear
-                  : "tất cả thời tian"}
+              ? dateFilter
+              : chartYear != ""
+              ? chartYear
+              : "tất cả thời tian"}
           </span>
           <Button
             onClick={() => {
@@ -773,9 +798,7 @@ const Dashboard = () => {
                         style={{ color: isChart == "turnover" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        {
-                          totalTurnover()
-                        }
+                        {totalTurnover()}
                       </h5>
                       <p
                         style={{
@@ -783,15 +806,6 @@ const Dashboard = () => {
                         }}
                         className="mb-0 dark:texgenderBySerVicet-white dark:opacity-60"
                       >
-                        <button>
-                          <span
-                            data="turnover"
-                            onClick={handleChooseChart}
-                            className="text-sm font-bold leading-normal "
-                          >
-                            Xem biểu đồ năm {chartYear}
-                          </span>
-                        </button>
                         {/* since yesterday */}
                       </p>
                     </div>
@@ -802,6 +816,18 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </div>
+                <button>
+                  <span
+                    style={{
+                      color: isChart != "turnover" ? "#168ea0" : "#fbff08",
+                    }}
+                    data="turnover"
+                    onClick={handleChooseChart}
+                    className="text-sm font-bold leading-normal "
+                  >
+                    Xem biểu đồ năm {chartYear}
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -874,14 +900,19 @@ const Dashboard = () => {
                         Giới tính
                       </p>
                       <h5
-                        style={{ color: isChart == "genderBySerVice" ? "white" : "" }}
+                        style={{
+                          color: isChart == "genderBySerVice" ? "white" : "",
+                        }}
                         className="mb-2 font-bold dark:text-white"
                       >
                         Biểu đồ
                       </h5>
                       <p
                         style={{
-                          color: isChart != "genderBySerVice" ? "#168ea0" : "#fbff08",
+                          color:
+                            isChart != "genderBySerVice"
+                              ? "#168ea0"
+                              : "#fbff08",
                         }}
                         className="mb-0 dark:text-white dark:opacity-60"
                       >
@@ -905,7 +936,6 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
           {/* card4 */}
@@ -925,14 +955,17 @@ const Dashboard = () => {
                         Độ tuổi
                       </p>
                       <h5
-                        style={{ color: isChart == "ageBySerVice" ? "white" : "" }}
+                        style={{
+                          color: isChart == "ageBySerVice" ? "white" : "",
+                        }}
                         className="mb-2 font-bold dark:text-white"
                       >
                         Biểu đồ
                       </h5>
                       <p
                         style={{
-                          color: isChart != "ageBySerVice" ? "#168ea0" : "#fbff08",
+                          color:
+                            isChart != "ageBySerVice" ? "#168ea0" : "#fbff08",
                         }}
                         className="mb-0 dark:text-white dark:opacity-60"
                       >
@@ -956,7 +989,6 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
           <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
@@ -966,9 +998,7 @@ const Dashboard = () => {
                 color: isChart == "employee" ? "white" : "",
               }}
               className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
-            >
-
-            </div>
+            ></div>
           </div>
         </div>
         <div className="w-full px-6 py-6 mx-auto">
@@ -1009,15 +1039,15 @@ const Dashboard = () => {
                     }}
                   >
                     {employeeFilterMonth != ""
-                      ? employeeFilterMonth : employeeFilterYear != ""
-                        ? employeeFilterYear
-                        : "tất cả thời tian"}
+                      ? employeeFilterMonth
+                      : employeeFilterYear != ""
+                      ? employeeFilterYear
+                      : "tất cả thời tian"}
                   </span>
                 </h6>
                 <Button
                   onClick={() => {
-                    setEmployeeFilterMonth(""),
-                      setEmployeeFilterYear("");
+                    setEmployeeFilterMonth(""), setEmployeeFilterYear("");
                   }}
                   style={{
                     float: "right",
@@ -1072,7 +1102,7 @@ const Dashboard = () => {
                           style={{
                             display:
                               employeeFilterDate ==
-                                moment().format("YYYY-MM-DD")
+                              moment().format("YYYY-MM-DD")
                                 ? "block"
                                 : "none",
                           }}
@@ -1126,7 +1156,7 @@ const Dashboard = () => {
                               style={{
                                 display:
                                   employeeFilterDate ==
-                                    moment().format("YYYY-MM-DD")
+                                  moment().format("YYYY-MM-DD")
                                     ? ""
                                     : "none",
                               }}
@@ -1139,13 +1169,15 @@ const Dashboard = () => {
                                     : "bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white"
                                 }
                               >
-                                {item.employee.status == 1 ? "online" : "offline"}
+                                {item.employee.status == 1
+                                  ? "online"
+                                  : "offline"}
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                  moment().format("YYYY-MM-DD")
+                                moment().format("YYYY-MM-DD")
                                   ? countCustomerByEmployee(item._id)
                                   : item.finished}
                               </span>
@@ -1153,34 +1185,51 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                  moment().format("YYYY-MM-DD")
+                                moment().format("YYYY-MM-DD")
                                   ? countCustomerSpaIngByEmployee(item._id)
                                   : item.turnover.toLocaleString("vi", {
-                                    style: "currency",
-                                    currency: "VND",
-                                  })}
+                                      style: "currency",
+                                      currency: "VND",
+                                    })}
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                  moment().format("YYYY-MM-DD") ? (
+                                moment().format("YYYY-MM-DD") ? (
                                   countCustomerSpaSuccessByEmployee(item._id)
                                 ) : (
                                   <div className="flex items-center justify-center">
                                     <span className="mr-2 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
-                                      {item.percentage == null ? 0 : item.percentage?.toString().substring(0, 5)}%
+                                      {item.percentage == null
+                                        ? 0
+                                        : item.percentage
+                                            ?.toString()
+                                            .substring(0, 5)}
+                                      %
                                     </span>
                                     <div>
                                       <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                         <div
                                           style={{
-                                            width: `${item.percentage == null ? 0 : item.percentage?.toString().substring(0, 5)}%`,
+                                            width: `${
+                                              item.percentage == null
+                                                ? 0
+                                                : item.percentage
+                                                    ?.toString()
+                                                    .substring(0, 5)
+                                            }%`,
                                             backgroundColor: colorbyRevenue(),
                                           }}
                                           className="flex flex-col justify-center h-auto overflow-hidden "
                                           role="progressbar"
-                                          aria-valuenow={item.percentage == null ? 0 : item.percentage?.toString().substring(0, 5)}
+                                          aria-valuenow={
+                                            item.percentage == null
+                                              ? 0
+                                              : item.percentage
+                                                  ?.toString()
+                                                  .substring(0, 5)
+                                          }
                                           aria-valuemin={0}
                                           aria-valuemax={100}
                                         />
@@ -1224,8 +1273,8 @@ const Dashboard = () => {
                     {serviceFilter != ""
                       ? ` ${serviceFilter}`
                       : serviceFilterMonth != ""
-                        ? serviceFilterMonth
-                        : "tất cả thời tian"}
+                      ? serviceFilterMonth
+                      : "tất cả thời tian"}
                   </span>{" "}
                   <br />
                   <span style={{ color: "red", fontSize: "16px" }}>
@@ -1330,7 +1379,9 @@ const Dashboard = () => {
                               <span
                                 style={{
                                   color:
-                                    item.service.status == 1 ? "#a0d911" : "#b83a1b",
+                                    item.service.status == 1
+                                      ? "#a0d911"
+                                      : "#b83a1b",
                                 }}
                                 className="  text-xs font-semibold leading-tight dark:text-white dark:opacity-60"
                               >
@@ -1342,7 +1393,10 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               {item.complete}
                             </td>
-                            <td id="totalserviceID" className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <td
+                              id="totalserviceID"
+                              className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                            >
                               {item.turnover.toLocaleString("vi", {
                                 style: "currency",
                                 currency: "VND",
@@ -1351,18 +1405,31 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <div className="flex items-center justify-center">
                                 <span className="mr-2 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
-                                  {item.percentage == null ? 0 : item.percentage.toString().substring(0, 5)}%
+                                  {item.percentage == null
+                                    ? 0
+                                    : item.percentage
+                                        .toString()
+                                        .substring(0, 5)}
+                                  %
                                 </span>
                                 <div>
                                   <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                     <div
                                       style={{
-                                        width: `${item.percentage == null ? 0 : item.percentage}%`,
+                                        width: `${
+                                          item.percentage == null
+                                            ? 0
+                                            : item.percentage
+                                        }%`,
                                         backgroundColor: colorbyRevenue(),
                                       }}
                                       className="flex flex-col justify-center h-auto overflow-hidden "
                                       role="progressbar"
-                                      aria-valuenow={item.percentage == null ? 0 : item.percentage}
+                                      aria-valuenow={
+                                        item.percentage == null
+                                          ? 0
+                                          : item.percentage
+                                      }
                                       aria-valuemin={0}
                                       aria-valuemax={100}
                                     />

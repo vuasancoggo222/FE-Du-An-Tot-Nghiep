@@ -854,7 +854,7 @@ const ListBooking = (props) => {
         socket.emit(SocketEvent.NEWUSERNOTIFICATION,notification)
         socket.off(NEWUSERNOTIFICATION)
       } catch (error) {
-        message.error(`${error.response.data.message}`);
+        message.error(`${error.response?.data?.message}`);
       }
     } else if (ishandle === "2") {
       try {
@@ -894,6 +894,9 @@ const ListBooking = (props) => {
     },
   };
   const handleToolbarClick = async () => {
+   if(ishandle != 4) {
+    return
+   }
     const sliceId = handleBooking?._id.slice(-7, handleBooking._id.length);
     if (girl) {
       girl.excelExport({
@@ -1324,7 +1327,7 @@ const ListBooking = (props) => {
               onClick={handleToolbarClick}
               style={{
                 display:
-                  titleModal == "Thanh toán và in hóa đơn" ? "block" : titleModal == "Thông tin" ? "none" : "none",
+                  titleModal == "Thanh toán và in hóa đơn" ? "block" : titleModal == "Thông tin" ? "none" : "",
               }}
               type="primary"
               htmlType="submit"

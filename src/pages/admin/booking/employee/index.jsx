@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select } from 'antd';
+import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select, Spin } from 'antd';
 import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import { employeeStatistics, httpGetOne } from "../../../../api/employee";
@@ -17,6 +17,7 @@ const ListBookingByEmployee = (props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [titleModal, setTitleModal] = useState("");
     const [fillerMonth, setFillterMonth] = useState("");
+    const [loading, setLoading] = useState(false);
     const [fillterYear, setFillterYear] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
@@ -577,28 +578,33 @@ const ListBookingByEmployee = (props) => {
         if (date == "") {
             setFillterMonth("");
         } else {
+            setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics( employee.id , month, year);
+            const res = await employeeStatistics(employee.id, month, year);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
         }
+        setLoading(false)
     }
 
     const onChangeYear = async (date, dateString) => {
         if (date == "") {
             setFillterYear("");
         } else {
+            setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics( employee.id , undefined, year);
+            const res = await employeeStatistics(employee.id, undefined, year);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
         }
+        setLoading(false)
     }
 
     useEffect(() => {
+        setLoading(true)
         const getEmployee = async () => {
             const res = await httpGetOne(employee.id)
             setIsemployee(res)
@@ -611,216 +617,223 @@ const ListBookingByEmployee = (props) => {
             setEmpoyeeStatic(res)
         }
         getEmployeeStatic()
+        setLoading(false)
     }, [])
-    return <div className="w-full px-6 py-6 mx-auto">
-        <div>
-            <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-                Booking by {isEmployee?.name}
-            </h1>
+    return <Spin Spin spinning={loading} style={{
+        position: "fixed",
+        top: "25%",
+        left: "8%"
+    }}>
+        <div className="w-full px-6 py-6 mx-auto">
+            <div>
+                <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
+                    Booking by {isEmployee?.name}
+                </h1>
 
-        </div>
-        <div className="b-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+            </div>
+            <div className="b-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
 
-            <Button
-                onClick={() => {
-                    fillerMonth(""), fillterYear("");
-                }}
-                style={{
-                    float: "right",
-                    marginLeft: "3px",
-                    backgroundColor: "#168ea0",
-                    fontFamily: "monospace",
-                    color: "white",
-                }}
-            >
-                Làm mới
-            </Button>
-            <DatePicker
-                value={fillterYear == "" ? null : moment(fillterYear)}
-                placeholder="Lọc năm"
-                status="warning"
-                style={{
-                    float: "right",
-                    fontWeight: "bold",
-                    marginLeft: "3px",
-                }}
-                onChange={onChangeYear}
-                picker="year"
-            />
-            <DatePicker
-                value={fillerMonth == "" ? null : moment(fillerMonth)}
-                placeholder="Lọc tháng "
-                status="warning"
-                style={{ float: "right", fontWeight: "bold" }}
-                onChange={onChangeMonth}
-                picker="month"
-            />
-        </div>
-        <br />
-        <div className="flex flex-wrap -mx-3 mt-7 ">
-            {/* card1 */}
-            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 ">
-                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-                    <div
+                <Button
+                    onClick={() => {
+                        fillerMonth(""), fillterYear("");
+                    }}
+                    style={{
+                        float: "right",
+                        marginLeft: "3px",
+                        backgroundColor: "#168ea0",
+                        fontFamily: "monospace",
+                        color: "white",
+                    }}
+                >
+                    Làm mới
+                </Button>
+                <DatePicker
+                    value={fillterYear == "" ? null : moment(fillterYear)}
+                    placeholder="Lọc năm"
+                    status="warning"
+                    style={{
+                        float: "right",
+                        fontWeight: "bold",
+                        marginLeft: "3px",
+                    }}
+                    onChange={onChangeYear}
+                    picker="year"
+                />
+                <DatePicker
+                    value={fillerMonth == "" ? null : moment(fillerMonth)}
+                    placeholder="Lọc tháng "
+                    status="warning"
+                    style={{ float: "right", fontWeight: "bold" }}
+                    onChange={onChangeMonth}
+                    picker="month"
+                />
+            </div>
+            <br />
+            <div className="flex flex-wrap -mx-3 mt-7 ">
+                {/* card1 */}
+                <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 ">
+                    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                        <div
 
-                        className="flex-auto p-4"
-                    >
-                        <div className="flex flex-row -mx-3">
-                            <div className="flex-none w-2/3 max-w-full px-3">
-                                <div>
-                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Chờ Spa
-                                    </p>
-                                    <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.confirmed}
-                                    </h5>
-                                    <p className="mb-0 dark:text-white dark:opacity-60">
-                                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                                            {/* +55% */}
-                                        </span>
-                                        {/* since yesterday */}
-                                    </p>
+                            className="flex-auto p-4"
+                        >
+                            <div className="flex flex-row -mx-3">
+                                <div className="flex-none w-2/3 max-w-full px-3">
+                                    <div>
+                                        <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                            Chờ Spa
+                                        </p>
+                                        <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.confirmed}
+                                        </h5>
+                                        <p className="mb-0 dark:text-white dark:opacity-60">
+                                            <span className="text-sm font-bold leading-normal text-emerald-500">
+                                                {/* +55% */}
+                                            </span>
+                                            {/* since yesterday */}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="px-3 text-right basis-1/3">
-                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                                    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hairdresser-and-barber-shop-flaticons-lineal-color-flat-icons-3.png" />
+                                <div className="px-3 text-right basis-1/3">
+                                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
+                                        <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hairdresser-and-barber-shop-flaticons-lineal-color-flat-icons-3.png" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-                    <div
+                <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                        <div
 
-                        className="flex-auto p-4"
-                    >
-                        <div className="flex flex-row -mx-3">
-                            <div className="flex-none w-2/3 max-w-full px-3">
-                                <div>
-                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Chờ thanh toán
-                                    </p>
-                                    <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.waitToPay}
-                                    </h5>
-                                    <p className="mb-0 dark:text-white dark:opacity-60">
-                                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                                            {/* +55% */}
-                                        </span>
-                                        {/* since yesterday */}
-                                    </p>
+                            className="flex-auto p-4"
+                        >
+                            <div className="flex flex-row -mx-3">
+                                <div className="flex-none w-2/3 max-w-full px-3">
+                                    <div>
+                                        <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                            Chờ thanh toán
+                                        </p>
+                                        <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.waitToPay}
+                                        </h5>
+                                        <p className="mb-0 dark:text-white dark:opacity-60">
+                                            <span className="text-sm font-bold leading-normal text-emerald-500">
+                                                {/* +55% */}
+                                            </span>
+                                            {/* since yesterday */}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="px-3 text-right basis-1/3">
-                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                                    <img src="https://img.icons8.com/cotton/64/null/receive-cash--v1.png" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-                    <div
-
-                        className="flex-auto p-4"
-                    >
-                        <div className="flex flex-row -mx-3">
-                            <div className="flex-none w-2/3 max-w-full px-3">
-                                <div>
-                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Hoàn thành
-                                    </p>
-                                    <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.finished}
-                                    </h5>
-                                    <p className="mb-0 dark:text-white dark:opacity-60">
-                                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                                            {/* +55% */}
-                                        </span>
-                                        {/* since yesterday */}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="px-3 text-right basis-1/3">
-                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                                    <img src="https://img.icons8.com/doodle/48/null/checkmark.png" />
+                                <div className="px-3 text-right basis-1/3">
+                                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
+                                        <img src="https://img.icons8.com/cotton/64/null/receive-cash--v1.png" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+                        <div
 
-            </div>
-            {/* card2 */}
-
-            <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-                <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-
-                    <div
-
-                        className="flex-auto p-4"
-                    >
-                        <div className="flex flex-row -mx-3">
-
-                            <div className="flex-none w-2/3 max-w-full px-3">
-                                <div>
-                                    <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                                        Đóng góp
-                                    </p>
-                                    <h5 className="mb-2 font-bold dark:text-white">
-                                        {employeeStatic?.turnover?.toLocaleString("vi", {
-                                            style: "currency",
-                                            currency: "VND",
-                                        })}
-                                    </h5>
-                                    <p className="mb-0 dark:text-white dark:opacity-60">
-                                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                                            {/* +3% */}
-                                        </span>
-                                        {/* since last week */}
-                                    </p>
+                            className="flex-auto p-4"
+                        >
+                            <div className="flex flex-row -mx-3">
+                                <div className="flex-none w-2/3 max-w-full px-3">
+                                    <div>
+                                        <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                            Hoàn thành
+                                        </p>
+                                        <h5 className="mb-2 font-bold dark:text-white">{employeeStatic?.finished}
+                                        </h5>
+                                        <p className="mb-0 dark:text-white dark:opacity-60">
+                                            <span className="text-sm font-bold leading-normal text-emerald-500">
+                                                {/* +55% */}
+                                            </span>
+                                            {/* since yesterday */}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="px-3 text-right basis-1/3">
+                                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
+                                        <img src="https://img.icons8.com/doodle/48/null/checkmark.png" />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="px-3 text-right basis-1/3">
-                                <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
-                                    <img src="https://img.icons8.com/color/48/null/banknotes.png" />
+                        </div>
+                    </div>
+
+                </div>
+                {/* card2 */}
+
+                <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+                    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+
+                        <div
+
+                            className="flex-auto p-4"
+                        >
+                            <div className="flex flex-row -mx-3">
+
+                                <div className="flex-none w-2/3 max-w-full px-3">
+                                    <div>
+                                        <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                                            Đóng góp
+                                        </p>
+                                        <h5 className="mb-2 font-bold dark:text-white">
+                                            {employeeStatic?.turnover?.toLocaleString("vi", {
+                                                style: "currency",
+                                                currency: "VND",
+                                            })}
+                                        </h5>
+                                        <p className="mb-0 dark:text-white dark:opacity-60">
+                                            <span className="text-sm font-bold leading-normal text-emerald-500">
+                                                {/* +3% */}
+                                            </span>
+                                            {/* since last week */}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="px-3 text-right basis-1/3">
+                                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
+                                        <img src="https://img.icons8.com/color/48/null/banknotes.png" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {/* card3 */}
+
+                {/* card4 */}
+
             </div>
-            {/* card3 */}
+            <Table className="mt-5" columns={columns} dataSource={datatable} />;
 
-            {/* card4 */}
+            <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>Tên Khách hàng: {handleBooking?.name}</p>
+                <p>Tuổi: {handleBooking?.age}</p>
+                <p>Giới tính: {handleBooking?.gender == 1 ? 'Nữ' : "Nam"}</p>
+                <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
+                <p>Ngày: {renderDate(handleBooking?.date)}</p>
+                <p>Giờ đến: {renderTime(handleBooking?.time)}</p>
+                <p>Nhân viên: {handleBooking?.employeeId.name}</p>
+                <p>Dịch vụ:
+                    <ul>
+                        {handleBooking?.serviceId?.map((item) => {
+                            return (
+                                // eslint-disable-next-line react/jsx-key
+                                <li>{item.name}</li>
+                            )
 
-        </div>
-        <Table className="mt-5" columns={columns} dataSource={datatable} />;
-
-        <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-            <p>Tên Khách hàng: {handleBooking?.name}</p>
-            <p>Tuổi: {handleBooking?.age}</p>
-            <p>Giới tính: {handleBooking?.gender == 1 ? 'Nữ' : "Nam"}</p>
-            <p>Số điện thoại: {handleBooking?.phoneNumber}</p>
-            <p>Ngày: {renderDate(handleBooking?.date)}</p>
-            <p>Giờ đến: {renderTime(handleBooking?.time)}</p>
-            <p>Nhân viên: {handleBooking?.employeeId.name}</p>
-            <p>Dịch vụ:
-                <ul>
-                    {handleBooking?.serviceId?.map((item) => {
-                        return (
-                            // eslint-disable-next-line react/jsx-key
-                            <li>{item.name}</li>
-                        )
-
-                    })}
-                </ul>
-            </p>
-            <p>Thanh toán: {formatCash(handleBooking?.bookingPrice || "0")}</p>
-            <p>Note: {handleBooking?.note}</p>
-        </Modal>
-    </div>;
+                        })}
+                    </ul>
+                </p>
+                <p>Thanh toán: {formatCash(handleBooking?.bookingPrice || "0")}</p>
+                <p>Note: {handleBooking?.note}</p>
+            </Modal>
+        </div>;
+    </Spin>
 };
 export default ListBookingByEmployee;

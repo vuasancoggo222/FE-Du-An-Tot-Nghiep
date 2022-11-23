@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import { Button, DatePicker } from "antd";
 import React, { useEffect, useState } from "react";
+import { Spin } from 'antd';
 import { httpGetAll } from "../../api/booking";
 import { employeeOrderStatistics } from "../../api/employee";
 import { groupAgeByService, groupGenderByService, servicesStatistic, turnoverServicesMonth } from "../../api/services";
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [user, setUser] = useState();
   const [service, setService] = useState();
   const [acCount, setaccCount] = useState();
+  const [loading, setLoading] = useState(false);
   const [turnover, setTurnover] = useState();
   const [ageByService, setAgeByService] = useState();
   const [genderByService, setGenderByService] = useState();
@@ -143,9 +145,10 @@ const Dashboard = () => {
 
   const onChangeYearService = async (date, dateString) => {
     if (date == "") {
-      setServiceFilter(""); 
+      setServiceFilter("");
     } else {
-      const year  = moment(date).format("YYYY")
+      setLoading(true)
+      const year = moment(date).format("YYYY")
       const res = await servicesStatistic(undefined, year);
       const arr = {
         services: [
@@ -154,16 +157,18 @@ const Dashboard = () => {
       }
       setService(arr)
       setServiceFilter(dateString);
-      setServiceFilterMonth(""); 
-    } 
+      setServiceFilterMonth("");
+    }
+    setLoading(false)
   };
 
   const onChangeMonthService = async (date, dateString) => {
     if (date == "") {
-      setServiceFilterMonth(""); 
+      setServiceFilterMonth("");
     } else {
-      const month  = moment(date).format("MM")
-      const year  = moment(date).format("YYYY")
+      setLoading(true)
+      const month = moment(date).format("MM")
+      const year = moment(date).format("YYYY")
       const res = await servicesStatistic(month, year);
       const arr = {
         services: [
@@ -172,28 +177,32 @@ const Dashboard = () => {
       }
       setService(arr)
       setServiceFilter("");
-      setServiceFilterMonth(dateString); 
-    } 
+      setServiceFilterMonth(dateString);
+    }
+    setLoading(false)
   };
 
   const onChangeMonthEmployee = async (date, dateString) => {
     if (date == "") {
-      setEmployeeFilterMonth(""); 
+      setEmployeeFilterMonth("");
     } else {
-      const month  = moment(date).format("MM")
-      const year  = moment(date).format("YYYY")
+      setLoading(true)
+      const month = moment(date).format("MM")
+      const year = moment(date).format("YYYY")
       const res = await employeeOrderStatistics(month, year);
       setEmployees(res)
       setEmployeeFilterMonth(dateString);
-    } 
+    }
     setEmployeeFilterYear("");
+    setLoading(false)
   };
 
   const onChangeYearEmployee = async (date, dateString) => {
     if (date == "") {
       setEmployeeFilterYear("");
     } else {
-      const year  = moment(date).format("YYYY")
+      setLoading(true)
+      const year = moment(date).format("YYYY")
       const res = await employeeOrderStatistics(undefined, year);
       setEmployees(res)
       console.log(res);
@@ -201,6 +210,7 @@ const Dashboard = () => {
     }
     setEmployeeFilterMonth("");
     setEmployeeFilterDate("")
+    setLoading(false)
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -457,6 +467,7 @@ const Dashboard = () => {
       if (chartYear != '') {
         year = chartYear
       }
+      setLoading(true)
       const res = await turnoverServicesMonth(year);
       await setTurnover(res);
       console.log(res);
@@ -473,6 +484,7 @@ const Dashboard = () => {
         type: "",
         categories: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
       })
+      setLoading(false)
     };
     getTurnover();
 
@@ -500,10 +512,15 @@ const Dashboard = () => {
       setUser(res);
     };
     getUser()
+
   }, [chartYear]);
   return (
-    <>
-      <div className="w-full px-6  mx-auto">
+    < Spin spinning={loading} style={{
+      position: "fixed",
+      top: "25%",
+      left: "8%"
+    }}>
+      <div className="w-full px-6 mx-auto">
         <div style={{ height: "" }}>
           <h1
             style={{ justifyContent: "space-between", alignItems: "center" }}
@@ -991,15 +1008,15 @@ const Dashboard = () => {
                       textDecorationColor: "blue",
                     }}
                   >
-                    { employeeFilterMonth != ""
-                        ? employeeFilterMonth:  employeeFilterYear != ""
+                    {employeeFilterMonth != ""
+                      ? employeeFilterMonth : employeeFilterYear != ""
                         ? employeeFilterYear
-                            : "tất cả thời tian"}
+                        : "tất cả thời tian"}
                   </span>
                 </h6>
                 <Button
                   onClick={() => {
-                      setEmployeeFilterMonth(""),
+                    setEmployeeFilterMonth(""),
                       setEmployeeFilterYear("");
                   }}
                   style={{
@@ -1340,7 +1357,7 @@ const Dashboard = () => {
                                   <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                     <div
                                       style={{
-                                        width: `${ item.percentage == null ? 0 : item.percentage}%`,
+                                        width: `${item.percentage == null ? 0 : item.percentage}%`,
                                         backgroundColor: colorbyRevenue(),
                                       }}
                                       className="flex flex-col justify-center h-auto overflow-hidden "
@@ -1367,7 +1384,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </>
+    </Spin>
   );
 };
 

@@ -37,3 +37,31 @@ export const removeEmployees = (id, data) => {
   const url = `employees/${id}`;
   return instance.delete(url, data);
 };
+
+export const employeeOrderStatistics = (month, year) => {
+  console.log(month, year);
+  let url
+  if(month == undefined && year == undefined) {
+    url = `employee/order-statistics`
+  }
+  else if(month != undefined && year != undefined) {
+    url = `employee/order-statistics?month=${month}&year=${year}`;
+  }else if(month == undefined){
+    url = `employee/order-statistics?year=${year}`;
+  }
+  return instance.get(url);
+}
+
+export const employeeStatistics = (id, month, year) => {
+  console.log(month, year);
+  let url
+  if(month == undefined && year == undefined) {
+    url = `statistics-for-employee/${id}`
+  }
+  else if(month != undefined && year != undefined) {
+    url = `statistics-for-employee/${id}?month=${month}&year=${year}`;
+  }else if(month == undefined){
+    url = `statistics-for-employee/${id}?year=${year}`;
+  }
+  return instance.get(url);
+}

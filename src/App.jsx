@@ -31,6 +31,7 @@ import ListUser from "./pages/admin/user";
 import Userinformation from "./components/clients/userinformation";
 import ReplyFeedback from "./pages/admin/feedback";
 import ListBanner from "./pages/admin/banner";
+import AddBanner from "./pages/admin/banner/add";
 
 function App() {
   const [booking, setBooking] = useState();
@@ -138,6 +139,8 @@ function App() {
             </Route>
             <Route path="banner">
               <Route index element={<ListBanner />}></Route>
+              <Route path="add" element={<AddBanner />} />
+              {/* <Route path=":id/edit" element={<EditEmployee />} /> */}
             </Route>
           </Route>
         </Routes>

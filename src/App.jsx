@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
@@ -52,7 +53,9 @@ import ListPost from "./pages/admin/post";
 import AddPost from "./pages/admin/post/add";
 import EditPost from "./pages/admin/post/edit";
 import ListBanner from "./pages/admin/banner";
-import Detailpost from "./pages/admin/post/detail";
+import AddBanner from "./pages/admin/banner/add";
+import DetailPost from "./pages/admin/post/detail";
+
 function App() {
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
@@ -86,14 +89,14 @@ function App() {
   useEffect(() => {
     socket.connect();
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-        setNotification(data);
+      setNotification(data);
     });
-    socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
-        setUserNotification(data);
+    socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
+      setUserNotification(data);
     });
-    socket.on('myNewNotification',(data)=>{
+    socket.on("myNewNotification", (data) => {
       console.log(data);
-    })
+    });
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -112,9 +115,9 @@ function App() {
     getService();
     return () => {
       socket.off(SocketEvent.NOTIFICATION);
-      socket.off(SocketEvent.USERLISTNOTIFICATION)
-      socket.off('myNewNotification')
-    }
+      socket.off(SocketEvent.USERLISTNOTIFICATION);
+      socket.off("myNewNotification");
+    };
   }, []);
 
   useEffect(() => {
@@ -219,10 +222,15 @@ function App() {
               <Route index element={<ListPost />}></Route>
               <Route path=":id/edit" element={<EditPost />} />
               <Route path="add" element={<AddPost />} />
-              <Route path=":id" element={<Detailpost />} />
+              <Route path=":id" element={<DetailPost />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>
+            </Route>
+            <Route path="banner">
+              <Route index element={<ListBanner />}></Route>
+              <Route path="add" element={<AddBanner />} />
+              {/* <Route path=":id/edit" element={<EditEmployee />} /> */}
             </Route>
           </Route>
         </Routes>

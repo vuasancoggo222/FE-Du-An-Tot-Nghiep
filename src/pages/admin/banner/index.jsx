@@ -58,7 +58,7 @@ const ListBanner = () => {
                 type="primary"
                 style={{ border: "none", color: "white", width: "100%" }}
               >
-                Sửa
+                <Link to={`/admin/banner/${item}/edit`}>Sửa</Link>
               </Button>
             </Option>
             <Option>
@@ -79,17 +79,16 @@ const ListBanner = () => {
   const onRemove = async (id) => {
     Swal.fire({
       title: "Bạn muốn xóa banner không?",
-      text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Xóa!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         await httpDeleteBanner(id);
         setData(data.filter((item) => item._id !== id));
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        Swal.fire("Xóa thành công!", "", "success");
       }
     });
   };

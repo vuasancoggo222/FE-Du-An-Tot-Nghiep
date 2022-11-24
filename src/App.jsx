@@ -55,6 +55,7 @@ import EditPost from "./pages/admin/post/edit";
 import ListBanner from "./pages/admin/banner";
 import AddBanner from "./pages/admin/banner/add";
 import DetailPost from "./pages/admin/post/detail";
+import EditBanner from "./pages/admin/banner/edit";
 
 function App() {
   const [notification, setNotification] = useRecoilState(notificationState);
@@ -230,7 +231,7 @@ function App() {
             <Route path="banner">
               <Route index element={<ListBanner />}></Route>
               <Route path="add" element={<AddBanner />} />
-              {/* <Route path=":id/edit" element={<EditEmployee />} /> */}
+              <Route path=":id/edit" element={<EditBanner />} />
             </Route>
           </Route>
         </Routes>

@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { Button, Image, Table, Select, message, Popconfirm } from "antd";
+import { Button, Image, Table, Select } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { BiEdit } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { httpDeleteBanner, httpListBanner } from "../../../api/banner";
+// import { httpDeleteBanner, httpListBanner} from '../../../api/';
+// import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+// import { Fragment as _Fragment } from "react/jsx-dev-runtime";
 
 const ListBanner = () => {
   const { Option } = Select;
@@ -59,13 +62,14 @@ const ListBanner = () => {
               </Button>
             </Option>
             <Option>
+              {" "}
               <Button
                 type="danger"
                 style={{ border: "none", color: "white", width: "100%" }}
                 onClick={() => onRemove(item)}
               >
                 Xóa
-              </Button>
+              </Button>{" "}
             </Option>
           </Select>
         );

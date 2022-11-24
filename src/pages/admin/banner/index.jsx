@@ -1,9 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { Button, Image, Table, Select, message } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { BiEdit } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { httpDeleteBanner, httpListBanner } from "../../../api/banner";
+// import { httpDeleteBanner, httpListBanner} from '../../../api/';
+// import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+// import { Fragment as _Fragment } from "react/jsx-dev-runtime";
 
 const ListBanner = () => {
   const { Option } = Select;
@@ -46,6 +50,7 @@ const ListBanner = () => {
             value="Đổi trạng thái"
           >
             <Option>
+              {" "}
               <Button
                 onClick={showModal}
                 dataId={item._id}
@@ -56,6 +61,7 @@ const ListBanner = () => {
               </Button>
             </Option>
             <Option>
+              {" "}
               <Button
                 onClick={() => {
                   onRemove(item);
@@ -64,7 +70,7 @@ const ListBanner = () => {
                 style={{ border: "none", color: "white", width: "100%" }}
               >
                 Xóa
-              </Button>
+              </Button>{" "}
             </Option>
           </Select>
         );

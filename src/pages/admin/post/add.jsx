@@ -23,20 +23,20 @@ const modules = {
   ],
 };
 
-const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-  "imageBlot",
-];
+// const formats = [
+//   "header",
+//   "bold",
+//   "italic",
+//   "underline",
+//   "strike",
+//   "blockquote",
+//   "list",
+//   "bullet",
+//   "indent",
+//   "link",
+//   "image",
+//   "imageBlot",
+// ];
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();

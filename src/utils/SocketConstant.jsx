@@ -8,5 +8,6 @@ export const SocketEvent = {
   NEWNOTIFICATION : 'newNotification',
   CHANGESTATUSBOOKING : 'changeStatusBooking',
   USERLISTNOTIFICATION : 'userListNotification',
+  NEWUSERNOTIFICATION : "newUserNotification"
 };
 Object.freeze(SocketEvent);

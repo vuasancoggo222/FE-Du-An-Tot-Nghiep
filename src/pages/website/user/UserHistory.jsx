@@ -20,6 +20,7 @@ const UserHistory = () => {
         setConfirmBooking(data.filter((item) => item.status == 1));
         setCancelBooking(data.filter((item) => item.status == 2));
         setSuccessBooking(data.filter((item) => item.status == 3));
+        setSuccessBooking(data.filter((item) => item.status == 4));
       } catch (error) {
         console.log(error);
       }
@@ -29,6 +30,7 @@ const UserHistory = () => {
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
   };
+
   return (
     <>
       <div className="border border-[#00502b] rounded-md ">

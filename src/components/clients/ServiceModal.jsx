@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Radio } from "antd";
+import { Button, Col, Descriptions, Modal, Radio, Row } from "antd";
 import { Checkbox } from "antd";
 const ServiceModal = (props) => {
   //  Modal
@@ -24,8 +24,8 @@ const ServiceModal = (props) => {
 
   const [dataUptoForm, setdataUptoForm] = useState({});
   const onChange = (checkedValues) => {
-    console.log("checked = ", checkedValues.target.value);
-    setdataUptoForm(checkedValues.target.value);
+    console.log("checked = ", checkedValues);
+    setdataUptoForm(checkedValues);
   };
 
   const ChildServiceID = (e) => {
@@ -34,7 +34,7 @@ const ServiceModal = (props) => {
   useEffect(() => {
     fetch(`http://localhost:5000/api/service`)
       .then((response) => response.json())
-      .then((data) => setService(data));
+      .then((data) => setService(data.filter((item) => item.status !== 2)));
   }, []);
   return (
     <>
@@ -52,11 +52,32 @@ const ServiceModal = (props) => {
         onCancel={handleCancel}
         centered
       >
-        <Radio.Group
+        <Checkbox.Group style={{ width: "100%" }} onChange={onChange}>
+          {service?.map((item) => {
+            return (
+              <Descriptions bordered title=" " size={"small"} key={item._id}>
+                <Descriptions.Item
+                  label={<Checkbox value={item._id}></Checkbox>}
+                >
+                  {item.name}
+                </Descriptions.Item>
+                <Descriptions.Item label="Giá tiền">
+                  <span className="ml-1">
+                    {item.price.toLocaleString("vi", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </span>
+                </Descriptions.Item>
+              </Descriptions>
+            );
+          })}
+        </Checkbox.Group>
+        {/* <Radio.Group
           options={options}
           onChange={onChange}
           buttonStyle="solid"
-        />
+        /> */}
       </Modal>
     </>
   );

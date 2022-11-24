@@ -1,6 +1,6 @@
-import { Table, Image, Space, Tooltip, Button } from "antd";
+import { Table, Button } from "antd";
 import React from "react";
-import { Link } from "react-router-dom";
+
 import useContact from "../../../hooks/use-contact";
 import { httpDeleteContact } from "../../../api/contact";
 import "antd/dist/antd.css";
@@ -38,7 +38,13 @@ const columns = [
     render: (item) => {
       return (
         <div className="text-center">
-          <Button className="font-bold w-full h-full" onClick={() => onRemove(item)}>Xóa</Button>
+          <Button
+            type="danger"
+            className="font-bold w-full h-full "
+            onClick={() => onRemove(item)}
+          >
+            Xóa
+          </Button>
         </div>
       );
     },

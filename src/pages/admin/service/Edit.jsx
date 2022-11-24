@@ -1,4 +1,4 @@
-import { Button, Form, Input, Upload, Select, message } from "antd";
+import { Button, Form, Input, Upload, Select, message, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
@@ -7,6 +7,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { updateService } from "../../../api/service";
 
 import { uploadCloudinary } from "../../../api/upload";
+import ReactQuill from "react-quill";
+import ImgCrop from "antd-img-crop";
 
 const normFile = (e) => {
   console.log("Upload event:", e);
@@ -17,24 +19,47 @@ const normFile = (e) => {
 
   return e?.fileList;
 };
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, false] }],
+    ["bold", "italic", "underline", "strike", "blockquote"],
+    [
+      { list: "ordered" },
+      { list: "bullet" },
+      { indent: "-1" },
+      { indent: "+1" },
+    ],
+    ["link", "image"],
+    ["clean"],
+    [{ align: [] }],
+  ],
+};
+
 const { Option } = Select;
 const EditService = () => {
   const navigate = useNavigate();
   const [url, setUrl] = useState("");
   const { id } = useParams();
   const [form] = Form.useForm();
-
+  const [content, setContent] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
   useEffect(() => {
     const getSerVice = async () => {
       const dataService = await httpGetOneService(id);
       console.log("log service :", dataService);
       setUrl(dataService?.image);
+      setContent(dataService?.content);
+      setFileList([{ url: dataService.image }]);
       form.setFieldsValue({
         name: dataService?.name,
-        description: dataService?.description,
+
         price: dataService?.price,
         status: dataService?.status,
-        // image: dataService?.image,
+        image: dataService?.image,
+        description: dataService?.description,
       });
     };
 
@@ -44,6 +69,7 @@ const EditService = () => {
   const uploadImage = async (options) => {
     const { onSuccess, onError, file } = options;
     const formData = new FormData();
+
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
@@ -58,7 +84,7 @@ const EditService = () => {
   };
   const onFinish = async (data) => {
     console.log(data);
-    const a = { ...data, image: url };
+    const a = { ...data, image: url, description: content };
     try {
       await updateService(id, a).then(() => {
         message.success("cap nhat thành công", 4);
@@ -104,8 +130,8 @@ const EditService = () => {
 
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
-          <Link to={"/admin/service/add"}>
-            <Button type="primary">Primary Button</Button>
+          <Link to={"/admin/service"}>
+            <Button type="primary">Quay lại</Button>
           </Link>
         </div>
         <Form
@@ -134,22 +160,18 @@ const EditService = () => {
             <Input />
           </Form.Item>
 
-          <Form.Item label="Image">
-            <Form.Item
-              name="image"
-              valuePropName="fileList"
-              getValueFromEvent={normFile}
-              noStyle
-            >
-              <Upload.Dragger {...setting} customRequest={uploadImage}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">
-                  Nhấn hoặc kéo thả để tải ảnh lên
-                </p>
-              </Upload.Dragger>
-            </Form.Item>
+          <Form.Item label="image">
+            <ImgCrop>
+              <Upload
+                customRequest={uploadImage}
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                name="avatar"
+              >
+                {fileList.length < 1 && "+ Upload"}
+              </Upload>
+            </ImgCrop>
           </Form.Item>
           <Form.Item
             name="status"
@@ -163,8 +185,13 @@ const EditService = () => {
             ]}
           >
             <Select placeholder="Please select a country">
-              <Option value={1}></Option>
-              <Option value={2}></Option>
+              <Option value={1}>
+                <Tag color="green">ĐANG KINH DOANH</Tag>
+              </Option>
+              <Option value={2}>
+                {" "}
+                <Tag color="red">DỪNG KINH DOANH</Tag>;
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -174,7 +201,14 @@ const EditService = () => {
               { required: true, message: "Please input your description" },
             ]}
           >
-            <Input.TextArea />
+            <ReactQuill
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              modules={modules}
+              // formats={formats}
+              className="h-screen mb-20"
+            ></ReactQuill>
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 10, span: 5 }}>

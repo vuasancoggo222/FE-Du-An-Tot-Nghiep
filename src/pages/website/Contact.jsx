@@ -1,16 +1,20 @@
 import React from "react";
-import { ArrowRightOutlined, BgColorsOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Row, Col, Space, message} from "antd";
+import { Button, Form, Input, Row, Col, message } from "antd";
 import { httpAddContact } from "../../api/contact";
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
+import styles from "../../../assets/css/style.module.css";
+import { useRecoilValue } from "recoil";
+import { notificationState } from "../../recoil/notificationState";
 
 function Contact() {
+  const count = useRecoilValue(notificationState);
+  console.log(count);
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     var res = await httpAddContact(data);
     if (res._id !== undefined) {
-      message.success("Add contact success");
+      message.success("Cám ơn ban đã để lại lời nhắn");
     }
     navigate("/contact");
   };
@@ -25,222 +29,188 @@ function Contact() {
 
   return (
     <>
-      <div className="bg-gray-100">
-        <div className="w-full h-96 bg-green-800 z-30"></div>
-        <div className="block mb-8 m-auto w-3/4 max-w-fit">
-          <div className="register-wrapper -mt-32">
-            <div className="register-right w-full">
-              <div className="flex">
-                <div
-                  style={{ width: "30%" }}
-                  className="inline-block flex-1 bg-white z-20 shadow-2xl p-4"
-                >
-                  <div>
-                    <svg
-                      class="bg-black w-1/6 h-1/6 mx-auto text-white rounded-full"
-                      viewBox="-3 -3 30 30"
-                      stroke-width="2"
-                      stroke="currentColor"
-                      fill="none"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      {" "}
-                      <path stroke="none" d="M0 0h24v24H0z" />{" "}
-                      <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
-                    </svg>
-                  </div>
-                  <h6 className="text-center text-xl">Tư vấn</h6>
-                  <p className="text-center">
+      <div>
+        <div className="bg-[#f4f4f4] m-auto">
+          <div className={styles.sectiondart}>
+            <section className="py-[120px] ">
+              <div className="text-center text-[#FFF]">
+                <h2 className="text-[#FFF] text-[30px] ">
+                  Để lại lời nhắn cho Beauty
+                </h2>
+                <p className="text-base">
+                  Beauty luôn lắng nghe, luôn luôn thấu hiểu
+                </p>
+              </div>
+            </section>
+          </div>
+          <div className="container m-auto " style={{ maxWidth: "1313px" }}>
+            <div className="container m-auto lg:px-24">
+              <section className="grid sm:grid-cols-1 md:grid-cols-2 m-auto gap-[20px]">
+                <div className="bg-white text-center py-[40px] px-[100px] mt-[-60px] h-[350px] mb-[20px] col-span-1">
+                  <button className="rounded-full bg-black px-[12px] py-[12px] ">
+                    <i className="fa-solid fa-phone fa-2x text-white"></i>
+                  </button>
+                  <h2 className="text-lg font-bold leading-7 text-center text-[#01321f] mt-4">
+                    Tư vấn{" "}
+                  </h2>
+                  <p className="mt-4 text-base">
                     Tư vấn về các dịch vụ làm đẹp tại Beauty
                   </p>
-                  <p className="text-center bg-green-900 text-white w-1/2 mx-auto">
-                    <span>
-                      {" "}
-                      <svg
-                        class="w-6 h-6 mx-auto text-white rounded-full inline-block"
-                        viewBox="6 0 10 25"
-                        stroke-width="2"
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
+                  <div className="">
+                    <div>
+                      <button className="bg-[#00502b] px-[8px] py-[8px] text-white hover:bg-[#01321f] mt-4 text-lg font-semibold">
                         {" "}
-                        <path stroke="none" d="M0 0h24v24H0z" />{" "}
-                        <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
-                      </svg>
-                    </span>{" "}
-                    0123456789
-                  </p>
-                </div>
-                <div className="mx-2"></div>
-                <div
-                  style={{ width: "30%", height: "30%" }}
-                  className="inline-block flex-1 bg-white z-20 shadow-2xl p-4"
-                >
-                  <div>
-                    <svg
-                      class="bg-black w-1/6 h-1/6 mx-auto text-white rounded-full"
-                      viewBox="-3 -3 30 30"
-                      stroke-width="2"
-                      stroke="currentColor"
-                      fill="none"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      {" "}
-                      <path stroke="none" d="M0 0h24v24H0z" />{" "}
-                      <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />{" "}
-                      <line x1="12" y1="12" x2="12" y2="12.01" />{" "}
-                      <line x1="8" y1="12" x2="8" y2="12.01" />{" "}
-                      <line x1="16" y1="12" x2="16" y2="12.01" />
-                    </svg>
+                        <i className="fa-solid fa-comments fa-1x text-white px-[10px]"></i>{" "}
+                        (028) 4455 7788
+                      </button>
+                    </div>
                   </div>
-                  <h6 className="text-center text-xl">Chăm sóc</h6>
-                  <p className="text-center">
+                </div>
+                <div className="bg-white text-center py-[40px] px-[100px] mt-[-60px] h-[350px] mb-[20px] col-span-1 ">
+                  <button className="rounded-full bg-black px-[10px] py-[13px]">
+                    <i className="fa-solid fa-comments fa-2x text-white"></i>
+                  </button>
+                  <h2 className="text-lg font-bold leading-7 text-center text-[#01321f] mt-4">
+                    Chăm sóc{" "}
+                  </h2>
+                  <p className="mt-4 text-base">
                     Lắng nghe, thay đổi để phát triển
                   </p>
-                  <p className="text-center bg-green-900 text-white w-1/2 mx-auto">
-                    <span>
-                      {" "}
-                      <svg
-                        class="w-6 h-6 mx-auto text-white rounded-full inline-block"
-                        viewBox="6 0 10 25"
-                        stroke-width="2"
-                        stroke="currentColor"
-                        fill="none"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
+                  <div className="">
+                    <div>
+                      <button className="bg-[#00502b] px-[8px] py-[8px] text-white hover:bg-[#01321f] mt-4 text-lg font-semibold">
                         {" "}
-                        <path stroke="none" d="M0 0h24v24H0z" />{" "}
-                      <path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" />{" "}
-                      <line x1="12" y1="12" x2="12" y2="12.01" />{" "}
-                      <line x1="8" y1="12" x2="8" y2="12.01" />{" "}
-                      <line x1="16" y1="12" x2="16" y2="12.01" />
-                      </svg>
-                    </span>{" "}
-                    0123456789
-                  </p>
+                        <i className="fa-solid fa-comments fa-1x text-white px-[10px]"></i>{" "}
+                        (028) 4455 7788
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+            <div className="container mx-auto lg:px-24 mb-4">
+              <div className="bg-white w-full shadow rounded p-8 sm:p-12 ">
+                <p className="text-2xl text-green-700 font-bold leading-7 text-center ">
+                  Để lại lời nhắn cho Beauty
+                </p>
+                <div className="register-right -mt-7">
+                  <div className="form-wrapper block bg-white mt-12">
+                    <Form
+                      // name="basic"
+                      onFinish={onFinish}
+                      onFinishFailed={onFinishFailed}
+                      autoComplete="off"
+                      layout="vertical"
+                    >
+                      <Row className="w-2/3 block mx-auto">
+                        <Col className="w-full">
+                          <Row>
+                            <Col className="w-full">
+                              <Form.Item
+                                className=""
+                                label="Họ tên"
+                                name="name"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Vui lòng nhập họ tên của bạn !",
+                                  },
+                                ]}
+                                style={{ marginRight: "10px" }}
+                              >
+                                <Input placeholder="Your Name" />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col className="w-full">
+                              <Form.Item
+                                className=""
+                                label="Địa chỉ"
+                                name="address"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Vui lòng nhập địa chỉ của bạn !",
+                                  },
+                                ]}
+                                style={{ marginRight: "10px" }}
+                              >
+                                <Input placeholder="Your Address" />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col className="w-full">
+                              <Form.Item
+                                className=""
+                                label="Số điện thoại"
+                                name="phoneNumber"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message:
+                                      "Vui lòng nhập số điện thoại của bạn !",
+                                  },
+                                ]}
+                                style={{ marginRight: "10px" }}
+                              >
+                                <Input placeholder="Your PhoneNumber" />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col className="w-full">
+                              <Form.Item
+                                className=""
+                                label="Nội dung"
+                                name="content"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Vui lòng nhập nội dung của bạn !",
+                                  },
+                                ]}
+                                style={{ marginRight: "10px" }}
+                              >
+                                <TextArea
+                                  placeholder="Your Context"
+                                  className="form-input"
+                                  type=""
+                                />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Col>
+                      </Row>
+                      <Form.Item>
+                        <Button
+                          htmlType="submit"
+                          className="w-[15%] block m-12 ml-[16.5%]"
+                          style={{
+                            backgroundColor:
+                              "rgb(20 80 45 / var(--tw-bg-opacity))",
+                            fontSize: "15px",
+                            fontWeight: "bold",
+                            color: "white",
+                          }}
+                        >
+                          Submit
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="register-right -mt-7">
-              <div className="form-wrapper block bg-white mt-12">
-                <Form
-                  name="basic"
-                  onFinish={onFinish}
-                  onFinishFailed={onFinishFailed}
-                  autoComplete="off"
-                  layout="vertical"
-                  className="shadow-2xl"
-                >
-                  <Row className="w-2/3 block mx-auto">
-                    <Col className="w-full">
-                      <Row>
-                        <Col className="w-full">
-                          <Form.Item
-                            className="shadow-2xl shadow-gray-300"
-                            label="Your Name"
-                            name="name"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input your name !",
-                              },
-                            ]}
-                            style={{ marginRight: "10px" }}
-                          >
-                            <Input
-                              placeholder="Your Name"
-                              className="form-input shadow-inner shadow-gray-300"
-                            />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className="w-full">
-                          <Form.Item
-                            className="shadow-2xl shadow-gray-300"
-                            label="Your Address"
-                            name="address"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input your address !",
-                              },
-                            ]}
-                            style={{ marginRight: "10px" }}
-                          >
-                            <Input
-                              placeholder="Your Address"
-                              className="form-input shadow-inner shadow-gray-300"
-                            />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className="w-full">
-                          <Form.Item
-                            className="shadow-2xl shadow-gray-300"
-                            label="Your Context"
-                            name="content"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input your content !",
-                              },
-                            ]}
-                            style={{ marginRight: "10px" }}
-                          >
-                            <TextArea
-                              placeholder="Your Context"
-                              className="form-input shadow-inner shadow-gray-300"
-                              type=""
-                            />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className="w-full">
-                          <Form.Item
-                            className="shadow-2xl shadow-gray-300"
-                            label="Your PhoneNumber"
-                            name="phoneNumber"
-                            rules={[
-                              {
-                                required: true,
-                                message: "Please input your phone number !",
-                              },
-                            ]}
-                            style={{ marginRight: "10px" }}
-                          >
-                            <Input
-                              placeholder="Your PhoneNumber"
-                              className="form-input shadow-inner shadow-blue-300"
-                            />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                  <Form.Item>
-                    <Button
-                      htmlType="submit"
-                      className="w-[15%] block m-12 ml-[16.5%]"
-                      style={{
-                        backgroundColor: "rgb(20 80 45 / var(--tw-bg-opacity))",
-                        fontSize: "15px",
-                        fontWeight: "bold",
-                        color: "white",
-                      }}
-                    >
-                      Thêm
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+            <div className="map container mx-auto lg:px-24 mb-4">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14896.602629703322!2d105.7703402!3d21.026657000000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x313455c2ee01a76b%3A0xb118ceaa0cb97f16!2zU8OibiBiw7NuZyBN4bu5IMSQw6xuaCAy!5e0!3m2!1sen!2s!4v1663950191361!5m2!1sen!2s"
+                width="100%"
+                height="450"
+                allowfullscreen=""
+                loading="lazy"
+              ></iframe>
             </div>
           </div>
         </div>

@@ -113,7 +113,8 @@ const VerifyPage = () => {
         </Button>
       </Form.Item>
     </Form> : <></>}
-    <div id="recaptcha"></div>
+    <div id="recaptcha">
+    </div>
     </>
   )
 }

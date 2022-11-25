@@ -11,3 +11,11 @@ export const httpListBanner = () => {
 export const httpDeleteBanner = (id) => {
   return instance.delete(`/banners/${id}`);
 };
+
+export const httpGetOne = (id) => {
+  return instance.get(`banners/${id}`);
+};
+
+export const httpUpdateBanner = (id, data) => {
+  return instance.patch(`banners/${id}`, data);
+};

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
@@ -41,19 +42,27 @@ import {
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
 export const socket = io(REALTIME_SERVER, {
-  autoConnect: false,
+  autoConnect : true,
+  transports: ["websocket"],
+  reconnection: true,
   query: {
     token: user?.token,
   },
 });
+
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
 import ListPost from "./pages/admin/post";
 import AddPost from "./pages/admin/post/add";
 import EditPost from "./pages/admin/post/edit";
 import ListBanner from "./pages/admin/banner";
-import Detailpost from "./pages/admin/post/detail";
+import AddBanner from "./pages/admin/banner/add";
+import DetailPost from "./pages/admin/post/detail";
+import EditBanner from "./pages/admin/banner/edit";
+import { message } from "antd";
+
 function App() {
+  const [isConnected, setIsConnected] = useState(socket.connected);
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
@@ -84,15 +93,21 @@ function App() {
   };
 
   useEffect(() => {
-    socket.connect();
+    socket.on('connect', () => {
+      setIsConnected(true);
+    });
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-        setNotification(data);
+      setNotification(data);
     });
     socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
         setUserNotification(data);
+        console.log(data);
     });
     socket.on('myNewNotification',(data)=>{
-      console.log(data);
+      message.info(`${data.text}`,20)
     })
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -112,14 +127,14 @@ function App() {
     getService();
     return () => {
       socket.off(SocketEvent.NOTIFICATION);
-      socket.off(SocketEvent.USERLISTNOTIFICATION)
-      socket.off('myNewNotification')
-    }
+      socket.off(SocketEvent.USERLISTNOTIFICATION);
+      socket.off("myNewNotification");
+    };
   }, []);
 
   useEffect(() => {
-    socket?.emit("newUser", user ? user.id : "");
-  }, [socket]);
+    socket.emit("newUser", user ? user.id : "");
+  }, [isConnected]);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);
@@ -219,10 +234,15 @@ function App() {
               <Route index element={<ListPost />}></Route>
               <Route path=":id/edit" element={<EditPost />} />
               <Route path="add" element={<AddPost />} />
-              <Route path=":id" element={<Detailpost />} />
+              <Route path=":id" element={<DetailPost />} />
             </Route>
             <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>
+            </Route>
+            <Route path="banner">
+              <Route index element={<ListBanner />}></Route>
+              <Route path="add" element={<AddBanner />} />
+              <Route path=":id/edit" element={<EditBanner />} />
             </Route>
           </Route>
         </Routes>

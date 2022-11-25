@@ -582,7 +582,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee.id, month, year);
+            const res = await employeeStatistics(isEmployee.employeeId, month, year);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -596,7 +596,7 @@ const ListBookingByEmployee = (props) => {
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee.id, undefined, year);
+            const res = await employeeStatistics(isEmployee.employeeId, undefined, year);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
@@ -610,15 +610,12 @@ const ListBookingByEmployee = (props) => {
             const res = await httpGetOneUser(employee.token , employee.id)
             setIsemployee(res)
             console.log(res);
+            const data = await employeeStatistics(res.employeeId)
+            console.log(data);
+            setEmpoyeeStatic(data) 
+            
         }
         getEmployee()
-
-        const getEmployeeStatic = async () => {
-            const res = await employeeStatistics(isEmployee.employeeId)
-            console.log(res);
-            setEmpoyeeStatic(res)
-        }
-        getEmployeeStatic()
         setLoading(false)
     }, [])
     return <Spin Spin spinning={loading} style={{

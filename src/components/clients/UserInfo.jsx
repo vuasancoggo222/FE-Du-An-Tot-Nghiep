@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import {
   ClockCircleFilled,
+  LockOutlined,
   SettingFilled,
   UserOutlined,
 } from "@ant-design/icons";
@@ -9,16 +10,28 @@ import { Avatar, Image, Menu } from "antd";
 
 import { isAuthenticate } from "../../utils/LocalStorage";
 import { getProfile } from "../../api/user";
+import Userinformation from "./userinformation";
+import { useState } from "react";
 const UserInfo = () => {
-  const user = isAuthenticate();
+  const isUser = isAuthenticate();
+  const [user, setuser] = useState();
+  const url = useParams()
+  const isurl = window.location.href    
+  const isInfo = isurl.includes("user-information/me")
   useEffect(() => {
     const getProfiles = async () => {
-      const datauser = await getProfile(user.token);
-      console.log("log profile :", datauser);
+      const res = await getProfile(isUser.token);
+      setuser(res)
     };
-
     getProfiles();
-  }, []);
+}, [url]);
+
+  const handleUpdateSuccess = async () => {
+    const res = await getProfile(isUser.token);
+    setuser(res)
+  }
+
+
   function getItem(label, key, icon, children) {
     return {
       key,
@@ -39,8 +52,13 @@ const UserInfo = () => {
       <UserOutlined />
     ),
     getItem(
-      <Link to={`/user-setting/me`}>Cài đặt</Link>,
+      <Link to={`/user-changePass/me`}>Đổi mật khẩu</Link>,
       "3",
+      <LockOutlined />
+    ),
+    getItem(
+      <Link to={`/user-setting/me`}>Cài đặt</Link>,
+      "4",
       <SettingFilled />
     ),
   ];
@@ -61,11 +79,11 @@ const UserInfo = () => {
                     xl: 80,
                     xxl: 100,
                   }}
-                  src={<Image src={user.avatar} preview={false} />}
+                  src={<Image src={user?.avatar} preview={false} />}
                   icon={<UserOutlined />}
                 />
               </div>
-              <h3 className="font-bold text-2xl  mb-5">{user.name}</h3>
+              <h3 className="font-bold text-2xl  mb-5">{user?.name}</h3>
             </div>
             <div className="">
               <Menu
@@ -78,7 +96,7 @@ const UserInfo = () => {
             </div>
           </div>
           <div className="col-span-4 ">
-            <Outlet />
+            { isInfo == true ? <Userinformation  updateSuccess = {handleUpdateSuccess} /> : <Outlet />}
           </div>
         </div>
       </div>

@@ -95,12 +95,13 @@ const Header = () => {
         {
           key: "3",
           label: (
-            <button
-              className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
-              onClick={handleLogout}
-            >
-              Đăng xuất
-            </button>
+            <Link
+            className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
+            to="/"
+            onClick={handleLogout}
+          >
+            Đăng xuất
+          </Link>
           ),
         },
       ]}

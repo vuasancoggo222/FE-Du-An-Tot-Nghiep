@@ -11,29 +11,23 @@ const EditBanner = () => {
   const { id } = useParams();
   const [form] = Form.useForm();
   const [url, setUrl] = useState("");
-  const onSubmit = async (data) => {
-    var res = await httpUpdateBanner(id, data);
-    if (res._id !== undefined) {
-      message.success("Update banner success", 4);
-      navigate("/admin/banner");
-    }
-  };
 
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
   useEffect(() => {
-    const reloadData = async (id) => {
-      var res = await httpGetOne(id);
-      console.log(res);
-
-      setFileList([{ url: res.image }]);
+    const getSerVice = async () => {
+      const dataService = await httpGetOne(id);
+      console.log("log service :", dataService);
+      setUrl(dataService?.image);
+      setFileList([{ url: dataService.image }]);
       form.setFieldsValue({
-        image: res.image,
+        image: dataService?.image,
       });
     };
-    reloadData(id);
+
+    getSerVice();
   }, []);
 
   const uploadImage = async (options) => {
@@ -53,16 +47,17 @@ const EditBanner = () => {
     }
   };
   const onFinish = async (data) => {
-    const dataPost = { ...data, image: url };
-    await onSubmit(dataPost);
-
-    console.log(dataPost);
+    console.log(data);
+    const a = { ...data, image: url };
+    try {
+      await httpUpdateBanner(id, a).then(() => {
+        message.success("cap nhat thành công", 4);
+        navigate("/admin/banner");
+      });
+    } catch (error) {
+      message.error(`${error.response.data.message}`, 4);
+    }
   };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-
   return (
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
@@ -83,7 +78,6 @@ const EditBanner = () => {
           wrapperCol={{ span: 15, offset: 5 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
           autoComplete="off"
           layout="vertical"
         >
@@ -95,7 +89,7 @@ const EditBanner = () => {
                 listType="picture-card"
                 fileList={fileList}
                 onChange={onChange}
-                name="image"
+                name="avatar"
               >
                 {fileList.length < 1 && "+ Upload"}
               </Upload>

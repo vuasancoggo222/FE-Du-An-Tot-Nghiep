@@ -1,11 +1,7 @@
-import {
-  Button,
-  Form,
-  Input,
-  message,
-} from "antd";
+import { Button, Form, Input, message } from "antd";
 import { updatePassword } from "firebase/auth";
 import React, { useEffect } from "react";
+import { updatePass } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
 const layout = {
   labelCol: {
@@ -32,22 +28,24 @@ const validateMessages = {
 const ChangePass = () => {
   const isUser = isAuthenticate();
   const [form] = Form.useForm();
-  useEffect(() => {
-   
-  }, []);
-
-  const onFinish = async (data) => {
-    try {
-      console.log(data);
-      await updatePassword(isUser, data)
-      message.success("Đổi mật khẩu thành công");
-    } catch (error) {
-      message.error(`${error.response.data.message}`);
+  useEffect(() => {}, []);
+  const onSubmit = async (data) => {
+    var res = await updatePass(isUser.token, data);
+    if (res._id !== undefined) {
+      message.success("Add employee success", 4);
     }
   };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+  const onFinish = async (data) => {
+    console.log(data);
+    const dataPost = { ...data };
+    try {
+      await onSubmit(dataPost).then(() => {
+        message.success("cap nhat thành công", 4);
+      });
+      // eslint-disable-next-line react/prop-types
+    } catch (error) {
+      message.error(`${error.response.data.message}`, 4);
+    }
   };
 
   return (
@@ -57,18 +55,15 @@ const ChangePass = () => {
           Đổi mật khẩu
         </h1>
         <div className="py-[20px] pb-5">
-         
           <Form
             {...layout}
             name="nest-messages"
             onFinish={onFinish}
             validateMessages={validateMessages}
-            onFinishFailed={onFinishFailed}
             form={form}
           >
-            
             <Form.Item
-            {...layout}
+              {...layout}
               name="currentPassword"
               label="Mật khẩu cũ"
               rules={[
@@ -80,7 +75,7 @@ const ChangePass = () => {
               <Input />
             </Form.Item>
             <Form.Item
-            {...layout}
+              {...layout}
               name="newPassword"
               label="Mật khẩu mới"
               rules={[
@@ -102,7 +97,7 @@ const ChangePass = () => {
             >
               <Input />
             </Form.Item>
-           
+
             <Form.Item
               wrapperCol={{
                 ...layout.wrapperCol,

@@ -41,11 +41,14 @@ import {
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
 export const socket = io(REALTIME_SERVER, {
-  autoConnect: false,
+  autoConnect : true,
+  transports: ["websocket"],
+  reconnection: true,
   query: {
     token: user?.token,
   },
 });
+
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
 import ListPost from "./pages/admin/post";
@@ -54,6 +57,7 @@ import EditPost from "./pages/admin/post/edit";
 import ListBanner from "./pages/admin/banner";
 import Detailpost from "./pages/admin/post/detail";
 function App() {
+  const [isConnected, setIsConnected] = useState(socket.connected);
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
@@ -84,15 +88,21 @@ function App() {
   };
 
   useEffect(() => {
-    socket.connect();
+    socket.on('connect', () => {
+      setIsConnected(true);
+    });
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
         setNotification(data);
     });
     socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
         setUserNotification(data);
+        console.log(data);
     });
     socket.on('myNewNotification',(data)=>{
-      console.log(data);
+      message.info(`${data.text}`,20)
     })
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -118,8 +128,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket?.emit("newUser", user ? user.id : "");
-  }, [socket]);
+    socket.emit("newUser", user ? user.id : "");
+  }, [isConnected]);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);

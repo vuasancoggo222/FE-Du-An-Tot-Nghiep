@@ -60,6 +60,7 @@ import AddBanner from "./pages/admin/banner/add";
 import DetailPost from "./pages/admin/post/detail";
 import EditBanner from "./pages/admin/banner/edit";
 import { message } from "antd";
+import ChangePass from "./components/clients/ChangePass";
 
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -150,6 +151,7 @@ function App() {
             <Route element={<UserInfo />}>
               <Route path="booking-history/me" element={<UserHistory />} />
               <Route path="user-information/me" element={<Userinformation />} />
+              <Route path="user-changePass/me" element={<ChangePass />} />
             </Route>
 
             <Route path="/contact" element={<Contact />} />

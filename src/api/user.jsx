@@ -59,3 +59,12 @@ export const userAccountStatistics = () => {
   const url = `/users/acccount-status-statistics`;
   return instance.get(url);
 }
+export const updatePassword = (token , data) => {
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  const url = `/update-password}`;
+  return instance.get(url, data, header );
+}

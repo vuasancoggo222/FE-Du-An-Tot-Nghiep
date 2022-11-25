@@ -52,7 +52,7 @@ const disabledDate = (current) => {
 };
 
 // ------------------------------------------------------------------------------------------------
-let timeLeft = 30;
+
 const BookingPage = () => {
   const onGetOtp = () => {
     generateCaptcha();
@@ -67,7 +67,6 @@ const BookingPage = () => {
       });
     // time disabled
     setLoadings((prevLoadings) => {
-      countdown();
       const newLoadings = [...prevLoadings];
       newLoadings[0] = true;
       return newLoadings;
@@ -81,18 +80,6 @@ const BookingPage = () => {
     }, 30000);
 
     // ---- time count down
-
-    function countdown() {
-      timeLeft--;
-      document.getElementById("seconds").innerHTML = String(timeLeft + "s");
-      if (timeLeft > 0) {
-        setTimeout(countdown, 1000);
-      }
-      if (timeLeft == 0) {
-        timeLeft = 30;
-        document.getElementById("seconds").innerHTML = String("");
-      }
-    }
   };
 
   const user = isAuthenticate();
@@ -114,7 +101,7 @@ const BookingPage = () => {
         type: "booking",
         text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
       };
-      socket.emit(SocketEvent.NEWNOTIFICATION,newNotification)
+      socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);
       message.success("Đặt lịch thành công", 2);
       navigate("/");
     } catch (error) {

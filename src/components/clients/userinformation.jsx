@@ -35,7 +35,7 @@ const validateMessages = {
 };
 /* eslint-enable no-template-curly-in-string */
 
-const Userinformation = () => {
+const Userinformation = (props) => {
   const user = isAuthenticate();
   const [form] = Form.useForm();
   const [url, setUrl] = useState("");
@@ -73,6 +73,8 @@ const Userinformation = () => {
       await onSubmit(dataPost).then(() => {
         message.success("cap nhat thành công", 4);
       });
+      // eslint-disable-next-line react/prop-types
+      props.updateSuccess()
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
     }
@@ -149,8 +151,8 @@ const Userinformation = () => {
             </Form.Item>
             <Form.Item label="Gender" name="gender">
               <Select>
-                <Select.Option value={1}>1</Select.Option>
-                <Select.Option value={1}>2</Select.Option>
+                <Select.Option value={1}>Nam</Select.Option>
+                <Select.Option value={1}>Nữ</Select.Option>
               </Select>
             </Form.Item>
             <Form.Item name="address" label="Address">

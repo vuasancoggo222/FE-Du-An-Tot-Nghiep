@@ -58,4 +58,13 @@ export const httpUpdateOneUser = (token, id, data) => {
 export const userAccountStatistics = () => {
   const url = `/users/acccount-status-statistics`;
   return instance.get(url);
-}
+};
+export const updatePass = (token, data) => {
+  const url = `/update-password`;
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  return instance.put(url, data, header);
+};

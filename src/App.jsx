@@ -42,11 +42,14 @@ import {
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
 export const socket = io(REALTIME_SERVER, {
-  autoConnect: false,
+  autoConnect : true,
+  transports: ["websocket"],
+  reconnection: true,
   query: {
     token: user?.token,
   },
 });
+
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
 import ListPost from "./pages/admin/post";
@@ -56,8 +59,10 @@ import ListBanner from "./pages/admin/banner";
 import AddBanner from "./pages/admin/banner/add";
 import DetailPost from "./pages/admin/post/detail";
 import EditBanner from "./pages/admin/banner/edit";
+import { message } from "antd";
 
 function App() {
+  const [isConnected, setIsConnected] = useState(socket.connected);
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
@@ -88,16 +93,22 @@ function App() {
   };
 
   useEffect(() => {
-    socket.connect();
+    socket.on('connect', () => {
+      setIsConnected(true);
+    });
+    socket.on('disconnect', () => {
+      setIsConnected(false);
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
       setNotification(data);
     });
-    socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
-      setUserNotification(data);
+    socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
+        setUserNotification(data);
+        console.log(data);
     });
-    socket.on("myNewNotification", (data) => {
-      console.log(data);
-    });
+    socket.on('myNewNotification',(data)=>{
+      message.info(`${data.text}`,20)
+    })
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -122,8 +133,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    socket?.emit("newUser", user ? user.id : "");
-  }, [socket]);
+    socket.emit("newUser", user ? user.id : "");
+  }, [isConnected]);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);

@@ -2,18 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-.centerimage img{
-    margin:auto;
+.centerimage img {
+  margin: auto;
 }
 .formrmd input {
-    width: 100%;
-    margin-bottom: 20px;
-    outline: none;
+  width: 100%;
+  margin-bottom: 20px;
+  outline: none;
 }
 
 .formrmd button:hover {
-    background-color: #00502b;
-    color: white;
-    transition: .4s;
-
+  background-color: #00502b;
+  color: white;
+  transition: 0.4s;
 }

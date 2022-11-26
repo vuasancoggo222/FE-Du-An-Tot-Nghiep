@@ -25,6 +25,15 @@ import { httpAddBooking } from "../../api/booking";
 import { socket } from "../../App";
 import { SocketEvent } from "../../utils/SocketConstant";
 
+import image from "../../../assets/img/image/1.jpg";
+import image1 from "../../../assets/img/image/cham-soc-da-1.jpg";
+import image2 from "../../../assets/img/image/GIAM-MO-BUNG.png";
+import image3 from "../../../assets/img/image/nám.jpg";
+import image4 from "../../../assets/img/image/tam trang.jpg";
+import image5 from "../../../assets/img/image/xam may.jpg";
+import image6 from "../../../assets/img/image/xoa xam.jpg";
+import banner from "../../../assets/img/image/banner.jpg";
+
 // ------------------------------------------------------------------------------------------------
 const layout = {
   labelCol: {
@@ -114,7 +123,7 @@ const BookingPage = () => {
         type: "booking",
         text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
       };
-      socket.emit(SocketEvent.NEWNOTIFICATION,newNotification)
+      socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);
       message.success("Đặt lịch thành công", 2);
       navigate("/");
     } catch (error) {
@@ -468,11 +477,7 @@ const BookingPage = () => {
               </div>
             </div>
             <div>
-              <img
-                className="w-[100%] mt-4 mb-6"
-                src="https://thanhthuybeauty.com/wp-content/uploads/2020/10/banner-quang-cao-300x300.jpg"
-                alt
-              />
+              <img className="w-[100%] mt-4 mb-6" src={banner} alt />
             </div>
             <div className="border-2 border-[#00502B] border-t-transparent rounded-3xl mt-5">
               <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-4 rounded-tr-2xl rounded-tl-2xl">
@@ -483,55 +488,35 @@ const BookingPage = () => {
                   className="flex text-[#036636] hover:text-[#008000] font-bold pb-3 pt-3"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://thanhthuybeauty.com/wp-content/uploads/2020/10/tu-van-3-300x167.jpg"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image} alt />
                   Rút chất liệu mũi là gì
                 </a>
                 <a
                   className="flex text-[#036636] hover:text-[#008000] font-bold pb-3 pt-3"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://thanhthuybeauty.com/wp-content/uploads/2020/10/tu-van-4-300x200.jpg"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image1} alt />
                   Thu gọn cánh mũi
                 </a>
                 <a
                   className="flex text-[#036636] hover:text-[#008000] font-bold pb-3 pt-3"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGM9Gva3DiF5VIcb_OQV8-baXcstYB8Pay7g&usqp=CAU"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image2} alt />
                   Nâng mũi High-line
                 </a>
                 <a
                   className="flex text-[#036636] hover:text-[#008000] font-bold pb-3 pt-3"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://thanhthuybeauty.com/wp-content/uploads/2020/10/96243980_3241418309244404_2262902871081091072_o-300x256.jpg"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image3} alt />
                   Nâng mũi NanoCell 4.0
                 </a>
                 <a
                   className="flex text-[#036636] hover:text-[#008000] font-bold pb-3 pt-3"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://thanhthuybeauty.com/wp-content/uploads/2020/10/96372996_3233515503368018_4629360027893760000_o.jpg"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image4} alt />
                   Nâng mũi BisCell
                 </a>
               </div>
@@ -555,33 +540,21 @@ const BookingPage = () => {
                   className="flex text-[#036636] hover:text-[#008000] pb-3 pt-3 font-bold"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUfp-LxsSFZkebtyf143IKldTeRbGZq1zemQ&usqp=CAU"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image5} alt />
                   Điêu khắc lông mày được bao lâu?
                 </a>
                 <a
                   className="flex text-[#036636] hover:text-[#008000] pb-3 pt-3 font-bold"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9g6bCNhOormxufV3rGvu9CHnLM8ju8Wn_aw&usqp=CAU"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image6} alt />
                   Điêu khắc lông mày hỏng có sửa được không?
                 </a>
                 <a
                   className="flex text-[#036636] hover:text-[#008000] pb-3 pt-3 font-bold"
                   href
                 >
-                  <img
-                    className="mr-2 w-[44px] h-[44px]"
-                    src="https://thanhthuybeauty.com/wp-content/uploads/2020/10/tu-van-1-300x300.jpg"
-                    alt
-                  />
+                  <img className="mr-2 w-[44px] h-[44px]" src={image} alt />
                   Có nên điêu khắc lông mày không?
                 </a>
               </div>

@@ -5,8 +5,9 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select, Spin } from 'antd';
 import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
-import { employeeStatistics, httpGetOne } from "../../../../api/employee";
+import { employeeStatistics } from "../../../../api/employee";
 import moment from "moment";
+import { httpGetOneUser } from "../../../../api/user";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
     const { Option } = Select;
@@ -559,7 +560,7 @@ const ListBookingByEmployee = (props) => {
     let datatable = [];
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
-        if (item.employeeId?._id == isEmployee?._id && item.status == 1 || item.status == 3 || item.status == 4) {
+        if (item.employeeId?._id == isEmployee?.employeeId && item.status == 1 || item.employeeId?._id == isEmployee?.employeeId && item.status == 2 || item.employeeId?._id == isEmployee?.employeeId && item.status == 3 ) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -568,7 +569,7 @@ const ListBookingByEmployee = (props) => {
                 status: item.status,
                 date: date,
                 time: time,
-                employeeId: item.employeeId.name,
+                employeeId: item.employeeId?.name,
                 action: (item)
             })
         }
@@ -581,7 +582,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee.id, month, year);
+            const res = await employeeStatistics(isEmployee.employeeId, month, year);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -595,7 +596,7 @@ const ListBookingByEmployee = (props) => {
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee.id, undefined, year);
+            const res = await employeeStatistics(isEmployee.employeeId, undefined, year);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
@@ -606,17 +607,15 @@ const ListBookingByEmployee = (props) => {
     useEffect(() => {
         setLoading(true)
         const getEmployee = async () => {
-            const res = await httpGetOne(employee.id)
+            const res = await httpGetOneUser(employee.token , employee.id)
             setIsemployee(res)
+            console.log(res);
+            const data = await employeeStatistics(res.employeeId)
+            console.log(data);
+            setEmpoyeeStatic(data) 
+            
         }
         getEmployee()
-
-        const getEmployeeStatic = async () => {
-            const res = await employeeStatistics(employee.id)
-            console.log(res);
-            setEmpoyeeStatic(res)
-        }
-        getEmployeeStatic()
         setLoading(false)
     }, [])
     return <Spin Spin spinning={loading} style={{

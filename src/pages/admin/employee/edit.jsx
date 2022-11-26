@@ -28,7 +28,7 @@ const EditEmployee = () => {
     const reloadData = async (id) => {
       var res = await httpGetOne(id);
       console.log(res);
-
+      setUrl(res?.avatar);
       setFileList([{ url: res.avatar }]);
       form.setFieldsValue({
         name: res.name,
@@ -38,6 +38,7 @@ const EditEmployee = () => {
         phoneNumber: res.phoneNumber,
         avatar: res.avatar,
         status: res.status,
+        gender: res.gender,
       });
     };
     reloadData(id);
@@ -152,7 +153,7 @@ const EditEmployee = () => {
             </Select>
           </Form.Item>
           {/* Avater */}
-          <Form.Item label="image">
+          <Form.Item label="avatar">
             <ImgCrop>
               <Upload
                 customRequest={uploadImage}

@@ -128,6 +128,19 @@ const AddEmployee = () => {
           </Form.Item>
           {/* Id Card */}
           <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Password không được để trống !",
+              },
+            ]}
+          >
+            <Input type="password" />
+          </Form.Item>
+          {/* Id Card */}
+          <Form.Item
             label="Card Id"
             name="idCard"
             rules={[

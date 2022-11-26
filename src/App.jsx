@@ -42,7 +42,7 @@ import {
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
 export const socket = io(REALTIME_SERVER, {
-  autoConnect : true,
+  autoConnect: true,
   transports: ["websocket"],
   reconnection: true,
   query: {
@@ -61,6 +61,8 @@ import DetailPost from "./pages/admin/post/detail";
 import EditBanner from "./pages/admin/banner/edit";
 import { message } from "antd";
 
+import ChangePass from "./components/clients/ChangePass";
+import Swal from "sweetalert2";
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [notification, setNotification] = useRecoilState(notificationState);
@@ -93,22 +95,23 @@ function App() {
   };
 
   useEffect(() => {
-    socket.on('connect', () => {
+    socket.on("connect", () => {
       setIsConnected(true);
     });
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
       setIsConnected(false);
     });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
       setNotification(data);
     });
-    socket.on(SocketEvent.USERLISTNOTIFICATION,(data) => {
-        setUserNotification(data);
-        console.log(data);
+    socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
+      setUserNotification(data);
+      console.log("USERLISTNOTIFICATION", data);
     });
-    socket.on('myNewNotification',(data)=>{
-      message.info(`${data.text}`,20)
-    })
+    socket.on("myNewNotification", (data) => {
+      message.info(`${data.text}`, 20);
+      console.log(data);
+    });
     const getBooking = async () => {
       const res = await httpGetAll();
 
@@ -150,6 +153,7 @@ function App() {
             <Route element={<UserInfo />}>
               <Route path="booking-history/me" element={<UserHistory />} />
               <Route path="user-information/me" element={<Userinformation />} />
+              <Route path="user-changePass/me" element={<ChangePass />} />
             </Route>
 
             <Route path="/contact" element={<Contact />} />

@@ -4,23 +4,26 @@ import { NavLink } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import ServiceCategory from "../../components/clients/ServiceCategory";
 
+import useBanner from "../../hooks/use-banner";
+
 const HomePage = () => {
+  const { data, error } = useBanner();
+  console.log(data);
+  if (!data) return <div>loading</div>;
+  if (error) return <div>Failed loading</div>;
   return (
     <>
       <div className="">
-        <Slide>
-          <div className="border-bottom text-[20px]">
-            <div className="">
-              <div className="image-container">
-                <img
-                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/banner-2.png"
-                  width="100%"
-                  height="100%"
-                />
+        <div className="slide-container">
+          <Slide>
+            {data?.map((item, index) => (
+              <div className="each-slide" key={index}>
+                <div style={{ backgroundImage: `url(${item?.image})` }}></div>
               </div>
-            </div>
-          </div>
-        </Slide>
+            ))}
+          </Slide>
+        </div>
+
         <article className="w-full max-w-[1920px] px-[10px] mx-auto relative ">
           <div className="slide-container"></div>
           <div>
@@ -51,7 +54,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </div>
-              <ServiceCategory/>
+              <ServiceCategory />
             </div>
           </div>
 

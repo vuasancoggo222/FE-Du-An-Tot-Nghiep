@@ -63,6 +63,7 @@ import { message } from "antd";
 
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
+import Chatbox from "./components/clients/Chatbox";
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [notification, setNotification] = useRecoilState(notificationState);
@@ -172,17 +173,26 @@ function App() {
               </PrivateRouter>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route
+              index
+              element={
+                <PrivateRouter2>
+                  <Dashboard />
+                </PrivateRouter2>
+              }
+            />
             <Route path="booking">
               <Route
                 index
                 element={
-                  <ListBooking
-                    handleChangeStatus={changeStatusBooking}
-                    dataBooking={booking}
-                    dataEmployy={employees}
-                    dataService={service}
-                  />
+                  <PrivateRouter2>
+                    <ListBooking
+                      handleChangeStatus={changeStatusBooking}
+                      dataBooking={booking}
+                      dataEmployy={employees}
+                      dataService={service}
+                    />
+                  </PrivateRouter2>
                 }
               />
               <Route
@@ -210,7 +220,14 @@ function App() {
               <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
             <Route path="service">
-              <Route index element={<ListService dataEmployy={employees} />} />
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListService dataEmployy={employees} />
+                  </PrivateRouter2>
+                }
+              />
               <Route
                 path="add"
                 element={<AddService dataEmployy={employees} />}
@@ -218,10 +235,24 @@ function App() {
               <Route path=":id/edit" element={<EditService />} />
             </Route>
             <Route path="contact">
-              <Route index element={<ContactList />} />
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ContactList />
+                  </PrivateRouter2>
+                }
+              />
             </Route>
             <Route path="banner">
-              <Route index element={<ListBanner />} />
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListBanner />
+                  </PrivateRouter2>
+                }
+              />
             </Route>
             <Route path="user">
               <Route
@@ -235,7 +266,14 @@ function App() {
               <Route path=":id/edit" element={<UserEdit />} />
             </Route>
             <Route path="post">
-              <Route index element={<ListPost />}></Route>
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListPost />
+                  </PrivateRouter2>
+                }
+              ></Route>
               <Route path=":id/edit" element={<EditPost />} />
               <Route path="add" element={<AddPost />} />
               <Route path=":id" element={<DetailPost />} />
@@ -250,6 +288,7 @@ function App() {
             </Route>
           </Route>
         </Routes>
+        <Chatbox />
       </div>
     </>
   );

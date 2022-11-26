@@ -30,7 +30,7 @@ export const PrivateRouter2 = (props) => {
     if (user.role == 1) {
       React.useEffect(() => {
         message.error("Bạn không có quyền truy cập !", 2);
-        return navigate("/admin");
+        return navigate("/admin/booking/employee");
       }, []);
     } else {
       return props.children;

@@ -6,7 +6,14 @@ export const notificationState = atom({
     key : 'notification',
     default : false
 })
-
+export const notificationLengthState = atom({
+    key : 'notificationLength',
+    default : 0
+})
+export const userNotificationLengthState = atom({
+  key : 'userNotificationLength',
+  default : 0
+})
 export const userNotificationState = atom({
   key: 'userNotification',
   default : false

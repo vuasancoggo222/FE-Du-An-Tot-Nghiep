@@ -38,6 +38,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   userNotificationState,
   notificationState,
+  userNotificationLengthState,
+  notificationLengthState
 } from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
@@ -70,6 +72,8 @@ function App() {
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
   );
+  const [userNotificationLength,setUserNotificationLength] = useRecoilState(userNotificationLengthState)
+  const [notificationLength,setNotificationLength] = useRecoilState(notificationLengthState)
   const user = isAuthenticate();
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -96,18 +100,22 @@ function App() {
   };
 
   useEffect(() => {
+
     socket.on("connect", () => {
       setIsConnected(true);
     });
+    socket.emit("newUser",user.id);
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-      setNotification(data);
+      setNotification(data.notfication);
+      setNotificationLength(data.unRead)
     });
     socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
-      setUserNotification(data);
-      console.log("USERLISTNOTIFICATION", data);
+      setUserNotification(data.notification);
+      setUserNotificationLength(data.unRead)
+      console.log("USERLISTNOTIFICATION", data.notification);
     });
     socket.on("myNewNotification", (data) => {
       message.info(`${data.text}`, 20);
@@ -135,10 +143,6 @@ function App() {
       socket.off("myNewNotification");
     };
   }, []);
-
-  useEffect(() => {
-    socket.emit("newUser", user ? user.id : "");
-  }, [isConnected]);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);

@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/user';
+import { socket } from "../../App";
 
 const SignIn = (props) => {
-  
   const navigate = useNavigate()
   const layout = {
     labelCol: {
@@ -31,6 +31,7 @@ const SignIn = (props) => {
       const data = await login(userValues)
       console.log(data);
       localStorage.setItem('user', JSON.stringify(data))
+      socket.emit("newUser",data.id);
       message.success('Đăng nhập thành công')
       navigate('/')
       // eslint-disable-next-line react/prop-types

@@ -3,19 +3,20 @@ import moment from "moment";
 import React from "react";
 import { useRecoilValue } from "recoil";
 import {
+notificationLengthState,
   notificationState,
+  userNotificationLengthState,
   userNotificationState,
 } from "../../recoil/notificationState";
 import { isAuthenticate } from "../../utils/LocalStorage";
 const notification = () => {
   const user = isAuthenticate();
-  const listNotification = useRecoilValue(notificationState);
+  const adminNotification = useRecoilValue(notificationState);
   const userNotification = useRecoilValue(userNotificationState);
-
+  const userNotificationUnRead = useRecoilValue(userNotificationLengthState)
+  const adminNotificationUnRead = useRecoilValue(notificationLengthState)
   const [show, setShow] = React.useState(false);
-  // console.log(
-  //   listNotification?.filter((item) => item.notificationType === "booking")
-  // );
+
   const onClick = () => {
     setShow(!show);
   };
@@ -32,10 +33,10 @@ const notification = () => {
           <Badge
             count={
               user.role === 0
-                ? userNotification.length
-                : listNotification.length
+                ? userNotificationUnRead
+                : adminNotificationUnRead
             }
-            overflowCount={10}
+            overflowCount={100}
           >
             <i
               className="cursor-pointer fa fa-bell text-3xl text-white"
@@ -49,7 +50,7 @@ const notification = () => {
           } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
         >
           {user.role === 0
-            ? userNotification.length &&
+            ? userNotification &&
               userNotification.map((item) => {
                 return (
                   <li className="relative mb-2" key={item._id}>
@@ -75,10 +76,8 @@ const notification = () => {
                   </li>
                 );
               })
-            : listNotification.length &&
-              listNotification
-                .filter((item) => item.notificationType === "booking")
-                .map((item, index) => {
+            : adminNotification &&
+            adminNotification.map((item, index) => {
                   return (
                     <li className="relative mb-2" key={index}>
                       <a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">

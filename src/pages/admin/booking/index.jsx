@@ -846,7 +846,7 @@ const ListBooking = (props) => {
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
         const notification = {
           id : handleBooking._id,
-          notificationType : 'bookingStatus',
+          notificationType : 'user',
           text : "Admin đã cập nhật trạng thái đơn hàng của bạn.",
           from : user.id,
           userId : handleBooking.userId._id

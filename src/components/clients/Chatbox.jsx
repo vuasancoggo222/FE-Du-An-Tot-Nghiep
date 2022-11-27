@@ -12,7 +12,8 @@ const Chatbox = () => {
     <>
       <MessengerChat
         pageId="105289585752964"
-        //  language="vi_VN"
+        language="vi_VN"
+        themeColor={"#000000"}
         greetingDialogDisplay={"show"}
         debugMode={true}
         bottomSpacing={30}

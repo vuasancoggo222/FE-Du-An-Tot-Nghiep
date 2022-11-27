@@ -14,7 +14,7 @@ const Chatbox = () => {
         pageId="105289585752964"
         language="vi_VN"
         themeColor={"#000000"}
-        bottomSpacing={300}
+        // bottomSpacing={300}
         loggedInGreeting="loggedInGreeting"
         loggedOutGreeting="loggedOutGreeting"
         greetingDialogDisplay={"show"}

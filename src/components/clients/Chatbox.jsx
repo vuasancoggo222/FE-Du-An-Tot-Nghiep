@@ -10,8 +10,6 @@ import {
 const Chatbox = () => {
   return (
     <>
-      <div className=""></div>
-
       <MessengerChat
         pageId="105289585752964"
         language="vi_VN"

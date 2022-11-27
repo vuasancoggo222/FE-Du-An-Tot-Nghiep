@@ -33,7 +33,7 @@ const ServiceModal = (props) => {
     props.ParentServiceId(e);
   };
   useEffect(() => {
-    fetch(`${instance}/service`)
+    fetch(`https://be-du-an-tot-nghiep.vercel.app/api/service`)
       .then((response) => response.json())
       .then((data) => setService(data.filter((item) => item.status !== 2)));
   }, []);

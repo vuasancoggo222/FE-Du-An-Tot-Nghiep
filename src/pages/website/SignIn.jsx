@@ -1,13 +1,7 @@
 import React from "react";
-import { Button, Form, Input, message } from "antd";
-import { useNavigate } from 'react-router-dom';
-import { login } from '../../api/user';
+import { Button, Form, Input, message,Modal } from "antd";
 import { socket } from "../../App";
-
-const SignIn = (props) => {
-  const navigate = useNavigate()
-import React, { useState } from "react";
-import { Button, Form, Input, message, Modal } from "antd";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../api/user";
 

@@ -105,7 +105,9 @@ function App() {
     socket.on("connect", () => {
       setIsConnected(true);
     });
-    socket.emit("newUser",user.id);
+    if(user){
+      socket.emit("newUser",user.id);
+    }
     socket.on("disconnect", () => {
       setIsConnected(false);
     });

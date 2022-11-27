@@ -181,7 +181,7 @@ function App() {
                 </PrivateRouter2>
               }
             />
-            <Route path="/booking">
+            <Route path="booking">
               <Route
                 index
                 element={
@@ -196,7 +196,7 @@ function App() {
                 }
               />
               <Route
-                path="/employee"
+                path="employee"
                 element={
                   <ListBookingByEmployee
                     handleChangeStatus={changeStatusBooking}
@@ -207,7 +207,7 @@ function App() {
                 }
               />
             </Route>
-            <Route path="/employee">
+            <Route path="employee">
               <Route
                 index
                 element={
@@ -219,7 +219,7 @@ function App() {
               <Route path="add" element={<AddEmployee />} />
               <Route path=":id/edit" element={<EditEmployee />} />
             </Route>
-            <Route path="/service">
+            <Route path="service">
               <Route
                 index
                 element={
@@ -234,7 +234,7 @@ function App() {
               />
               <Route path=":id/edit" element={<EditService />} />
             </Route>
-            <Route path="/contact">
+            <Route path="contact">
               <Route
                 index
                 element={
@@ -244,7 +244,7 @@ function App() {
                 }
               />
             </Route>
-            <Route path="/banner">
+            <Route path="banner">
               <Route
                 index
                 element={
@@ -254,7 +254,7 @@ function App() {
                 }
               />
             </Route>
-            <Route path="/user">
+            <Route path="user">
               <Route
                 index
                 element={
@@ -265,7 +265,7 @@ function App() {
               ></Route>
               <Route path=":id/edit" element={<UserEdit />} />
             </Route>
-            <Route path="/post">
+            <Route path="post">
               <Route
                 index
                 element={
@@ -278,17 +278,17 @@ function App() {
               <Route path="add" element={<AddPost />} />
               <Route path=":id" element={<DetailPost />} />
             </Route>
-            <Route path="/feedback">
+            <Route path="feedback">
               <Route index element={<ReplyFeedback />}></Route>
             </Route>
-            <Route path="/banner">
+            <Route path="banner">
               <Route index element={<ListBanner />}></Route>
               <Route path="add" element={<AddBanner />} />
               <Route path=":id/edit" element={<EditBanner />} />
             </Route>
           </Route>
         </Routes>
-        <Chatbox />
+        {/* <Chatbox /> */}
       </div>
     </>
   );

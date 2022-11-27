@@ -12,13 +12,7 @@ const Chatbox = () => {
     <>
       <MessengerChat
         pageId="105289585752964"
-        language="vi_VN"
-        themeColor={"#000000"}
-        // bottomSpacing={300}
-        loggedInGreeting="loggedInGreeting"
-        loggedOutGreeting="loggedOutGreeting"
-        greetingDialogDisplay={"show"}
-        debugMode={true}
+        //  language="vi_VN"
       />
     </>
   );

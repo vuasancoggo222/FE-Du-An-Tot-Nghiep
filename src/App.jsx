@@ -288,7 +288,7 @@ function App() {
             </Route>
           </Route>
         </Routes>
-        <Chatbox />
+        {/* <Chatbox /> */}
       </div>
     </>
   );

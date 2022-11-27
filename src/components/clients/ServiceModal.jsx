@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Descriptions, Modal, Radio, Row } from "antd";
 import { Checkbox } from "antd";
+import instance from "../../api/instance";
 const ServiceModal = (props) => {
   //  Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +33,7 @@ const ServiceModal = (props) => {
     props.ParentServiceId(e);
   };
   useEffect(() => {
-    fetch(`http://localhost:5000/api/service`)
+    fetch(`${instance}/service`)
       .then((response) => response.json())
       .then((data) => setService(data.filter((item) => item.status !== 2)));
   }, []);

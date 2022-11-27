@@ -13,6 +13,9 @@ const Chatbox = () => {
       <MessengerChat
         pageId="105289585752964"
         //  language="vi_VN"
+        greetingDialogDisplay={"show"}
+        debugMode={true}
+        bottomSpacing={30}
       />
     </>
   );

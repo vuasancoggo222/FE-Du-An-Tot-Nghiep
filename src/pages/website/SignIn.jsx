@@ -4,9 +4,7 @@ import { Button, Form, Input, message,Modal } from "antd";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../api/user";
-import { io } from "socket.io-client";
 import { socket } from "../../App";
-
 
 const SignIn = (props) => {
   const [open, setOpen] = useState(false);

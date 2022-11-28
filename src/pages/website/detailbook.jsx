@@ -42,7 +42,7 @@ const Detaibooking = (props) => {
         const token = result._tokenResponse.idToken;
         await httpAddBooking(token, {
           ...formData,
-          serviceId: service._id,
+          services: {serviceId: service._id, price: service.price },
           bookingPrice: service.price,
         });
         message.success("Đặt lịch thành công", 2);
@@ -431,7 +431,7 @@ const Detaibooking = (props) => {
             }}
           >
             * {titleStatusConfirm + " "}
-            {timeReload != "" ? timeReload + "s" : ""}
+            {timeReload != undefined ? timeReload + "s" : ""}
           </p>
           <Form className="mt-10" onFinish={getValueOtp} name="otpvalue">
             <Form.Item

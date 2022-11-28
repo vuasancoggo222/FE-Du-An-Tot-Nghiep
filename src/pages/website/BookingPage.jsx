@@ -107,7 +107,7 @@ const BookingPage = () => {
       });
       const newNotification = {
         id: response._id,
-        type: "booking",
+        type: "admin",
         text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
       };
       socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);

@@ -44,13 +44,16 @@ import {
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
 export const socket = io(REALTIME_SERVER, {
-  autoConnect: true,
-  transports: ["websocket"],
-  reconnection: true,
-  query: {
-    token: user?.token,
-  },
-});
+    autoConnect: true,
+    forceNew:true,
+    transports: ["websocket"],
+    reconnection: true,
+    reconnectionDelay: 500,
+    reconnectionAttempts: 10,
+    query: {
+      token: user?.token,
+    },
+  });
 
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
@@ -68,7 +71,7 @@ import Swal from "sweetalert2";
 import Chatbox from "./components/clients/Chatbox";
 
 function App() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isConnected, setIsConnected] = useState(null);
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
@@ -76,6 +79,7 @@ function App() {
   const [userNotificationLength,setUserNotificationLength] = useRecoilState(userNotificationLengthState)
   const [notificationLength,setNotificationLength] = useRecoilState(notificationLengthState)
   const user = isAuthenticate();
+
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
@@ -100,56 +104,59 @@ function App() {
     }, 1000);
   };
 
-  useEffect(() => {
+    useEffect(() => {
 
-    socket.on("connect", () => {
-      setIsConnected(true);
-    });
-    if(user){
-      socket.emit("newUser",user.id);
-    }
-    socket.on("disconnect", () => {
-      setIsConnected(false);
-    });
-    socket.on(SocketEvent.NOTIFICATION, (data) => {
-      setNotification(data.notfication);
-      setNotificationLength(data.unRead)
-    });
-    socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
-      setUserNotification(data.notification);
-      setUserNotificationLength(data.unRead)
-      console.log("USERLISTNOTIFICATION", data.notification);
-    });
-    socket.on("myNewNotification", (data) => {
-      message.info(`${data.text}`, 20);
-      console.log(data);
-    });
-    const getBooking = async () => {
-      const res = await httpGetAll();
+      socket.on("connect", () => {
+        setIsConnected(true);
+      });
+      if(user){
+        socket.emit("newUser",user.token);
+      }
+      socket.on("disconnect", () => {
+        setIsConnected(false);
+      });
+      socket.on(SocketEvent.NOTIFICATION, (data) => {
+        setNotification(data.notfication);
+        setNotificationLength(data.unRead)
+      });
+      socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
+        setUserNotification(data.notification);
+        setUserNotificationLength(data.unRead)
+        console.log("USERLISTNOTIFICATION", data.notification);
+      });
+      socket.on("myNewNotification", (data) => {
+        message.info(`${data.text}`, 20);
+        console.log(data);
+      });
+      const getBooking = async () => {
+        const res = await httpGetAll();
+  
+        setBooking(res);
+      };
+      getBooking();
+      const getEmployee = async () => {
+        const res = await httpGetEmployees();
+        setEmployees(res);
+      };
+      getEmployee();
+      const getService = async () => {
+        const res = await httpGetAllService();
+        setService(res);
+      };
+      getService();
+      return () => {
+        socket.off(SocketEvent.NOTIFICATION);
+        socket.off(SocketEvent.USERLISTNOTIFICATION);
+        socket.off("myNewNotification");
+      };
+    }, []);
+  
 
-      setBooking(res);
-    };
-    getBooking();
-    const getEmployee = async () => {
-      const res = await httpGetEmployees();
-      setEmployees(res);
-    };
-    getEmployee();
-    const getService = async () => {
-      const res = await httpGetAllService();
-      setService(res);
-    };
-    getService();
-    return () => {
-      socket.off(SocketEvent.NOTIFICATION);
-      socket.off(SocketEvent.USERLISTNOTIFICATION);
-      socket.off("myNewNotification");
-    };
-  }, []);
   const changeStatusBooking = async () => {
     const res = await httpGetAll();
     setBooking(res);
   };
+  
   return (
     <>
       <div className="App">

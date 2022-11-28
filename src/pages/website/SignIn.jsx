@@ -1,9 +1,12 @@
 import React from "react";
 import { Button, Form, Input, message,Modal } from "antd";
-import { socket } from "../../App";
+
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../api/user";
+import { io } from "socket.io-client";
+import { socket } from "../../App";
+
 
 const SignIn = (props) => {
   const [open, setOpen] = useState(false);
@@ -42,11 +45,11 @@ const SignIn = (props) => {
     console.log(values.phoneNumber.phoneNumber, values.password.password);
     try {
       const data = await login(userValues);
-      console.log(data);
       localStorage.setItem('user', JSON.stringify(data))
-      socket.emit("newUser",data.id);
+      socket.emit("newUser",data.token);
       message.success('Đăng nhập thành công')
       navigate('/')
+     
       // eslint-disable-next-line react/prop-types
       props.parentCallback(data);
     } catch (error) {

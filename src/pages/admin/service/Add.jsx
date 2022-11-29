@@ -1,4 +1,13 @@
-import { Button, Form, Input, Upload, Select, message } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Upload,
+  Select,
+  message,
+  Tag,
+  InputNumber,
+} from "antd";
 import React, { useState } from "react";
 import { uploadCloudinary } from "../../../api/upload";
 import { InboxOutlined } from "@ant-design/icons";
@@ -110,7 +119,7 @@ const AddService = () => {
           </Link>
         </div>
         <Form
-          className="m-auto text-center"
+          className="m-auto "
           name="basic"
           labelCol={{ span: 4, offset: 5 }}
           wrapperCol={{ span: 15, offset: 5 }}
@@ -132,7 +141,14 @@ const AddService = () => {
             label="Price"
             rules={[{ required: true, message: "Please input your number" }]}
           >
-            <Input type="number" />
+            <InputNumber
+              min={10000}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              style={{ width: "100%" }}
+            />
+            {/* <Input type="number" /> */}
           </Form.Item>
           <Form.Item label="Image">
             <Form.Item
@@ -140,6 +156,12 @@ const AddService = () => {
               valuePropName="fileList"
               getValueFromEvent={normFile}
               noStyle
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your image!",
+                },
+              ]}
             >
               <Upload.Dragger {...setting} customRequest={uploadImage}>
                 <p className="ant-upload-drag-icon h-[15px]">
@@ -163,15 +185,20 @@ const AddService = () => {
             ]}
           >
             <Select placeholder="Please select a country">
-              <Option value={1}></Option>
-              <Option value={2}></Option>
+              <Option value={1}>
+                <Tag color="green">ĐANG KINH DOANH</Tag>
+              </Option>
+              <Option value={2}>
+                {" "}
+                <Tag color="red">DỪNG KINH DOANH</Tag>
+              </Option>
             </Select>
           </Form.Item>
           <Form.Item
             name="description"
             label="Introduction"
             rules={[
-              { required: true, message: "Please input your description" },
+              { required: true, message: "Please input your Introduction" },
             ]}
           >
             <ReactQuill
@@ -180,7 +207,7 @@ const AddService = () => {
               onChange={setContent}
               modules={modules}
               // formats={formats}
-              className="h-screen mb-20"
+              className="h-[300px] mb-20"
             ></ReactQuill>
           </Form.Item>
 

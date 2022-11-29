@@ -68,7 +68,7 @@ const Header = () => {
     setAuth(false);
   };
   const checckAuth = () => {
-    if (users.role === 1) {
+    if (users?.role === 1) {
       return (
         <Link
           className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
@@ -77,7 +77,7 @@ const Header = () => {
           Lịch làm việc
         </Link>
       );
-    } else if (users.role === 2) {
+    } else if (users?.role === 2) {
       return (
         <Link
           className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px] text-black"

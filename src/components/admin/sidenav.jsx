@@ -1,7 +1,16 @@
+import { Button, message } from "antd";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Sidenav = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    console.log(1);
+    localStorage.removeItem("user");
+    message.success("Đăng xuất thành công.", 2);
+    navigate("/");
+    // setAuth(false);
+  };
   return (
     <>
       {/* sidenav  */}
@@ -141,6 +150,16 @@ const Sidenav = () => {
                   User
                 </span>
               </Link>
+            </li>
+            <li className="mt-0.5 w-full">
+              <Button
+                className="mx-6 "
+                style={{ borderRadius: "5px" }}
+                onClick={handleLogout}
+              >
+                {" "}
+                Đăng xuất
+              </Button>
             </li>
           </ul>
         </div>

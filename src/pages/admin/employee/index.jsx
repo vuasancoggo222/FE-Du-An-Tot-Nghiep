@@ -14,6 +14,11 @@ const ListEmployee = () => {
   const { data, error } = useEmployee();
   const columns = [
     {
+      title: "Avatar",
+      dataIndex: "avatar",
+      render: (image) => <Image width={100} src={image} key={image} />,
+    },
+    {
       title: "Mã nhân viên",
       dataIndex: "idCard",
       // specify the condition of filtering result
@@ -27,11 +32,7 @@ const ListEmployee = () => {
       title: "Name",
       dataIndex: "name",
     },
-    {
-      tittle: "avatar",
-      dataIndex: "avatar",
-      render: (image) => <Image width={200} src={image} key={image} />,
-    },
+
     {
       title: "Email",
       dataIndex: "email",

@@ -6,11 +6,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { removeService } from "../../../api/service";
 import { Option } from "antd/lib/mentions";
 import Swal from "sweetalert2";
+import { formatPrice } from "../../../utils/formatCash";
 
 const ListService = () => {
   const { data, error } = useService();
   const navigate = useNavigate();
   const columns = [
+    {
+      title: "image",
+      dataIndex: "image",
+      render: (image) => <Image width={100} src={image} key={image} />,
+    },
     {
       title: "Name",
       dataIndex: "name",
@@ -48,12 +54,9 @@ const ListService = () => {
     {
       title: "price",
       dataIndex: "price",
+      render: (price) => <div className="">{formatPrice(price)}</div>,
     },
-    {
-      title: "image",
-      dataIndex: "image",
-      render: (image) => <Image width={200} src={image} key={image} />,
-    },
+
     {
       title: "status",
       dataIndex: "status",

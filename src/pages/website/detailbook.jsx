@@ -431,7 +431,7 @@ const Detaibooking = (props) => {
             }}
           >
             * {titleStatusConfirm + " "}
-            {timeReload != undefined ? timeReload + "s" : ""}
+            {timeReload != "" ? timeReload + "s" : ""}
           </p>
           <Form className="mt-10" onFinish={getValueOtp} name="otpvalue">
             <Form.Item

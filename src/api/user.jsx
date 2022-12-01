@@ -68,3 +68,18 @@ export const updatePass = (token, data) => {
   };
   return instance.put(url, data, header);
 };
+
+export const checkValidPhoneNumber = (phoneNumber) =>{
+  const url = `/check-valid-phone-number`
+  return instance.post(url,phoneNumber)
+}
+
+export const resetPassword = (data,token) => {
+  const url = `reset-password`
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
+  return instance.put(url,data,header)
+}

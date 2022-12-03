@@ -1,4 +1,4 @@
-import { Button, message } from "antd";
+import { message } from "antd";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -32,7 +32,7 @@ const Sidenav = () => {
               alt="main_logo"
             />
             <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
-              BeautySpa
+              Thẩm mỹ viện Tuyến Spa
             </span>
           </Link>
         </div>
@@ -63,7 +63,7 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-spa-travel-agency-flaticons-lineal-color-flat-icons.png" />
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   Employee
                 </span>
               </Link>
@@ -76,7 +76,7 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center fill-current stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-booking-spa-flaticons-lineal-color-flat-icons.png" />{" "}
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   Booking
                 </span>
               </Link>
@@ -89,7 +89,7 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hospitality-services-flaticons-lineal-color-flat-icons.png" />{" "}
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   Service
                 </span>
               </Link>
@@ -102,7 +102,7 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/cotton/64/null/contact-card.png" />{" "}
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   Contact
                 </span>
               </Link>
@@ -115,7 +115,7 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/external-smashingstocks-isometric-smashing-stocks/55/null/external-Banner-sports-smashingstocks-isometric-smashing-stocks-2.png" />{" "}
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   Banner
                 </span>
               </Link>
@@ -128,7 +128,7 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/nolan/64/us-news.png" />{" "}
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   Post
                 </span>
               </Link>
@@ -146,20 +146,20 @@ const Sidenav = () => {
                 <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                   <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-alternative-medicine-flaticons-lineal-color-flat-icons.png" />{" "}
                 </div>
-                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                <span className="ml-1 duration-300 opacity-100 pointer-events-none ease text-[#005E2E] text-base font-semibold">
                   User
                 </span>
               </Link>
             </li>
-            <li className="mt-0.5 w-full">
-              <Button
-                className="mx-6 "
+            <li className="mt-10 grid">
+              <button
+                type="button"
+                className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                 style={{ borderRadius: "5px" }}
                 onClick={handleLogout}
               >
-                {" "}
                 Đăng xuất
-              </Button>
+              </button>
             </li>
           </ul>
         </div>

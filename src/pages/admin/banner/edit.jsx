@@ -62,8 +62,8 @@ const EditBanner = () => {
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
-          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Update Banner</div>
+          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Cập nhật banner</div>
           </h1>
         </div>
       </div>
@@ -82,7 +82,7 @@ const EditBanner = () => {
           layout="vertical"
         >
           {/* Avater */}
-          <Form.Item label="image">
+          <Form.Item label="Ảnh banner">
             <ImgCrop>
               <Upload
                 customRequest={uploadImage}
@@ -98,7 +98,7 @@ const EditBanner = () => {
           <Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Cập nhật
               </Button>
             </Form.Item>
           </Form.Item>

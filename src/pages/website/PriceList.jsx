@@ -69,25 +69,31 @@ const PriceList = () => {
               <h3 className="w-[5%] bg-[#008000] text-white mr-[1px] pl-2 py-1 text-base">
                 STT
               </h3>
-              <h3 className="w-[85%] bg-[#008000] text-white pl-2 py-1 text-base">
+              <h3 className="w-[82%] bg-[#008000] text-white pl-2 py-1 text-base">
                 Tên dịch vụ
               </h3>
-              <h3 className="w-[10%] bg-[#008000] text-white ml-[1px] pl-2 py-1 text-base">
+              <h3 className="w-[13%] bg-[#008000] text-white ml-[1px] pl-2 py-1 text-base">
                 Giá dv
               </h3>
             </div>
             <ul>
               {listPrice.map((item, index) => (
-                <li className="flex ml-2 my-2" key={index}>
+                <li
+                  className="flex ml-2 my-2 border-b-[1px] border-[#ccc]"
+                  key={index}
+                >
                   <strong className="w-[5%] pl-2 text-base">{index + 1}</strong>
                   <a
-                    className="text-black w-[85%] text-base hover:text-[#036636] font-bold"
+                    className="text-black w-[82%] text-base hover:text-[#036636] font-bold"
                     href
                   >
                     {item.name}
                   </a>
-                  <strong className="w-[10%] pl-2 text-base">
-                    {item.price}đ
+                  <strong className="w-[13%] pl-2 text-base">
+                    {item.price.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
                   </strong>
                 </li>
               ))}

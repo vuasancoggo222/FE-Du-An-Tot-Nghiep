@@ -8,7 +8,7 @@ import {
   InputNumber,
 } from "antd";
 import { Option } from "antd/lib/mentions";
-import { InboxOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -98,7 +98,7 @@ const UserEdit = () => {
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
           <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Edit User</div>
+            <div>Cập nhật tài khoản</div>
           </h1>
         </div>
       </div>
@@ -112,8 +112,6 @@ const UserEdit = () => {
         <div className="w-[1000px] m-auto">
           <Form
             name="basic"
-            //   labelCol={{ span: 4, offset: 5 }}
-            //   wrapperCol={{ span: 10 }}
             initialValues={{ status: true }}
             onFinish={onFinish}
             autoComplete="off"
@@ -122,20 +120,20 @@ const UserEdit = () => {
           >
             <Form.Item
               name="name"
-              label="Name"
+              label="Họ tên"
               // rules={[{ required: true, message: "Please input your username!" }]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               name="phone"
-              label="Phone Number"
+              label="Số điện thoại"
               rules={[{ required: true, message: "Please input your number" }]}
             >
               <Input disabled />
             </Form.Item>
 
-            <Form.Item label="Avatar">
+            <Form.Item label="Ảnh đại diện">
               <Form.Item name="avatar">
                 <Upload
                   listType="picture-card"
@@ -149,17 +147,17 @@ const UserEdit = () => {
             </Form.Item>
             <Form.Item
               name="address"
-              label="Address"
+              label="Địa chỉ"
               // rules={[{ required: true, message: "Please input your username!" }]}
             >
               <Input />
             </Form.Item>
-            <Form.Item name="age" label="Age" type="number">
+            <Form.Item name="age" label="Tuổi" type="number">
               <InputNumber />
             </Form.Item>
             <Form.Item
               name="gender"
-              label="Gender"
+              label="Giới tính"
               // rules={[{ required: true, message: "Please input your username!" }]}
             >
               <Select placeholder="Chọn giới tính">
@@ -169,7 +167,7 @@ const UserEdit = () => {
             </Form.Item>
             <Form.Item
               name="role"
-              label="Role"
+              label="vai trò"
               hasFeedback
               rules={[
                 {
@@ -186,7 +184,7 @@ const UserEdit = () => {
             </Form.Item>
             <Form.Item
               name="status"
-              label="Status"
+              label="Trạng thái"
               hasFeedback
               rules={[
                 {
@@ -203,7 +201,7 @@ const UserEdit = () => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
               <Button type="primary" htmlType="submit">
-                Sửa tài khoản
+                Cập nhật tài khoản
               </Button>
             </Form.Item>
           </Form>

@@ -45,7 +45,6 @@ const AddService = () => {
   const [url, setUrl] = useState("");
 
   const navigate = useNavigate();
-  // const { create } = useService();
   const [content, setContent] = useState("");
   const create = async (data) => {
     try {
@@ -106,8 +105,8 @@ const AddService = () => {
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
-          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Them dich vu</div>
+          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Thêm dịch vụ</div>
           </h1>
         </div>
       </div>
@@ -130,7 +129,7 @@ const AddService = () => {
           layout="vertical"
         >
           <Form.Item
-            label="Username"
+            label="Tên dịch vụ"
             name="name"
             rules={[{ required: true, message: "Please input your username!" }]}
           >
@@ -138,7 +137,7 @@ const AddService = () => {
           </Form.Item>
           <Form.Item
             name="price"
-            label="Price"
+            label="Giá tiền"
             rules={[{ required: true, message: "Please input your number" }]}
           >
             <InputNumber
@@ -150,7 +149,7 @@ const AddService = () => {
             />
             {/* <Input type="number" /> */}
           </Form.Item>
-          <Form.Item label="Image">
+          <Form.Item label="Ảnh dịch vụ">
             <Form.Item
               name="image"
               valuePropName="fileList"
@@ -175,7 +174,7 @@ const AddService = () => {
           </Form.Item>
           <Form.Item
             name="status"
-            label="Status"
+            label="Trạng thái dịch vụ"
             hasFeedback
             rules={[
               {
@@ -196,7 +195,7 @@ const AddService = () => {
           </Form.Item>
           <Form.Item
             name="description"
-            label="Introduction"
+            label="Mô tả dịch vụ"
             rules={[
               { required: true, message: "Please input your Introduction" },
             ]}

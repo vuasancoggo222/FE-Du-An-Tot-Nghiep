@@ -451,6 +451,7 @@ const ListBooking = (props) => {
       document.getElementById("js-licensing").style.display = "none";
       document.getElementById("grid_1281791375_0").style.display = "none";
       setIshandle(1)
+      setIsHouseNoneBlock("none");
       form.setFieldsValue({
         name: "",
         phoneNumber: undefined,
@@ -490,7 +491,6 @@ const ListBooking = (props) => {
           return;
         }
       });
-
       booking.map(async (item) => {
         console.log(item);
         if (item._id == idBooking) {
@@ -498,6 +498,7 @@ const ListBooking = (props) => {
             return;
           }
           await seDateBooking(item.date.toString());
+          setBookingPirce(item?.bookingPrice)
           form.setFieldsValue({
             name: item?.name,
             phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),

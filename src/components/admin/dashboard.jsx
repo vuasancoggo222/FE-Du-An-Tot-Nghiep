@@ -249,51 +249,6 @@ const Dashboard = () => {
     return coutn;
   };
 
-  const countCustomerIng = () => {
-    let coutn = 0;
-    const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
-    booking?.forEach((item) => {
-      let dayItem = renderDate(item.date);
-      if (item.status == 3 && dayItem == today) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
-
-  const countBookingWait = () => {
-    let coutn = 0;
-    const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
-    booking?.forEach((item) => {
-      let dayItem = renderDate(item.date);
-      if (item.status == 0 && dayItem == today) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
-
-  const countBookingSuccess = () => {
-    let coutn = 0;
-    const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
-    booking?.forEach((item) => {
-      let dayItem = renderDate(item.date);
-      if (item.status == 1 && dayItem == today) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
-
   const totalTurnover = () => {
     let sum = 0;
     turnover?.allData.map((item) => {

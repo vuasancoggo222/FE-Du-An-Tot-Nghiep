@@ -14,8 +14,8 @@ const DetailNews = () => {
   });
 
   return (
-    <section className="bg-white max-w-[1200px] mx-auto mb-8 mt-8">
-      <div className="flex items-center ml-5">
+    <section className="bg-white max-w-[1200px] mx-auto mb-8 mt-8 px-10 xl:px-0">
+      <div className="flex justify-center md:justify-start items-center ml-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -33,8 +33,8 @@ const DetailNews = () => {
         </svg>
         <h2 className="text-2xl text-[#014b29] mb-0 ml-3">Tin tức</h2>
       </div>
-      <div className="flex">
-        <div className="w-[75%] pr-10">
+      <div className="flex flex-wrap">
+        <div className="w-[100%] md:w-[75%] mx-auto pr-0 md:pr-10">
           <div className="flex flex-wrap">
             {/* <div>
               <Link to={`/detail-booking/${item?.slug}`}>
@@ -54,7 +54,7 @@ const DetailNews = () => {
               <Link
                 key={item?._id}
                 to={`/news/detail/${item?.slug}`}
-                className="w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
+                className="w-[100%] lg:w-[46%] xl:w-[30%] border-2 border-[#f3dd82] rounded-xl mx-3 my-5"
               >
                 <img
                   className="rounded-t-[10px] w-[100%] h-[260px] object-cover"

@@ -5,10 +5,11 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { login } from "../../api/user";
 import { socket } from "../../App";
+import FormForgotPassword from "../../components/antd/Form";
 
 const SignIn = (props) => {
   const [open, setOpen] = useState(false);
-  const [code, setCode] = useState(false);
+
 
   const navigate = useNavigate();
   // modal forgot password
@@ -147,62 +148,7 @@ const SignIn = (props) => {
                   onCancel={handleCancel}
                   footer={[]}
                 >
-                  <Form
-                    name="basic"
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 16 }}
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    autoComplete="off"
-                  >
-                    {code ? (
-                      <Form.Item
-                        label="Mã xác nhận"
-                        name="username"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Vui lòng nhập mã xác nhận!",
-                          },
-                        ]}
-                      >
-                        <Input />
-                        <NavLink>Nhập lại số điện thoại</NavLink>
-                      </Form.Item>
-                    ) : (
-                      <Form.Item
-                        label="Số điện thoại"
-                        name="username"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Vui lòng nhập số điện thoại của bạn!",
-                          },
-                        ]}
-                      >
-                        <Input />
-                      </Form.Item>
-                    )}
-                    <Form.Item wrapperCol={{ offset: 1, span: 16 }}>
-                      {code ? (
-                        <Button
-                          type="primary"
-                          htmlType="submit"
-                          onClick={() => setCode(true)}
-                        >
-                          Gửi
-                        </Button>
-                      ) : (
-                        <Button
-                          type="primary"
-                          htmlType="submit"
-                          onClick={() => setCode(true)}
-                        >
-                          Nhận mã
-                        </Button>
-                      )}
-                    </Form.Item>
-                  </Form>
+                 <FormForgotPassword open={open}/>
                 </Modal>
 
                 <Form.Item

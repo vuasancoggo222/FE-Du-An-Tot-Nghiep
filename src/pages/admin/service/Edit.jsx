@@ -1,4 +1,13 @@
-import { Button, Form, Input, Upload, Select, message, Tag } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Upload,
+  Select,
+  message,
+  Tag,
+  InputNumber,
+} from "antd";
 import React, { useEffect, useState } from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
@@ -157,7 +166,13 @@ const EditService = () => {
             label="Price"
             rules={[{ required: true, message: "Please input your number" }]}
           >
-            <Input />
+            <InputNumber
+              min={10000}
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+              }
+              style={{ width: "100%" }}
+            />
           </Form.Item>
 
           <Form.Item label="image">

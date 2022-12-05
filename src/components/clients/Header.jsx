@@ -34,7 +34,7 @@ const Header = () => {
         navigate("/admin");
       }
     }
-  }
+  };
 
   const handleSignUp = async () => {
     const signUp = await JSON.parse(localStorage.getItem("signup"));
@@ -67,6 +67,30 @@ const Header = () => {
     navigate("/");
     setAuth(false);
   };
+  const checckAuth = () => {
+    if (users?.role === 1) {
+      return (
+        <Link
+          className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
+          to="/admin/booking/employee"
+        >
+          Lịch làm việc
+        </Link>
+      );
+    } else if (users?.role === 2) {
+      return (
+        <Link
+          className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px] text-black"
+          to="/admin"
+        >
+          Admin
+        </Link>
+      );
+    } else {
+      return null;
+    }
+  };
+  const users = isAuthenticate();
   const menu = (
     <Menu
       items={[
@@ -94,14 +118,18 @@ const Header = () => {
         },
         {
           key: "3",
+          label: checckAuth(),
+        },
+        {
+          key: "4",
           label: (
             <Link
-            className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
-            to="/"
-            onClick={handleLogout}
-          >
-            Đăng xuất
-          </Link>
+              className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] w-[50px] mr-[30px]"
+              to="/"
+              onClick={handleLogout}
+            >
+              Đăng xuất
+            </Link>
           ),
         },
       ]}

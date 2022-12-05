@@ -93,7 +93,13 @@ const BookingPage = () => {
 
   const user = isAuthenticate();
   console.log(user);
+
   const getValueOtp = async (data) => {
+    console.log("formsubmit", {
+      ...formValues,
+      services: servicePicked,
+      bookingPrice,
+    });
     try {
       const otp = data.otp;
       const confirmationResult = window.confirmationResult;
@@ -102,7 +108,7 @@ const BookingPage = () => {
       console.log(token);
       const response = await httpAddBooking(token, {
         ...formValues,
-        serviceId,
+        services: servicePicked,
         bookingPrice,
       });
       const newNotification = {
@@ -114,6 +120,11 @@ const BookingPage = () => {
       message.success("Đặt lịch thành công", 2);
       navigate("/");
     } catch (error) {
+      console.log("formsubmit", {
+        ...formValues,
+        services: servicePicked,
+        bookingPrice,
+      });
       console.log(error);
     }
   };
@@ -128,6 +139,7 @@ const BookingPage = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const [servicePicked, setServicePicked] = useState([]);
   const [loadings, setLoadings] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [formValues, setFormValues] = useState({});
@@ -177,6 +189,13 @@ const BookingPage = () => {
         }
         setBookingPrice(total);
         console.log("total", total);
+        const fill = fildata.map((item) => ({
+          serviceId: item._id,
+          price: item.price,
+        }));
+        setServicePicked(fill);
+
+        console.log(servicePicked);
         console.log("data list service", fildata);
       }
 

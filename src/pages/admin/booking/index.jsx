@@ -36,6 +36,7 @@ import { readMoney } from "../../../utils/ReadMoney";
 import { formatPrice } from "../../../utils/formatCash";
 import { socket } from "../../../App";
 import { SocketEvent } from "../../../utils/SocketConstant";
+import { httpGetOneService } from "../../../api/services";
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
   const [form] = Form.useForm();
@@ -472,6 +473,7 @@ const ListBooking = (props) => {
     });
 
     booking.map(async (item) => {
+      console.log(item);
       if (item._id == idBooking) {
         if (item.status == isButon || show == "false") {
           return;
@@ -480,10 +482,10 @@ const ListBooking = (props) => {
         form.setFieldsValue({
           name: item?.name,
           phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
-          serviceId: item.serviceId?.map((item) => {
+          services: item.services?.map((item) => {
             return {
-              lable: item.name,
-              value: item._id
+              lable: item.serviceId?.name,
+              value: item.serviceId?._id
             }
           }),
           employeeId: item?.employeeId?._id,
@@ -609,13 +611,7 @@ const ListBooking = (props) => {
       filters: employee,
       onFilter: (value, record) => record.employeeId?.indexOf(value) === 0,
     },
-    // {
-    //   title: "Dịch vụ",
-    //   dataIndex: "serviceId",
-    //   key: "serviceId",
-    //   filters: service,
-    //   onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
-    // },
+  
     {
       title: "Trạng Thái",
       key: "status",
@@ -809,7 +805,6 @@ const ListBooking = (props) => {
       date: date,
       time: time,
       employeeId: item.employeeId?.name,
-      serviceId: item.serviceId[0]?.name,
       action: item,
     };
   });
@@ -830,18 +825,41 @@ const ListBooking = (props) => {
     if (ishandle === "1") {
       try {
         let res = ""
-        if (data.serviceId[0].lable) {
-          res = data.serviceId.map((item) => {
-            return item.value
+        if (!data.services[0].lable) {
+          res = data.services.map((item) => {
+            let price
+             props.dataService?.map((current) => {
+             if(current._id == item){
+              price = current.price
+             }
+            })
+            return {
+              serviceId: item,
+              price: price
+            }
+          })
+        }else{
+          res = data.services.map((item) => {
+            let price
+             props.dataService?.map((current) => {
+             if(current._id == item.value){
+              price = current.price
+             }
+            })
+            return {
+              serviceId: item.value,
+              price: price
+            }
           })
         }
+        console.log(data);
         await httpGetChangeStatus(handleBooking?._id, {
           ...data,
           date: dateUpdate,
           time: timeUpdate,
           status: 1,
           bookingPrice: bookingPrice,
-          serviceId: res != "" ? res : data.serviceId
+          services: res
         });
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
         const notification = {
@@ -1107,7 +1125,7 @@ const ListBooking = (props) => {
           toolbar={[titleModal]}
           allowExcelExport={true}
           wrapText={true}
-          // dataSource={handleBooking?.serviceId.map((item) => {
+          // dataSource={handleBooking?.services.map((item) => {
           //     return { ...item, price: formatCash(item?.price) }
           // })}
           // toolbarClick={handleToolbarClick}
@@ -1208,7 +1226,7 @@ const ListBooking = (props) => {
             />
           </Form.Item>
           <Form.Item
-            name="serviceId"
+            name="services"
             label="Dịch vụ"
             rules={[
               {
@@ -1220,7 +1238,6 @@ const ListBooking = (props) => {
             <Select
               mode="multiple"
               allowClear
-
               placeholder="Please select"
               onChange={handleChange}
               options={options}

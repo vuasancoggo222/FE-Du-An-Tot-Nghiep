@@ -42,7 +42,7 @@ const Detaibooking = (props) => {
         const token = result._tokenResponse.idToken;
         await httpAddBooking(token, {
           ...formData,
-          serviceId: service._id,
+          services: {serviceId: service._id, price: service.price },
           bookingPrice: service.price,
         });
         message.success("Đặt lịch thành công", 2);

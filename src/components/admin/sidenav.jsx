@@ -1,9 +1,10 @@
 import { message } from "antd";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { isAuthenticate } from "../../utils/LocalStorage";
 const Sidenav = () => {
   const navigate = useNavigate();
+  const user = isAuthenticate();
   const handleLogout = () => {
     console.log(1);
     localStorage.removeItem("user");
@@ -38,6 +39,7 @@ const Sidenav = () => {
         </div>
         <hr className="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
         <div className="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+<<<<<<< HEAD
           <ul className="flex flex-col pl-0 mb-0">
             <li className="mt-0.5 w-full">
               <Link
@@ -162,6 +164,153 @@ const Sidenav = () => {
               </button>
             </li>
           </ul>
+=======
+          {user && user?.role === 1 ? (
+            <ul className="flex flex-col pl-0 mb-0">
+              <li className="mt-0.5 w-full">
+                <Link
+                  className="py-2.7 bg-blue-500/13 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors"
+                  to={`/admin/booking/employee`}
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img
+                      width="100%"
+                      src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-dashboard-mobile-app-development-flaticons-lineal-color-flat-icons-4.png"
+                    />
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    My history working
+                  </span>
+                </Link>
+              </li>
+            </ul>
+          ) : (
+            <ul className="flex flex-col pl-0 mb-0">
+              <li className="mt-0.5 w-full">
+                <Link
+                  className="py-2.7 bg-blue-500/13 dark:text-white dark:opacity-80 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold text-slate-700 transition-colors"
+                  to={`/admin`}
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img
+                      width="100%"
+                      src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-dashboard-mobile-app-development-flaticons-lineal-color-flat-icons-4.png"
+                    />
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Dashboard
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  to="/admin/employee"
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-spa-travel-agency-flaticons-lineal-color-flat-icons.png" />
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Employee
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  to="/admin/booking"
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center fill-current stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-booking-spa-flaticons-lineal-color-flat-icons.png" />{" "}
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Booking
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                  to="/admin/service"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hospitality-services-flaticons-lineal-color-flat-icons.png" />{" "}
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Service
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                  to="/admin/contact"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/cotton/64/null/contact-card.png" />{" "}
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Contact
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                  to="/admin/banner"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/external-smashingstocks-isometric-smashing-stocks/55/null/external-Banner-sports-smashingstocks-isometric-smashing-stocks-2.png" />{" "}
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Banner
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                  to="/admin/post"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/nolan/64/us-news.png" />{" "}
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    Post
+                  </span>
+                </Link>
+              </li>
+              <li className="w-full mt-4">
+                <h6 className="pl-6 ml-2 text-xs font-bold leading-tight uppercase dark:text-white opacity-60">
+                  Account pages
+                </h6>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Link
+                  to="/admin/user"
+                  className=" dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors"
+                >
+                  <div className="mr-2 flex h-8 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
+                    <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-alternative-medicine-flaticons-lineal-color-flat-icons.png" />{" "}
+                  </div>
+                  <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
+                    User
+                  </span>
+                </Link>
+              </li>
+              <li className="mt-0.5 w-full">
+                <Button
+                  className="mx-6 "
+                  style={{ borderRadius: "5px" }}
+                  onClick={handleLogout}
+                >
+                  {" "}
+                  Đăng xuất
+                </Button>
+              </li>
+            </ul>
+          )}
+>>>>>>> 17c67a499b5d8b4f2521e179e2bc7272b6c4cd99
         </div>
       </aside>
     </>

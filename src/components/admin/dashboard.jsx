@@ -551,7 +551,7 @@ const Dashboard = () => {
             style={{ justifyContent: "space-between", alignItems: "center" }}
             className="mb-0 font-bold text-white text-center setChartLable text-[50px]"
           >
-            <span>Dashboard</span>
+            <span>Thống kê</span>
           </h1>
         </div>
         <div style={{ marginTop: "20px", fontWeight: "bold" }}>

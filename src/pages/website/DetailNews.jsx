@@ -15,14 +15,17 @@ const News = () => {
     data();
   }, []);
   return (
-    <section className="flex bg-white max-w-[1200px] mx-auto mb-8 mt-8">
-      <div className="w-[75%] pr-10">
+    <section className="flex flex-col md:flex-row bg-white max-w-[1200px] mx-auto mb-8 mt-8 px-10 xl:px-0">
+      <div className="w-[100%] md:w-[75%] pr-0 md:pr-10">
         <div>
           <h1 className="text-[#00502b] text-center font-medium">Tin tức</h1>
           <h2 className="text-[#00502b] text-center text-3xl">{post?.title}</h2>
 
           <div className="centerimage">
-            <div dangerouslySetInnerHTML={{ __html: post?.content }}></div>
+            <div
+              className="text-base mt-10"
+              dangerouslySetInnerHTML={{ __html: post?.content }}
+            ></div>
           </div>
         </div>
         <div className="flex justify-between mt-10 border-t-2 border-black"></div>
@@ -95,7 +98,7 @@ const News = () => {
             bình luận kế tiếp của tôi.
           </strong>{" "}
           <br />
-          <button className="bg-[#00502b] hover:bg-[#0c452b] text-xl font-semibold pt-2 pb-2 pl-4 pr-4 text-white mt-8">
+          <button className="bg-[#00502b] hover:bg-[#0c452b] text-xl font-semibold pt-2 pb-2 pl-4 pr-4 text-white mt-8 mb-20">
             PHẢN HỒI
           </button>
         </div>

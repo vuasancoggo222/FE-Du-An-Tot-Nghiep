@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { Button, message } from "antd";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { isAuthenticate } from "../../utils/LocalStorage";
@@ -39,7 +39,6 @@ const Sidenav = () => {
         </div>
         <hr className="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
         <div className="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
-<<<<<<< HEAD
           <ul className="flex flex-col pl-0 mb-0">
             <li className="mt-0.5 w-full">
               <Link
@@ -164,7 +163,6 @@ const Sidenav = () => {
               </button>
             </li>
           </ul>
-=======
           {user && user?.role === 1 ? (
             <ul className="flex flex-col pl-0 mb-0">
               <li className="mt-0.5 w-full">
@@ -310,7 +308,6 @@ const Sidenav = () => {
               </li>
             </ul>
           )}
->>>>>>> 17c67a499b5d8b4f2521e179e2bc7272b6c4cd99
         </div>
       </aside>
     </>

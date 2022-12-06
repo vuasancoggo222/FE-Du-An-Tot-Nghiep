@@ -97,12 +97,12 @@ const ListBanner = () => {
     <>
       <div className="w-full px-6 py-6 mx-auto">
         <div>
-          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Banner</div>
+          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Danh sách Banner</div>
           </h1>
         </div>
         <Link to={"/admin/banner/add"}>
-          <Button type="primary">Primary Button</Button>
+          <Button>+ Thêm ảnh</Button>
         </Link>
       </div>
       <div className="w-full px-6 py-6 mx-auto">

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
-import sanitizeHtml from "sanitize-html";
 import * as medthod from "../../../api/post";
-import { Button, message, Checkbox, Form, Input, Space } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, message, Form, Input } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import Upload from "antd/lib/upload/Upload";
 import TextArea from "antd/lib/input/TextArea";
 import { useNavigate, useParams } from "react-router-dom";
-import { uploadCloudinary } from "../../../api/upload";
 
 const modules = {
   toolbar: [
@@ -120,7 +118,7 @@ const EditPost = () => {
       <div className="w-full px-6 py-6 mx-auto ">
         <div>
           <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px] ">
-            <div>Edit Post</div>
+            <div>Cập nhật tin tức</div>
           </h1>
         </div>
       </div>

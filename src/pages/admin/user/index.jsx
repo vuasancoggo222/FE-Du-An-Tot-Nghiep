@@ -117,8 +117,8 @@ const ListUser = () => {
     <>
       <div className="w-full px-6 py-6 mx-auto">
         <div>
-          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>User</div>
+          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[40px]">
+            <div className="">Danh sách tài khoản</div>
           </h1>
         </div>
       </div>

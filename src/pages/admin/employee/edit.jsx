@@ -75,8 +75,8 @@ const EditEmployee = () => {
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
-          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Add New Employee</div>
+          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Cập nhật nhân viên</div>
           </h1>
         </div>
       </div>
@@ -99,7 +99,7 @@ const EditEmployee = () => {
           <Row gutter={[4, 4]}>
             <Col xxl={24} xl={24} sm={24} xs={24}>
               <Form.Item
-                label="Username"
+                label="Họ tên"
                 name="name"
                 rules={[
                   { required: true, message: "Please input your username !" },
@@ -112,7 +112,7 @@ const EditEmployee = () => {
           {/* Number Phone */}
           <Form.Item
             name="phoneNumber"
-            label="phoneNumber"
+            label="Số điện thoại"
             rules={[
               { required: true, message: "Please input your phone number !" },
             ]}
@@ -121,7 +121,7 @@ const EditEmployee = () => {
           </Form.Item>
           {/* Id Card */}
           <Form.Item
-            label="Id Card"
+            label="CMT/CCCD"
             name="idCard"
             rules={[{ required: true, message: "Please input your id card !" }]}
           >
@@ -138,7 +138,7 @@ const EditEmployee = () => {
           {/* Gender */}
           <Form.Item
             name="gender"
-            label="Gender"
+            label="Giới tính"
             hasFeedback
             rules={[
               {
@@ -153,7 +153,7 @@ const EditEmployee = () => {
             </Select>
           </Form.Item>
           {/* Avater */}
-          <Form.Item label="avatar">
+          <Form.Item label="Ảnh đại diện">
             <ImgCrop>
               <Upload
                 customRequest={uploadImage}
@@ -169,7 +169,7 @@ const EditEmployee = () => {
           <Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Cập nhật
               </Button>
             </Form.Item>
           </Form.Item>

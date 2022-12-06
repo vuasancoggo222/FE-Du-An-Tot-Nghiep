@@ -35,10 +35,10 @@ function Contact() {
             <section className="py-[120px] ">
               <div className="text-center text-[#FFF]">
                 <h2 className="text-[#FFF] text-[30px] ">
-                  Để lại lời nhắn cho Beauty
+                  Để lại lời nhắn cho Tuyến Spa
                 </h2>
                 <p className="text-base">
-                  Beauty luôn lắng nghe, luôn luôn thấu hiểu
+                  Tuyến Spa luôn lắng nghe, luôn luôn thấu hiểu
                 </p>
               </div>
             </section>
@@ -54,14 +54,19 @@ function Contact() {
                     Tư vấn{" "}
                   </h2>
                   <p className="mt-4 text-base">
-                    Tư vấn về các dịch vụ làm đẹp tại Beauty
+                    Tư vấn về các dịch vụ làm đẹp tại Tuyến Spa
                   </p>
                   <div className="">
                     <div>
                       <button className="bg-[#00502b] px-[8px] py-[8px] text-white hover:bg-[#01321f] mt-4 text-lg font-semibold">
                         {" "}
                         <i className="fa-solid fa-comments fa-1x text-white px-[10px]"></i>{" "}
-                        (028) 4455 7788
+                        <a
+                          className="text-white hover:text-white"
+                          href="tel:+84 844557788"
+                        >
+                          (028) 4455 7788
+                        </a>
                       </button>
                     </div>
                   </div>
@@ -81,7 +86,12 @@ function Contact() {
                       <button className="bg-[#00502b] px-[8px] py-[8px] text-white hover:bg-[#01321f] mt-4 text-lg font-semibold">
                         {" "}
                         <i className="fa-solid fa-comments fa-1x text-white px-[10px]"></i>{" "}
-                        (028) 4455 7788
+                        <a
+                          className="text-white hover:text-white"
+                          href="tel:+84 866824564"
+                        >
+                          0866 824 564
+                        </a>
                       </button>
                     </div>
                   </div>
@@ -91,12 +101,11 @@ function Contact() {
             <div className="container mx-auto lg:px-24 mb-4">
               <div className="bg-white w-full shadow rounded p-8 sm:p-12 ">
                 <p className="text-2xl text-green-700 font-bold leading-7 text-center ">
-                  Để lại lời nhắn cho Beauty
+                  Để lại lời nhắn cho Tuyến Spa
                 </p>
                 <div className="register-right -mt-7">
                   <div className="form-wrapper block bg-white mt-12">
                     <Form
-                      // name="basic"
                       onFinish={onFinish}
                       onFinishFailed={onFinishFailed}
                       autoComplete="off"
@@ -107,7 +116,6 @@ function Contact() {
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className=""
                                 label="Họ tên"
                                 name="name"
                                 rules={[
@@ -118,14 +126,13 @@ function Contact() {
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <Input placeholder="Your Name" />
+                                <Input placeholder="Họ và tên" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className=""
                                 label="Địa chỉ"
                                 name="address"
                                 rules={[
@@ -136,14 +143,13 @@ function Contact() {
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <Input placeholder="Your Address" />
+                                <Input placeholder="Địa chỉ" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className=""
                                 label="Số điện thoại"
                                 name="phoneNumber"
                                 rules={[
@@ -155,14 +161,13 @@ function Contact() {
                                 ]}
                                 style={{ marginRight: "10px" }}
                               >
-                                <Input placeholder="Your PhoneNumber" />
+                                <Input placeholder="Số điện thoại" />
                               </Form.Item>
                             </Col>
                           </Row>
                           <Row>
                             <Col className="w-full">
                               <Form.Item
-                                className=""
                                 label="Nội dung"
                                 name="content"
                                 rules={[
@@ -174,7 +179,7 @@ function Contact() {
                                 style={{ marginRight: "10px" }}
                               >
                                 <TextArea
-                                  placeholder="Your Context"
+                                  placeholder="Nội dung"
                                   className="form-input"
                                   type=""
                                 />
@@ -195,7 +200,7 @@ function Contact() {
                             color: "white",
                           }}
                         >
-                          Submit
+                          Gửi
                         </Button>
                       </Form.Item>
                     </Form>

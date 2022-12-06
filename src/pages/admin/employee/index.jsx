@@ -123,8 +123,8 @@ const ListEmployee = () => {
     <>
       <div className="w-full px-6 py-6 mx-auto">
         <div>
-          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Employee</div>
+          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Danh sách nhân viên</div>
           </h1>
         </div>
         <Link to={"/admin/employee/add"}>
@@ -132,7 +132,6 @@ const ListEmployee = () => {
             type="success"
             style={{
               border: "1px solid white",
-
               font: "bold",
             }}
           >

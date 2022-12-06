@@ -33,7 +33,7 @@ const Sidenav = () => {
               alt="main_logo"
             />
             <span className="ml-1 font-semibold transition-all duration-200 ease-nav-brand">
-              BeautySpa
+              Thẩm mỹ viện Tuyến Spa
             </span>
           </Link>
         </div>
@@ -53,9 +53,20 @@ const Sidenav = () => {
                     />
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    My history working
+                    Lịch sử công việc
                   </span>
                 </Link>
+              </li>
+              <li className="mt-10 grid">
+                <button
+                  type="button"
+                  className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  style={{ borderRadius: "5px" }}
+                  onClick={handleLogout}
+                >
+                  {" "}
+                  Đăng xuất{" "}
+                </button>
               </li>
             </ul>
           ) : (
@@ -72,7 +83,7 @@ const Sidenav = () => {
                     />
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Dashboard
+                    Thống kê
                   </span>
                 </Link>
               </li>
@@ -85,7 +96,7 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-spa-travel-agency-flaticons-lineal-color-flat-icons.png" />
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Employee
+                    Nhân viên
                   </span>
                 </Link>
               </li>
@@ -98,7 +109,7 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-booking-spa-flaticons-lineal-color-flat-icons.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Booking
+                    Đặt lịch
                   </span>
                 </Link>
               </li>
@@ -111,7 +122,7 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-hospitality-services-flaticons-lineal-color-flat-icons.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Service
+                    Dịch vụ
                   </span>
                 </Link>
               </li>
@@ -124,7 +135,7 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/cotton/64/null/contact-card.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Contact
+                    Liên hệ
                   </span>
                 </Link>
               </li>
@@ -137,7 +148,7 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/external-smashingstocks-isometric-smashing-stocks/55/null/external-Banner-sports-smashingstocks-isometric-smashing-stocks-2.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Banner
+                    Ảnh Banner
                   </span>
                 </Link>
               </li>
@@ -150,13 +161,13 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/nolan/64/us-news.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    Post
+                    Bài viết
                   </span>
                 </Link>
               </li>
               <li className="w-full mt-4">
                 <h6 className="pl-6 ml-2 text-xs font-bold leading-tight uppercase dark:text-white opacity-60">
-                  Account pages
+                  Tài khoản
                 </h6>
               </li>
               <li className="mt-0.5 w-full">
@@ -168,19 +179,20 @@ const Sidenav = () => {
                     <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/null/external-spa-alternative-medicine-flaticons-lineal-color-flat-icons.png" />{" "}
                   </div>
                   <span className="ml-1 duration-300 opacity-100 pointer-events-none ease">
-                    User
+                    Tài khoản
                   </span>
                 </Link>
               </li>
-              <li className="mt-0.5 w-full">
-                <Button
-                  className="mx-6 "
+              <li className="mt-10 grid">
+                <button
+                  type="button"
+                  className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                   style={{ borderRadius: "5px" }}
                   onClick={handleLogout}
                 >
                   {" "}
-                  Đăng xuất
-                </Button>
+                  Đăng xuất{" "}
+                </button>
               </li>
             </ul>
           )}

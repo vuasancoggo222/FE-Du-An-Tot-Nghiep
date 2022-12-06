@@ -77,7 +77,7 @@ const AddEmployee = () => {
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
-          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
+          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
             <div>Thêm mới nhân viên</div>
           </h1>
         </div>
@@ -128,7 +128,7 @@ const AddEmployee = () => {
           </Form.Item>
           {/* Id Card */}
           <Form.Item
-            label="Password"
+            label="Mật khẩu"
             name="password"
             rules={[
               {
@@ -141,7 +141,7 @@ const AddEmployee = () => {
           </Form.Item>
           {/* Id Card */}
           <Form.Item
-            label="Card Id"
+            label="CMT/CCCD"
             name="idCard"
             rules={[
               { required: true, message: "Card Id không được để trống !" },
@@ -176,10 +176,9 @@ const AddEmployee = () => {
           </Form.Item>
           {/* Avater */}
 
-          <Form.Item>
+          <Form.Item label="Ảnh đại diện">
             <Form.Item
               name="avatar"
-              label="avatar"
               valuePropName="fileList"
               getValueFromEvent={normFile}
               noStyle

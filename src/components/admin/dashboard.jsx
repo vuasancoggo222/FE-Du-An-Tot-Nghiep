@@ -10,13 +10,12 @@ import {
   servicesStatistic,
   turnoverServicesMonth,
 } from "../../api/services";
-import { httpGetAllUser, userAccountStatistics } from "../../api/user";
+import { userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
 const Dashboard = () => {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
-  const [user, setUser] = useState();
   const [service, setService] = useState();
   const [acCount, setaccCount] = useState();
   const [loading, setLoading] = useState(false);
@@ -28,8 +27,6 @@ const Dashboard = () => {
   const [employeeFilterMonth, setEmployeeFilterMonth] = useState("");
   const [employeeFilterYear, setEmployeeFilterYear] = useState("");
   const [serviceFilterMonth, setServiceFilterMonth] = useState("");
-  const [monthFilter, setMonthFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
   const [dataChart, setDataChart] = useState();
   const [lableChart, setLableChart] = useState();
   // const [dataChartService, setDataChartService] = useState();
@@ -110,11 +107,6 @@ const Dashboard = () => {
     return `${d.getFullYear()}-${month}-${date}`;
   };
 
-  const renderYear = (value) => {
-    const d = new Date(value);
-    return d.getFullYear();
-  };
-
   const countCustomerByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
@@ -136,15 +128,6 @@ const Dashboard = () => {
       }
     });
     return coutn;
-  };
-
-  const renderMonth = (value) => {
-    const d = new Date(value);
-    let month = d.getMonth() + 1;
-    if (month.toString().length == 1) {
-      month = `0${month}`;
-    }
-    return `${d.getFullYear()}-${month}`;
   };
 
   const onChangeYearService = async (date, dateString) => {
@@ -266,56 +249,6 @@ const Dashboard = () => {
     return coutn;
   };
 
-  const thisday = new Date();
-  const today = `${thisday.getFullYear()}-${
-    thisday.getMonth() + 1
-  }-${thisday.getDate()}`;
-
-  const countCustomerIng = () => {
-    let coutn = 0;
-    const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
-    booking?.forEach((item) => {
-      let dayItem = renderDate(item.date);
-      if (item.status == 3 && dayItem == today) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
-
-  const countBookingWait = () => {
-    let coutn = 0;
-    const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
-    booking?.forEach((item) => {
-      let dayItem = renderDate(item.date);
-      if (item.status == 0 && dayItem == today) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
-
-  const countBookingSuccess = () => {
-    let coutn = 0;
-    const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
-    booking?.forEach((item) => {
-      let dayItem = renderDate(item.date);
-      if (item.status == 1 && dayItem == today) {
-        coutn += 1;
-      }
-    });
-    return coutn;
-  };
-
   const totalTurnover = () => {
     let sum = 0;
     turnover?.allData.map((item) => {
@@ -327,52 +260,6 @@ const Dashboard = () => {
       style: "currency",
       currency: "VND",
     });
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  const percentServiceOfRevenue = (IdService) => {
-    let totalService = 0;
-    let totalRevenue = 0;
-    if (serviceFilter != "") {
-      booking?.forEach((item) => {
-        if (item.status == 4 && renderYear(item.date) == serviceFilter) {
-          totalRevenue += item.serviceId[0]?.price;
-        }
-        if (
-          item.status == 4 &&
-          item.serviceId[0]?._id == IdService &&
-          renderYear(item.date) == serviceFilter
-        ) {
-          totalService += item.serviceId[0]?.price;
-        }
-      });
-    } else if (serviceFilterMonth != "") {
-      booking?.forEach((item) => {
-        if (item.status == 4 && renderMonth(item.date) == serviceFilterMonth) {
-          totalRevenue += item.serviceId[0]?.price;
-        }
-        if (
-          item.status == 4 &&
-          item.serviceId[0]?._id == IdService &&
-          renderMonth(item.date) == serviceFilterMonth
-        ) {
-          totalService += item.serviceId[0]?.price;
-        }
-      });
-    } else {
-      booking?.forEach((item) => {
-        if (item.status == 4) {
-          totalRevenue += item.serviceId[0]?.price;
-        }
-        if (item.status == 4 && item.serviceId[0]?._id == IdService) {
-          totalService += item.serviceId[0]?.price;
-        }
-      });
-    }
-    if (totalRevenue == 0) {
-      return 0;
-    }
-    return ((totalService * 100) / totalRevenue).toString().substring(0, 5);
   };
 
   const handleChooseChart = async (e) => {
@@ -525,16 +412,12 @@ const Dashboard = () => {
     getAccount();
 
     const getEmployee = async () => {
-      const res = await employeeOrderStatistics();
-      setEmployees(res);
+      const res = await employeeOrderStatistics(undefined, undefined);
+      console.log(res);
+      setEmployees(res); 
     };
     getEmployee();
 
-    const getUser = async () => {
-      const res = await httpGetAllUser();
-      setUser(res);
-    };
-    getUser();
   }, [chartYear]);
   return (
     <Spin
@@ -551,7 +434,7 @@ const Dashboard = () => {
             style={{ justifyContent: "space-between", alignItems: "center" }}
             className="mb-0 font-bold text-white text-center setChartLable text-[50px]"
           >
-            <span>Dashboard</span>
+            <span>Thống kê</span>
           </h1>
         </div>
         <div style={{ marginTop: "20px", fontWeight: "bold" }}>
@@ -564,55 +447,14 @@ const Dashboard = () => {
           >
             {" "}
             Thống kê{" "}
-            {monthFilter != ""
-              ? monthFilter
-              : dateFilter != ""
-              ? dateFilter
-              : chartYear != ""
+            {
+               chartYear != ""
               ? chartYear
-              : "tất cả thời tian"}
+              : "tất cả thời gian"}
           </span>
           <Button
             onClick={() => {
-              const year = moment().format("YYYY");
-              let arrData = [];
-              let count;
-              for (let i = 0; i <= 11; i++) {
-                count = 0;
-                let month;
-                if ((i + 1).toString().length == 1) {
-                  month = `${year}-0${i + 1}`;
-                } else {
-                  month = `${year}-${i + 1}`;
-                }
-                booking?.map((item) => {
-                  if (isChart == "turnover") {
-                    if (renderMonth(item.date) == month && item.status == 4) {
-                      count += item?.serviceId[0]?.price;
-                    }
-                  } else if (isChart == "booking") {
-                    if (renderMonth(item.date) == month && item.status == 4) {
-                      count += 1;
-                    }
-                  } else if (isChart == "userBad") {
-                    if (renderMonth(item.date) == month && item.status == 2) {
-                      count += 1;
-                    }
-                  }
-                });
-                if (isChart == "newUser") {
-                  user?.map((item) => {
-                    if (renderMonth(item.createdAt) == month) {
-                      count += 1;
-                    }
-                  });
-                }
-                arrData.push(count);
-              }
-              setDataChart(arrData);
               setChartYear("");
-              setMonthFilter("");
-              setDateFilter("");
             }}
             style={{
               float: "right",
@@ -635,148 +477,7 @@ const Dashboard = () => {
           />
         </div>{" "}
         <br />
-        <div className="flex flex-wrap -mx-3 mt-3">
-          {/* card1 */}
-          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-              <div
-                style={{
-                  display: renderDate(today) == dateFilter ? "block" : "none",
-                }}
-                className="flex-auto p-4"
-              >
-                <div className="flex flex-row -mx-3">
-                  <div className="flex-none w-2/3 max-w-full px-3">
-                    <div>
-                      <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Khách chờ xác nhận
-                      </p>
-                      <h5 className="mb-2 font-bold dark:text-white">
-                        {countBookingWait()}
-                      </h5>
-                      <p className="mb-0 dark:text-white dark:opacity-60">
-                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                          {/* +55% */}
-                        </span>
-                        {/* since yesterday */}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-3 text-right basis-1/3">
-                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl">
-                      <img src="https://img.icons8.com/external-sbts2018-lineal-color-sbts2018/58/000000/external-wait-lean-thinking-sbts2018-lineal-color-sbts2018.png" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* card2 */}
-          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-              <div
-                style={{
-                  display: renderDate(today) == dateFilter ? "block" : "none",
-                }}
-                className="flex-auto p-4"
-              >
-                <div className="flex flex-row -mx-3">
-                  <div className="flex-none w-2/3 max-w-full px-3">
-                    <div>
-                      <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Khách dự kiến
-                      </p>
-                      <h5 className="mb-2 font-bold dark:text-white">
-                        {countBookingSuccess()}
-                      </h5>
-                      <p className="mb-0 dark:text-white dark:opacity-60">
-                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                          {/* +3% */}
-                        </span>
-                        {/* since last week */}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-3 text-right basis-1/3">
-                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
-                      <img src="https://img.icons8.com/color/48/000000/reviewer-female.png" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* card3 */}
-          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-              <div
-                style={{
-                  display: renderDate(today) == dateFilter ? "block" : "none",
-                }}
-                className="flex-auto p-4"
-              >
-                <div className="flex flex-row -mx-3">
-                  <div className="flex-none w-2/3 max-w-full px-3">
-                    <div>
-                      <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Nhân viên đang làm
-                      </p>
-                      <h5 className="mb-2 font-bold dark:text-white">
-                        {/* {countEmployee()} */}
-                      </h5>
-                      <p className="mb-0 dark:text-white dark:opacity-60">
-                        <span className="text-sm font-bold leading-normal text-red-600">
-                          {/* -2% */}
-                        </span>
-                        {/* since last quarter */}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-3 text-right basis-1/3">
-                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
-                      <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-spa-travel-agency-flaticons-lineal-color-flat-icons.png" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* card4 */}
-          <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-              <div
-                style={{
-                  display: renderDate(today) == dateFilter ? "block" : "none",
-                }}
-                className="flex-auto p-4"
-              >
-                <div className="flex flex-row -mx-3">
-                  <div className="flex-none w-2/3 max-w-full px-3">
-                    <div>
-                      <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Khách đang Spa
-                      </p>
-                      <h5 className="mb-2 font-bold dark:text-white">
-                        {countCustomerIng()}
-                      </h5>
-                      <p className="mb-0 dark:text-white dark:opacity-60">
-                        <span className="text-sm font-bold leading-normal text-emerald-500">
-                          {/* +5% */}
-                        </span>
-                        {/* than last month */}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="px-3 text-right basis-1/3">
-                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
-                      <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-spa-hairdresser-and-barber-shop-flaticons-lineal-color-flat-icons-3.png" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      
         <div className="flex flex-wrap -mx-3 mt-3">
           {/* card1 */}
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
@@ -1042,7 +743,7 @@ const Dashboard = () => {
                       ? employeeFilterMonth
                       : employeeFilterYear != ""
                       ? employeeFilterYear
-                      : "tất cả thời tian"}
+                      : "tất cả thời gian"}
                   </span>
                 </h6>
                 <Button
@@ -1274,7 +975,7 @@ const Dashboard = () => {
                       ? ` ${serviceFilter}`
                       : serviceFilterMonth != ""
                       ? serviceFilterMonth
-                      : "tất cả thời tian"}
+                      : "tất cả thời gian"}
                   </span>{" "}
                   <br />
                   <span style={{ color: "red", fontSize: "16px" }}>

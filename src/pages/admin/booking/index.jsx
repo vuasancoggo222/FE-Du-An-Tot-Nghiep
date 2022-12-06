@@ -27,7 +27,7 @@ import {
   Tag,
   TimePicker,
 } from "antd";
-import { httpGetChangeStatus } from "../../../api/booking";
+import { bookingAddByEmployeeApi, httpGetChangeStatus } from "../../../api/booking";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
 import { ChangeToSlug } from "../../../utils/ConvertStringToSlug";
@@ -443,101 +443,121 @@ const ListBooking = (props) => {
       ),
   });
   // let elemenPick;
-  const showModal = (e) => {
+  const showModal = async (e) => {
     // eslint-disable-next-line react/prop-types
-    setIsHouseNoneBlock("none");
-    let isButon = e.target.getAttribute("data");
-    let idBooking = e.target.getAttribute("dataId");
-    let show = e.target.getAttribute("isshow");
+    if (e.target.getAttribute("data") == "addBooking" || e.target.offsetParent.getAttribute("data") == "addBooking") {
 
-    if (isButon == null) {
-      isButon = e.target.offsetParent.getAttribute("data");
-      idBooking = e.target.offsetParent.getAttribute("dataId");
-      show = e.target.offsetParent.getAttribute("isshow");
-    }
-    let count = 0;
-    let isBooking;
-    // eslint-disable-next-line react/prop-types
+      await setIsModalOpen(true);
+      document.getElementById("js-licensing").style.display = "none";
+      document.getElementById("grid_1281791375_0").style.display = "none";
+      setIshandle(1)
+      setIsHouseNoneBlock("none");
+      form.setFieldsValue({
+        name: "",
+        phoneNumber: undefined,
+        services: undefined,
+        employeeId: undefined,
+        note: "",
+        age: "",
+        gender: "",
+        date: undefined,
+        time:undefined,
+      });
+      setBookingPirce(0)
+      setTitleModal("Thêm khách đến trực tiếp")
+    } else {
+      setIsHouseNoneBlock("none");
+      let isButon = e.target.getAttribute("data");
+      let idBooking = e.target.getAttribute("dataId");
+      let show = e.target.getAttribute("isshow");
 
-    // eslint-disable-next-line react/prop-types
-    booking.map(async (item) => {
-      if (item._id == idBooking) {
-        isBooking = item;
-        await setHandleBooking(item);
-        setDateUpdate(item.date);
-        setTimeUpdate(item.time);
-        setEmployeeBooking(item.employeeId?._id || "");
-        return;
+      if (isButon == null) {
+        isButon = e.target.offsetParent.getAttribute("data");
+        idBooking = e.target.offsetParent.getAttribute("dataId");
+        show = e.target.offsetParent.getAttribute("isshow");
       }
-    });
+      let count = 0;
+      let isBooking;
+      // eslint-disable-next-line react/prop-types
 
-    booking.map(async (item) => {
-      if (item._id == idBooking) {
-        if (item.status == isButon || show == "false") {
+      // eslint-disable-next-line react/prop-types
+      booking.map(async (item) => {
+        if (item._id == idBooking) {
+          isBooking = item;
+          await setHandleBooking(item);
+          setDateUpdate(item.date);
+          setTimeUpdate(item.time);
+          setEmployeeBooking(item.employeeId?._id || "");
           return;
         }
-        await seDateBooking(item.date.toString());
-        form.setFieldsValue({
-          name: item?.name,
-          phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
-          serviceId: item.serviceId?.map((item) => {
-            return {
-              lable: item.name,
-              value: item._id
-            }
-          }),
-          employeeId: item?.employeeId?._id,
-          note: item?.note,
-          age: item?.age,
-          gender: item?.gender,
-          // bookingPrice:item?.bookingPrice ? formatCash(item?.bookingPrice) : "",
-          date: moment(renderDate(item?.date), dateFormat),
-          time:
-            item?.time != undefined
-              ? moment(renderTime(item?.time), format)
-              : "",
-        });
-        await setIsModalOpen(true);
-        document.getElementById("js-licensing").style.display = "none";
-        document.getElementById("grid_1281791375_0").style.display = "none";
-        // const btnNew =  btninvoice.parentNode.removeChild(btninvoice)
-        // bodyModal.appendChild(btnNew)
-        // btninvoice.className("ant-btn ant-btn-primary")
-      }
-    });
-
-    setIshandle(isButon);
-    if (isButon === "1") {
-      setTitleModal("Xác nhận");
-    } else if (isButon === "2") {
-      setTitleModal("Hủy");
-    } else if (isButon === "0") {
-      setTitleModal("Chờ xác nhận");
-    } else if (isButon === "4") {
-      setTitleModal("Thanh toán và in hóa đơn");
-    } else if (isButon === "5") {
-      setTitleModal("Thông tin");
-    }
-
-    if (isButon == 1) {
-      booking?.map((item) => {
-        if (
-          item.status == 1 &&
-          renderDate(item.date) == renderDate(isBooking.date) &&
-          renderTime(item.time) == renderTime(isBooking.time) &&
-          item.employeeId?._id == isBooking.employeeId?._id
-        ) {
-          count = Number(count) + 1;
+      });
+      booking.map(async (item) => {
+        console.log(item);
+        if (item._id == idBooking) {
+          if (item.status == isButon || show == "false") {
+            return;
+          }
+          await seDateBooking(item.date.toString());
+          setBookingPirce(item?.bookingPrice)
+          form.setFieldsValue({
+            name: item?.name,
+            phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
+            services: item.services?.map((item) => {
+              return {
+                lable: item.serviceId?.name,
+                value: item.serviceId?._id
+              }
+            }),
+            employeeId: item?.employeeId?._id,
+            note: item?.note,
+            age: item?.age,
+            gender: item?.gender,
+            // bookingPrice:item?.bookingPrice ? formatCash(item?.bookingPrice) : "",
+            date: moment(renderDate(item?.date), dateFormat),
+            time:
+              item?.time != undefined
+                ? moment(renderTime(item?.time), format)
+                : "",
+          });
+          await setIsModalOpen(true);
+          document.getElementById("js-licensing").style.display = "none";
+          document.getElementById("grid_1281791375_0").style.display = "none";
         }
       });
-      if (count > 0) {
-        setIsHouseNoneBlock("block");
-        setIsHouse(count);
+
+      setIshandle(isButon);
+      if (isButon === "1") {
+        setTitleModal("Xác nhận");
+      } else if (isButon === "2") {
+        setTitleModal("Hủy");
+      } else if (isButon === "0") {
+        setTitleModal("Chờ xác nhận");
+      } else if (isButon === "4") {
+        setTitleModal("Thanh toán và in hóa đơn");
+      } else if (isButon === "5") {
+        setTitleModal("Thông tin");
+      }
+
+      if (isButon == 1) {
+        booking?.map((item) => {
+          if (
+            item.status == 1 &&
+            renderDate(item.date) == renderDate(isBooking.date) &&
+            renderTime(item.time) == renderTime(isBooking.time) &&
+            item.employeeId?._id == isBooking.employeeId?._id
+          ) {
+            count = Number(count) + 1;
+          }
+        });
+        if (count > 0) {
+          setIsHouseNoneBlock("block");
+          setIsHouse(count);
+        } else {
+          setIsHouseNoneBlock("none");
+        }
       } else {
         setIsHouseNoneBlock("none");
       }
-    } else {
-      setIsHouseNoneBlock("none");
     }
   };
 
@@ -609,13 +629,7 @@ const ListBooking = (props) => {
       filters: employee,
       onFilter: (value, record) => record.employeeId?.indexOf(value) === 0,
     },
-    // {
-    //   title: "Dịch vụ",
-    //   dataIndex: "serviceId",
-    //   key: "serviceId",
-    //   filters: service,
-    //   onFilter: (value, record) => record.serviceId?.indexOf(value) === 0,
-    // },
+
     {
       title: "Trạng Thái",
       key: "status",
@@ -809,7 +823,6 @@ const ListBooking = (props) => {
       date: date,
       time: time,
       employeeId: item.employeeId?.name,
-      serviceId: item.serviceId[0]?.name,
       action: item,
     };
   });
@@ -826,61 +839,136 @@ const ListBooking = (props) => {
 
   const onSubmit = async (data) => {
     console.log("submit", data);
-    console.log(timeUpdate);
-    if (ishandle === "1") {
-      try {
-        let res = ""
-        if (data.serviceId[0].lable) {
-          res = data.serviceId.map((item) => {
-            return item.value
+    if(titleModal == "Thêm khách đến trực tiếp") {
+    console.log(bookingPrice);
+
+      let res = ""
+      if (!data.services[0].lable) {
+        res = data.services.map((item) => {
+          let price
+          props.dataService?.map((current) => {
+            if (current._id == item) {
+              price = current.price
+            }
           })
-        }
-        await httpGetChangeStatus(handleBooking?._id, {
-          ...data,
-          date: dateUpdate,
-          time: timeUpdate,
-          status: 1,
-          bookingPrice: bookingPrice,
-          serviceId: res != "" ? res : data.serviceId
-        });
-        message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-        const notification = {
-          id : handleBooking._id,
-          notificationType : 'user',
-          text : "Admin đã cập nhật trạng thái đơn hàng của bạn.",
-          from : user.id,
-          userId : handleBooking.userId._id
-        }
-        socket.emit(SocketEvent.NEWUSERNOTIFICATION,notification)
-        socket.off(NEWUSERNOTIFICATION)
+          return {
+            serviceId: item,
+            price: price
+          }
+        })
+      } else {
+        res = data.services.map((item) => {
+          let price
+          props.dataService?.map((current) => {
+            if (current._id == item.value) {
+              price = current.price
+            }
+          })
+          return {
+            serviceId: item.value,
+            price: price
+          }
+        })
+      }
+      const bodyData = {
+        ...data,
+        status: 4,
+        date: dateUpdate,
+        time: timeUpdate,
+        services: res,
+        bookingPrice: bookingPrice,
+      }
+      console.log(bodyData);
+      try {
+          await bookingAddByEmployeeApi(
+          bodyData
+        );
+        message.success("Thêm khách đến trực tiếp thành công", 2);
+        setIsModalOpen(false)
+        props.handleChangeStatus();
       } catch (error) {
         message.error(`${error.response?.data?.message}`);
+        console.log(error);
       }
-    } else if (ishandle === "2") {
-      try {
-        await httpGetChangeStatus(handleBooking._id, { status: 2 });
-        message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-      } catch (error) {
-        message.error(`${error.response.data.message}`);
+    }else{
+      if (ishandle === "1") {
+        try {
+          let res = ""
+          if (!data.services[0].lable) {
+            res = data.services.map((item) => {
+              let price
+              props.dataService?.map((current) => {
+                if (current._id == item) {
+                  price = current.price
+                }
+              })
+              return {
+                serviceId: item,
+                price: price
+              }
+            })
+          } else {
+            res = data.services.map((item) => {
+              let price
+              props.dataService?.map((current) => {
+                if (current._id == item.value) {
+                  price = current.price
+                }
+              })
+              return {
+                serviceId: item.value,
+                price: price
+              }
+            })
+          }
+          console.log(data);
+          await httpGetChangeStatus(handleBooking?._id, {
+            ...data,
+            date: dateUpdate,
+            time: timeUpdate,
+            status: 1,
+            bookingPrice: bookingPrice,
+            services: res
+          });
+          message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+          const notification = {
+            id: handleBooking._id,
+            notificationType: 'user',
+            text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+            from: user.id,
+            userId: handleBooking.userId._id
+          }
+          socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
+          socket.off(NEWUSERNOTIFICATION)
+        } catch (error) {
+          message.error(`${error.response?.data?.message}`);
+        }
+      } else if (ishandle === "2") {
+        try {
+          await httpGetChangeStatus(handleBooking._id, { status: 2 });
+          message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+        } catch (error) {
+          message.error(`${error.response.data.message}`);
+        }
+      } else if (ishandle === "0") {
+        try {
+          await httpGetChangeStatus(handleBooking._id, { status: 0 });
+          message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+        } catch (error) {
+          message.error(`${error.response.data.message}`);
+        }
+      } else if (ishandle === "4") {
+        try {
+          await httpGetChangeStatus(handleBooking._id, { status: 4 });
+          message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+        } catch (error) {
+          message.error(`${error.response.data.message}`);
+        }
       }
-    } else if (ishandle === "0") {
-      try {
-        await httpGetChangeStatus(handleBooking._id, { status: 0 });
-        message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-      } catch (error) {
-        message.error(`${error.response.data.message}`);
-      }
-    } else if (ishandle === "4") {
-      try {
-        await httpGetChangeStatus(handleBooking._id, { status: 4 });
-        message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-      } catch (error) {
-        message.error(`${error.response.data.message}`);
-      }
+      // eslint-disable-next-line react/prop-types
+      props.handleChangeStatus();
+      handleCancel();
     }
-    // eslint-disable-next-line react/prop-types
-    props.handleChangeStatus();
-    handleCancel();
   };
   const onHandleAdd = (value) => {
     console.log("cha:", value);
@@ -894,9 +982,9 @@ const ListBooking = (props) => {
     },
   };
   const handleToolbarClick = async () => {
-   if(ishandle != 4) {
-    return
-   }
+    if (ishandle != 4) {
+      return
+    }
     const sliceId = handleBooking?._id.slice(-7, handleBooking._id.length);
     if (girl) {
       girl.excelExport({
@@ -1087,9 +1175,21 @@ const ListBooking = (props) => {
         <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
           List Booking
         </h1>
+        <Button
+          onClick={showModal}
+          data= "addBooking"
+          type="success"
+          style={{
+            border: "1px solid white",
+
+            font: "bold",
+          }}
+        >
+          + Thêm khách đến trực tiếp
+        </Button>
       </div>
 
-      <Table columns={columns} dataSource={datatable} />;
+      <Table className="mt-5" columns={columns} dataSource={datatable} />;
       <Modal
         footer={null}
         style={{ fontFamily: "revert-layer" }}
@@ -1107,7 +1207,7 @@ const ListBooking = (props) => {
           toolbar={[titleModal]}
           allowExcelExport={true}
           wrapText={true}
-          // dataSource={handleBooking?.serviceId.map((item) => {
+          // dataSource={handleBooking?.services.map((item) => {
           //     return { ...item, price: formatCash(item?.price) }
           // })}
           // toolbarClick={handleToolbarClick}
@@ -1208,7 +1308,7 @@ const ListBooking = (props) => {
             />
           </Form.Item>
           <Form.Item
-            name="serviceId"
+            name="services"
             label="Dịch vụ"
             rules={[
               {
@@ -1220,7 +1320,6 @@ const ListBooking = (props) => {
             <Select
               mode="multiple"
               allowClear
-
               placeholder="Please select"
               onChange={handleChange}
               options={options}

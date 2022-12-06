@@ -176,7 +176,9 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/news/detail/:id" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking />} />
+            <Route path="/detail-booking/:id" element={<Detaibooking countDown={countDown}
+              handleSetCountDown={handleSetCountDown}
+            />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>

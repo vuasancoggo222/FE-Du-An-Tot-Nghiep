@@ -34,7 +34,7 @@ const AdminLayout = () => {
           <main className="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
             {/* Navbar */}
             <Header />
-            <div>{listNotification.length}</div>
+            <div className="hidden">{listNotification.length}</div>
             {/* end Navbar */}
             {/* cards */}
             <div>

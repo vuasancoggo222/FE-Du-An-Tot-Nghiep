@@ -86,7 +86,7 @@ const AddEmployee = () => {
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]"></div>
         <Form
-          className="m-auto text-center"
+          className="m-auto"
           name="basic"
           labelCol={{ span: 4, offset: 5 }}
           wrapperCol={{ span: 15, offset: 5 }}

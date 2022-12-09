@@ -7,3 +7,7 @@ export const ListVouchers = () => {
 export const OneVoucher = (id) => {
   return instance.get(`vouchers/${id}`);
 };
+
+export const DeleteVoucher = (id) => {
+  return instance.delete(`/voucher/delete/${id}`);
+};

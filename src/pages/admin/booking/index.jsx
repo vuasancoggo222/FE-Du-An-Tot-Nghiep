@@ -922,7 +922,8 @@ const ListBooking = (props) => {
             })
           }
           console.log(data);
-          await httpGetChangeStatus(handleBooking?._id, {
+          console.log(handleBooking)
+          await httpGetChangeStatus(handleBooking._id, {
             ...data,
             date: dateUpdate,
             time: timeUpdate,
@@ -931,29 +932,65 @@ const ListBooking = (props) => {
             services: res
           });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-          const notification = {
-            id: handleBooking._id,
-            notificationType: 'user',
-            text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
-            from: user.id,
-            userId: handleBooking.userId._id
+          if(handleBooking.userId){
+            const notification = {
+              id: handleBooking._id,
+              notificationType: 'user',
+              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              from: user.id,
+              userId: handleBooking.userId._id
+            }
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
+            socket.off(SocketEvent.NEWUSERNOTIFICATION)
           }
-          socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
-          socket.off(NEWUSERNOTIFICATION)
         } catch (error) {
+          console.log(error)
           message.error(`${error.response?.data?.message}`);
         }
       } else if (ishandle === "2") {
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 2 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+          if(handleBooking.userId){
+            const notification = {
+              id: handleBooking._id,
+              notificationType: 'user',
+              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              from: user.id,
+              userId: handleBooking.userId._id
+            }
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
+            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+          }
         } catch (error) {
           message.error(`${error.response.data.message}`);
+          if(handleBooking.userId){
+            const notification = {
+              id: handleBooking._id,
+              notificationType: 'user',
+              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              from: user.id,
+              userId: handleBooking.userId._id
+            }
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
+            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+          }
         }
       } else if (ishandle === "0") {
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 0 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+          if(handleBooking.userId){
+            const notification = {
+              id: handleBooking._id,
+              notificationType: 'user',
+              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              from: user.id,
+              userId: handleBooking.userId._id
+            }
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
+            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+          }
         } catch (error) {
           message.error(`${error.response.data.message}`);
         }
@@ -961,6 +998,17 @@ const ListBooking = (props) => {
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 4 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+          if(handleBooking.userId){
+            const notification = {
+              id: handleBooking._id,
+              notificationType: 'user',
+              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              from: user.id,
+              userId: handleBooking.userId._id
+            }
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
+            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+          }
         } catch (error) {
           message.error(`${error.response.data.message}`);
         }

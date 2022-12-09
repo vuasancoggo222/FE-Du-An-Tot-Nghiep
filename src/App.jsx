@@ -68,6 +68,7 @@ import { message } from "antd";
 
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
+import ListVoucher from "./pages/admin/voucher";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
@@ -176,9 +177,15 @@ function App() {
             <Route path="/news" element={<News />} />
             <Route path="/news/detail/:id" element={<DetailNews />} />
             <Route path="/price-list" element={<PriceList />} />
-            <Route path="/detail-booking/:id" element={<Detaibooking countDown={countDown}
-              handleSetCountDown={handleSetCountDown}
-            />} />
+            <Route
+              path="/detail-booking/:id"
+              element={
+                <Detaibooking
+                  countDown={countDown}
+                  handleSetCountDown={handleSetCountDown}
+                />
+              }
+            />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
@@ -271,6 +278,18 @@ function App() {
                 }
               />
             </Route>
+
+            <Route path="voucher">
+              <Route
+                index
+                element={
+                  <PrivateRouter2>
+                    <ListVoucher />
+                  </PrivateRouter2>
+                }
+              />
+            </Route>
+
             <Route path="user">
               <Route
                 index

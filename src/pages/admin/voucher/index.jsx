@@ -3,7 +3,7 @@ import { Button, message, Select, Space, Table } from "antd";
 
 import { Option } from "antd/lib/mentions";
 import { Link } from "react-router-dom";
-import { ListVouchers } from "../../../api/voucher";
+import { ListVouchers, DeleteVoucher } from "../../../api/voucher";
 
 const ListVoucher = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +12,15 @@ const ListVoucher = () => {
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const handleRemove = async (id) => {
+    const confirm = window.confirm("Bạn muốn xóa voucher này không?");
+    if (confirm) {
+      await DeleteVoucher(id);
+      setVouchers(vouchers.filter((item) => item._id !== id));
+      message.success("Xóa voucher thành công!");
+    }
   };
 
   const columns = [
@@ -65,6 +74,9 @@ const ListVoucher = () => {
                 <Option>
                   {" "}
                   <Button
+                    onClick={() => {
+                      handleRemove(item._id);
+                    }}
                     type="danger"
                     style={{ border: "none", color: "white", width: "100%" }}
                   >

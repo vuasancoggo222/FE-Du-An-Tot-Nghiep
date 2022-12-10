@@ -4,7 +4,7 @@ import { Button, message, Select, Space, Table } from "antd";
 import { Option } from "antd/lib/mentions";
 import { Link } from "react-router-dom";
 import { ListVouchers, DeleteVoucher } from "../../../api/voucher";
-
+import moment from "moment";
 const ListVoucher = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [vouchers, setVouchers] = useState([]);
@@ -31,12 +31,12 @@ const ListVoucher = () => {
       render: (text) => <a>{text}</a>,
     },
     {
-      title: "Mã vouche",
+      title: "Mã voucher",
       dataIndex: "code",
       key: "code",
     },
     {
-      title: "Tiền giảm",
+      title: "Giảm giá",
       dataIndex: "discount",
       key: "discount",
     },
@@ -51,12 +51,14 @@ const ListVoucher = () => {
       title: "Dịch vụ",
       dataIndex: "service",
       key: "service",
+      render: item => <span>{item.name}</span>
     },
 
     {
       title: "Ngày hết hạn",
       dataIndex: "expirationDate",
       key: "expirationDate",
+      render : item => <span>{moment(item).format('DD/MM/YYYY')}</span>
     },
 
     {

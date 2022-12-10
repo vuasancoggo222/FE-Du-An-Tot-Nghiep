@@ -36,7 +36,7 @@ import { readMoney } from "../../../utils/ReadMoney";
 import { formatPrice } from "../../../utils/formatCash";
 import { socket } from "../../../App";
 import { SocketEvent } from "../../../utils/SocketConstant";
-import { httpGetOneService } from "../../../api/services";
+
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
   const [form] = Form.useForm();
@@ -611,7 +611,7 @@ const ListBooking = (props) => {
       filters: employee,
       onFilter: (value, record) => record.employeeId?.indexOf(value) === 0,
     },
-  
+
     {
       title: "Trạng Thái",
       key: "status",
@@ -823,36 +823,36 @@ const ListBooking = (props) => {
     console.log("submit", data);
     console.log(timeUpdate);
     if (ishandle === "1") {
+      let res = ""
+      if (!data.services[0].lable) {
+        res = data.services.map((item) => {
+          let price
+          props.dataService?.map((current) => {
+            if (current._id == item) {
+              price = current.price
+            }
+          })
+          return {
+            serviceId: item,
+            price: price
+          }
+        })
+      } else {
+        res = data.services.map((item) => {
+          let price
+          props.dataService?.map((current) => {
+            if (current._id == item.value) {
+              price = current.price
+            }
+          })
+          return {
+            serviceId: item.value,
+            price: price
+          }
+        })
+      }
+      console.log(data);
       try {
-        let res = ""
-        if (!data.services[0].lable) {
-          res = data.services.map((item) => {
-            let price
-             props.dataService?.map((current) => {
-             if(current._id == item){
-              price = current.price
-             }
-            })
-            return {
-              serviceId: item,
-              price: price
-            }
-          })
-        }else{
-          res = data.services.map((item) => {
-            let price
-             props.dataService?.map((current) => {
-             if(current._id == item.value){
-              price = current.price
-             }
-            })
-            return {
-              serviceId: item.value,
-              price: price
-            }
-          })
-        }
-        console.log(data);
         await httpGetChangeStatus(handleBooking?._id, {
           ...data,
           date: dateUpdate,
@@ -863,16 +863,16 @@ const ListBooking = (props) => {
         });
         message.success(`${titleModal} khách hàng ${handleBooking.name}`);
         const notification = {
-          id : handleBooking._id,
-          notificationType : 'user',
-          text : "Admin đã cập nhật trạng thái đơn hàng của bạn.",
-          from : user.id,
-          userId : handleBooking.userId._id
+          id: handleBooking._id,
+          notificationType: 'user',
+          text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+          from: user.id,
+          userId: handleBooking.userId._id
         }
-        socket.emit(SocketEvent.NEWUSERNOTIFICATION,notification)
+        socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
         socket.off(NEWUSERNOTIFICATION)
       } catch (error) {
-        message.error(`${error.response?.data?.message}`);
+        message.error(error?.response?.data?.message);
       }
     } else if (ishandle === "2") {
       try {
@@ -912,9 +912,9 @@ const ListBooking = (props) => {
     },
   };
   const handleToolbarClick = async () => {
-   if(ishandle != 4) {
-    return
-   }
+    if (ishandle != 4) {
+      return
+    }
     const sliceId = handleBooking?._id.slice(-7, handleBooking._id.length);
     if (girl) {
       girl.excelExport({

@@ -70,6 +70,7 @@ import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
 import ListVoucher from "./pages/admin/voucher";
 import AddVoucher from "./pages/admin/voucher/add";
+import EditVoucher from "./pages/admin/voucher/edit";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
@@ -290,6 +291,7 @@ function App() {
                 }
               />
               <Route path="add" element={<AddVoucher />} />
+              <Route path="update/:id" element={<EditVoucher />} />
             </Route>
 
             <Route path="user">

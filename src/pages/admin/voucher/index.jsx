@@ -80,7 +80,7 @@ const ListVoucher = () => {
                     type="primary"
                     style={{ border: "none", color: "white", width: "100%" }}
                   >
-                    <Link to={`/admin/post/${item.slug}/edit`}>Sửa</Link>
+                    <Link to={`/admin/voucher/update/${item._id}`}>Sửa</Link>
                   </Button>
                 </Option>
                 <Option>

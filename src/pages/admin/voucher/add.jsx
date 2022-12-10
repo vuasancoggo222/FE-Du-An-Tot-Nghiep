@@ -104,11 +104,11 @@ const AddVoucher = () => {
               options={[
                 {
                   label: "Giảm tiền",
-                  value: "0",
+                  value: "direct",
                 },
                 {
                   label: "Giảm %",
-                  value: "1",
+                  value: "percentage",
                 },
               ]}
             />
@@ -116,16 +116,16 @@ const AddVoucher = () => {
 
           {/* Tiền giảm */}
           <Form.Item
-            label="Tiền giảm"
+            label="Giảm giá"
             name="discount"
             rules={[
               {
                 required: true,
-                message: "Số tiền khuyến mãi không được để trống !",
+                message: "Giảm giá không được để trống !",
               },
             ]}
           >
-            <Input type="number" placeholder="Tiền giảm" />
+            <Input type="number" placeholder="Giảm giá" />
           </Form.Item>
 
           {/* Số lượng */}

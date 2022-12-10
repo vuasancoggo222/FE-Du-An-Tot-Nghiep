@@ -130,14 +130,29 @@ const ListBookingByEmployee = (props) => {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3 })
                 message.success(`Hoàn thành "${handleBooking.name}"`)
+                    const notification = {
+                      id: handleBooking._id,
+                      notificationType: "admin",
+                      text: `Nhân viên ${user.name} đã hoàn thành đơn làm việc ${handleBooking._id}.`,
+                      from: user.id,
+                    };
+                    socket.emit(SocketEvent.NEWNOTIFICATION, notification);
+                    socket.off(SocketEvent.NEWNOTIFICATION);  
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
         } else {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 5 })
-
                 message.success(`Reset chờ khách hàng "${handleBooking.name}"`)
+                const notification = {
+                    id: handleBooking._id,
+                    notificationType: "admin",
+                    text: `Nhân viên ${user.name} đã chuyển trạng thái đơn làm việc ${handleBooking._id} thành chờ khách hàng.`,
+                    from: user.id,
+                  };
+                  socket.emit(SocketEvent.NEWNOTIFICATION, notification);
+                  socket.off(SocketEvent.NEWNOTIFICATION);  
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }

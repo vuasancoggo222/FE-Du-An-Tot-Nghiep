@@ -939,7 +939,7 @@ const ListBooking = (props) => {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              text: "Đơn đặt lịch của bạn đã được xác nhận",
               from: user.id,
               userId: handleBooking.userId._id,
             };
@@ -967,17 +967,6 @@ const ListBooking = (props) => {
           }
         } catch (error) {
           message.error(`${error.response.data.message}`);
-          if (handleBooking.userId) {
-            const notification = {
-              id: handleBooking._id,
-              notificationType: "user",
-              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
-              from: user.id,
-              userId: handleBooking.userId._id,
-            };
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
-            socket.off(SocketEvent.NEWUSERNOTIFICATION);
-          }
         }
       } else if (ishandle === "0") {
         try {

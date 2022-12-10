@@ -27,7 +27,10 @@ import {
   Tag,
   TimePicker,
 } from "antd";
-import { bookingAddByEmployeeApi, httpGetChangeStatus } from "../../../api/booking";
+import {
+  bookingAddByEmployeeApi,
+  httpGetChangeStatus,
+} from "../../../api/booking";
 import Highlighter from "react-highlight-words";
 import moment from "moment";
 import { ChangeToSlug } from "../../../utils/ConvertStringToSlug";
@@ -445,12 +448,14 @@ const ListBooking = (props) => {
   // let elemenPick;
   const showModal = async (e) => {
     // eslint-disable-next-line react/prop-types
-    if (e.target.getAttribute("data") == "addBooking" || e.target.offsetParent.getAttribute("data") == "addBooking") {
-
+    if (
+      e.target.getAttribute("data") == "addBooking" ||
+      e.target.offsetParent.getAttribute("data") == "addBooking"
+    ) {
       await setIsModalOpen(true);
       document.getElementById("js-licensing").style.display = "none";
       document.getElementById("grid_1281791375_0").style.display = "none";
-      setIshandle(1)
+      setIshandle(1);
       setIsHouseNoneBlock("none");
       form.setFieldsValue({
         name: "",
@@ -461,10 +466,10 @@ const ListBooking = (props) => {
         age: "",
         gender: "",
         date: undefined,
-        time:undefined,
+        time: undefined,
       });
-      setBookingPirce(0)
-      setTitleModal("Thêm khách đến trực tiếp")
+      setBookingPirce(0);
+      setTitleModal("Thêm khách đến trực tiếp");
     } else {
       setIsHouseNoneBlock("none");
       let isButon = e.target.getAttribute("data");
@@ -498,15 +503,15 @@ const ListBooking = (props) => {
             return;
           }
           await seDateBooking(item.date.toString());
-          setBookingPirce(item?.bookingPrice)
+          setBookingPirce(item?.bookingPrice);
           form.setFieldsValue({
             name: item?.name,
             phoneNumber: item?.phoneNumber.toString().replace("+84", "0"),
             services: item.services?.map((item) => {
               return {
                 lable: item.serviceId?.name,
-                value: item.serviceId?._id
-              }
+                value: item.serviceId?._id,
+              };
             }),
             employeeId: item?.employeeId?._id,
             note: item?.note,
@@ -562,7 +567,7 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => { };
+  const handleOk = async () => {};
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -830,7 +835,7 @@ const ListBooking = (props) => {
     required: "${label} không được để trống!",
     types: {
       email: "${label} không đúng định dạng!",
-      number: ""
+      number: "",
     },
     number: {
       range: "${label} must be between ${min} and ${max}",
@@ -839,36 +844,36 @@ const ListBooking = (props) => {
 
   const onSubmit = async (data) => {
     console.log("submit", data);
-    if(titleModal == "Thêm khách đến trực tiếp") {
-    console.log(bookingPrice);
+    if (titleModal == "Thêm khách đến trực tiếp") {
+      console.log(bookingPrice);
 
-      let res = ""
+      let res = "";
       if (!data.services[0].lable) {
         res = data.services.map((item) => {
-          let price
+          let price;
           props.dataService?.map((current) => {
             if (current._id == item) {
-              price = current.price
+              price = current.price;
             }
-          })
+          });
           return {
             serviceId: item,
-            price: price
-          }
-        })
+            price: price,
+          };
+        });
       } else {
         res = data.services.map((item) => {
-          let price
+          let price;
           props.dataService?.map((current) => {
             if (current._id == item.value) {
-              price = current.price
+              price = current.price;
             }
-          })
+          });
           return {
             serviceId: item.value,
-            price: price
-          }
-        })
+            price: price,
+          };
+        });
       }
       const bodyData = {
         ...data,
@@ -877,119 +882,117 @@ const ListBooking = (props) => {
         time: timeUpdate,
         services: res,
         bookingPrice: bookingPrice,
-      }
+      };
       console.log(bodyData);
       try {
-          await bookingAddByEmployeeApi(
-          bodyData
-        );
+        await bookingAddByEmployeeApi(bodyData);
         message.success("Thêm khách đến trực tiếp thành công", 2);
-        setIsModalOpen(false)
+        setIsModalOpen(false);
         props.handleChangeStatus();
       } catch (error) {
         message.error(`${error.response?.data?.message}`);
         console.log(error);
       }
-    }else{
+    } else {
       if (ishandle === "1") {
         try {
-          let res = ""
+          let res = "";
           if (!data.services[0].lable) {
             res = data.services.map((item) => {
-              let price
+              let price;
               props.dataService?.map((current) => {
                 if (current._id == item) {
-                  price = current.price
+                  price = current.price;
                 }
-              })
+              });
               return {
                 serviceId: item,
-                price: price
-              }
-            })
+                price: price,
+              };
+            });
           } else {
             res = data.services.map((item) => {
-              let price
+              let price;
               props.dataService?.map((current) => {
                 if (current._id == item.value) {
-                  price = current.price
+                  price = current.price;
                 }
-              })
+              });
               return {
                 serviceId: item.value,
-                price: price
-              }
-            })
+                price: price,
+              };
+            });
           }
           console.log(data);
-          console.log(handleBooking)
+          console.log(handleBooking);
           await httpGetChangeStatus(handleBooking._id, {
             ...data,
             date: dateUpdate,
             time: timeUpdate,
             status: 1,
             bookingPrice: bookingPrice,
-            services: res
+            services: res,
           });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-          if(handleBooking.userId){
+          if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
-              notificationType: 'user',
+              notificationType: "user",
               text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
               from: user.id,
-              userId: handleBooking.userId._id
-            }
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
-            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
           message.error(`${error.response?.data?.message}`);
         }
       } else if (ishandle === "2") {
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 2 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-          if(handleBooking.userId){
+          if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
-              notificationType: 'user',
+              notificationType: "user",
               text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
               from: user.id,
-              userId: handleBooking.userId._id
-            }
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
-            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
         } catch (error) {
           message.error(`${error.response.data.message}`);
-          if(handleBooking.userId){
+          if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
-              notificationType: 'user',
+              notificationType: "user",
               text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
               from: user.id,
-              userId: handleBooking.userId._id
-            }
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
-            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
         }
       } else if (ishandle === "0") {
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 0 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-          if(handleBooking.userId){
+          if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
-              notificationType: 'user',
+              notificationType: "user",
               text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
               from: user.id,
-              userId: handleBooking.userId._id
-            }
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
-            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
         } catch (error) {
           message.error(`${error.response.data.message}`);
@@ -998,16 +1001,16 @@ const ListBooking = (props) => {
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 4 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-          if(handleBooking.userId){
+          if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
-              notificationType: 'user',
+              notificationType: "user",
               text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
               from: user.id,
-              userId: handleBooking.userId._id
-            }
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification)
-            socket.off(SocketEvent.NEWUSERNOTIFICATION)
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
         } catch (error) {
           message.error(`${error.response.data.message}`);
@@ -1031,7 +1034,7 @@ const ListBooking = (props) => {
   };
   const handleToolbarClick = async () => {
     if (ishandle != 4) {
-      return
+      return;
     }
     const sliceId = handleBooking?._id.slice(-7, handleBooking._id.length);
     if (girl) {
@@ -1200,32 +1203,32 @@ const ListBooking = (props) => {
   };
   const handleChange = (value) => {
     let total = 0;
-    const arrOption = value.toString().split(',')
+    const arrOption = value.toString().split(",");
     arrOption.forEach((item) => {
       props.dataService?.map((service) => {
         if (item == service._id) {
-          total += service.price
+          total += service.price;
         }
-      })
-    })
+      });
+    });
     console.log(total);
-    setBookingPirce(total)
+    setBookingPirce(total);
   };
   const options = props.dataService?.map((item) => {
     return {
       label: item.name,
       value: item._id,
-    }
+    };
   });
   return (
     <div className="w-full px-6 py-6 mx-auto">
       <div>
         <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-          List Booking
+          Danh sách lịch đặt
         </h1>
         <Button
           onClick={showModal}
-          data= "addBooking"
+          data="addBooking"
           type="success"
           style={{
             border: "1px solid white",
@@ -1236,7 +1239,6 @@ const ListBooking = (props) => {
           + Thêm khách đến trực tiếp
         </Button>
       </div>
-
       <Table className="mt-5" columns={columns} dataSource={datatable} />;
       <Modal
         footer={null}
@@ -1284,7 +1286,6 @@ const ListBooking = (props) => {
           form={form}
           onAdd={onHandleAdd}
           {...layout}
-
           name="nest-messages"
           validateMessages={validateMessages}
           onFinish={onSubmit}
@@ -1292,43 +1293,44 @@ const ListBooking = (props) => {
           {/* Tên */}
           <Form.Item
             name="name"
-            label="Tên "
+            label="Tên"
             rules={[
               {
                 required: ishandle == 1 ? true : false,
               },
             ]}
           >
-            <Input disabled={ishandle == 1 ? false : true} />
+            <Input disabled={ishandle == 1 ? false : true} placeholder="Tên" />
           </Form.Item>
-          <Form.Item
-            style={{ margin: "0px" }}
-            label="Tuổi - Giới tính"
-          >
-            <Input.Group >
+          <Form.Item style={{ margin: "0px" }} label="Tuổi - Giới tính">
+            <Input.Group>
               <Row>
                 <Col style={{ width: "45%" }}>
-                  <Form.Item
-                    name="age"
-                  >
-                    <InputNumber disabled={ishandle == 1 ? false : true} style={{ width: "100%" }} placeholder="Tuổi" min={1} max={100} />
+                  <Form.Item name="age">
+                    <InputNumber
+                      disabled={ishandle == 1 ? false : true}
+                      style={{ width: "100%" }}
+                      placeholder="Tuổi"
+                      min={1}
+                      max={100}
+                    />
                   </Form.Item>
                 </Col>
-                <Col style={{ width: "50%", marginLeft: "5%" }} >
-                  <Form.Item
-                    name="gender"
-                  >
-                    <Select disabled={ishandle == 1 ? false : true} style={{ width: "100%" }}
+                <Col style={{ width: "50%", marginLeft: "5%" }}>
+                  <Form.Item name="gender">
+                    <Select
+                      disabled={ishandle == 1 ? false : true}
+                      style={{ width: "100%" }}
                       placeholder="Giới tính"
                       options={[
                         {
-                          label: 'Nam',
-                          value: '0',
+                          label: "Nam",
+                          value: "0",
                         },
                         {
-                          label: 'Nữ',
-                          value: '1',
-                        }
+                          label: "Nữ",
+                          value: "1",
+                        },
                       ]}
                     />
                   </Form.Item>
@@ -1349,6 +1351,7 @@ const ListBooking = (props) => {
             ]}
           >
             <Input
+              placeholder="Số điện thoại"
               disabled={ishandle == 1 ? false : true}
               style={{
                 width: "100%",
@@ -1368,12 +1371,11 @@ const ListBooking = (props) => {
             <Select
               mode="multiple"
               allowClear
-              placeholder="Please select"
+              placeholder="Dịch vụ"
               onChange={handleChange}
               options={options}
               disabled={ishandle == 1 ? false : true}
             />
-
           </Form.Item>
 
           <Form.Item
@@ -1391,7 +1393,8 @@ const ListBooking = (props) => {
               showTime
               format={dateFormat}
               onChange={onchangeDateBooking}
-            // onOk={onOk}
+              placeholder="Ngày đến"
+              // onOk={onOk}
             />
           </Form.Item>
 
@@ -1409,6 +1412,7 @@ const ListBooking = (props) => {
             <Select
               disabled={ishandle == 1 ? false : true}
               onChange={changeEmployee}
+              placeholder="Nhân viên"
             >
               {props.dataEmployy?.map((item, index) => (
                 <Select.Option value={item._id} key={index}>
@@ -1432,6 +1436,7 @@ const ListBooking = (props) => {
               disabled={ishandle == 1 ? false : true}
               format={format}
               onChange={onchangeTimeBooking}
+              placeholder="Giờ đến"
             />
           </Form.Item>
 
@@ -1454,7 +1459,11 @@ const ListBooking = (props) => {
           </Form.Item>
           <Form.Item name="bookingPrice" label="Thanh toán">
             <span className="font-semibold">
-              {formatPrice(bookingPrice || bookingPrice == 0 ? bookingPrice : handleBooking?.bookingPrice)}
+              {formatPrice(
+                bookingPrice || bookingPrice == 0
+                  ? bookingPrice
+                  : handleBooking?.bookingPrice
+              )}
             </span>
           </Form.Item>
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
@@ -1462,7 +1471,9 @@ const ListBooking = (props) => {
               style={{
                 display:
                   // eslint-disable-next-line no-constant-condition
-                  titleModal == "Thanh toán và in hóa đơn" || "thông tin" ? "none" : "block",
+                  titleModal == "Thanh toán và in hóa đơn" || "thông tin"
+                    ? "none"
+                    : "block",
               }}
               type="primary"
               htmlType="submit"
@@ -1474,7 +1485,11 @@ const ListBooking = (props) => {
               onClick={handleToolbarClick}
               style={{
                 display:
-                  titleModal == "Thanh toán và in hóa đơn" ? "block" : titleModal == "Thông tin" ? "none" : "",
+                  titleModal == "Thanh toán và in hóa đơn"
+                    ? "block"
+                    : titleModal == "Thông tin"
+                    ? "none"
+                    : "",
               }}
               type="primary"
               htmlType="submit"
@@ -1484,7 +1499,7 @@ const ListBooking = (props) => {
           </Form.Item>
         </Form>
       </Modal>
-    </div >
+    </div>
   );
 };
 export default ListBooking;

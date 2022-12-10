@@ -69,6 +69,7 @@ import { message } from "antd";
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
 import ListVoucher from "./pages/admin/voucher";
+import AddVoucher from "./pages/admin/voucher/add";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
@@ -288,6 +289,7 @@ function App() {
                   </PrivateRouter2>
                 }
               />
+              <Route path="add" element={<AddVoucher />} />
             </Route>
 
             <Route path="user">

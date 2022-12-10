@@ -76,8 +76,8 @@ const AddBanner = () => {
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
-          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Add New Banner</div>
+          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Thêm ảnh banner</div>
           </h1>
         </div>
       </div>
@@ -96,10 +96,9 @@ const AddBanner = () => {
           layout="vertical"
         >
           {/* Avater */}
-          <Form.Item>
+          <Form.Item label="Ảnh banner">
             <Form.Item
               name="image"
-              label="image"
               valuePropName="fileList"
               getValueFromEvent={normFile}
               noStyle
@@ -114,8 +113,8 @@ const AddBanner = () => {
               </Upload.Dragger>
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
-              <Button type="primary" htmlType="submit">
-                Submit
+              <Button type="primary" htmlType="submit" className="mt-[20px]">
+                Thêm mới
               </Button>
             </Form.Item>
           </Form.Item>

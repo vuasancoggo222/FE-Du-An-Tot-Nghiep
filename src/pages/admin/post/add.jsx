@@ -23,21 +23,6 @@ const modules = {
   ],
 };
 
-// const formats = [
-//   "header",
-//   "bold",
-//   "italic",
-//   "underline",
-//   "strike",
-//   "blockquote",
-//   "list",
-//   "bullet",
-//   "indent",
-//   "link",
-//   "image",
-//   "imageBlot",
-// ];
-
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
@@ -109,7 +94,7 @@ const AddPost = () => {
       <div className="w-full px-6 py-6 mx-auto ">
         <div>
           <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px] ">
-            <div>Add Post</div>
+            <div>Thêm tin tức</div>
           </h1>
         </div>
       </div>

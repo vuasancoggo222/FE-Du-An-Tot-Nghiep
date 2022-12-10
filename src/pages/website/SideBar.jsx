@@ -10,7 +10,7 @@ import banner from "../../../assets/img/image/banner.jpg";
 
 const SideBar = () => {
   return (
-    <div className="w-[25%] ">
+    <div className="w-[100%] md:w-[25%] ">
       <div className="border-2 border-[#00502B] border-t-transparent rounded-3xl text-center pb-4">
         <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-0 rounded-tr-2xl rounded-tl-2xl">
           Thời gian làm việc

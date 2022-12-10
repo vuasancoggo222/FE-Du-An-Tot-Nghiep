@@ -10,7 +10,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 
-import { InboxOutlined } from "@ant-design/icons";
 import { httpGetOneService } from "../../../api/services";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { updateService } from "../../../api/service";
@@ -64,7 +63,6 @@ const EditService = () => {
       setFileList([{ url: dataService.image }]);
       form.setFieldsValue({
         name: dataService?.name,
-
         price: dataService?.price,
         status: dataService?.status,
         image: dataService?.image,
@@ -117,10 +115,6 @@ const EditService = () => {
         return Upload.LIST_IGNORE;
       }
     },
-    // onChange: (info) => {
-    //   // console.log(info);
-    //   // setImageFile(info);
-    // },
     listType: "picture",
     maxCount: 1,
     onDrop: true,
@@ -131,8 +125,8 @@ const EditService = () => {
     <>
       <div className="w-[1200px] px-6 py-6 m-auto">
         <div>
-          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px]  text-[50px]">
-            <div>Edit dich vu</div>
+          <h1 className="w-full text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px]">
+            <div>Cập nhật dịch vụ</div>
           </h1>
         </div>
       </div>
@@ -156,15 +150,17 @@ const EditService = () => {
         >
           <Form.Item
             name="name"
-            label="Username"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            label="Tên dịch vụ"
+            rules={[{ required: true, message: "Vui lòng nhập tên dịch vụ!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="price"
-            label="Price"
-            rules={[{ required: true, message: "Please input your number" }]}
+            label="Giá tiền"
+            rules={[
+              { required: true, message: "Vui lòng nhập giá tiền dịch vụ!" },
+            ]}
           >
             <InputNumber
               min={10000}
@@ -175,7 +171,7 @@ const EditService = () => {
             />
           </Form.Item>
 
-          <Form.Item label="image">
+          <Form.Item label="Ảnh dịch vụ">
             <ImgCrop>
               <Upload
                 customRequest={uploadImage}
@@ -190,16 +186,16 @@ const EditService = () => {
           </Form.Item>
           <Form.Item
             name="status"
-            label="Status"
+            label="Trạng thái dịch vụ"
             hasFeedback
             rules={[
               {
                 required: true,
-                message: "Please select your status",
+                message: "Không được để trống",
               },
             ]}
           >
-            <Select placeholder="Please select a country">
+            <Select placeholder="Vui lòng chọn">
               <Option value={1}>
                 <Tag color="green">ĐANG KINH DOANH</Tag>
               </Option>
@@ -211,9 +207,9 @@ const EditService = () => {
           </Form.Item>
           <Form.Item
             name="description"
-            label="Introduction"
+            label="Mô tả dịch vụ"
             rules={[
-              { required: true, message: "Please input your description" },
+              { required: true, message: "Vui lòng nhập mô tả dịch vụ!" },
             ]}
           >
             <ReactQuill
@@ -228,7 +224,7 @@ const EditService = () => {
 
           <Form.Item wrapperCol={{ offset: 10, span: 5 }}>
             <Button type="primary" htmlType="submit">
-              Submit
+              Cập nhật
             </Button>
           </Form.Item>
         </Form>

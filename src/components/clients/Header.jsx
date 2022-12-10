@@ -63,7 +63,7 @@ const Header = () => {
   const handleLogout = () => {
     console.log(1);
     localStorage.removeItem("user");
-    message.success("Đăng xuất thành công.", 2);
+    message.success("Đăng xuất thành công!", 2);
     navigate("/");
     setAuth(false);
   };
@@ -143,113 +143,136 @@ const Header = () => {
     }
   }, []);
   return (
-    <>
-      <div className="bg-[#005E2E] ">
-        <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[29px] justify-center">
-          <div className="header-menu">
-            <nav>
-              <div className=" flex">
-                <div>
-                  <Link to={"/"}>
-                    <img
-                      className="flex w-[50px] sm:w-[100px] mr-[50px]"
-                      src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/logo-spa-4.svg"
-                    />
-                  </Link>
-                </div>
-                <div className="flex-auto w-84 text-center">
-                  <Link to={"/"}>
-                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
-                      Trang chủ
-                    </button>
-                  </Link>
-                  <Link to={"/price-list"}>
-                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
-                      Dịch vụ
-                    </button>
-                  </Link>
-                  <Link to={"/contact"}>
-                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
-                      Liên Hệ
-                    </button>
-                  </Link>
-                  <Link to={"/news"}>
-                    <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
-                      Tin tức
-                    </button>
-                  </Link>
-                </div>
-                <div>
-                  {auth ? (
-                    <div
-                      style={{ justifyItems: "center", display: "flex" }}
-                      className="items-center"
-                    >
-                      <span className="text-white">Xin chao {user.name}</span>
-                      <div className="mx-[20px]">
-                        <Dropdown overlay={menu} placement="bottom">
-                          <Avatar src={user.avatar}></Avatar>
-                        </Dropdown>
-                      </div>
-                      <div>
-                        <div className="mr-[50px]">
-                          <Notification />
-                        </div>
-                      </div>
-                      <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
-                        <Link className="text-[#fff]" to={`/booking`}>
-                          Đặt Lịch
-                        </Link>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="sm:flex-auto">
-                      <button
-                        data="signin"
-                        onClick={showModal}
-                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff] "
-                      >
-                        Đăng nhập
-                      </button>
-                      <button
-                        data="signup"
-                        onClick={showModal}
-                        className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 text-[#fff] ml-3"
-                      >
-                        Đăng ký
-                      </button>
-                      <button className="md:text-[8px] lg:text-[10px] xl:text-[15px] 2xl:text-[15px] sm:px-2 sm:w-[50px] lg:w-[100px] lg:inline-block text-[3px] w-[30px] rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1 ml-3">
-                        <Link className="text-[#fff]" to={`/booking`}>
-                          Đặt Lịch
-                        </Link>
-                      </button>
-                    </div>
-                  )}
-                </div>
+    <div className="bg-[#005E2E] ">
+      <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[4px] lg:py-[29px] justify-center">
+        <Link to={"/"}>
+          <img
+            className="lg:hidden w-[100px]"
+            src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/logo-spa-4.svg"
+          />
+        </Link>
+        <div className="header-menu">
+          <nav className=" flex justify-between items-center">
+            <div>
+              <div id="btn-menu">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-8 h-8 text-white lg:hidden cursor-pointer"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
+                </svg>
               </div>
-            </nav>
-          </div>
-          <Modal
-            open={open}
-            onOk={handleOk}
-            confirmLoading={confirmLoading}
-            onCancel={handleCancel}
-            width={1000}
-            footer={false}
-          >
-            <p>
-              {ismolDal == "signin" ? (
-                <SignIn parentCallback={callbackFunction} />
-              ) : ismolDal == "signup" ? (
-                <SignUp handleSignUp={handleSignUp()} />
+              <Link to={"/"}>
+                <img
+                  className="hidden lg:flex min-w-[100px] mr-[50px] "
+                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/logo-spa-4.svg"
+                />
+              </Link>
+            </div>
+            <div className="hidden lg:flex w-84 text-center" id="menu">
+              <Link to={"/"}>
+                <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                  Trang chủ
+                </button>
+              </Link>
+              <Link to={"/price-list"}>
+                <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                  Dịch vụ
+                </button>
+              </Link>
+              <Link to={"/contact"}>
+                <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                  Liên Hệ
+                </button>
+              </Link>
+              <Link to={"/news"}>
+                <button className="text-[5px] md:text-[8px] lg:text-[15px] xl:text-[15px] 2xl:text-[15px] px-[10px] sm:px-[25px] text-[#fff]">
+                  Tin tức
+                </button>
+              </Link>
+            </div>
+            <div>
+              {auth ? (
+                <div
+                  style={{ justifyItems: "center", display: "flex" }}
+                  className="items-center"
+                >
+                  <span className="text-white whitespace-nowrap">
+                    Xin chào! {user.name}
+                  </span>
+                  <div className="mx-[10px]">
+                    <Dropdown overlay={menu} placement="bottom">
+                      <Avatar src={user.avatar}></Avatar>
+                    </Dropdown>
+                  </div>
+                  <div>
+                    <div className="mr-[10px]">
+                      <Notification />
+                    </div>
+                  </div>
+                  <button className="xl:text-[15px] sm:px-2 w-[100px] lg:inline-block text-[11px] whitespace-nowrap mr-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
+                    <Link className="text-[#fff]" to={`/booking`}>
+                      Đặt Lịch
+                    </Link>
+                  </button>
+                </div>
               ) : (
-                ""
+                <div className="flex ">
+                  <button
+                    data="signin"
+                    onClick={showModal}
+                    className="text-[12px] sm:text-[14px] lg:text-[16px] whitespace-nowrap mr-3 px-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block text-[#fff] "
+                  >
+                    Đăng nhập
+                  </button>
+                  <button
+                    data="signup"
+                    onClick={showModal}
+                    className="text-[12px] sm:text-[14px] lg:text-[16px] whitespace-nowrap mr-3 px-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block text-[#fff]"
+                  >
+                    Đăng ký
+                  </button>
+                  <button className="text-[12px] sm:text-[14px] lg:text-[16px] whitespace-nowrap px-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block">
+                    <Link
+                      className="text-[#fff] hover:text-[#fff]"
+                      to={`/booking`}
+                    >
+                      Đặt Lịch
+                    </Link>
+                  </button>
+                </div>
               )}
-            </p>
-          </Modal>
-        </header>
-      </div>
-    </>
+            </div>
+          </nav>
+        </div>
+        <Modal
+          open={open}
+          onOk={handleOk}
+          confirmLoading={confirmLoading}
+          onCancel={handleCancel}
+          width={1000}
+          footer={false}
+        >
+          <p>
+            {ismolDal == "signin" ? (
+              <SignIn parentCallback={callbackFunction} />
+            ) : ismolDal == "signup" ? (
+              <SignUp handleSignUp={handleSignUp()} />
+            ) : (
+              ""
+            )}
+          </p>
+        </Modal>
+      </header>
+    </div>
   );
 };
 

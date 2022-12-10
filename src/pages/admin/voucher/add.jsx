@@ -1,8 +1,7 @@
 import { Button, Form, Input, Select, message, Row, Col } from "antd";
 import React, { useState, useEffect } from "react";
-import { InboxOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { Add_Voucher } from "../../../api/voucher";
+import { AddVouche } from "../../../api/voucher";
 import { httpGetAllService } from "../../../api/services";
 
 const AddVoucher = () => {
@@ -11,9 +10,9 @@ const AddVoucher = () => {
 
   const onFinish = async (data) => {
     console.log(data);
-    await Add_Voucher(data);
-    // message.success("Thêm voucher thành công !");
-    // navigate(-1);
+    await AddVouche(data);
+    message.success("Thêm voucher thành công !");
+    navigate(-1);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -169,8 +168,8 @@ const AddVoucher = () => {
           >
             <Select placeholder="Dịch vụ">
               {services.map((service, index) => (
-                <Option key={index} value={service.name}>
-                  {service.name}
+                <Option key={index} value={service._id}>
+                  <div className="">{service.name}</div>
                 </Option>
               ))}
             </Select>

@@ -8,7 +8,7 @@ import { ListVouchers, DeleteVoucher } from "../../../api/voucher";
 const ListVoucher = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [vouchers, setVouchers] = useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -45,6 +45,18 @@ const ListVoucher = () => {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
+    },
+
+    {
+      title: "Dịch vụ",
+      dataIndex: "service",
+      key: "service",
+    },
+
+    {
+      title: "Ngày hết hạn",
+      dataIndex: "expirationDate",
+      key: "expirationDate",
     },
 
     {
@@ -119,12 +131,12 @@ const ListVoucher = () => {
     <>
       <div className="w-full px-6 py-6 mx-auto ">
         <div>
-          <h1 className="w-[1200px] m-auto text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px] ">
+          <h1 className="m-auto text-center mb-0 font-bold text-white capitalize pb-[20px] text-[40px] ">
             <div>Danh sách Voucher</div>
           </h1>
         </div>
         <div className="">
-          <Link to={"/admin/post/add"}>
+          <Link to={"/admin/voucher/add"}>
             <Button>+ Thêm Voucher</Button>
           </Link>
         </div>

@@ -11,3 +11,7 @@ export const OneVoucher = (id) => {
 export const DeleteVoucher = (id) => {
   return instance.delete(`/voucher/delete/${id}`);
 };
+
+export const AddVouche = (data) => {
+  return instance.post(`/voucher/add`, data);
+};

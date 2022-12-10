@@ -847,7 +847,6 @@ const ListBooking = (props) => {
     console.log("submit", data);
     if (titleModal == "Thêm khách đến trực tiếp") {
       console.log(bookingPrice);
-
       let res = "";
       if (!data.services[0].lable) {
         res = data.services.map((item) => {

@@ -7,7 +7,6 @@ import { httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import { employeeStatistics } from "../../../../api/employee";
 import moment from "moment";
-import { httpGetOneUser } from "../../../../api/user";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
     const { Option } = Select;
@@ -22,7 +21,6 @@ const ListBookingByEmployee = (props) => {
     const [fillterYear, setFillterYear] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
-    const [isEmployee, setIsemployee] = useState();
     // eslint-disable-next-line react/prop-types
     const booking = props.dataBooking
     // eslint-disable-next-line react/prop-types
@@ -575,7 +573,7 @@ const ListBookingByEmployee = (props) => {
     let datatable = [];
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
-        if (item.employeeId?._id == isEmployee?.employeeId && item.status == 1 || item.employeeId?._id == isEmployee?.employeeId && item.status == 2 || item.employeeId?._id == isEmployee?.employeeId && item.status == 3 ) {
+        if (item.employeeId?._id == employee?.employeeId && item.status == 1 || item.employeeId?._id == employee?.employeeId && item.status == 2 || item.employeeId?._id == employee?.employeeId && item.status == 3) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -597,7 +595,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(isEmployee.employeeId, month, year);
+            const res = await employeeStatistics(employee.employeeId, month, year);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -611,7 +609,7 @@ const ListBookingByEmployee = (props) => {
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(isEmployee.employeeId, undefined, year);
+            const res = await employeeStatistics(employee.employeeId, undefined, year);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
@@ -622,13 +620,10 @@ const ListBookingByEmployee = (props) => {
     useEffect(() => {
         setLoading(true)
         const getEmployee = async () => {
-            const res = await httpGetOneUser(employee.token , employee.id)
-            setIsemployee(res)
-            console.log(res);
-            const data = await employeeStatistics(res.employeeId)
+            const data = await employeeStatistics(employee.employeeId)
             console.log(data);
-            setEmpoyeeStatic(data) 
-            
+            setEmpoyeeStatic(data)
+
         }
         getEmployee()
         setLoading(false)
@@ -641,7 +636,7 @@ const ListBookingByEmployee = (props) => {
         <div className="w-full px-6 py-6 mx-auto">
             <div>
                 <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-                    Booking by {isEmployee?.name}
+                    Booking by {employee?.name}
                 </h1>
 
             </div>

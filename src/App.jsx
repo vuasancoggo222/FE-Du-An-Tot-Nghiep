@@ -90,6 +90,8 @@ function App() {
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
   const [countDown, setCountDown] = useState("");
+  const [employeeId, setEmployeeId] = useState();
+  const [bookingId, setBookingId] = useState();
 
   window.addEventListener("unload", () => {
     if (countDown > 0) {
@@ -109,6 +111,10 @@ function App() {
       }
     }, 1000);
   };
+  const handleToEmployee = (data, bookingId) => {
+    setEmployeeId(data)
+    setBookingId(bookingId)
+  }
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -213,6 +219,7 @@ function App() {
                 element={
                   <PrivateRouter2>
                     <ListBooking
+                      handleToEmployee={handleToEmployee}
                       handleChangeStatus={changeStatusBooking}
                       dataBooking={booking}
                       dataEmployy={employees}
@@ -225,9 +232,11 @@ function App() {
                 path="employee"
                 element={
                   <ListBookingByEmployee
+                    dataAdminLogin={employeeId}
                     handleChangeStatus={changeStatusBooking}
                     dataBooking={booking}
                     dataEmployy={employees}
+                    dataBookingId={bookingId}
                     dataService={service}
                   />
                 }

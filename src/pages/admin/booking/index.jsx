@@ -23,12 +23,14 @@ import {
   Row,
   Select,
   Space,
+  Spin,
   Table,
   Tag,
   TimePicker,
 } from "antd";
 import {
   bookingAddByEmployeeApi,
+  httpGetAll,
   httpGetChangeStatus,
 } from "../../../api/booking";
 import Highlighter from "react-highlight-words";
@@ -39,6 +41,8 @@ import { readMoney } from "../../../utils/ReadMoney";
 import { formatPrice } from "../../../utils/formatCash";
 import { socket } from "../../../App";
 import { SocketEvent } from "../../../utils/SocketConstant";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
@@ -49,21 +53,23 @@ const ListBooking = (props) => {
   const searchInput = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [girl, setGirl] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [titleModal, setTitleModal] = useState("Xác nhận");
   const [handleBooking, setHandleBooking] = useState();
   const [ishouse, setIsHouse] = useState();
   const [ishouseNoneBlock, setIsHouseNoneBlock] = useState();
   const [timeUpdate, setTimeUpdate] = useState();
   const [bookingPrice, setBookingPirce] = useState();
+  const [booking, setBooking] = useState();
   const [dateUpdate, setDateUpdate] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   // eslint-disable-next-line no-unused-vars
   const [dateBooking, seDateBooking] = useState();
   const [ishandle, setIshandle] = useState();
   const dateFormat = "YYYY/MM/DD";
+  const navigate = useNavigate()
   const format = "HH";
   // eslint-disable-next-line react/prop-types
-  const booking = props.dataBooking;
   // eslint-disable-next-line react/prop-types
   const employee = props.dataEmployy?.map((item) => {
     return {
@@ -448,6 +454,7 @@ const ListBooking = (props) => {
   });
   // let elemenPick;
   const showModal = async (e) => {
+
     // eslint-disable-next-line react/prop-types
     if (
       e.target.getAttribute("data") == "addBooking" ||
@@ -568,11 +575,16 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => {};
+  const handleOk = async () => { };
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    props.handleChangeStatus();
+
+    const changeStatus = async () => {
+      const res = await httpGetAll();
+      setBooking(res)
+    }
+    changeStatus()
   };
   const renderTime = (value) => {
     const d = new Date(value);
@@ -678,7 +690,7 @@ const ListBooking = (props) => {
         } else if (status === 3) {
           key = "Chờ thanh toán";
           color = "#69c20a";
-        } else {
+        } else if (status === 4) {
           key = "Hoàn thành";
           color = "#09857e";
         }
@@ -699,10 +711,12 @@ const ListBooking = (props) => {
         let isShowPay = "false";
         let isShowInfo = "true";
         let BtSusscesCursor = "pointer";
+        let BtToEmployeeCursor = "pointer";
         let BtSusscessColor = "#dedede";
         // thong tin
         let BtInfoCursor = "pointer";
         let BtInfo = "#3934df";
+        let BtToEmployee = "#b11aa0";
         // let BtSusscessColor = "#26cbe8"
         // hủy
         let BtFailureCursor = "not-allowed";
@@ -716,6 +730,8 @@ const ListBooking = (props) => {
         if (item.status === 0) {
           // xac nhan
           isShowCucess = "true";
+          BtToEmployee = "#dedede";
+          BtToEmployeeCursor = "not-allowed"
           isShowFailure = "true";
           BtSusscesCursor = "pointer";
           BtSusscessColor = "#26cbe8";
@@ -731,6 +747,10 @@ const ListBooking = (props) => {
           BtPayCursor = "pointer";
           BtPayColor = "#09857e";
           isShowPay = "true";
+        }else if (item.status === 2) {
+          // hủy
+          BtToEmployee = "#dedede";
+          BtToEmployeeCursor = "not-allowed"
         }
         return (
           <Select
@@ -797,6 +817,29 @@ const ListBooking = (props) => {
             </Option>
             <Option value="5">
               <Button
+                onClick={async () => {
+                  if (item.status == 0 ) {
+                   return
+                  }else if(item.status == 2) {
+                    return
+                  }else{
+                    await props.handleToEmployee(item.employeeId._id, item._id)
+                    navigate("/admin/booking/employee")
+                  }
+                }}
+                style={{
+                  cursor: BtToEmployeeCursor,
+                  backgroundColor: BtToEmployee,
+                  border: "none",
+                  color: "white",
+                  width: "100%",
+                }}
+              >
+                Quyền nhân viên
+              </Button>
+            </Option>
+            <Option value="5">
+              <Button
                 isshow={isShowInfo}
                 onClick={showModal}
                 dataId={item._id}
@@ -819,19 +862,7 @@ const ListBooking = (props) => {
   ];
 
   // eslint-disable-next-line react/prop-types
-  const datatable = booking?.map((item) => {
-    const time = renderTime(item.time);
-    const date = renderDate(item.date);
-    return {
-      name: item.name,
-      phoneNumber: item.phoneNumber.toString().replace("+84", "0"),
-      status: item.status,
-      date: date,
-      time: time,
-      employeeId: item.employeeId?.name,
-      action: item,
-    };
-  });
+
   const validateMessages = {
     required: "${label} không được để trống!",
     types: {
@@ -888,7 +919,11 @@ const ListBooking = (props) => {
         await bookingAddByEmployeeApi(bodyData);
         message.success("Thêm khách đến trực tiếp thành công", 2);
         setIsModalOpen(false);
-        props.handleChangeStatus();
+        const changeStatus = async () => {
+          const res = await httpGetAll();
+          setBooking(res)
+        }
+        changeStatus()
       } catch (error) {
         message.error(`${error.response?.data?.message}`);
         console.log(error);
@@ -1006,7 +1041,11 @@ const ListBooking = (props) => {
         }
       }
       // eslint-disable-next-line react/prop-types
-      props.handleChangeStatus();
+      const changeStatus = async () => {
+        const res = await httpGetAll();
+        setBooking(res)
+      }
+      changeStatus()
       handleCancel();
     }
   };
@@ -1204,291 +1243,323 @@ const ListBooking = (props) => {
     setBookingPirce(total);
   };
   const options = props.dataService?.map((item) => {
+    setBooking
     return {
       label: item.name,
       value: item._id,
     };
   });
+  const datatable = booking?.map((item) => {
+    const time = renderTime(item.time);
+    const date = renderDate(item.date);
+    return {
+      name: item.name,
+      phoneNumber: item.phoneNumber.toString().replace("+84", "0"),
+      status: item.status,
+      date: date,
+      time: time,
+      employeeId: item.employeeId?.name,
+      action: item,
+    };
+  });
+  useEffect(() => {
+    setLoading(true);
+    const getBooking = async () => {
+      const res = await httpGetAll();
+      setBooking(res)
+    }
+    getBooking()
+    setLoading(false);
+  }, [])
   return (
-    <div className="w-full px-6 py-6 mx-auto">
-      <div>
-        <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-          Danh sách lịch đặt
-        </h1>
-        <Button
-          onClick={showModal}
-          data="addBooking"
-          type="success"
-          style={{
-            border: "1px solid white",
+    <Spin
+      spinning={loading}
+      style={{
+        position: "fixed",
+        top: "25%",
+        left: "8%",
+      }}
+    >
+      <div className="w-full px-6 py-6 mx-auto">
+        <div>
+          <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
+            Danh sách lịch đặt
+          </h1>
+          <Button
+            onClick={showModal}
+            data="addBooking"
+            type="success"
+            style={{
+              border: "1px solid white",
 
-            font: "bold",
-          }}
+              font: "bold",
+            }}
+          >
+            + Thêm khách đến trực tiếp
+          </Button>
+        </div>
+        <Table className="mt-5" columns={columns} dataSource={datatable} />;
+        <Modal
+          footer={null}
+          style={{ fontFamily: "revert-layer" }}
+          title={titleModal}
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
         >
-          + Thêm khách đến trực tiếp
-        </Button>
-      </div>
-      <Table className="mt-5" columns={columns} dataSource={datatable} />;
-      <Modal
-        footer={null}
-        style={{ fontFamily: "revert-layer" }}
-        title={titleModal}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <GridComponent
-          style={{
-            display:
-              titleModal == "Thanh toán và in hóa đơn" ? "block" : "none",
-          }}
-          ref={(g) => setGirl(g)}
-          toolbar={[titleModal]}
-          allowExcelExport={true}
-          wrapText={true}
-          // dataSource={handleBooking?.services.map((item) => {
-          //     return { ...item, price: formatCash(item?.price) }
-          // })}
-          // toolbarClick={handleToolbarClick}
-          allowPaging={true}
-        >
-          <ColumnsDirective>
-            <ColumnDirective
-              indent="1"
-              field="name"
-              headerText="Dịch vụ"
-              width="200"
-              textAlign="left"
-            />
-            <ColumnDirective
-              field="price"
-              headerText="Đơn Giá"
-              width="110"
-              textAlign="right"
-            />
-          </ColumnsDirective>
-          <Inject services={[ExcelExport]} />
-        </GridComponent>
+          <GridComponent
+            style={{
+              display:
+                titleModal == "Thanh toán và in hóa đơn" ? "block" : "none",
+            }}
+            ref={(g) => setGirl(g)}
+            toolbar={[titleModal]}
+            allowExcelExport={true}
+            wrapText={true}
+            // dataSource={handleBooking?.services.map((item) => {
+            //     return { ...item, price: formatCash(item?.price) }
+            // })}
+            // toolbarClick={handleToolbarClick}
+            allowPaging={true}
+          >
+            <ColumnsDirective>
+              <ColumnDirective
+                indent="1"
+                field="name"
+                headerText="Dịch vụ"
+                width="200"
+                textAlign="left"
+              />
+              <ColumnDirective
+                field="price"
+                headerText="Đơn Giá"
+                width="110"
+                textAlign="right"
+              />
+            </ColumnsDirective>
+            <Inject services={[ExcelExport]} />
+          </GridComponent>
 
-        <Form
-          id="html2pdf"
-          form={form}
-          onAdd={onHandleAdd}
-          {...layout}
-          name="nest-messages"
-          validateMessages={validateMessages}
-          onFinish={onSubmit}
-        >
-          {/* Tên */}
-          <Form.Item
-            name="name"
-            label="Tên"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-              },
-            ]}
+          <Form
+            id="html2pdf"
+            form={form}
+            onAdd={onHandleAdd}
+            {...layout}
+            name="nest-messages"
+            validateMessages={validateMessages}
+            onFinish={onSubmit}
           >
-            <Input disabled={ishandle == 1 ? false : true} placeholder="Tên" />
-          </Form.Item>
-          <Form.Item style={{ margin: "0px" }} label="Tuổi - Giới tính">
-            <Input.Group>
-              <Row>
-                <Col style={{ width: "45%" }}>
-                  <Form.Item name="age">
-                    <InputNumber
-                      disabled={ishandle == 1 ? false : true}
-                      style={{ width: "100%" }}
-                      placeholder="Tuổi"
-                      min={1}
-                      max={100}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col style={{ width: "50%", marginLeft: "5%" }}>
-                  <Form.Item name="gender">
-                    <Select
-                      disabled={ishandle == 1 ? false : true}
-                      style={{ width: "100%" }}
-                      placeholder="Giới tính"
-                      options={[
-                        {
-                          label: "Nam",
-                          value: "0",
-                        },
-                        {
-                          label: "Nữ",
-                          value: "1",
-                        },
-                      ]}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Input.Group>
-          </Form.Item>
+            {/* Tên */}
+            <Form.Item
+              name="name"
+              label="Tên"
+              rules={[
+                {
+                  required: ishandle == 1 ? true : false,
+                },
+              ]}
+            >
+              <Input disabled={ishandle == 1 ? false : true} placeholder="Tên" />
+            </Form.Item>
+            <Form.Item style={{ margin: "0px" }} label="Tuổi - Giới tính">
+              <Input.Group>
+                <Row>
+                  <Col style={{ width: "45%" }}>
+                    <Form.Item name="age">
+                      <InputNumber
+                        disabled={ishandle == 1 ? false : true}
+                        style={{ width: "100%" }}
+                        placeholder="Tuổi"
+                        min={1}
+                        max={100}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col style={{ width: "50%", marginLeft: "5%" }}>
+                    <Form.Item name="gender">
+                      <Select
+                        disabled={ishandle == 1 ? false : true}
+                        style={{ width: "100%" }}
+                        placeholder="Giới tính"
+                        options={[
+                          {
+                            label: "Nam",
+                            value: "0",
+                          },
+                          {
+                            label: "Nữ",
+                            value: "1",
+                          },
+                        ]}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Input.Group>
+            </Form.Item>
 
-          <Form.Item
-            name="phoneNumber"
-            label="Số điện thoại"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-                pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
-                message: "Số điện thoại không đúng định dạng!",
-              },
-            ]}
-          >
-            <Input
-              placeholder="Số điện thoại"
-              disabled={ishandle == 1 ? false : true}
-              style={{
-                width: "100%",
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="services"
-            label="Dịch vụ"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-                // eslint-disable-next-line no-undef
-              },
-            ]}
-          >
-            <Select
-              mode="multiple"
-              allowClear
-              placeholder="Dịch vụ"
-              onChange={handleChange}
-              options={options}
-              disabled={ishandle == 1 ? false : true}
-            />
-          </Form.Item>
+            <Form.Item
+              name="phoneNumber"
+              label="Số điện thoại"
+              rules={[
+                {
+                  required: ishandle == 1 ? true : false,
+                  pattern: new RegExp(/((09|03|07|08|05)+([0-9]{8})\b)/g),
+                  message: "Số điện thoại không đúng định dạng!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Số điện thoại"
+                disabled={ishandle == 1 ? false : true}
+                style={{
+                  width: "100%",
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="services"
+              label="Dịch vụ"
+              rules={[
+                {
+                  required: ishandle == 1 ? true : false,
+                  // eslint-disable-next-line no-undef
+                },
+              ]}
+            >
+              <Select
+                mode="multiple"
+                allowClear
+                placeholder="Dịch vụ"
+                onChange={handleChange}
+                options={options}
+                disabled={ishandle == 1 ? false : true}
+              />
+            </Form.Item>
 
-          <Form.Item
-            name="date"
-            label="Ngày đến"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-                // eslint-disable-next-line no-undef
-              },
-            ]}
-          >
-            <DatePicker
-              disabled={ishandle == 1 ? false : true}
-              showTime
-              format={dateFormat}
-              onChange={onchangeDateBooking}
-              placeholder="Ngày đến"
+            <Form.Item
+              name="date"
+              label="Ngày đến"
+              rules={[
+                {
+                  required: ishandle == 1 ? true : false,
+                  // eslint-disable-next-line no-undef
+                },
+              ]}
+            >
+              <DatePicker
+                disabled={ishandle == 1 ? false : true}
+                showTime
+                format={dateFormat}
+                onChange={onchangeDateBooking}
+                placeholder="Ngày đến"
               // onOk={onOk}
-            />
-          </Form.Item>
+              />
+            </Form.Item>
 
-          {/* chọn nhân viên */}
-          <Form.Item
-            name="employeeId"
-            label="Nhân viên"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-                // eslint-disable-next-line no-undef
-              },
-            ]}
-          >
-            <Select
-              disabled={ishandle == 1 ? false : true}
-              onChange={changeEmployee}
-              placeholder="Nhân viên"
+            {/* chọn nhân viên */}
+            <Form.Item
+              name="employeeId"
+              label="Nhân viên"
+              rules={[
+                {
+                  required: ishandle == 1 ? true : false,
+                  // eslint-disable-next-line no-undef
+                },
+              ]}
             >
-              {props.dataEmployy?.map((item, index) => (
-                <Select.Option value={item._id} key={index}>
-                  {item.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+              <Select
+                disabled={ishandle == 1 ? false : true}
+                onChange={changeEmployee}
+                placeholder="Nhân viên"
+              >
+                {props.dataEmployy?.map((item, index) => (
+                  <Select.Option value={item._id} key={index}>
+                    {item.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
 
-          <Form.Item
-            name="time"
-            label="Giờ đến"
-            rules={[
-              {
-                required: ishandle == 1 ? true : false,
-                // eslint-disable-next-line no-undef
-              },
-            ]}
-          >
-            <TimePicker
-              disabled={ishandle == 1 ? false : true}
-              format={format}
-              onChange={onchangeTimeBooking}
-              placeholder="Giờ đến"
-            />
-          </Form.Item>
-
-          <Form.Item
-            style={{ display: ishouseNoneBlock }}
-            label="Note"
-            name="time"
-          >
-            <div
-              className=""
-              style={{ color: "#cfab1b", display: ishouseNoneBlock }}
+            <Form.Item
+              name="time"
+              label="Giờ đến"
+              rules={[
+                {
+                  required: ishandle == 1 ? true : false,
+                  // eslint-disable-next-line no-undef
+                },
+              ]}
             >
-              Nhân viên này đã có {ishouse} khách vào thời điểm này !
-            </div>
-          </Form.Item>
-          {/* chọn ca  */}
+              <TimePicker
+                disabled={ishandle == 1 ? false : true}
+                format={format}
+                onChange={onchangeTimeBooking}
+                placeholder="Giờ đến"
+              />
+            </Form.Item>
 
-          <Form.Item name="note" label="Ghi chú">
-            <Input.TextArea disabled={ishandle == 1 ? false : true} />
-          </Form.Item>
-          <Form.Item name="bookingPrice" label="Thanh toán">
-            <span className="font-semibold">
-              {formatPrice(
-                bookingPrice || bookingPrice == 0
-                  ? bookingPrice
-                  : handleBooking?.bookingPrice
-              )}
-            </span>
-          </Form.Item>
-          <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-            <Button
-              style={{
-                display:
-                  // eslint-disable-next-line no-constant-condition
-                  titleModal == "Thanh toán và in hóa đơn" || "thông tin"
-                    ? "none"
-                    : "block",
-              }}
-              type="primary"
-              htmlType="submit"
+            <Form.Item
+              style={{ display: ishouseNoneBlock }}
+              label="Note"
+              name="time"
             >
-              {titleModal}
-            </Button>
+              <div
+                className=""
+                style={{ color: "#cfab1b", display: ishouseNoneBlock }}
+              >
+                Nhân viên này đã có {ishouse} khách vào thời điểm này !
+              </div>
+            </Form.Item>
+            {/* chọn ca  */}
 
-            <Button
-              onClick={handleToolbarClick}
-              style={{
-                display:
-                  titleModal == "Thanh toán và in hóa đơn"
-                    ? "block"
-                    : titleModal == "Thông tin"
-                    ? "none"
-                    : "",
-              }}
-              type="primary"
-              htmlType="submit"
-            >
-              {titleModal}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+            <Form.Item name="note" label="Ghi chú">
+              <Input.TextArea disabled={ishandle == 1 ? false : true} />
+            </Form.Item>
+            <Form.Item name="bookingPrice" label="Thanh toán">
+              <span className="font-semibold">
+                {formatPrice(
+                  bookingPrice || bookingPrice == 0
+                    ? bookingPrice
+                    : handleBooking?.bookingPrice
+                )}
+              </span>
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+              <Button
+                style={{
+                  display:
+                    // eslint-disable-next-line no-constant-condition
+                    titleModal == "Thanh toán và in hóa đơn" || "thông tin"
+                      ? "none"
+                      : "block",
+                }}
+                type="primary"
+                htmlType="submit"
+              >
+                {titleModal}
+              </Button>
+
+              <Button
+                onClick={handleToolbarClick}
+                style={{
+                  display:
+                    titleModal == "Thanh toán và in hóa đơn"
+                      ? "block"
+                      : titleModal == "Thông tin"
+                        ? "none"
+                        : "",
+                }}
+                type="primary"
+                htmlType="submit"
+              >
+                {titleModal}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    </Spin>
   );
 };
 export default ListBooking;

@@ -877,7 +877,7 @@ const ListBooking = (props) => {
       }
       const bodyData = {
         ...data,
-        status: 4,
+        status: 1,
         date: dateUpdate,
         time: timeUpdate,
         services: res,

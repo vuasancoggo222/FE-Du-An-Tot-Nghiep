@@ -7,7 +7,9 @@ import {
   message,
   Select,
   Upload,
+  Modal
 } from "antd";
+
 import React, { useEffect, useState } from "react";
 import { getProfile, updateProfile } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
@@ -57,10 +59,7 @@ const Userinformation = (props) => {
   }, []);
 
   const onSubmit = async (data) => {
-    var res = await updateProfile(user.token, data);
-    if (res._id !== undefined) {
-      message.success("Add employee success", 4);
-    }
+   await updateProfile(user.token, data);
   };
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
@@ -70,11 +69,17 @@ const Userinformation = (props) => {
   const onFinish = async (data) => {
     const dataPost = { ...data, avatar: url };
     try {
-      await onSubmit(dataPost).then(() => {
-        message.success("cap nhat thành công", 4);
-      });
-      // eslint-disable-next-line react/prop-types
-      props.updateSuccess()
+      Modal.confirm({
+        title: 'Bạn có chắc chắn muốn cập nhật thông tin tài khoản không ?',
+        onOk: async () => {
+          await onSubmit(dataPost).then(() => {
+            message.success("Cập nhật thông tin tài khoản thành công.", 4);
+          });
+          // eslint-disable-next-line react/prop-types
+          props.updateSuccess()
+        }
+      })
+   
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
     }
@@ -89,14 +94,14 @@ const Userinformation = (props) => {
     try {
       const res = await uploadCloudinary(formData);
       onSuccess("Ok");
-      message.success("Upload successfully !");
+      message.success("Tải lên ảnh đại diện thành công !");
       console.log("server res: ", res);
       setUrl(res.data.secure_url);
     } catch (err) {
       onError({ err });
     }
   };
-  const [componentDisabled, setComponentDisabled] = useState(true);
+  const [componentDisabled, setComponentDisabled] = useState(false);
   const onFormLayoutChange = ({ disabled }) => {
     setComponentDisabled(disabled);
   };
@@ -108,19 +113,12 @@ const Userinformation = (props) => {
           Thông tin tài khoản
         </h1>
         <div className="py-[20px] pb-5">
-          <div className="px-[20px] mb-5">
-            <Checkbox
-              checked={componentDisabled}
-              onChange={(e) => setComponentDisabled(e.target.checked)}
-            >
-              Sửa Thông tin
-            </Checkbox>
-          </div>
+          
           <Form
             {...layout}
             name="nest-messages"
             onFinish={onFinish}
-            disabled={componentDisabled}
+           
             onValuesChange={onFormLayoutChange}
             validateMessages={validateMessages}
             form={form}
@@ -179,8 +177,8 @@ const Userinformation = (props) => {
                 offset: 8,
               }}
             >
-              <Button type="primary" htmlType="submit">
-               Cập nhật
+              <Button className="bg-[#0c8747] text-white"  htmlType="submit">
+               Cập nhật tài khoản
               </Button>
             </Form.Item>
            </div>

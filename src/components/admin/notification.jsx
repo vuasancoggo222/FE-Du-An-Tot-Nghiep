@@ -32,7 +32,7 @@ const notification = () => {
         >
           <Badge
             count={
-              user.role === 0
+              user?.role === 0
                 ? userNotificationUnRead
                 : adminNotificationUnRead
             }

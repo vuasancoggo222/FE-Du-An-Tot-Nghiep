@@ -8,6 +8,7 @@ import { isAuthenticate } from "../../utils/LocalStorage";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Notification from "../admin/notification";
+import { PrivateRouter } from "../../utils/PrivateRouter";
 const Header = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
@@ -61,7 +62,6 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    console.log(1);
     localStorage.removeItem("user");
     message.success("Đăng xuất thành công!", 2);
     navigate("/");
@@ -142,6 +142,9 @@ const Header = () => {
       setUser(user);
     }
   }, []);
+  const onHandleCloseModal = ()=>{
+    setOpen(false);
+  }
   return (
     <div className="bg-[#005E2E] ">
       <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[4px] lg:py-[29px] justify-center">
@@ -215,7 +218,7 @@ const Header = () => {
                   </div>
                   <div>
                     <div className="mr-[10px]">
-                      <Notification />
+                    <Notification/>
                     </div>
                   </div>
                   <button className="xl:text-[15px] sm:px-2 w-[100px] lg:inline-block text-[11px] whitespace-nowrap mr-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
@@ -227,6 +230,7 @@ const Header = () => {
               ) : (
                 <div className="flex ">
                   <button
+                  
                     data="signin"
                     onClick={showModal}
                     className="text-[12px] sm:text-[14px] lg:text-[16px] whitespace-nowrap mr-3 px-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block text-[#fff] "
@@ -263,7 +267,7 @@ const Header = () => {
         >
           <p>
             {ismolDal == "signin" ? (
-              <SignIn parentCallback={callbackFunction} />
+              <SignIn  closeModal={onHandleCloseModal} parentCallback={callbackFunction} />
             ) : ismolDal == "signup" ? (
               <SignUp handleSignUp={handleSignUp()} />
             ) : (

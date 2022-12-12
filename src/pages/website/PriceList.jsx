@@ -52,19 +52,10 @@ const PriceList = () => {
               Xin cám ơn sự tin tưởng và ủng hộ của quý khách trong thời gian
               qua.
             </p>
-            <p className="text-base">Trân trọng/.</p>
-            <p className="py-[20px] font-bold text-base">
-              BẢNG GIÁ DỊCH VỤ PHẪU THUẬT THẨM MỸ
-            </p>
-            <p className="font-bold text-base">
-              (Đơn vị: 1000đ. Nhân số tiền ở cột “Giá dịch vụ” với 1.000đ để ra
-              giá niêm yết theo đơn vị VND)
-            </p>
-            <p className="pt-[20px] pb-[29px] font-bold text-base">
-              BẢNG GIÁ PHẪU THUẬT THẨM MỸ MẮT
-            </p>
+            <p className="text-base">Trân trọng.</p>
+           
           </div>
-          <p className="ml-2 font-bold text-base">PHẪU THUẬT THẨM MỸ MẮT</p>
+          <p className="ml-2 font-bold text-base">BẢNG GIÁ DỊCH VỤ</p>
           <div className="overflow-x-auto">
             <div className="flex ">
               <h3 className="w-[15%] sm:w-[10%] bg-[#008000] text-white mr-[1px] pl-2 py-1 text-base">
@@ -104,9 +95,7 @@ const PriceList = () => {
             </ul>
           </div>
           <p className="mb-10 md:mb-0 mt-5 text-base">
-            Quý khách click vào đây để nhận được những ưu đãi mới nhất tại{" "}
-            <strong className="text-[#036636]">Tuyến Spa</strong> về dịch vụ cắt
-            mí mắt.
+            Quý khách có thể click vào từng dịch để xem chi tiết dịch vụ đó.
           </p>
         </div>
 

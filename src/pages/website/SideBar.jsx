@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import image from "../../../assets/img/image/1.jpg";
 import image1 from "../../../assets/img/image/cham-soc-da-1.jpg";
 import image2 from "../../../assets/img/image/GIAM-MO-BUNG.png";
@@ -7,12 +7,24 @@ import image4 from "../../../assets/img/image/tam trang.jpg";
 import image5 from "../../../assets/img/image/xam may.jpg";
 import image6 from "../../../assets/img/image/xoa xam.jpg";
 import banner from "../../../assets/img/image/banner.jpg";
+import instance from "../../api/instance";
+import { httpGetAllService } from "../../api/services";
 
 const SideBar = () => {
+  const [services, setServices] = useState([]);
+  useEffect(() => {
+    const data = async () => {
+      const fetch = await httpGetAllService();
+      setServices(fetch);
+      console.log("sevice", fetch);
+    };
+    data();
+  }, []);
+
   return (
     <div className="w-[100%] md:w-[25%] ">
       <div className="border-2 border-[#00502B] border-t-transparent rounded-3xl text-center pb-4">
-        <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-0 rounded-tr-2xl rounded-tl-2xl">
+        <h2 className="bg-[#00502B] text-white text-[24px] font-bold text-center mb-0 rounded-tr-2xl rounded-tl-2xl py-2">
           Thời gian làm việc
         </h2>
         <h2 className="text-[#00502B] text-[28px] font-bold">7H00 - 19H00</h2>
@@ -21,17 +33,20 @@ const SideBar = () => {
         </p>
       </div>
       <div className="text-[#00502B] border-2 border-[#00502B] border-t-transparent rounded-3xl mt-5">
-        <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-4 rounded-tr-2xl rounded-tl-2xl">
+        <h2 className="bg-[#00502B] text-white text-[24px] font-bold text-center mb-4 rounded-tr-2xl rounded-tl-2xl py-2">
           Dịch vụ nổi bật
         </h2>
         <div className="px-4">
-          <a
-            className="block text-[#036636] hover:text-[#008000] font-bold pb-2"
-            href
-          >
-            Điêu khắc lông mày được bao lâu?
-          </a>
-          <a
+          {services?.map((item) => (
+            <a
+              className="block text-[#036636] hover:text-[#008000] font-bold pb-2"
+              href={`/detail-booking/${item.slug}`}
+            >
+              {item.name}
+            </a>
+          ))}
+
+          {/* <a
             className="block text-[#036636] hover:text-[#008000] font-bold pb-2"
             href
           >
@@ -60,14 +75,14 @@ const SideBar = () => {
             href
           >
             Phun môi có đánh son được không?
-          </a>
+          </a> */}
         </div>
       </div>
       <div>
         <img className="w-[100%] mt-4 mb-6" src={banner} alt />
       </div>
       <div className="border-2 border-[#00502B] border-t-transparent rounded-3xl mt-5">
-        <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-4 rounded-tr-2xl rounded-tl-2xl">
+        <h2 className="bg-[#00502B] text-white text-[24px] font-bold text-center mb-4 rounded-tr-2xl rounded-tl-2xl py-2">
           Có thể bạn quan tâm
         </h2>
         <div className="px-4">
@@ -112,13 +127,23 @@ const SideBar = () => {
         <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-0 rounded-tr-2xl rounded-tl-2xl">
           Xem video
         </h2>
-        <video
-          className="rounded-b-[22px] w-[100%]"
-          src="./image/Rectangle.png"
-          controls
-        />
+        <div className="relative">
+          <div className="">
+            {" "}
+            <iframe
+              width="auto"
+              // width="560"
+              // height="315"
+              src="https://www.youtube.com/embed/BdLgWOpvGd4"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
       </div>
-      <div className="border-2 border-[#00502B] border-t-transparent rounded-3xl mt-5 ">
+      {/* <div className="border-2 border-[#00502B] border-t-transparent rounded-3xl mt-5 ">
         <h2 className="bg-[#00502B] text-white text-[28px] font-bold text-center mb-0 rounded-tr-2xl rounded-tl-2xl">
           Câu chuyện khác hàng
         </h2>
@@ -145,7 +170,7 @@ const SideBar = () => {
             Có nên điêu khắc lông mày không?
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

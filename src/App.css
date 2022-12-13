@@ -1,0 +1,19 @@
+.ant-descriptions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+}
+
+.name {
+  color: #005e2e;
+}
+
+/* @media (min-width: 768px) {
+  .ant-form-item {
+    margin-bottom: 20px;
+  }
+} */
+.ant-form-item {
+  margin-bottom: 0;
+}

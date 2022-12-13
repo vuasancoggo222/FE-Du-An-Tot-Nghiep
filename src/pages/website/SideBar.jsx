@@ -4,8 +4,6 @@ import image1 from "../../../assets/img/image/cham-soc-da-1.jpg";
 import image2 from "../../../assets/img/image/GIAM-MO-BUNG.png";
 import image3 from "../../../assets/img/image/nám.jpg";
 import image4 from "../../../assets/img/image/tam trang.jpg";
-import image5 from "../../../assets/img/image/xam may.jpg";
-import image6 from "../../../assets/img/image/xoa xam.jpg";
 import banner from "../../../assets/img/image/banner.jpg";
 import instance from "../../api/instance";
 import { httpGetAllService } from "../../api/services";

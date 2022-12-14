@@ -8,7 +8,7 @@ import { isAuthenticate } from "../../utils/LocalStorage";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Notification from "../admin/notification";
-import { PrivateRouter } from "../../utils/PrivateRouter";
+
 const Header = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
@@ -46,7 +46,7 @@ const Header = () => {
   };
 
   const handleOk = () => {
-    setModalText("The modal will be closed after two seconds");
+   
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);

@@ -1,4 +1,14 @@
 import instance from "./instance";
+import {isAuthenticate} from '../utils/LocalStorage'
+const user = isAuthenticate()
+let header = {}
+if(user){
+header = {
+  headers: {
+    Authorization: `${user.token}`,
+  },
+}
+}
 export const login = (values) => {
   const url = `signin`;
   return instance.post(url, values);
@@ -9,7 +19,7 @@ export const register = (values) => {
 };
 
 export const httpGetAllUser = () => {
-  return instance.get(`users`);
+  return instance.get(`users`,header);
 };
 export const getProfile = (token) => {
   const url = `/user/my-profile`;
@@ -18,7 +28,7 @@ export const getProfile = (token) => {
       Authorization: `${token}`,
     },
   };
-  return instance.get(url, header);
+  return instance.get(url,header);
 };
 export const updateProfile = (token, data) => {
   const url = `/user/my-profile/edit`;

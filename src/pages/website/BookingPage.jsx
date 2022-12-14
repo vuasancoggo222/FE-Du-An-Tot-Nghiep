@@ -54,7 +54,7 @@ const validateMessages = {
     range: "${label} từ ${min} đến ${max} tuổi",
   },
 };
-const format = "HH";
+const format = "HH:00"
 
 const disabledDate = (current) => {
   // Can not select days before today and today
@@ -249,7 +249,7 @@ const BookingPage = () => {
             <h3 className="text-2xl font-bold bg-[#00502B] text-white p-3 rounded-t-lg">
               Đặt lịch cùng Tuyến Spa
             </h3>
-            <div className="mx-5">
+            <div className="mx-5 my-6 pr-16">
               <Form
                 {...layout}
                 name="nest-messages"
@@ -363,7 +363,7 @@ const BookingPage = () => {
                 >
                   <Select defaultValue="default">
                     <Select.Option disabled value="default">
-                      Vui lòng chọn nhân viên
+                     Chọn nhân viên
                     </Select.Option>
                     {employees?.map((item, index) => (
                       <Select.Option value={item._id} key={index}>

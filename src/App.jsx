@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import "./index.css";
@@ -65,7 +65,7 @@ import AddBanner from "./pages/admin/banner/add";
 import DetailPost from "./pages/admin/post/detail";
 import EditBanner from "./pages/admin/banner/edit";
 import { message } from "antd";
-
+import instance from "./api/instance";
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
 import ListVoucher from "./pages/admin/voucher";
@@ -73,6 +73,7 @@ import AddVoucher from "./pages/admin/voucher/add";
 import EditVoucher from "./pages/admin/voucher/edit";
 
 function App() {
+  
   const [isConnected, setIsConnected] = useState(null);
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
@@ -139,17 +140,18 @@ function App() {
       message.info(`${data.text}`, 20);
       console.log(data);
     });
-    const getBooking = async () => {
-      const res = await httpGetAll();
-
-      setBooking(res);
-    };
-    getBooking();
-    const getEmployee = async () => {
-      const res = await httpGetEmployees();
-      setEmployees(res);
-    };
-    getEmployee();
+    if(user && user.role == 2 || user && user.role ==1){
+      const getBooking = async () => {
+        const res = await httpGetAll();
+        setBooking(res);
+      };
+      getBooking();
+    }
+      const getEmployee = async () => {
+        const res = await httpGetEmployees();
+        setEmployees(res);
+      getEmployee();
+    }
     const getService = async () => {
       const res = await httpGetAllService();
       setService(res);

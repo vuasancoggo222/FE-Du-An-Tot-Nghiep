@@ -50,7 +50,8 @@ const SignIn = (props) => {
       socket.emit("newUser",data.token);
       message.success('Đăng nhập thành công')
       navigate('/')
-     
+      // eslint-disable-next-line react/prop-types
+      props.parentCallback(data)
       // eslint-disable-next-line react/prop-types
     } catch (error) {
       message.error(`${error.response.data.message}`, 2);

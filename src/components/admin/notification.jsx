@@ -32,7 +32,7 @@ const notification = () => {
         >
           <Badge
             count={
-              user?.role === 0
+              user && user?.role === 0
                 ? userNotificationUnRead
                 : adminNotificationUnRead
             }
@@ -49,7 +49,7 @@ const notification = () => {
             show === false ? "hidden" : ""
           } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
         >
-          {user.role === 0
+          { user && user.role === 0
             ? userNotification &&
               userNotification.map((item) => {
                 return (

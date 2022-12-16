@@ -47,6 +47,10 @@ const SignIn = (props) => {
     try {
       const data = await login(userValues);
       localStorage.setItem('user', JSON.stringify(data))
+      localStorage.setItem('userHeader',JSON.stringify({
+        name :data.name,
+        avatar: data.avatar
+      }))
       socket.emit("newUser",data.token);
       message.success('Đăng nhập thành công')
       navigate('/')

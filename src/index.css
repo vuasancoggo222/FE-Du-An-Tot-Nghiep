@@ -31,18 +31,3 @@
   background: #efefef;
   text-align: center;
 }
-.ant-picker-panel-container{
-  width:100px !important;
-  height:fit-content !important;
-}
-.ant-picker-panel{
-  width:100% !important;
-  text-align: center !important;
-
-}
-.ant-picker-time-panel-cell{
-  margin-left:20px !important
-}
-.ant-picker-time-panel-column{
-  height:auto !important;
-}

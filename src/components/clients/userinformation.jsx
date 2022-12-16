@@ -9,12 +9,13 @@ import {
   Upload,
   Modal
 } from "antd";
-
+import { useLocalStorage } from "react-use";
 import React, { useEffect, useState } from "react";
 import { getProfile, updateProfile } from "../../api/user";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import ImgCrop from "antd-img-crop";
 import { uploadCloudinary } from "../../api/upload";
+
 const layout = {
   labelCol: {
     span: 4,
@@ -38,6 +39,8 @@ const validateMessages = {
 /* eslint-enable no-template-curly-in-string */
 
 const Userinformation = (props) => {
+  const [isUpdateImg,setIsUpdateImg] = useState(true)
+  const [header, setHeader, remove] = useLocalStorage('userHeader');
   const user = isAuthenticate();
   const [form] = Form.useForm();
   const [url, setUrl] = useState("");
@@ -58,9 +61,7 @@ const Userinformation = (props) => {
     getProfiles();
   }, []);
 
-  const onSubmit = async (data) => {
-   await updateProfile(user.token, data);
-  };
+
   const [fileList, setFileList] = useState([]);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -72,9 +73,18 @@ const Userinformation = (props) => {
       Modal.confirm({
         title: 'Bạn có chắc chắn muốn cập nhật thông tin tài khoản không ?',
         onOk: async () => {
-          await onSubmit(dataPost).then(() => {
+          updateProfile(user.token, data).then((data) => {
             message.success("Cập nhật thông tin tài khoản thành công.", 4);
-          });
+            const userHeader = {
+              name :data.name,
+              avatar :data.avatar
+            }
+            setHeader(userHeader)
+          })
+          .catch(error =>{
+            message.error("Không thể cập nhật tài khoản", 4)
+          })
+         
           // eslint-disable-next-line react/prop-types
           props.updateSuccess()
         }
@@ -92,19 +102,17 @@ const Userinformation = (props) => {
     formData.append("file", file);
     formData.append("upload_preset", "my_upload");
     try {
+      setIsUpdateImg(false)
       const res = await uploadCloudinary(formData);
       onSuccess("Ok");
       message.success("Tải lên ảnh đại diện thành công !");
-      console.log("server res: ", res);
+      setIsUpdateImg(true)
       setUrl(res.data.secure_url);
     } catch (err) {
       onError({ err });
     }
   };
-  const [componentDisabled, setComponentDisabled] = useState(false);
-  const onFormLayoutChange = ({ disabled }) => {
-    setComponentDisabled(disabled);
-  };
+ 
 
   return (
     <>
@@ -119,7 +127,7 @@ const Userinformation = (props) => {
             name="nest-messages"
             onFinish={onFinish}
            
-            onValuesChange={onFormLayoutChange}
+          
             validateMessages={validateMessages}
             form={form}
           >
@@ -177,9 +185,16 @@ const Userinformation = (props) => {
                 offset: 8,
               }}
             >
-              <Button className="bg-[#0c8747] text-white"  htmlType="submit">
-               Cập nhật tài khoản
-              </Button>
+               {isUpdateImg   ?
+                <Button  className="bg-[#0c8747] text-white"  htmlType="submit">
+              Cập nhật tài khoản
+             </Button>
+               
+             :
+             <Button disabled className="bg-gray-500 text-white"  htmlType="submit">
+               Đang cập nhật ảnh
+             </Button>
+              }
             </Form.Item>
            </div>
           </Form>

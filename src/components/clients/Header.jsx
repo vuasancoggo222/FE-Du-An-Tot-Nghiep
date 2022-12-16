@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocalStorage } from 'react-use';
 import { Link } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { Avatar, Dropdown, Menu, Modal } from "antd";
@@ -8,13 +9,14 @@ import { isAuthenticate } from "../../utils/LocalStorage";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import Notification from "../admin/notification";
-
+import { getProfile } from "../../api/user";
 const Header = () => {
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [header, setHeader, remove] = useLocalStorage('userHeader');
   // eslint-disable-next-line no-unused-vars
   const [modalText, setModalText] = useState("Content of the modal");
   const [ismolDal, setIsModal] = useState();
@@ -24,6 +26,17 @@ const Header = () => {
     setIsModal(e.target.getAttribute("data"));
   };
 
+  useEffect(() =>{
+    const getProfileData = () =>{
+      getProfile(user.token).then(response =>{
+        setUser(response)
+      }) 
+      .catch(error =>{
+        console.log(error);
+      }) 
+     }
+     getProfileData()
+  })
   const callbackFunction = (childData) => {
     if (childData) {
       setAuth(true);
@@ -209,11 +222,11 @@ const Header = () => {
                   className="items-center"
                 >
                   <span className="text-white whitespace-nowrap">
-                    Xin chào! {user.name}
+                    Xin chào! {header.name}
                   </span>
                   <div className="mx-[10px]">
                     <Dropdown overlay={menu} placement="bottom">
-                      <Avatar src={user.avatar}></Avatar>
+                      <Avatar src={header.avatar}></Avatar>
                     </Dropdown>
                   </div>
                   <div>

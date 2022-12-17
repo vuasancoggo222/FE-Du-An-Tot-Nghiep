@@ -73,7 +73,7 @@ const Userinformation = (props) => {
       Modal.confirm({
         title: 'Bạn có chắc chắn muốn cập nhật thông tin tài khoản không ?',
         onOk: async () => {
-          updateProfile(user.token, data).then((data) => {
+          updateProfile(user.token, dataPost).then((data) => {
             message.success("Cập nhật thông tin tài khoản thành công.", 4);
             const userHeader = {
               name :data.name,

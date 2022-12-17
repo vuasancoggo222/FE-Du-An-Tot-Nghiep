@@ -19,7 +19,7 @@ export const httpUpdateEmployee = (id, data) => {
   return instance.patch(`employees/${id}`, data,header);
 };
 export const httpGetOne = (id) => {
-  return instance.get(`employees/${id}`);
+  return instance.get(`employees/${id}`,header);
 };
 
 export const httpGetEmployees = () => {

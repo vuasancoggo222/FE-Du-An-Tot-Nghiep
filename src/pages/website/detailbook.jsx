@@ -333,19 +333,17 @@ const Detaibooking = (props) => {
                   {/* chọn nhân viên */}
                   <Form.Item label="Chọn nhân viên" name="employeeId">
                     <Select onChange={onChangeSelected}>
-                      {employees
-                        ?.filter((item) => item.status === 1)
-                        .map((item, index) => (
-                          <Select.Option value={item._id} key={index}>
-                            {item.name}
-                            <div
-                              className=""
-                              // onClick={() => {
-                              //   setOpen(true);
-                              // }}
-                            ></div>
-                          </Select.Option>
-                        ))}
+                      {employees?.map((item, index) => (
+                        <Select.Option value={item._id} key={index}>
+                          {item.name}
+                          <div
+                            className=""
+                            // onClick={() => {
+                            //   setOpen(true);
+                            // }}
+                          ></div>
+                        </Select.Option>
+                      ))}
                     </Select>
                   </Form.Item>
                   <Form.Item

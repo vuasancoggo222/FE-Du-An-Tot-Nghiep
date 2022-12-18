@@ -3,7 +3,6 @@ import { Link, Outlet, useParams } from "react-router-dom";
 import {
   ClockCircleFilled,
   LockOutlined,
-  SettingFilled,
   UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Image, Menu } from "antd";

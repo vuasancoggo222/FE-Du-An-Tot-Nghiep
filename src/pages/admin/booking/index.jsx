@@ -67,7 +67,7 @@ const ListBooking = (props) => {
   const [dateBooking, seDateBooking] = useState();
   const [ishandle, setIshandle] = useState();
   const dateFormat = "YYYY/MM/DD";
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const format = "HH";
   // eslint-disable-next-line react/prop-types
   // eslint-disable-next-line react/prop-types
@@ -454,7 +454,6 @@ const ListBooking = (props) => {
   });
   // let elemenPick;
   const showModal = async (e) => {
-
     // eslint-disable-next-line react/prop-types
     if (
       e.target.getAttribute("data") == "addBooking" ||
@@ -575,16 +574,16 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => { };
+  const handleOk = async () => {};
 
   const handleCancel = () => {
     setIsModalOpen(false);
 
     const changeStatus = async () => {
       const res = await httpGetAll();
-      setBooking(res)
-    }
-    changeStatus()
+      setBooking(res);
+    };
+    changeStatus();
   };
   const renderTime = (value) => {
     const d = new Date(value);
@@ -620,13 +619,13 @@ const ListBooking = (props) => {
       ...getColumnSearchProps("name"),
     },
     {
-      title: "SĐT",
+      title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       ...getColumnSearchProps("phoneNumber"),
     },
     {
-      title: <span>Ngày</span>,
+      title: <span>Ngày đến</span>,
       dataIndex: "date",
       key: "date",
       render: (data) => <span>{data}</span>,
@@ -635,13 +634,13 @@ const ListBooking = (props) => {
       // onFilter: (value, record) => record.date.toString().indexOf(value) === 0,
     },
     {
-      title: "Giờ",
+      title: "Giờ đến",
       dataIndex: "time",
       key: "time",
       ...getColumnSearchTime("time"),
     },
     {
-      title: "Nhân viên",
+      title: "Nhân viên phục vụ",
       dataIndex: "employeeId",
       key: "employeeId",
       filters: employee,
@@ -731,7 +730,7 @@ const ListBooking = (props) => {
           // xac nhan
           isShowCucess = "true";
           BtToEmployee = "#dedede";
-          BtToEmployeeCursor = "not-allowed"
+          BtToEmployeeCursor = "not-allowed";
           isShowFailure = "true";
           BtSusscesCursor = "pointer";
           BtSusscessColor = "#26cbe8";
@@ -747,10 +746,10 @@ const ListBooking = (props) => {
           BtPayCursor = "pointer";
           BtPayColor = "#09857e";
           isShowPay = "true";
-        }else if (item.status === 2) {
+        } else if (item.status === 2) {
           // hủy
           BtToEmployee = "#dedede";
-          BtToEmployeeCursor = "not-allowed"
+          BtToEmployeeCursor = "not-allowed";
         }
         return (
           <Select
@@ -818,13 +817,13 @@ const ListBooking = (props) => {
             <Option value="5">
               <Button
                 onClick={async () => {
-                  if (item.status == 0 ) {
-                   return
-                  }else if(item.status == 2) {
-                    return
-                  }else{
-                    await props.handleToEmployee(item.employeeId._id, item._id)
-                    navigate("/admin/booking/employee")
+                  if (item.status == 0) {
+                    return;
+                  } else if (item.status == 2) {
+                    return;
+                  } else {
+                    await props.handleToEmployee(item.employeeId._id, item._id);
+                    navigate("/admin/booking/employee");
                   }
                 }}
                 style={{
@@ -921,9 +920,9 @@ const ListBooking = (props) => {
         setIsModalOpen(false);
         const changeStatus = async () => {
           const res = await httpGetAll();
-          setBooking(res)
-        }
-        changeStatus()
+          setBooking(res);
+        };
+        changeStatus();
       } catch (error) {
         message.error(`${error.response?.data?.message}`);
         console.log(error);
@@ -1043,9 +1042,9 @@ const ListBooking = (props) => {
       // eslint-disable-next-line react/prop-types
       const changeStatus = async () => {
         const res = await httpGetAll();
-        setBooking(res)
-      }
-      changeStatus()
+        setBooking(res);
+      };
+      changeStatus();
       handleCancel();
     }
   };
@@ -1243,7 +1242,7 @@ const ListBooking = (props) => {
     setBookingPirce(total);
   };
   const options = props.dataService?.map((item) => {
-    setBooking
+    setBooking;
     return {
       label: item.name,
       value: item._id,
@@ -1266,11 +1265,11 @@ const ListBooking = (props) => {
     setLoading(true);
     const getBooking = async () => {
       const res = await httpGetAll();
-      setBooking(res)
-    }
-    getBooking()
+      setBooking(res);
+    };
+    getBooking();
     setLoading(false);
-  }, [])
+  }, []);
   return (
     <Spin
       spinning={loading}
@@ -1359,7 +1358,10 @@ const ListBooking = (props) => {
                 },
               ]}
             >
-              <Input disabled={ishandle == 1 ? false : true} placeholder="Tên" />
+              <Input
+                disabled={ishandle == 1 ? false : true}
+                placeholder="Tên"
+              />
             </Form.Item>
             <Form.Item style={{ margin: "0px" }} label="Tuổi - Giới tính">
               <Input.Group>
@@ -1453,7 +1455,7 @@ const ListBooking = (props) => {
                 format={dateFormat}
                 onChange={onchangeDateBooking}
                 placeholder="Ngày đến"
-              // onOk={onOk}
+                // onOk={onOk}
               />
             </Form.Item>
 
@@ -1547,8 +1549,8 @@ const ListBooking = (props) => {
                     titleModal == "Thanh toán và in hóa đơn"
                       ? "block"
                       : titleModal == "Thông tin"
-                        ? "none"
-                        : "",
+                      ? "none"
+                      : "",
                 }}
                 type="primary"
                 htmlType="submit"

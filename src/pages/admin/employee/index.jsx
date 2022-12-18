@@ -4,13 +4,11 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useEmployee from "../../../hooks/use-employee";
 
-
 // CommonJS
 
 const ListEmployee = () => {
-  
   const navigate = useNavigate();
-  const { data,update, error } = useEmployee();
+  const { data, update, error } = useEmployee();
   const columns = [
     {
       title: "Ảnh đại diện",
@@ -50,13 +48,13 @@ const ListEmployee = () => {
         if (item === 0) {
           return <Tag color="red">TẠM NGHỈ LÀM</Tag>;
         }
-        if(item == 2){
+        if (item == 2) {
           return <Tag color="gray">ĐÃ NGHỈ VIỆC</Tag>;
         }
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "_id",
       key: "action",
       colapse: 2,
@@ -76,47 +74,52 @@ const ListEmployee = () => {
                 Sửa thông tin
               </Button>
             </Option>
-            {item.status == 1 || item.status == 0 ?
+            {item.status == 1 || item.status == 0 ? (
               <Option>
-              <Button
-                onClick={() => {
-                  onChangeStatus(item._id,2);
-                }}
-              className="text-white bg-gray-500"
-                style={{ border: "none", color: "white", width: "100%" }}
-              >
-                Xác nhận nghỉ việc
-              </Button>
-            </Option> : ""
-            }
-            {item.status == 1 ? <Option>
-              <Button
-                onClick={() => {
-                 onChangeStatus(item._id,0)
-                }}
-                type="danger"
-                style={{ border: "none", color: "white", width: "100%" }}
-              >
-                Xác nhận tạm nghỉ
-              </Button>
-            </Option> : ""
-            }
-            {item.status == 0 || item.status == 2 ? <Option>
-              <Button
-                onClick={() => {
-                 onChangeStatus(item._id,1)
-                }}
-               
-                className="text-white bg-green-500"
-                style={{ border: "none", color: "white", width: "100%" }}
-              >
-                Xác nhận làm trở lại
-              </Button>
-            </Option> : ""
-
-            }
+                <Button
+                  onClick={() => {
+                    onChangeStatus(item._id, 2);
+                  }}
+                  className="text-white bg-gray-500"
+                  style={{ border: "none", color: "white", width: "100%" }}
+                >
+                  Xác nhận nghỉ việc
+                </Button>
+              </Option>
+            ) : (
+              ""
+            )}
+            {item.status == 1 ? (
+              <Option>
+                <Button
+                  onClick={() => {
+                    onChangeStatus(item._id, 0);
+                  }}
+                  type="danger"
+                  style={{ border: "none", color: "white", width: "100%" }}
+                >
+                  Xác nhận tạm nghỉ
+                </Button>
+              </Option>
+            ) : (
+              ""
+            )}
+            {item.status == 0 || item.status == 2 ? (
+              <Option>
+                <Button
+                  onClick={() => {
+                    onChangeStatus(item._id, 1);
+                  }}
+                  className="text-white bg-green-500"
+                  style={{ border: "none", color: "white", width: "100%" }}
+                >
+                  Xác nhận làm trở lại
+                </Button>
+              </Option>
+            ) : (
+              ""
+            )}
           </Select>
-
         );
       },
     },
@@ -124,19 +127,18 @@ const ListEmployee = () => {
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  const onChangeStatus = async (id,status) => {
+  const onChangeStatus = async (id, status) => {
     const data = {
-      status
-    }
+      status,
+    };
     try {
       Modal.confirm({
-        title: 'Bạn có chắc chắn muốn cập nhật trạng thái nhân viên không ?',
+        title: "Bạn có chắc chắn muốn cập nhật trạng thái nhân viên không ?",
         onOk: async () => {
-          update(id,data)
-          message.success('Cập nhật trạng thái nhân viên thành công.',5)
-        }
-        
-      })
+          update(id, data);
+          message.success("Cập nhật trạng thái nhân viên thành công.", 5);
+        },
+      });
     } catch (error) {
       message.error(`${error.response.data.message}`, 4);
     }

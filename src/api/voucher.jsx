@@ -25,6 +25,11 @@ export const AddVouche = (data) => {
   return instance.post(`/voucher/add`, data,header);
 };
 
+export const useVoucher = (id, data) => {
+  return instance.post(`/use-voucher/${id}`, data);
+};
+
+
 export const updateVouche = (id, data) => {
   const url = `/voucher/update/${id}`;
   return instance.put(url, data,header);

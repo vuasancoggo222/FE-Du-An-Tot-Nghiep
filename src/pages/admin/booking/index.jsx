@@ -520,7 +520,7 @@ const ListBooking = (props) => {
                 value: item.serviceId?._id,
               };
             }),
-            employeeId: item?.employeeId?._id,
+            employeeId: item?.employeeId?._id ,
             note: item?.note,
             age: item?.age,
             gender: item?.gender,
@@ -1475,11 +1475,25 @@ const ListBooking = (props) => {
                 onChange={changeEmployee}
                 placeholder="Nhân viên"
               >
-                {props.dataEmployy?.map((item, index) => (
-                  <Select.Option value={item._id} key={index}>
-                    {item.name}
-                  </Select.Option>
-                ))}
+                {props.dataEmployy?.map((item, index) => {
+                  if(item.status == 1) {
+                    return (
+                      (
+                        <Select.Option  value={item._id} key={index}>
+                          {item.name}
+                        </Select.Option>
+                      )
+                    )
+                  }else{
+                    return (
+                      (
+                        <Select.Option disabled={true} value={item._id} key={index}>
+                          {item.name}
+                        </Select.Option>
+                      )
+                    )
+                  }
+                })}
               </Select>
             </Form.Item>
 

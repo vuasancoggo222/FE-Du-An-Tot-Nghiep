@@ -333,29 +333,35 @@ const Detaibooking = (props) => {
                   {/* chọn nhân viên */}
                   <Form.Item label="Chọn nhân viên" name="employeeId">
                     <Select onChange={onChangeSelected}>
-                      {employees
-                        ?.filter((item) => item.status === 1)
-                        .map((item, index) => (
-                          <Select.Option value={item._id} key={index}>
-                            {item.name}
-                            <div
-                              className=""
-                              // onClick={() => {
-                              //   setOpen(true);
-                              // }}
-                            ></div>
-                          </Select.Option>
-                        ))}
+                      {employees?.map((item, index) => {
+                        if (item.status == 1) {
+                          return (
+                            (
+                              <Select.Option value={item._id} key={index}>
+                                {item.name}
+                                <div
+                                  className=""
+                                // onClick={() => {
+                                //   setOpen(true);
+                                // }}
+                                ></div>
+                              </Select.Option>
+                            )
+                          )
+                        } else {
+                          return
+                        }
+                      })}
                     </Select>
                   </Form.Item>
                   <Form.Item
                     label="Chọn giờ đến"
                     name="time"
-                    // rules={[
-                    //   {
-                    //     required: true,
-                    //   },
-                    // ]}
+                  // rules={[
+                  //   {
+                  //     required: true,
+                  //   },
+                  // ]}
                   >
                     {/* <Select onChange={onChangeSelected}>
                       {shift?.map((item, index) => {
@@ -429,8 +435,8 @@ const Detaibooking = (props) => {
                 titleStatusConfirm == "Mã xác nhận đã gửi thành công"
                   ? "green"
                   : titleStatusConfirm == "Vui lòng chờ trong giây lát"
-                  ? "black"
-                  : "red",
+                    ? "black"
+                    : "red",
             }}
           >
             * {titleStatusConfirm + " "}

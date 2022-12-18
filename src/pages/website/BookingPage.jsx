@@ -54,7 +54,7 @@ const validateMessages = {
     range: "${label} từ ${min} đến ${max} tuổi",
   },
 };
-const format = "HH:00"
+const format = "HH:00";
 
 const disabledDate = (current) => {
   // Can not select days before today and today
@@ -135,6 +135,7 @@ const BookingPage = () => {
   };
   const [form2] = Form.useForm();
   const { data: employees, error } = useEmployee();
+
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -363,13 +364,15 @@ const BookingPage = () => {
                 >
                   <Select defaultValue="default">
                     <Select.Option disabled value="default">
-                     Chọn nhân viên
+                      Chọn nhân viên
                     </Select.Option>
-                    {employees?.map((item, index) => (
-                      <Select.Option value={item._id} key={index}>
-                        <div className="">{item.name}</div>
-                      </Select.Option>
-                    ))}
+                    {employees
+                      ?.filter((item) => item.status === 1)
+                      .map((item, index) => (
+                        <Select.Option value={item._id} key={index}>
+                          <div className="">{item.name}</div>
+                        </Select.Option>
+                      ))}
                   </Select>
                 </Form.Item>
                 {/* chọn ca  */}

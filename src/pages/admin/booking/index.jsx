@@ -45,6 +45,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { httpGetOne } from "../../../api/employee";
 import { httpGetOneService } from "../../../api/services";
+import { ListVouchers, OneVoucher, useVoucher } from "../../../api/voucher";
 
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
@@ -59,11 +60,13 @@ const ListBooking = (props) => {
   const [titleModal, setTitleModal] = useState("Xác nhận");
   const [handleBooking, setHandleBooking] = useState();
   const [ishouse, setIsHouse] = useState();
+  const [voucher, setVoucher] = useState();
   const [ishouseNoneBlock, setIsHouseNoneBlock] = useState();
   const [timeUpdate, setTimeUpdate] = useState();
   const [bookingPrice, setBookingPirce] = useState();
   const [booking, setBooking] = useState();
   const [dateUpdate, setDateUpdate] = useState();
+  const [addVoucher, setAddVoucher] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   // eslint-disable-next-line no-unused-vars
   const [dateBooking, seDateBooking] = useState();
@@ -88,6 +91,27 @@ const ListBooking = (props) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
+  const changeVoucher = async (data) => {
+    const res = await OneVoucher(data)
+    console.log(res.service);
+    const serrvice = await httpGetOneService(res.service)
+    setAddVoucher(res)
+    let coinDown
+    if (res.type == "direct") {
+      coinDown = res.discount
+    } else {
+      coinDown = (serrvice.price / 100) * res.discount
+    }
+    console.log(coinDown);
+    const coinResult = handleBooking.bookingPrice - coinDown
+    if (coinResult < 0) {
+      setBookingPirce(0)
+    } else {
+      setBookingPirce(coinResult)
+    }
+  }
+
   const changeEmployee = (e) => {
     console.log(e);
     let count = 0;
@@ -476,6 +500,7 @@ const ListBooking = (props) => {
         gender: "",
         date: undefined,
         time: undefined,
+        code:undefined
       });
       setBookingPirce(0);
       setTitleModal("Thêm khách đến trực tiếp");
@@ -532,6 +557,7 @@ const ListBooking = (props) => {
               item?.time != undefined
                 ? moment(renderTime(item?.time), format)
                 : "",
+                code:undefined
           });
           await setIsModalOpen(true);
           document.getElementById("js-licensing").style.display = "none";
@@ -930,14 +956,12 @@ const ListBooking = (props) => {
         console.log(error);
       }
     } else {
-      const res = await httpGetOne(data.employeeId, user.token)
-      if (res.status != 1) {
-        message.error("Nhân viên này tạm thời không thể thực hiện")
-        return
-      }
-
-
       if (ishandle === "1") {
+        const res = await httpGetOne(data.employeeId, user.token)
+        if (res.status != 1) {
+          message.error("Nhân viên này tạm thời không thể thực hiện")
+          return
+        }
         try {
           let res = "";
           if (!data.services[0].lable) {
@@ -1037,7 +1061,16 @@ const ListBooking = (props) => {
         }
       } else if (ishandle === "4") {
         try {
+          const res = await useVoucher(handleBooking._id, {code: addVoucher.code})
+          console.log(res);
+        } catch (error) {
+          message.error(`${error.response?.data?.message}`);
+          return
+        }
+  
+        try {
           await httpGetChangeStatus(handleBooking._id, { status: 4 });
+          handleToolbarClick()
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
           if (handleBooking.userId) {
             const notification = {
@@ -1209,7 +1242,7 @@ const ListBooking = (props) => {
                 },
                 {
                   colSpan: 1,
-                  value: formatCash(handleBooking?.bookingPrice),
+                  value: formatCash(bookingPrice),
                   style: { bold: true, hAlign: "right", fontSize: 15 },
                 },
               ],
@@ -1271,12 +1304,20 @@ const ListBooking = (props) => {
     };
   });
   useEffect(() => {
+
     setLoading(true);
     const getBooking = async () => {
       const res = await httpGetAll();
       setBooking(res);
     };
-    getBooking();
+    getBooking()
+
+    const getVoucher = async () => {
+      const res = await ListVouchers();
+      setVoucher(res);
+    };
+    getVoucher();
+
     setLoading(false);
   }, []);
   return (
@@ -1561,6 +1602,24 @@ const ListBooking = (props) => {
             <Form.Item name="note" label="Ghi chú">
               <Input.TextArea disabled={ishandle == 1 ? false : true} />
             </Form.Item>
+            <Form.Item name="code" label="Voucher">
+              <Select
+                disabled={ishandle == 4 ? false : true}
+                onChange={changeVoucher}
+              >
+                {
+                  voucher?.map((current, index) => {
+                    return (
+                      (
+                        <Select.Option value={current._id} key={index}>
+                          {current.name}
+                        </Select.Option>
+                      )
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
             <Form.Item name="bookingPrice" label="Thanh toán">
               <span className="font-semibold">
                 {formatPrice(
@@ -1586,7 +1645,7 @@ const ListBooking = (props) => {
               </Button>
 
               <Button
-                onClick={handleToolbarClick}
+                
                 style={{
                   display:
                     titleModal == "Thanh toán và in hóa đơn"

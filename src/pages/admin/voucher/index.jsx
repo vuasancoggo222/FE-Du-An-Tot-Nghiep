@@ -51,14 +51,14 @@ const ListVoucher = () => {
       title: "Dịch vụ",
       dataIndex: "service",
       key: "service",
-      render: item => <span>{item.name}</span>
+      render: (item) => <span>{item.name}</span>,
     },
 
     {
       title: "Ngày hết hạn",
       dataIndex: "expirationDate",
       key: "expirationDate",
-      render : item => <span>{moment(item).format('DD/MM/YYYY')}</span>
+      render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
     },
 
     {

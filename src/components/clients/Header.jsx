@@ -222,11 +222,11 @@ const Header = () => {
                   className="items-center"
                 >
                   <span className="text-white whitespace-nowrap">
-                    Xin chào! {header.name}
+                    Xin chào! {user?.name}
                   </span>
                   <div className="mx-[10px]">
                     <Dropdown overlay={menu} placement="bottom">
-                      <Avatar src={header.avatar}></Avatar>
+                      <Avatar src={users?.avatar}></Avatar>
                     </Dropdown>
                   </div>
                   <div>

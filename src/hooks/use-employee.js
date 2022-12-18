@@ -9,7 +9,7 @@ const endpoint = "/employees";
 
 const useEmployee = () => {
   const { data, error, mutate } = useSWR(endpoint, fetcher, {
-    refreshInterval: 5000,
+    refreshInterval: 2500,
   });
   const create = async (data) => {
     const revalidate = await method.httpPost(endpoint, data);

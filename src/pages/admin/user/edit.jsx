@@ -55,9 +55,9 @@ const UserEdit = () => {
     });
   };
   const onFinish = async (data) => {
-    const a = { ...data, avatar: url != "" ? url : fileList[0].url };
+    const avatar = { ...data, avatar: url != "" ? url : fileList[0].url };
     try {
-      await httpUpdateOneUser(user.token, id, a).then(() => {
+      await httpUpdateOneUser(user.token, id, avatar).then(() => {
         message.success("cập nhật thành công", 4);
         navigate("/admin/user");
       });
@@ -165,23 +165,7 @@ const UserEdit = () => {
                 <Option value={1}>Nam</Option>
               </Select>
             </Form.Item>
-            <Form.Item
-              name="role"
-              label="vai trò"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Please select your role",
-                },
-              ]}
-            >
-              <Select>
-                <Option value={0}>Khách hàng</Option>
-                <Option value={1}>Nhân viên</Option>
-                <Option value={2}>Admin</Option>
-              </Select>
-            </Form.Item>
+         
             <Form.Item
               name="status"
               label="Trạng thái"

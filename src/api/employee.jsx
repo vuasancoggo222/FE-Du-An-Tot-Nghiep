@@ -15,9 +15,7 @@ export const getEmployeeByDate = (date, id) => {
     `/employee/get-employee-by-date?date=${date}&employee=${id}`,header
   );
 };
-export const httpUpdateEmployee = (id, data) => {
-  return instance.patch(`employees/${id}`, data,header);
-};
+
 export const httpGetOne = (id) => {
   return instance.get(`employees/${id}`,header);
 };
@@ -29,7 +27,7 @@ export const httpAddEmployees = (data) => {
   return instance.post(`employees`, data,header);
 };
 export const httpUpdateEmployees = (id, data) => {
-  return instance.put(`employees/${id}`, data,header);
+  return instance.patch(`employees/${id}`, data,header);
 };
 
 export const removeEmployees = (id) => {

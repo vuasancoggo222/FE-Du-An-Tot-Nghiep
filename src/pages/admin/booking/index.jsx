@@ -520,7 +520,7 @@ const ListBooking = (props) => {
                 value: item.serviceId?._id,
               };
             }),
-            employeeId: item?.employeeId?._id ,
+            employeeId: item?.employeeId?._id,
             note: item?.note,
             age: item?.age,
             gender: item?.gender,
@@ -574,7 +574,7 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => {};
+  const handleOk = async () => { };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -1242,11 +1242,12 @@ const ListBooking = (props) => {
     setBookingPirce(total);
   };
   const options = props.dataService?.map((item) => {
-    setBooking;
-    return {
-      label: item.name,
-      value: item._id,
-    };
+    if(item.status == 1){
+      return {
+        label: item.name,
+        value: item._id,
+      };
+    }
   });
   const datatable = booking?.map((item) => {
     const time = renderTime(item.time);
@@ -1429,14 +1430,34 @@ const ListBooking = (props) => {
                 },
               ]}
             >
-              <Select
-                mode="multiple"
-                allowClear
-                placeholder="Dịch vụ"
-                onChange={handleChange}
-                options={options}
-                disabled={ishandle == 1 ? false : true}
-              />
+               <Select
+                    mode="multiple"
+                    allowClear
+                    placeholder="Dịch vụ"
+                    onChange={handleChange}
+                    disabled={ishandle == 1 ? false : true}
+              >
+                {props.dataService?.map((item, index) => {
+                  if (item.status == 1) {
+                    return (
+                      (
+                        <Select.Option value={item._id} key={index}>
+                          {item.name}
+                        </Select.Option>
+                      )
+                    )
+                  } else {
+                    return (
+                      (
+                        <Select.Option disabled={true} value={item._id} key={index}>
+                          {item.name}
+                        </Select.Option>
+                      )
+                    )
+                  }
+                })}
+              </Select>
+            
             </Form.Item>
 
             <Form.Item
@@ -1455,7 +1476,7 @@ const ListBooking = (props) => {
                 format={dateFormat}
                 onChange={onchangeDateBooking}
                 placeholder="Ngày đến"
-                // onOk={onOk}
+              // onOk={onOk}
               />
             </Form.Item>
 
@@ -1476,15 +1497,15 @@ const ListBooking = (props) => {
                 placeholder="Nhân viên"
               >
                 {props.dataEmployy?.map((item, index) => {
-                  if(item.status == 1) {
+                  if (item.status == 1) {
                     return (
                       (
-                        <Select.Option  value={item._id} key={index}>
+                        <Select.Option value={item._id} key={index}>
                           {item.name}
                         </Select.Option>
                       )
                     )
-                  }else{
+                  } else {
                     return (
                       (
                         <Select.Option disabled={true} value={item._id} key={index}>
@@ -1563,8 +1584,8 @@ const ListBooking = (props) => {
                     titleModal == "Thanh toán và in hóa đơn"
                       ? "block"
                       : titleModal == "Thông tin"
-                      ? "none"
-                      : "",
+                        ? "none"
+                        : "",
                 }}
                 type="primary"
                 htmlType="submit"

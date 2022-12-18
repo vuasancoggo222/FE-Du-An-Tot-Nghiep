@@ -13,7 +13,7 @@ const ListService = () => {
   const navigate = useNavigate();
   const columns = [
     {
-      title: "Ảnh mô tả",
+      title: "Ảnh dịch vụ",
       dataIndex: "image",
       render: (image) => <Image width={100} src={image} key={image} />,
     },
@@ -51,13 +51,13 @@ const ListService = () => {
     },
 
     {
-      title: "Giá dịch vụ",
+      title: "Giá",
       dataIndex: "price",
       render: (price) => <div className="">{formatPrice(price)}</div>,
     },
 
     {
-      title: "Trạng thái dịch vụ",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (item) => {
         if (item === 1) {
@@ -68,7 +68,7 @@ const ListService = () => {
       },
     },
     {
-      title: "Mô tả dịch vụ",
+      title: "Mô tả",
 
       render: (item) => {
         return (
@@ -79,7 +79,7 @@ const ListService = () => {
       },
     },
     {
-      title: "Chức năng",
+      title: "Hành động",
       dataIndex: "_id",
       key: "action",
       colapse: 2,

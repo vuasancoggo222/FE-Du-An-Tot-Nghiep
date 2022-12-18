@@ -51,14 +51,14 @@ const ListVoucher = () => {
       title: "Dịch vụ",
       dataIndex: "service",
       key: "service",
-      render: item => <span>{item.name}</span>
+      render: (item) => <span>{item.name}</span>,
     },
 
     {
       title: "Ngày hết hạn",
       dataIndex: "expirationDate",
       key: "expirationDate",
-      render : item => <span>{moment(item).format('DD/MM/YYYY')}</span>
+      render: (item) => <span>{moment(item).format("DD/MM/YYYY")}</span>,
     },
 
     {
@@ -68,7 +68,7 @@ const ListVoucher = () => {
       render: (_, item) => {
         // Thêm
         return (
-          <div className="text-center">
+          <div className="">
             <Space size="middle">
               <Select
                 style={{ width: "170px", color: "blue", textAlign: "center" }}
@@ -96,23 +96,6 @@ const ListVoucher = () => {
                   >
                     Xóa
                   </Button>{" "}
-                </Option>
-                <Option>
-                  {" "}
-                  <Button
-                    onClick={showModal}
-                    dataId={item.content}
-                    type=""
-                    style={{
-                      border: "none",
-                      color: "white",
-                      width: "100%",
-
-                      backgroundColor: "#f1c232",
-                    }}
-                  >
-                    <Link to={`/admin/post/${item.slug}`}>Chi Tiết</Link>
-                  </Button>
                 </Option>
               </Select>
             </Space>

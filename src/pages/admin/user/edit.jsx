@@ -105,7 +105,7 @@ const UserEdit = () => {
 
       <div className=" px-6 py-6 ml-[30px]  ">
         <div className="mt-[150px] my-[20px]">
-          <Link to={"/admin/user"}>
+          <Link to={"/admin/user"} className="ml-[275px]">
             <Button type="primary">Quay lại</Button>
           </Link>
         </div>
@@ -165,7 +165,23 @@ const UserEdit = () => {
                 <Option value={1}>Nam</Option>
               </Select>
             </Form.Item>
-         
+            {/* <Form.Item
+              name="role"
+              label="Vai trò"
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Please select your role",
+                },
+              ]}
+            >
+              <Select>
+                <Option value={0}>Khách hàng</Option>
+                <Option value={1}>Nhân viên</Option>
+                <Option value={2}>Admin</Option>
+              </Select>
+            </Form.Item> */}
             <Form.Item
               name="status"
               label="Trạng thái"
@@ -173,7 +189,7 @@ const UserEdit = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please select your status",
+                  message: "Không để trống trạng thái !",
                 },
               ]}
             >

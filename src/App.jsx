@@ -73,7 +73,7 @@ import AddVoucher from "./pages/admin/voucher/add";
 import EditVoucher from "./pages/admin/voucher/edit";
 
 function App() {
-  
+
   const [isConnected, setIsConnected] = useState(null);
   const [notification, setNotification] = useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
@@ -140,18 +140,18 @@ function App() {
       message.info(`${data.text}`, 20);
       console.log(data);
     });
-    if(user && user.role == 2 || user && user.role ==1){
+    if (user && user.role == 2 || user && user.role == 1) {
       const getBooking = async () => {
         const res = await httpGetAll();
         setBooking(res);
       };
       getBooking();
     }
-      const getEmployee = async () => {
-        const res = await httpGetEmployees();
-        setEmployees(res);
-      getEmployee();
+    const getEmployee = async () => {
+      const res = await httpGetEmployees();
+      setEmployees(res);
     }
+    getEmployee();
     const getService = async () => {
       const res = await httpGetAllService();
       setService(res);

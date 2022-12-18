@@ -16,7 +16,12 @@ export const getEmployeeByDate = (date, id) => {
   );
 };
 
-export const httpGetOne = (id) => {
+export const httpGetOne = (id, token) => {
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
   return instance.get(`employees/${id}`,header);
 };
 
@@ -49,7 +54,12 @@ export const employeeOrderStatistics = (month, year) => {
   return instance.get(url,header);
 }
 
-export const employeeStatistics = (id, month, year) => {
+export const employeeStatistics = (id, month, year, token) => {
+  const header = {
+    headers: {
+      Authorization: `${token}`,
+    },
+  };
   console.log(month, year);
   let url
   if(month == undefined && year == undefined) {
@@ -60,5 +70,5 @@ export const employeeStatistics = (id, month, year) => {
   }else if(month == undefined){
     url = `statistics-for-employee/${id}?year=${year}`;
   }
-  return instance.get(url,header);
+  return instance.get(url, header);
 }

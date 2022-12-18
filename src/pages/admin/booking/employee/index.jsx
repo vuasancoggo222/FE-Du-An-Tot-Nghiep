@@ -598,7 +598,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee?._id, month, year);
+            const res = await employeeStatistics(employee?._id, month, year, employe.token);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -613,7 +613,7 @@ const ListBookingByEmployee = (props) => {
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee?._id, undefined, year);
+            const res = await employeeStatistics(employee?._id, undefined, year, employe.token);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
@@ -622,23 +622,23 @@ const ListBookingByEmployee = (props) => {
     }
 
     useEffect(() => {
+        console.log(employe);
         setLoading(true)
         const adminLogin = async () => {
             let res
             // eslint-disable-next-line react/prop-types
             if (props.dataAdminLogin != undefined) {
                 // eslint-disable-next-line react/prop-types
-                res = await httpGetOne(props.dataAdminLogin)
+                res = await httpGetOne(props.dataAdminLogin, employe.token)
                 // eslint-disable-next-line react/prop-types
                 setEmployee(res)
             } else {
                 if (employe) {
-                    res = await httpGetOne(employe.employeeId)
+                    res = await httpGetOne(employe.employeeId, employe.token)
                     setEmployee(res)
-
                 }
             }
-            const data = await employeeStatistics(res._id)
+            const data = await employeeStatistics(res._id, undefined, undefined, employe.token)
             console.log(data);
             const hightlight = async () => {
                 // eslint-disable-next-line react/prop-types

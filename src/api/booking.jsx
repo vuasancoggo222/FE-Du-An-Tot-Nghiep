@@ -17,7 +17,7 @@ const httpGetAll = () => {
 
 const bookingGenderStatistics = () => {
   const url = `booking-gender-statistics`
-  return instance.get(url);
+  return instance.get(url,header);
 };
 const httpAddBooking = (token, data,userId) => {
   const header = {

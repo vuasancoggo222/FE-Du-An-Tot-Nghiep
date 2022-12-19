@@ -48,7 +48,9 @@ export const userHistory = (id) => {
 // const httpDelete = (endpoint, id) => {
 //   return instance.delete(`${endpoint}/${id}`);
 // };
-
+export const bookingForEmployee = () => {
+  return instance.get(`/booking-employee-list/${user.employeeId}`,header)
+}
 export {
   httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus, bookingGenderStatistics, bookingAddByEmployeeApi
   //  httpPut, httpDelete 

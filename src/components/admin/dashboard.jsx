@@ -13,6 +13,7 @@ import {
 import { userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
+import { isAuthenticate } from "../../utils/LocalStorage";
 const Dashboard = () => {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -32,7 +33,7 @@ const Dashboard = () => {
   // const [dataChartService, setDataChartService] = useState();
   const [chartYear, setChartYear] = useState(moment().format("YYYY"));
   const [isChart, setIsChart] = useState("turnover");
-
+  
   function formatCash(str) {
     const string = str.toString();
     return string

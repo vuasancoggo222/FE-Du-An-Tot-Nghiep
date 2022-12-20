@@ -18,6 +18,17 @@
   margin-bottom: 0;
 }
 
+.modal-service {
+  width: 1200px !important;
+}
+
+.width-input {
+  width: 70% !important;
+}
+
+.ant-form-item-control {
+  margin-left: 0;
+}
 .h-sidenav {
   height: 100vh !important;
 }

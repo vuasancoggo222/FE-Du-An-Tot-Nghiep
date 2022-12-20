@@ -87,10 +87,10 @@ const AddService = () => {
       const accept = ["image/png", "image/jpeg", "image/jpg"];
 
       if (file.size > 1024 * 1024 * 2) {
-        message.error(`file quá lớn`);
+        message.error(`File quá lớn`);
         return Upload.LIST_IGNORE;
       } else if (!accept.includes(file.type)) {
-        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
+        message.error(`Không đúng định dạng ảnh (png,jpeg,jpg)`);
         return Upload.LIST_IGNORE;
       }
     },
@@ -131,20 +131,25 @@ const AddService = () => {
           <Form.Item
             label="Tên dịch vụ"
             name="name"
-            rules={[{ required: true, message: "Please input your username!" }]}
+            rules={[
+              { required: true, message: "Tên dịch vụ không để trống !" },
+            ]}
           >
-            <Input value="lethetam" />
+            <Input value="lethetam" placeholder="Tên dịch vụ" />
           </Form.Item>
           <Form.Item
             name="price"
             label="Giá tiền"
-            rules={[{ required: true, message: "Please input your number" }]}
+            rules={[
+              { required: true, message: "Giá tiền dịch vụ không để trống !" },
+            ]}
           >
             <InputNumber
               min={10000}
               formatter={(value) =>
                 `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
+              placeholder="Giá dịch vụ"
               style={{ width: "100%" }}
             />
             {/* <Input type="number" /> */}
@@ -158,7 +163,7 @@ const AddService = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your image!",
+                  message: " Ảnh dịch vụ không để trống !",
                 },
               ]}
             >
@@ -179,11 +184,11 @@ const AddService = () => {
             rules={[
               {
                 required: true,
-                message: "Please select your status",
+                message: "Trạng thái dịch vụ không để trống !",
               },
             ]}
           >
-            <Select placeholder="Please select a country">
+            <Select placeholder="Trạng thái dịch vụ">
               <Option value={1}>
                 <Tag color="green">ĐANG KINH DOANH</Tag>
               </Option>
@@ -197,7 +202,7 @@ const AddService = () => {
             name="description"
             label="Mô tả dịch vụ"
             rules={[
-              { required: true, message: "Please input your Introduction" },
+              { required: true, message: "Mô tả dịch vụ không để trống !" },
             ]}
           >
             <ReactQuill
@@ -207,6 +212,7 @@ const AddService = () => {
               modules={modules}
               // formats={formats}
               className="h-[300px] mb-20"
+              placeholder="Mô tả dịch vụ"
             ></ReactQuill>
           </Form.Item>
 

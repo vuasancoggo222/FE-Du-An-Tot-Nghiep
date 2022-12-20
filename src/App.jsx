@@ -127,6 +127,9 @@ function App() {
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
+    socket.on('employeeNotification', (data) => {
+     console.log(data);
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
       setNotification(data.notfication);
       setNotificationLength(data.unRead);
@@ -140,18 +143,19 @@ function App() {
       message.info(`${data.text}`, 20);
       console.log(data);
     });
-    if (user && user.role == 2 || user && user.role == 1) {
+    if (user && user.role == 2) {
       const getBooking = async () => {
         const res = await httpGetAll();
         setBooking(res);
       };
       getBooking();
+      const getEmployee = async () => {
+        const res = await httpGetEmployees();
+        setEmployees(res);
+      }
+      getEmployee();
     }
-    const getEmployee = async () => {
-      const res = await httpGetEmployees();
-      setEmployees(res);
-    }
-    getEmployee();
+    
     const getService = async () => {
       const res = await httpGetAllService();
       setService(res);
@@ -160,7 +164,7 @@ function App() {
     return () => {
       socket.off(SocketEvent.NOTIFICATION);
       socket.off(SocketEvent.USERLISTNOTIFICATION);
-      socket.off("myNewNotification");
+      socket.off("employeeNotification");
     };
   }, []);
 

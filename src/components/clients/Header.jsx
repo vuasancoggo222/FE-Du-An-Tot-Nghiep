@@ -11,12 +11,12 @@ import { message } from "antd";
 import Notification from "../admin/notification";
 import { getProfile } from "../../api/user";
 const Header = () => {
+  const users = isAuthenticate();
   const navigate = useNavigate();
   const [auth, setAuth] = useState();
   const [user, setUser] = useState({});
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [header, setHeader, remove] = useLocalStorage('userHeader');
   // eslint-disable-next-line no-unused-vars
   const [modalText, setModalText] = useState("Content of the modal");
   const [ismolDal, setIsModal] = useState();
@@ -27,16 +27,18 @@ const Header = () => {
   };
 
   useEffect(() =>{
-    const getProfileData = () =>{
-      getProfile(user.token).then(response =>{
-        setUser(response)
-      }) 
-      .catch(error =>{
-        console.log(error);
-      }) 
-     }
-     getProfileData()
-  })
+    if(users){
+      const getProfileData = () =>{
+        getProfile(users.token).then(response =>{
+          setUser(response)
+        }) 
+        .catch(error =>{
+          console.log(error);
+        }) 
+       }
+       getProfileData()
+    }
+  },[])
   const callbackFunction = (childData) => {
     if (childData) {
       setAuth(true);
@@ -103,7 +105,6 @@ const Header = () => {
       return null;
     }
   };
-  const users = isAuthenticate();
   const menu = (
     <Menu
       items={[

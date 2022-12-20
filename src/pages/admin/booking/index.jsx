@@ -92,20 +92,27 @@ const ListBooking = (props) => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
+  const disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < moment().endOf("day");
+  };
+  const disabledTime = (current) => {
+    // Can not select days before today and today
+    return current && current < moment().endOf("hour");
+  };
   const changeVoucher = async () => {
     const code = document.getElementById("code")
     let flagVoucher = false
     let res
     voucher?.map((item) => {
-      if(item.code == code.value) {
+      if (item.code == code.value) {
         flagVoucher = true
         res = item
       }
     })
-    if(flagVoucher == false) {
+    if (flagVoucher == false) {
       message.error("Mã voucher không đúng")
-    }else{
+    } else {
       console.log(res);
       setAddVoucher(res)
       let flag = false
@@ -605,6 +612,8 @@ const ListBooking = (props) => {
         setTitleModal("Thanh toán và in hóa đơn");
       } else if (isButon === "5") {
         setTitleModal("Thông tin");
+      } else if (isButon === "6") {
+        setTitleModal("Sửa lịch đến");
       }
 
       if (isButon == 1) {
@@ -766,9 +775,11 @@ const ListBooking = (props) => {
         let isShowFailure = "false";
         let isShowPay = "false";
         let isShowInfo = "true";
+        let isEditshow = "false";
         let BtSusscesCursor = "pointer";
         let BtToEmployeeCursor = "pointer";
         let BtSusscessColor = "#dedede";
+
         // thong tin
         let BtInfoCursor = "pointer";
         let BtInfo = "#3934df";
@@ -776,7 +787,9 @@ const ListBooking = (props) => {
         // let BtSusscessColor = "#26cbe8"
         // hủy
         let BtFailureCursor = "not-allowed";
+        let BtEditCursor = "not-allowed";
         let BtFailureColor = "#dedede";
+        let BtEditColor = "#dedede";
         // let BtFailureColor = "#db5656"
         // thanh toánisShowCucess
         let BtPayCursor = "not-allowed";
@@ -789,15 +802,21 @@ const ListBooking = (props) => {
           BtToEmployee = "#dedede";
           BtToEmployeeCursor = "not-allowed";
           isShowFailure = "true";
+          isEditshow = "true";
           BtSusscesCursor = "pointer";
           BtSusscessColor = "#26cbe8";
           BtFailureCursor = "pointer";
+          BtEditCursor = "pointer";
           BtFailureColor = "#db5656";
+          BtEditColor = "#ba9d07";
         } else if (item.status === 1) {
           // hủy
           isShowFailure = "true";
           BtFailureCursor = "pointer";
+          isEditshow = "true";
           BtFailureColor = "#db5656";
+          BtEditCursor = "pointer";
+          BtEditColor = "#ba9d07";
         } else if (item.status === 3) {
           // hủy
           BtPayCursor = "pointer";
@@ -892,6 +911,23 @@ const ListBooking = (props) => {
                 }}
               >
                 Quyền nhân viên
+              </Button>
+            </Option>
+            <Option value="6">
+              <Button
+                isshow={isEditshow}
+                onClick={showModal}
+                dataId={item._id}
+                data="6"
+                style={{
+                  cursor: BtEditCursor,
+                  backgroundColor: BtEditColor,
+                  border: "none",
+                  color: "white",
+                  width: "100%",
+                }}
+              >
+                Sửa lịch đến
               </Button>
             </Option>
             <Option value="5">
@@ -1054,7 +1090,7 @@ const ListBooking = (props) => {
             text: "Bạn có lịch đặt mới",
             employeeId: handleBooking.employeeId,
           }
-          socket.emit('newEmployeeNotification',newEmployeeNotification)
+          socket.emit('newEmployeeNotification', newEmployeeNotification)
           socket.off('newEmployeeNotification');
         } catch (error) {
           console.log(error);
@@ -1120,6 +1156,17 @@ const ListBooking = (props) => {
             socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
             socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
+        } catch (error) {
+          message.error(`${error.response.data.message}`);
+        }
+      }
+      else if (ishandle === "6") {
+        try {
+          await httpGetChangeStatus(handleBooking._id, {
+            date: dateUpdate,
+            time: timeUpdate
+          });
+          message.success("Sửa lịch đến thành công cho khách hàng " + handleBooking?.name)
         } catch (error) {
           message.error(`${error.response.data.message}`);
         }
@@ -1557,7 +1604,8 @@ const ListBooking = (props) => {
               ]}
             >
               <DatePicker
-                disabled={ishandle == 1 ? false : true}
+              disabledDate={disabledDate}
+                disabled={ishandle == 1 || ishandle == 6 ? false : true}
                 showTime
                 format={dateFormat}
                 onChange={onchangeDateBooking}
@@ -1615,7 +1663,8 @@ const ListBooking = (props) => {
               ]}
             >
               <TimePicker
-                disabled={ishandle == 1 ? false : true}
+                disabledDate={disabledTime}
+                disabled={ishandle == 1 || ishandle == 6 ? false : true}
                 format={format}
                 onChange={onchangeTimeBooking}
                 placeholder="Giờ đến"
@@ -1648,7 +1697,7 @@ const ListBooking = (props) => {
                 disabled={ishandle == 4 ? false : true}
                 placeholder="Nhập mã"
               />
-              <Button  disabled={ishandle == 4 ? false : true} onClick={changeVoucher} style={{ marginTop: "2px" }} type="primary">Áp dụng</Button>
+              <Button disabled={ishandle == 4 ? false : true} onClick={changeVoucher} style={{ marginTop: "2px" }} type="primary">Áp dụng</Button>
             </Form.Item>
             <Form.Item name="bookingPrice" label="Thanh toán">
               <span className="font-semibold">

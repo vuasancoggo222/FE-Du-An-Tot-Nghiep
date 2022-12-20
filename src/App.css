@@ -17,3 +17,7 @@
 .ant-form-item {
   margin-bottom: 0;
 }
+
+.h-sidenav {
+  height: 100vh !important;
+}

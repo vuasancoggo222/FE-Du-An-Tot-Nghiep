@@ -10,21 +10,9 @@ if (user) {
     },
   };
 }
-export const getEmployeeByDate = (date, id) => {
-  return instance.get(
-    `/employee/get-employee-by-date?date=${date}&employee=${id}`,
-    header
-  );
-};
 
 export const httpGetOne = (id) => {
   return instance.get(`employees/${id}`, header);
-=======
-
-
-export const httpGetOne = (id) => {
-  
-  return instance.get(`employees/${id}`,header);
 };
 
 export const httpGetEmployees = () => {
@@ -56,7 +44,6 @@ export const employeeOrderStatistics = (month, year) => {
 };
 
 export const employeeStatistics = (id, month, year) => {
- 
   console.log(month, year);
   let url;
   if (month == undefined && year == undefined) {

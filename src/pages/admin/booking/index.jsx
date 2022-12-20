@@ -1041,13 +1041,21 @@ const ListBooking = (props) => {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Đơn đặt lịch của bạn đã được xác nhận",
+              text: "Lịch đặt của bạn đã được xác nhận",
               from: user.id,
               userId: handleBooking.userId._id,
-            };
+            }
             socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
             socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
+          const newEmployeeNotification = {
+            id: handleBooking._id,
+            notificationType: "employee",
+            text: "Bạn có lịch đặt mới",
+            employeeId: handleBooking.employeeId,
+          }
+          socket.emit('newEmployeeNotification',newEmployeeNotification)
+          socket.off('newEmployeeNotification');
         } catch (error) {
           console.log(error);
           message.error(`${error.response?.data?.message}`);

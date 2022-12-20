@@ -17,7 +17,7 @@ const httpGetAll = () => {
 
 const bookingGenderStatistics = () => {
   const url = `booking-gender-statistics`
-  return instance.get(url);
+  return instance.get(url,header);
 };
 const httpAddBooking = (token, data,userId) => {
   const header = {
@@ -48,7 +48,9 @@ export const userHistory = (id) => {
 // const httpDelete = (endpoint, id) => {
 //   return instance.delete(`${endpoint}/${id}`);
 // };
-
+export const bookingForEmployee = () => {
+  return instance.get(`/booking-employee-list/${user.employeeId}`,header)
+}
 export {
   httpGetAll, httpAddBooking, httpGetOne, httpGetChangeStatus, bookingGenderStatistics, bookingAddByEmployeeApi
   //  httpPut, httpDelete 

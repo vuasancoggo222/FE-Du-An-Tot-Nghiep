@@ -23,12 +23,12 @@ export const httpGetAllUser = () => {
 };
 export const getProfile = (token) => {
   const url = `/user/my-profile`;
-  const header = {
+  const header2 = {
     headers: {
       Authorization: `${token}`,
     },
   };
-  return instance.get(url,header);
+  return instance.get(url,header2);
 };
 export const updateProfile = (token, data) => {
   const url = `/user/my-profile/edit`;

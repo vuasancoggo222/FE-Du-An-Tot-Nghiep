@@ -196,9 +196,9 @@ const HomePage = () => {
           </div>
         </div>
         <div className="posttime">
-            <Post/>
+          <Post />
           <div className="form-group-1 my-[20px] ">
-            <div className="w-[1200px] form-group grid grid-cols-[340px_340px_1fr] gap-[10px] pb-[10px] m-auto  rounded-lg bg-[#cdcbcb] py-[40px] px-[30px]">
+            {/* <div className="w-[1200px] form-group grid grid-cols-[340px_340px_1fr] gap-[10px] pb-[10px] m-auto  rounded-lg bg-[#cdcbcb] py-[40px] px-[30px]">
               <div>
                 <img
                   src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/12/imgw_lienhe_111.png"
@@ -239,7 +239,7 @@ const HomePage = () => {
                   </div>
                 </form>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </article>

@@ -31,7 +31,7 @@ const Sidenav = () => {
           </Link>
         </div>
         <hr className="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent dark:bg-gradient-to-r dark:from-transparent dark:via-white dark:to-transparent" />
-        <div className="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full">
+        <div className="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full width-navbar">
           {user && user?.role === 1 ? (
             <ul className="flex flex-col pl-0 mb-0">
               <li className="mt-0.5 w-full">
@@ -53,7 +53,7 @@ const Sidenav = () => {
               <li className="mt-10 grid">
                 <button
                   type="button"
-                  className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
                   style={{ borderRadius: "5px" }}
                   onClick={handleLogout}
                 >
@@ -192,7 +192,7 @@ const Sidenav = () => {
               <li className="mt-10 grid">
                 <button
                   type="button"
-                  className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2"
                   style={{ borderRadius: "5px" }}
                   onClick={handleLogout}
                 >

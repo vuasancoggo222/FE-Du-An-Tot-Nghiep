@@ -1,4 +1,14 @@
-import { Button, Form, Input, Upload, Select, message, Row, Col } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  Upload,
+  Select,
+  message,
+  Row,
+  Col,
+  InputNumber,
+} from "antd";
 import React, { useState } from "react";
 import { httpAddEmployees } from "../../../api/employee";
 import { InboxOutlined } from "@ant-design/icons";
@@ -83,7 +93,7 @@ const AddEmployee = () => {
         </div>
       </div>
 
-      <div className=" px-6 py-6 ml-[30px]  ">
+      <div className=" px-6 py-6 ml-[30px] ">
         <div className="mt-[150px] my-[20px]"></div>
         <Form
           className="m-auto"
@@ -109,7 +119,7 @@ const AddEmployee = () => {
                   },
                 ]}
               >
-                <Input type="text" />
+                <Input type="text" placeholder="Họ tên nhân viên" />
               </Form.Item>
             </Col>
           </Row>
@@ -124,30 +134,36 @@ const AddEmployee = () => {
               },
             ]}
           >
-            <Input type="text" />
+            <InputNumber placeholder="Số điện thoại" style={{ width: "30%" }} />
           </Form.Item>
-          {/* Id Card */}
+          {/* Password */}
           <Form.Item
             label="Mật khẩu"
             name="password"
             rules={[
               {
                 required: true,
-                message: "Password không được để trống !",
+                message: "Mật khẩu không được để trống !",
               },
             ]}
           >
-            <Input type="password" />
+            <Input type="password" placeholder="Mật khẩu" />
           </Form.Item>
           {/* Id Card */}
           <Form.Item
             label="CMT/CCCD"
             name="idCard"
             rules={[
-              { required: true, message: "Card Id không được để trống !" },
+              {
+                required: true,
+                message: "Căn cước công dân không được để trống !",
+              },
             ]}
           >
-            <Input type="text" />
+            <InputNumber
+              placeholder="Căn cước công dân"
+              className="width-input width-input"
+            />
           </Form.Item>
           {/* Email */}
           <Form.Item
@@ -155,7 +171,7 @@ const AddEmployee = () => {
             name="email"
             rules={[{ required: true, message: "Email không được để trống !" }]}
           >
-            <Input type="text" />
+            <Input type="text" placeholder="Email nhân viên" />
           </Form.Item>
           {/* Gender */}
           <Form.Item
@@ -165,7 +181,7 @@ const AddEmployee = () => {
             rules={[
               {
                 required: true,
-                message: "Nhập giới tính !",
+                message: "Giới tính không để trống !",
               },
             ]}
           >
@@ -174,7 +190,7 @@ const AddEmployee = () => {
               <Option value={1}>Nữ</Option>
             </Select>
           </Form.Item>
-          {/* Avater */}
+          {/* Avatar */}
 
           <Form.Item label="Ảnh đại diện">
             <Form.Item

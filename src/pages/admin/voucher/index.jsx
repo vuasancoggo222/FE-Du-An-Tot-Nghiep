@@ -36,11 +36,32 @@ const ListVoucher = () => {
       key: "code",
     },
     {
+      title: "Loại voucher",
+      dataIndex: "type",
+      key: "type",
+      render: (item) => (
+        <span>{item == "direct" ? "Giảm trực tiếp" : "Giảm phần trăm"}</span>
+      ),
+    },
+    {
       title: "Giảm giá",
       dataIndex: "discount",
       key: "discount",
+      render: (item, vouchers) => (
+        <div>
+          {vouchers.type == "direct" ? (
+            <span>
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(item)}
+            </span>
+          ) : (
+            <span>{item + "%"}</span>
+          )}
+        </div>
+      ),
     },
-
     {
       title: "Số lượng",
       dataIndex: "quantity",

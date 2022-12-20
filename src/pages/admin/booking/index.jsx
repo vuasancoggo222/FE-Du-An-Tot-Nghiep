@@ -45,7 +45,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { httpGetOne } from "../../../api/employee";
 import { httpGetOneService } from "../../../api/services";
-import { ListVouchers, OneVoucher, useVoucher } from "../../../api/voucher";
+import { ListVouchers, useVoucher } from "../../../api/voucher";
 
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
@@ -66,6 +66,7 @@ const ListBooking = (props) => {
   const [bookingPrice, setBookingPirce] = useState();
   const [booking, setBooking] = useState();
   const [dateUpdate, setDateUpdate] = useState();
+  const [coinVoucher, setCoinVoucher] = useState();
   const [addVoucher, setAddVoucher] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   // eslint-disable-next-line no-unused-vars
@@ -92,24 +93,52 @@ const ListBooking = (props) => {
     setSearchedColumn(dataIndex);
   };
 
-  const changeVoucher = async (data) => {
-    const res = await OneVoucher(data)
-    console.log(res.service);
-    const serrvice = await httpGetOneService(res.service)
-    setAddVoucher(res)
-    let coinDown
-    if (res.type == "direct") {
-      coinDown = res.discount
-    } else {
-      coinDown = (serrvice.price / 100) * res.discount
+  const changeVoucher = async () => {
+    const code = document.getElementById("code")
+    let flagVoucher = false
+    let res
+    voucher?.map((item) => {
+      if(item.code == code.value) {
+        flagVoucher = true
+        res = item
+      }
+    })
+    if(flagVoucher == false) {
+      message.error("Mã voucher không đúng")
+    }else{
+      console.log(res);
+      setAddVoucher(res)
+      let flag = false
+      let serrvice
+      handleBooking?.services.map((item) => {
+        // console.log(item.serviceId._id);
+        if (item.serviceId._id == res.service._id) {
+          flag = true
+          serrvice = item.serviceId
+          return
+        }
+      })
+
+      if (flag == false) {
+        message.error("Voucher không áp dụng khuyến mãi cho dịch vụ này")
+      } else {
+        let coinDown
+        if (res.type == "direct") {
+          coinDown = res.discount
+        } else {
+          coinDown = (serrvice.price / 100) * res.discount
+        }
+        setCoinVoucher(coinDown)
+        const coinResult = handleBooking.bookingPrice - coinDown
+        if (coinResult < 0) {
+          setBookingPirce(0)
+        } else {
+          setBookingPirce(coinResult)
+        }
+        message.success("Đã áp dụng")
+      }
     }
-    console.log(coinDown);
-    const coinResult = handleBooking.bookingPrice - coinDown
-    if (coinResult < 0) {
-      setBookingPirce(0)
-    } else {
-      setBookingPirce(coinResult)
-    }
+
   }
 
   const changeEmployee = (e) => {
@@ -500,7 +529,7 @@ const ListBooking = (props) => {
         gender: "",
         date: undefined,
         time: undefined,
-        code:undefined
+        code: undefined
       });
       setBookingPirce(0);
       setTitleModal("Thêm khách đến trực tiếp");
@@ -557,7 +586,7 @@ const ListBooking = (props) => {
               item?.time != undefined
                 ? moment(renderTime(item?.time), format)
                 : "",
-                code:undefined
+            code: undefined
           });
           await setIsModalOpen(true);
           document.getElementById("js-licensing").style.display = "none";
@@ -1061,13 +1090,13 @@ const ListBooking = (props) => {
         }
       } else if (ishandle === "4") {
         try {
-          const res = await useVoucher(handleBooking._id, {code: addVoucher.code})
+          const res = await useVoucher(handleBooking._id, { code: addVoucher.code })
           console.log(res);
         } catch (error) {
           message.error(`${error.response?.data?.message}`);
           return
         }
-  
+
         try {
           await httpGetChangeStatus(handleBooking._id, { status: 4 });
           handleToolbarClick()
@@ -1602,23 +1631,16 @@ const ListBooking = (props) => {
             <Form.Item name="note" label="Ghi chú">
               <Input.TextArea disabled={ishandle == 1 ? false : true} />
             </Form.Item>
-            <Form.Item name="code" label="Voucher">
-              <Select
+            <Form.Item
+              name="codeVoucher"
+              label="Mã voucher"
+
+            >
+              <Input id="code"
                 disabled={ishandle == 4 ? false : true}
-                onChange={changeVoucher}
-              >
-                {
-                  voucher?.map((current, index) => {
-                    return (
-                      (
-                        <Select.Option value={current._id} key={index}>
-                          {current.name}
-                        </Select.Option>
-                      )
-                    )
-                  })
-                }
-              </Select>
+                placeholder="Nhập mã"
+              />
+              <Button  disabled={ishandle == 4 ? false : true} onClick={changeVoucher} style={{ marginTop: "2px" }} type="primary">Áp dụng</Button>
             </Form.Item>
             <Form.Item name="bookingPrice" label="Thanh toán">
               <span className="font-semibold">
@@ -1645,7 +1667,7 @@ const ListBooking = (props) => {
               </Button>
 
               <Button
-                
+
                 style={{
                   display:
                     titleModal == "Thanh toán và in hóa đơn"

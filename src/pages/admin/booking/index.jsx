@@ -3,7 +3,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/no-unknown-property */
 import React, { useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { InfoCircleTwoTone, SearchOutlined } from "@ant-design/icons";
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -67,6 +67,7 @@ const ListBooking = (props) => {
   const [booking, setBooking] = useState();
   const [dateUpdate, setDateUpdate] = useState();
   const [coinVoucher, setCoinVoucher] = useState();
+  const [note, setNote] = useState();
   const [addVoucher, setAddVoucher] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   // eslint-disable-next-line no-unused-vars
@@ -148,6 +149,19 @@ const ListBooking = (props) => {
 
   }
 
+  // const renderNameService = () => {
+  //   let text = ""
+  //   handleBooking?.services.forEach((item, index) => {
+  //     if(index >= 1) {
+  //       text +=  item.serviceId.name
+  //     }else{
+  //       text += item.serviceId.name
+  //     }
+
+  //   })
+  //   return text
+  // }
+
   const changeEmployee = (e) => {
     console.log(e);
     let count = 0;
@@ -208,6 +222,9 @@ const ListBooking = (props) => {
     clearFilters();
     setSearchText("");
   };
+
+
+
   const onchangeTimeBooking = async (value) => {
     console.log(value);
     setTimeUpdate(value);
@@ -239,6 +256,10 @@ const ListBooking = (props) => {
       .reduce((prev, next, index) => {
         return (index % 3 ? next : next + ",") + prev;
       });
+  }
+
+  const handleSetNote = (data) => {
+    setNote(data.target.value)
   }
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -435,7 +456,7 @@ const ListBooking = (props) => {
         style={{
           padding: 8,
         }}
-      >
+      >form
         <TimePicker
           onChange={async (e) => {
             console.log(renderTime(e._d)),
@@ -514,7 +535,8 @@ const ListBooking = (props) => {
         text
       ),
   });
-  // let elemenPick;
+  console.log(document.getElementsByClassName('dbd487'));
+  // let elemenPick; 
   const showModal = async (e) => {
     // eslint-disable-next-line react/prop-types
     if (
@@ -536,7 +558,7 @@ const ListBooking = (props) => {
         gender: "",
         date: undefined,
         time: undefined,
-        code: undefined
+        codeVoucher: undefined
       });
       setBookingPirce(0);
       setTitleModal("Thêm khách đến trực tiếp");
@@ -572,6 +594,8 @@ const ListBooking = (props) => {
           if (item.status == isButon || show == "false") {
             return;
           }
+          setAddVoucher("")
+          setCoinVoucher("")
           await seDateBooking(item.date.toString());
           setBookingPirce(item?.bookingPrice);
           form.setFieldsValue({
@@ -593,14 +617,13 @@ const ListBooking = (props) => {
               item?.time != undefined
                 ? moment(renderTime(item?.time), format)
                 : "",
-            code: undefined
+            codeVoucher: undefined
           });
           await setIsModalOpen(true);
           document.getElementById("js-licensing").style.display = "none";
           document.getElementById("grid_1281791375_0").style.display = "none";
         }
       });
-
       setIshandle(isButon);
       if (isButon === "1") {
         setTitleModal("Xác nhận");
@@ -650,6 +673,7 @@ const ListBooking = (props) => {
       setBooking(res);
     };
     changeStatus();
+
   };
   const renderTime = (value) => {
     const d = new Date(value);
@@ -678,6 +702,23 @@ const ListBooking = (props) => {
     return `${d.getFullYear()}-${month}-${date}`;
   };
   const columns = [
+    {
+      title: '',
+      dataIndex: 'id',
+      key: 'id',
+      render: (item) => {
+        return (
+          <div style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
+        )
+      }
+
+    },
+    {
+      title: "Mã",
+      dataIndex: "id",
+      key: "id",
+      ...getColumnSearchProps("id"),
+    },
     {
       title: "Tên",
       dataIndex: "name",
@@ -898,6 +939,7 @@ const ListBooking = (props) => {
                   } else if (item.status == 2) {
                     return;
                   } else {
+                    localStorage.setItem("Idback", item._id.slice(-6, item._id.length))
                     await props.handleToEmployee(item.employeeId._id, item._id);
                     navigate("/admin/booking/employee");
                   }
@@ -1133,16 +1175,19 @@ const ListBooking = (props) => {
           message.error(`${error.response.data.message}`);
         }
       } else if (ishandle === "4") {
-        try {
-          const res = await useVoucher(handleBooking._id, { code: addVoucher.code })
-          console.log(res);
-        } catch (error) {
-          message.error(`${error.response?.data?.message}`);
-          return
+        if (addVoucher != "") {
+          try {
+            const res = await useVoucher(handleBooking._id, { code: addVoucher.code })
+            console.log(res);
+          } catch (error) {
+            message.error(`${error.response?.data?.message}`);
+            return
+          }
         }
 
         try {
-          await httpGetChangeStatus(handleBooking._id, { status: 4 });
+          const res = await httpGetChangeStatus(handleBooking._id, { status: 4, note: data.note, bookingPrice: bookingPrice });
+          await setHandleBooking(res)
           handleToolbarClick()
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
           if (handleBooking.userId) {
@@ -1195,7 +1240,7 @@ const ListBooking = (props) => {
     if (ishandle != 4) {
       return;
     }
-    const sliceId = handleBooking?._id.slice(-7, handleBooking._id.length);
+    const sliceId = handleBooking?._id.slice(-6, handleBooking._id.length);
     if (girl) {
       girl.excelExport({
         fileName: `${ChangeToSlug(handleBooking?.name)}-${sliceId}.xlsx`,
@@ -1311,12 +1356,30 @@ const ListBooking = (props) => {
                   style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
+
             },
+            // this
+
           ],
         },
         footer: {
-          footerRows: 3,
+          footerRows: 5,
           rows: [
+
+            {
+              cells: [
+                {
+                  colSpan: 1,
+                  value: `Voucher:`,
+                  style: { bold: true, wrapText: true, fontSize: 12 },
+                },
+                {
+                  colSpan: 1,
+                  value: coinVoucher != "" ? formatCash(coinVoucher) : "",
+                  style: { bold: true, hAlign: "right", fontSize: 12 },
+                },
+              ],
+            },
             {
               cells: [
                 {
@@ -1328,6 +1391,15 @@ const ListBooking = (props) => {
                   colSpan: 1,
                   value: formatCash(bookingPrice),
                   style: { bold: true, hAlign: "right", fontSize: 15 },
+                },
+              ],
+            },
+            {
+              cells: [
+                {
+                  colSpan: 2,
+                  value: `Ghi chú: ${note != undefined ? note : handleBooking?.note}`,
+                  style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
             },
@@ -1350,7 +1422,7 @@ const ListBooking = (props) => {
                 {
                   rowSpan: 2,
                   colSpan: 2,
-                  value: `( ${ReadMoney.doc(handleBooking?.bookingPrice)} )`,
+                  value: `( ${ReadMoney.doc(bookingPrice)} )`,
                   style: { hAlign: "center", bold: true, wrapText: true },
                 },
               ],
@@ -1360,6 +1432,7 @@ const ListBooking = (props) => {
       });
     }
   };
+
   const handleChange = (value) => {
     let total = 0;
     const arrOption = value.toString().split(",");
@@ -1385,8 +1458,25 @@ const ListBooking = (props) => {
       time: time,
       employeeId: item.employeeId?.name,
       action: item,
+      id: item._id.slice(-6, item._id.length)
     };
   });
+  const getEle = async () => {
+    const idback = localStorage.getItem("Idback")
+    if (idback) {
+      const element = await document.getElementsByClassName(idback)
+      console.log(element);
+      if (element) {
+        element[0].style.display = "block";
+        element[0].scrollIntoView({ behavior: "smooth" });
+      }
+      setTimeout(() => {
+        element[0].style.display = "none";
+        localStorage.removeItem("Idback")
+      }, 7000);
+    }
+  }
+  getEle()
   useEffect(() => {
 
     setLoading(true);
@@ -1403,6 +1493,7 @@ const ListBooking = (props) => {
     getVoucher();
 
     setLoading(false);
+
   }, []);
   return (
     <Spin
@@ -1431,7 +1522,7 @@ const ListBooking = (props) => {
             + Thêm khách đến trực tiếp
           </Button>
         </div>
-        <Table className="mt-5" columns={columns} dataSource={datatable} />;
+        <Table pagination={false} className="mt-5" columns={columns} dataSource={datatable} />;
         <Modal
           footer={null}
           style={{ fontFamily: "revert-layer" }}
@@ -1449,26 +1540,27 @@ const ListBooking = (props) => {
             toolbar={[titleModal]}
             allowExcelExport={true}
             wrapText={true}
-            // dataSource={handleBooking?.services.map((item) => {
-            //     return { ...item, price: formatCash(item?.price) }
-            // })}
+            dataSource={handleBooking?.services.map((item) => {
+              return { name: item.serviceId.name, price: formatCash(item?.price) }
+            })}
             // toolbarClick={handleToolbarClick}
             allowPaging={true}
           >
             <ColumnsDirective>
               <ColumnDirective
-                indent="1"
                 field="name"
                 headerText="Dịch vụ"
                 width="200"
                 textAlign="left"
               />
+
               <ColumnDirective
                 field="price"
                 headerText="Đơn Giá"
                 width="110"
                 textAlign="right"
               />
+
             </ColumnsDirective>
             <Inject services={[ExcelExport]} />
           </GridComponent>
@@ -1604,7 +1696,7 @@ const ListBooking = (props) => {
               ]}
             >
               <DatePicker
-              disabledDate={disabledDate}
+                disabledDate={disabledDate}
                 disabled={ishandle == 1 || ishandle == 6 ? false : true}
                 showTime
                 format={dateFormat}
@@ -1686,18 +1778,20 @@ const ListBooking = (props) => {
             {/* chọn ca  */}
 
             <Form.Item name="note" label="Ghi chú">
-              <Input.TextArea disabled={ishandle == 1 ? false : true} />
+              <Input.TextArea onBlur={handleSetNote} disabled={ishandle == 1 || ishandle == 4 ? false : true} />
             </Form.Item>
             <Form.Item
               name="codeVoucher"
               label="Mã voucher"
-
             >
+
               <Input id="code"
                 disabled={ishandle == 4 ? false : true}
                 placeholder="Nhập mã"
               />
-              <Button disabled={ishandle == 4 ? false : true} onClick={changeVoucher} style={{ marginTop: "2px" }} type="primary">Áp dụng</Button>
+            </Form.Item>
+            <Form.Item className="mb-5" label=" ">
+              <Button disabled={ishandle == 4 ? false : true} onClick={changeVoucher} style={{ marginTop: "2px" }} type="primary">Áp dụng voucher</Button>
             </Form.Item>
             <Form.Item name="bookingPrice" label="Thanh toán">
               <span className="font-semibold">

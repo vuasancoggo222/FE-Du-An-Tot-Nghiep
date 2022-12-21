@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
 import { InfoCircleTwoTone, SearchOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select, Spin } from 'antd';
+import { Button, DatePicker, Input, message, Modal, Space, Table, Tag, TimePicker, Select, Spin, Form } from 'antd';
 import { httpGetAll, httpGetChangeStatus } from "../../../../api/booking";
 import Highlighter from 'react-highlight-words';
 import { employeeStatistics, httpGetOne } from "../../../../api/employee";
@@ -10,6 +10,7 @@ import moment from "moment";
 import { isAuthenticate } from "../../../../utils/LocalStorage";
 const ListBookingByEmployee = (props) => {
     const format = 'HH';
+    const [form] = Form.useForm();
     const { Option } = Select;
     const [searchText, setSearchText] = useState('');
     const [employeeStatic, setEmpoyeeStatic] = useState('');
@@ -103,6 +104,9 @@ const ListBookingByEmployee = (props) => {
             }
         })
 
+        form.setFieldsValue({
+            note: handleBooking?.note
+        });
         // eslint-disable-next-line react/prop-types
         booking?.map(async (item) => {
             if (item._id == idBooking) {
@@ -119,7 +123,8 @@ const ListBookingByEmployee = (props) => {
     };
 
     // eslint-disable-next-line no-unused-vars
-    const handleOk = async () => {
+    const handleOk = async (data) => {
+        alert(data.note)
         if (ishandle === "5") {
             setIsModalOpen(false);
             return
@@ -127,7 +132,7 @@ const ListBookingByEmployee = (props) => {
         setIsModalOpen(false);
         if (ishandle === "3") {
             try {
-                await httpGetChangeStatus(handleBooking._id, { status: 3 })
+                await httpGetChangeStatus(handleBooking._id, { status: 3, note: data.note })
                 message.success(`Chờ thanh toán "${handleBooking.name}"`)
                 const res = await httpGetAll()
                 setBooking(res)
@@ -647,11 +652,11 @@ const ListBookingByEmployee = (props) => {
                     const highlight = await document.getElementsByClassName(props.dataBookingId);
                     if (highlight != undefined) {
                         highlight[0].style.display = "block";
-                        highlight[0].scrollIntoView({behavior: "smooth"});
-                    } 
+                        highlight[0].scrollIntoView({ behavior: "smooth" });
+                    }
                 }
             }
-            hightlight() 
+            hightlight()
             setEmpoyeeStatic(data)
         }
         adminLogin()
@@ -856,9 +861,9 @@ const ListBookingByEmployee = (props) => {
                 {/* card4 */}
 
             </div>
-            <Table className="mt-5" columns={columns} dataSource={datatable} />;
+            <Table pagination={false} className="mt-5" columns={columns} dataSource={datatable} />;
 
-            <Modal style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal footer={null} style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <p>Tên Khách hàng: {handleBooking?.name}</p>
                 <p>Tuổi: {handleBooking?.age}</p>
                 <p>Giới tính: {handleBooking?.gender == 1 ? 'Nữ' : "Nam"}</p>
@@ -868,17 +873,37 @@ const ListBookingByEmployee = (props) => {
                 <p>Nhân viên: {handleBooking?.employeeId.name}</p>
                 <p>Dịch vụ:
                     <ul>
-                        {handleBooking?.serviceId?.map((item) => {
+                        {handleBooking?.services?.map((item) => {
                             return (
                                 // eslint-disable-next-line react/jsx-key
-                                <li>{item.name}</li>
+                                <li>{item.serviceId.name}</li>
                             )
 
                         })}
                     </ul>
                 </p>
                 <p>Thanh toán: {formatCash(handleBooking?.bookingPrice || "0")}</p>
-                <p>Note: {handleBooking?.note}</p>
+                <Form
+                    form={form}
+                    wrapperCol={{
+                        span: 16,
+                    }}
+
+                    onFinish={handleOk}
+                    // onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                >
+                    <Form.Item
+                        label="Note"
+                        name="note"
+                    >
+                        <Input disabled={ishandle == 5 ? true : false} placeholder="Thêm ghi chú hoặc sản phẩm spa" />
+                    </Form.Item>
+                    <Button
+                    style={{marginLeft:"75%",  width:"25%"}}
+                        type="primary"
+                        htmlType="submit">{titleModal}</Button>
+                </Form>
             </Modal>
         </div>;
     </Spin>

@@ -653,6 +653,8 @@ const ListBookingByEmployee = (props) => {
                     if (highlight != undefined) {
                         highlight[0].style.display = "block";
                         highlight[0].scrollIntoView({ behavior: "smooth" });
+                        // eslint-disable-next-line react/prop-types
+                        localStorage.setItem("Idback",props.dataBookingId.slice(-6, props.dataBookingId.length)) 
                     }
                 }
             }

@@ -59,7 +59,7 @@ const HomePage = () => {
 
         <div className="m-auto">
           <div className="bg-[url('https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/f1-bg.jpg')]">
-            <h2 className="text-center text-lg text-[#00502b]">
+            <h2 className="text-center text-lg text-[#00502b] pt-5">
               ĐÁNH GIÁ TỪ KHÁCH HÀNG
             </h2>
             <div className="">

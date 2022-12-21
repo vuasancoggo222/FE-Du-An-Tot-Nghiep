@@ -46,7 +46,6 @@ import { useEffect } from "react";
 import { httpGetOne } from "../../../api/employee";
 import { httpGetOneService } from "../../../api/services";
 import { ListVouchers, useVoucher } from "../../../api/voucher";
-
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
   const [form] = Form.useForm();
@@ -667,7 +666,7 @@ const ListBooking = (props) => {
   // eslint-disable-next-line no-unused-vars
   const handleOk = async () => { };
 
-  const handleCancel = () => {
+  const handleCancel =  async () => {
     setIsModalOpen(false);
 
     const changeStatus = async () => {
@@ -676,17 +675,21 @@ const ListBooking = (props) => {
     };
     changeStatus();
     if (localStorage.getItem("nonePage")) {
-      // window.scroll({
-      //   top: 220,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // })
-      
+      window.scroll({
+        top: 220,
+        left: 0,
+        behavior: 'smooth'
+      })
+      const element = await document.querySelectorAll("#higtlight")
+      console.log(element);
+      for(let i = 0 ; i < element.length; i++) {
+        element[i].style.display = "none";  
+      }
       setPage(true)
       localStorage.removeItem("nonePage") 
     }
-
   };
+
   const renderTime = (value) => {
     const d = new Date(value);
     let time = d.getHours();
@@ -720,7 +723,7 @@ const ListBooking = (props) => {
       key: 'id',
       render: (item) => {
         return (
-          <div style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
+          <div id="higtlight" style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
         )
       }
 

@@ -1,6 +1,6 @@
 import { Button, Form, Input, Upload, Select, message, Row, Col } from "antd";
 import React, { useEffect, useState } from "react";
-import {httpGetOne } from "../../../api/employee";
+import { httpGetOne } from "../../../api/employee";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ImgCrop from "antd-img-crop";
@@ -9,7 +9,7 @@ import useEmployee from "../../../hooks/use-employee";
 const { Option } = Select;
 
 const EditEmployee = () => {
-  const {update} = useEmployee()
+  const { update } = useEmployee();
   const navigate = useNavigate();
   const { id } = useParams();
   const [form] = Form.useForm();
@@ -47,7 +47,7 @@ const EditEmployee = () => {
     try {
       const res = await uploadCloudinary(formData);
       onSuccess("Ok");
-      message.success("Upload successfully !");
+      message.success("Upload ảnh thành công !");
       console.log("server res: ", res);
       setUrl(res.data.secure_url);
     } catch (err) {
@@ -56,14 +56,13 @@ const EditEmployee = () => {
   };
   const onFinish = async (data) => {
     const dataPost = { ...data, avatar: url };
-      try {
-        await update(id,dataPost);
-        message.success('Chỉnh sửa nhân viên thành công.')
-        navigate(-1)
-      } catch (error) {
-    
-        message.error(`${error.response.data.message}`,4)
-      }
+    try {
+      await update(id, dataPost);
+      message.success("Chỉnh sửa nhân viên thành công.");
+      navigate(-1);
+    } catch (error) {
+      message.error(`${error.response.data.message}`, 4);
+    }
   };
 
   const onFinishFailed = (errorInfo) => {

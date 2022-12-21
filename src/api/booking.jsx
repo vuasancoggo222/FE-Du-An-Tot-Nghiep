@@ -20,23 +20,16 @@ const bookingGenderStatistics = () => {
   return instance.get(url, header);
 };
 const httpAddBooking = (token, data, userId) => {
-  let userID = userId;
-  if (!userID) {
-    userID = "637e321c347223cf109f85e3";
-  }
+  
   const header = {
     headers: {
       Authorization: `${token}`,
     },
   };
-  return instance.post(`booking?user=${userID}`, data, header);
+  return instance.post(`booking?user=${userId}`, data, header);
 };
 const bookingAddByEmployeeApi = (data) => {
-  let userID = "";
-  if (!userID) {
-    userID = "637e321c347223cf109f85e3";
-  }
-  return instance.post(`bookingAddByEmployee?user=${userID}`, data, header);
+  return instance.post(`bookingAddByEmployee`, data, header);
 };
 const httpGetOne = (id) => {
   return instance.get(`booking/${id}`, header);

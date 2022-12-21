@@ -40,6 +40,8 @@ import {
   notificationState,
   userNotificationLengthState,
   notificationLengthState,
+  employeeNotificationState,
+  employeeNotificationLengthState,
 } from "./recoil/notificationState";
 import { isAuthenticate } from "./utils/LocalStorage";
 const user = isAuthenticate();
@@ -54,7 +56,7 @@ export const socket = io(REALTIME_SERVER, {
     token: user?.token,
   },
 });
-
+import moment from "moment";
 import DetailNews from "./pages/website/DetailNews";
 import UserEdit from "./pages/admin/user/edit";
 import ListPost from "./pages/admin/post";
@@ -64,7 +66,7 @@ import ListBanner from "./pages/admin/banner";
 import AddBanner from "./pages/admin/banner/add";
 import DetailPost from "./pages/admin/post/detail";
 import EditBanner from "./pages/admin/banner/edit";
-import { message } from "antd";
+import { message, notification } from "antd";
 import instance from "./api/instance";
 import ChangePass from "./components/clients/ChangePass";
 import Swal from "sweetalert2";
@@ -73,9 +75,9 @@ import AddVoucher from "./pages/admin/voucher/add";
 import EditVoucher from "./pages/admin/voucher/edit";
 
 function App() {
-
   const [isConnected, setIsConnected] = useState(null);
-  const [notification, setNotification] = useRecoilState(notificationState);
+  const [adminNotification, setNotification] =
+    useRecoilState(notificationState);
   const [userNotification, setUserNotification] = useRecoilState(
     userNotificationState
   );
@@ -85,6 +87,12 @@ function App() {
   const [notificationLength, setNotificationLength] = useRecoilState(
     notificationLengthState
   );
+
+  const [employeeNotification, setEmployeeNotification] = useRecoilState(
+    employeeNotificationState
+  );
+  const [employeenotificationLength, setEmployeeNotificationLength] =
+    useRecoilState(employeeNotificationLengthState);
   const user = isAuthenticate();
 
   const [booking, setBooking] = useState();
@@ -113,9 +121,9 @@ function App() {
     }, 1000);
   };
   const handleToEmployee = (data, bookingId) => {
-    setEmployeeId(data)
-    setBookingId(bookingId)
-  }
+    setEmployeeId(data);
+    setBookingId(bookingId);
+  };
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -127,9 +135,18 @@ function App() {
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
-    socket.on('employeeNotification', (data) => {
-     console.log(data);
+    socket.on("employeeNotification", (data) => {
+     setEmployeeNotification(data.notification)
+     setEmployeeNotificationLength(data.unRead)
     });
+    socket.on("myNewEmployeeNotification",(data)=>{
+      console.log(data);
+      notification.info({
+        message: `${moment(data.createdAt).fromNow()}`,
+        description: `${data.text}`,
+        duration: 15,
+      });
+    })
     socket.on(SocketEvent.NOTIFICATION, (data) => {
       setNotification(data.notfication);
       setNotificationLength(data.unRead);
@@ -140,7 +157,12 @@ function App() {
       console.log("USERLISTNOTIFICATION", data.notification);
     });
     socket.on("myNewNotification", (data) => {
-      message.info(`${data.text}`, 20);
+     
+      notification.info({
+        message: `${moment(data.createdAt).fromNow()}`,
+        description: `${data.text}`,
+        duration: 15,
+      });
       console.log(data);
     });
     if (user && user.role == 2) {
@@ -152,10 +174,10 @@ function App() {
       const getEmployee = async () => {
         const res = await httpGetEmployees();
         setEmployees(res);
-      }
+      };
       getEmployee();
     }
-    
+
     const getService = async () => {
       const res = await httpGetAllService();
       setService(res);

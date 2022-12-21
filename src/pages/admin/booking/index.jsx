@@ -58,12 +58,13 @@ const ListBooking = (props) => {
   const [girl, setGirl] = useState(false);
   const [loading, setLoading] = useState(false);
   const [titleModal, setTitleModal] = useState("Xác nhận");
-  const [page, setPage] = useState(true);
+  const [page, setPage] = useState(localStorage.getItem("Idback") == undefined ? true : false);
   const [handleBooking, setHandleBooking] = useState();
   const [ishouse, setIsHouse] = useState();
   const [voucher, setVoucher] = useState();
   const [ishouseNoneBlock, setIsHouseNoneBlock] = useState();
   const [timeUpdate, setTimeUpdate] = useState();
+  const [nonePage, setNonePage] = useState();
   const [bookingPrice, setBookingPirce] = useState();
   const [booking, setBooking] = useState();
   const [dateUpdate, setDateUpdate] = useState();
@@ -445,6 +446,11 @@ const ListBooking = (props) => {
         text
       ),
   });
+
+const handleChangeStatus = async () => {
+  await setNonePage(true)
+  console.log(nonePage);
+} 
 
   const getColumnSearchTime = (dataIndex) => ({
     filterDropdown: ({
@@ -874,6 +880,7 @@ const ListBooking = (props) => {
             className="selectChangeSatus"
             style={{ width: "150px", color: "blue", textAlign: "center" }}
             value="Đổi trạng thái"
+            onClick={handleChangeStatus}
           >
             <Option value="1">
               {" "}
@@ -1249,6 +1256,17 @@ const ListBooking = (props) => {
             services: res
           });
           message.success("Sửa thông tin thành công cho khách hàng " + handleBooking?.name)
+          if (handleBooking.userId) {
+            const notification = {
+              id: handleBooking._id,
+              notificationType: "user",
+              text: "Thông tin lịch spa của bạn đã được cập nhật.",
+              from: user.id,
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
+          }
         } catch (error) {
           message.error(`${error.response.data.message}`);
         }
@@ -1502,7 +1520,6 @@ const ListBooking = (props) => {
   const getEle = async () => {
     const idback = localStorage.getItem("Idback")
     if (idback) {
-      
       const element = await document.getElementsByClassName(idback)
       console.log(element);
       if (element) {
@@ -1512,8 +1529,13 @@ const ListBooking = (props) => {
       setPage(false)  
       localStorage.removeItem("Idback") 
       setTimeout(() => {
-        element[0].style.display = "none";
-        setPage(true)
+        console.log(nonePage);
+        if(nonePage == true) {
+          alert()
+        }else{
+          element[0].style.display = "none";
+          setPage(true)
+        }
       }, 5000);
     }
   }

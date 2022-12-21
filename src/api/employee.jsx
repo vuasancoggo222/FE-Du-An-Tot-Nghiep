@@ -43,13 +43,9 @@ export const employeeOrderStatistics = (month, year) => {
   return instance.get(url, header);
 };
 
-export const employeeStatistics = (id, month, year, token) => {
+export const employeeStatistics = (id, month, year) => {
   console.log(month, year);
-    header = {
-      headers: {
-        Authorization: `${token}`,
-      },
-    };
+ 
   let url;
   if (month == undefined && year == undefined) {
     url = `statistics-for-employee/${id}`;

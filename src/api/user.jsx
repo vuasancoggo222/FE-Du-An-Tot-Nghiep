@@ -32,12 +32,12 @@ export const getProfile = (token) => {
 };
 export const updateProfile = (token, data) => {
   const url = `/user/my-profile/edit`;
-  const header = {
+  const header2 = {
     headers: {
       Authorization: `${token}`,
     },
   };
-  return instance.put(url, data, header);
+  return instance.put(url, data,header2);
 };
 export const changeAccountStatus = (phoneNumber, status, token) => {
   const url = `change-account-status?phone=${phoneNumber}&status=${status}`;

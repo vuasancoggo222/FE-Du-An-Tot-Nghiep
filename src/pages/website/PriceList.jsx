@@ -53,7 +53,6 @@ const PriceList = () => {
               qua.
             </p>
             <p className="text-base">Trân trọng.</p>
-           
           </div>
           <p className="ml-2 font-bold text-base">BẢNG GIÁ DỊCH VỤ</p>
           <div className="overflow-x-auto">
@@ -74,12 +73,12 @@ const PriceList = () => {
                   className="flex ml-2 my-2 border-b-[1px] border-[#ccc]"
                   key={index}
                 >
-                  <strong className="w-[15%] sm:w-[10%] pl-2 text-base">
+                  <strong className="w-[15%] sm:w-[10%] pl-2 text-sm">
                     {index + 1}
                   </strong>
                   <Link
                     to={`/detail-booking/${item?.slug}`}
-                    className="text-black w-[70%] text-base hover:text-[#036636] font-bold"
+                    className="text-black w-[70%] text-base hover:text-[#036636] font-semibold"
                   >
                     {" "}
                     {item?.name}{" "}

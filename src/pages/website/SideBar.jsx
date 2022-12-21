@@ -31,7 +31,9 @@ const SideBar = () => {
         <h2 className="bg-[#00502B] text-white text-[24px] font-bold text-center mb-0 rounded-tr-2xl rounded-tl-2xl py-2">
           Thời gian làm việc
         </h2>
-        <h2 className="text-[#00502B] text-[28px] font-bold">7H00 - 19H00</h2>
+        <h2 className="text-[#00502B] text-[28px] font-bold mt-2">
+          7H00 - 19H00
+        </h2>
         <p className="text-[22px]">
           Từ <strong>thứ 2</strong> đến <strong>Chủ nhật</strong>
         </p>

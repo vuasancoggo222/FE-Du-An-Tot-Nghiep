@@ -1,14 +1,4 @@
-import {
-  Button,
-  Form,
-  Input,
-  Upload,
-  Select,
-  message,
-  Row,
-  Col,
-  InputNumber,
-} from "antd";
+import { Button, Form, Input, Upload, Select, message, Row, Col } from "antd";
 import React, { useState } from "react";
 import { httpAddEmployees } from "../../../api/employee";
 import { InboxOutlined } from "@ant-design/icons";
@@ -33,7 +23,7 @@ const AddEmployee = () => {
     console.log(data);
     var res = await httpAddEmployees(data);
     if (res._id !== undefined) {
-      message.success("Update employee success", 4);
+      message.success("Thêm nhân viên thành công !", 4);
       navigate("/admin/employee");
     }
   };
@@ -46,7 +36,7 @@ const AddEmployee = () => {
     try {
       const res = await uploadCloudinary(formData);
       onSuccess("Ok");
-      message.success("Upload successfully !");
+      message.success("Upload ảnh thành công !");
       setUrl(res.data.secure_url);
     } catch (err) {
       onError({ err });
@@ -68,10 +58,10 @@ const AddEmployee = () => {
       const accept = ["image/png", "image/jpeg", "image/jpg"];
 
       if (file.size > 1024 * 1024 * 2) {
-        message.error(`file quá lớn`);
+        message.error(`File quá lớn`);
         return Upload.LIST_IGNORE;
       } else if (!accept.includes(file.type)) {
-        message.error(`không đúng định dạng ảnh (png,jpeg,jpg)`);
+        message.error(`Không đúng định dạng ảnh (png,jpeg,jpg)`);
         return Upload.LIST_IGNORE;
       }
     },
@@ -134,7 +124,11 @@ const AddEmployee = () => {
               },
             ]}
           >
-            <InputNumber placeholder="Số điện thoại" style={{ width: "30%" }} />
+            <Input
+              type="text"
+              placeholder="Số điện thoại"
+              style={{ width: "30%" }}
+            />
           </Form.Item>
           {/* Password */}
           <Form.Item
@@ -160,7 +154,8 @@ const AddEmployee = () => {
               },
             ]}
           >
-            <InputNumber
+            <Input
+              type="text"
               placeholder="Căn cước công dân"
               className="width-input width-input"
             />

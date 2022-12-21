@@ -52,12 +52,8 @@ export const userHistory = (id) => {
 // const httpDelete = (endpoint, id) => {
 //   return instance.delete(`${endpoint}/${id}`);
 // };
-export const bookingForEmployee = (token) => {
-  const header = {
-    headers: {
-      Authorization: `${token}`,
-    },
-  };
+export const bookingForEmployee = () => {
+  
   return instance.get(`/booking-employee-list/${user.employeeId}`,header)
 }
 export {

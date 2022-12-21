@@ -114,7 +114,7 @@ const BookingPage = () => {
           services: servicePicked,
           bookingPrice,
         },
-        user?.id ?? ""
+        user?.id
       );
       const newNotification = {
         id: response._id,

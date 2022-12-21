@@ -58,6 +58,7 @@ const ListBooking = (props) => {
   const [girl, setGirl] = useState(false);
   const [loading, setLoading] = useState(false);
   const [titleModal, setTitleModal] = useState("Xác nhận");
+  const [page, setPage] = useState(localStorage.getItem("Idback") == undefined ? true : false);
   const [handleBooking, setHandleBooking] = useState();
   const [ishouse, setIsHouse] = useState();
   const [voucher, setVoucher] = useState();
@@ -573,6 +574,7 @@ const ListBooking = (props) => {
         idBooking = e.target.offsetParent.getAttribute("dataId");
         show = e.target.offsetParent.getAttribute("isshow");
       }
+      localStorage.setItem("nonePage", "true")
       let count = 0;
       let isBooking;
       // eslint-disable-next-line react/prop-types
@@ -636,7 +638,7 @@ const ListBooking = (props) => {
       } else if (isButon === "5") {
         setTitleModal("Thông tin");
       } else if (isButon === "6") {
-        setTitleModal("Sửa lịch đến");
+        setTitleModal("Sửa thông tin");
       }
 
       if (isButon == 1) {
@@ -673,6 +675,16 @@ const ListBooking = (props) => {
       setBooking(res);
     };
     changeStatus();
+    if (localStorage.getItem("nonePage")) {
+      // window.scroll({
+      //   top: 220,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // })
+      
+      setPage(true)
+      localStorage.removeItem("nonePage") 
+    }
 
   };
   const renderTime = (value) => {
@@ -873,6 +885,7 @@ const ListBooking = (props) => {
             className="selectChangeSatus"
             style={{ width: "150px", color: "blue", textAlign: "center" }}
             value="Đổi trạng thái"
+
           >
             <Option value="1">
               {" "}
@@ -939,7 +952,6 @@ const ListBooking = (props) => {
                   } else if (item.status == 2) {
                     return;
                   } else {
-                    localStorage.setItem("Idback", item._id.slice(-6, item._id.length))
                     await props.handleToEmployee(item.employeeId._id, item._id);
                     navigate("/admin/booking/employee");
                   }
@@ -969,7 +981,7 @@ const ListBooking = (props) => {
                   width: "100%",
                 }}
               >
-                Sửa lịch đến
+                Sửa thông tin
               </Button>
             </Option>
             <Option value="5">
@@ -1105,6 +1117,7 @@ const ListBooking = (props) => {
               return
             }
           }
+
           console.log(handleBooking);
           await httpGetChangeStatus(handleBooking._id, {
             ...data,
@@ -1206,17 +1219,53 @@ const ListBooking = (props) => {
         }
       }
       else if (ishandle === "6") {
+        let res = "";
+        if (!data.services[0].lable) {
+          res = data.services.map((item) => {
+            let price;
+            props.dataService?.map((current) => {
+              if (current._id == item) {
+                price = current.price;
+              }
+            });
+            return {
+              serviceId: item,
+              price: price,
+            };
+          });
+        } else {
+          res = data.services.map((item) => {
+            let price;
+            props.dataService?.map((current) => {
+              if (current._id == item.value) {
+                price = current.price;
+              }
+            });
+            return {
+              serviceId: item.value,
+              price: price,
+            };
+          });
+        }
+        for (let i = 0; i < res.length; i++) {
+          const result = await httpGetOneService(res[0].serviceId);
+          if (result.status != 1) {
+            message.error("Có dịch vụ đã tạm dừng kinh doanh")
+            return
+          }
+        }
         try {
           await httpGetChangeStatus(handleBooking._id, {
             date: dateUpdate,
-            time: timeUpdate
+            time: timeUpdate,
+            services: res
           });
-          message.success("Sửa lịch đến thành công cho khách hàng " + handleBooking?.name)
+          message.success("Sửa thông tin thành công cho khách hàng " + handleBooking?.name)
           if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Lịch đến của bạn đã được cập nhật.",
+              text: "Thông tin lịch spa của bạn đã được cập nhật.",
               from: user.id,
               userId: handleBooking.userId._id,
             };
@@ -1472,6 +1521,7 @@ const ListBooking = (props) => {
       id: item._id.slice(-6, item._id.length)
     };
   });
+
   const getEle = async () => {
     const idback = localStorage.getItem("Idback")
     if (idback) {
@@ -1481,10 +1531,21 @@ const ListBooking = (props) => {
         element[0].style.display = "block";
         element[0].scrollIntoView({ behavior: "smooth" });
       }
+      setPage(false)
+      localStorage.removeItem("Idback") 
       setTimeout(() => {
-        element[0].style.display = "none";
-        localStorage.removeItem("Idback")
-      }, 7000);
+        if (localStorage.getItem("nonePage")) {
+         return
+        }else{
+          window.scroll({
+            top: 220,
+            left: 0,
+            behavior: 'smooth'
+          })
+          element[0].style.display = "none";
+          setPage(true)
+        }
+      }, 5000);
     }
   }
   getEle()
@@ -1532,8 +1593,9 @@ const ListBooking = (props) => {
           >
             + Thêm khách đến trực tiếp
           </Button>
+          {page}
         </div>
-        <Table pagination={false} className="mt-5" columns={columns} dataSource={datatable} />;
+        <Table pagination={page} className="mt-5" columns={columns} dataSource={datatable} />;
         <Modal
           footer={null}
           style={{ fontFamily: "revert-layer" }}
@@ -1672,7 +1734,7 @@ const ListBooking = (props) => {
                 allowClear
                 placeholder="Dịch vụ"
                 onChange={handleChange}
-                disabled={ishandle == 1 ? false : true}
+                disabled={ishandle == 1 || ishandle == 6 ? false : true}
               >
                 {props.dataService?.map((item, index) => {
                   if (item.status == 1) {

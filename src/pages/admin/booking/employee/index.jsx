@@ -20,6 +20,7 @@ const ListBookingByEmployee = (props) => {
     const [titleModal, setTitleModal] = useState("");
     const [fillerMonth, setFillterMonth] = useState("");
     const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(true);
     const [fillterYear, setFillterYear] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
@@ -27,17 +28,7 @@ const ListBookingByEmployee = (props) => {
     const [employeeIdFromAdmin, setEmployeeIdFromAdmin] = useState('')
     const [booking, setBooking] = useState();
     const user = isAuthenticate()
-    // eslint-disable-next-line react/prop-types
-    // eslint-disable-next-line react/prop-types
-    // eslint-disable-next-line react/prop-types
-
-
-
-    // eslint-disable-next-line react/prop-types
-
-    // eslint-disable-next-line react/prop-types
-
-    // eslint-disable-next-line react/prop-types
+    
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -61,7 +52,7 @@ const ListBookingByEmployee = (props) => {
         }
         return time
     }
-
+    
     const renderDate = (value) => {
         const d = new Date(value)
         let date = d.getDate();
@@ -604,7 +595,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(user.employeeId || employeeIdFromAdmin, month, year, user.token);
+            const res = await employeeStatistics(employee?._id  || employeeIdFromAdmin, month, year, user.token);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -619,7 +610,7 @@ const ListBookingByEmployee = (props) => {
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(user.employeeId || employeeIdFromAdmin, undefined, year, user.token);
+            const res = await employeeStatistics(employee?._id  || employeeIdFromAdmin, undefined, year, user.token);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
@@ -628,7 +619,6 @@ const ListBookingByEmployee = (props) => {
     }
 
     useEffect(() => {
-
         setLoading(true)
         const adminLogin = async () => {
             let res
@@ -640,9 +630,11 @@ const ListBookingByEmployee = (props) => {
                 setEmployee(res)
                 // eslint-disable-next-line react/prop-types
                 setEmployeeIdFromAdmin(props.dataAdminLogin)
+                setPage(false)
             }
             // eslint-disable-next-line react/prop-types
-            const data = await employeeStatistics(user.employeeId || props.dataAdminLogin, undefined, undefined, user.token)
+            const data = await employeeStatistics(props.dataAdminLogin == undefined ? user.employeeId : props.dataAdminLogin, undefined, undefined, user.token)
+            setEmpoyeeStatic(data)
             console.log(data);
             const hightlight = async () => {
                 // eslint-disable-next-line react/prop-types
@@ -652,7 +644,14 @@ const ListBookingByEmployee = (props) => {
                     if (highlight != undefined) {
                         highlight[0].style.display = "block";
                         highlight[0].scrollIntoView({ behavior: "smooth" });
+                        // eslint-disable-next-line react/prop-types
+                        localStorage.setItem("Idback",props.dataBookingId.slice(-6, props.dataBookingId.length)) 
                     }
+                }else{
+                    setPage(true)
+                    const res = {...user, _id: user.employeeId}
+                    console.log(res);
+                    setEmployee(res)
                 }
             }
             hightlight()
@@ -860,7 +859,7 @@ const ListBookingByEmployee = (props) => {
                 {/* card4 */}
 
             </div>
-            <Table pagination={false} className="mt-5" columns={columns} dataSource={datatable} />;
+            <Table pagination={page} className="mt-5" columns={columns} dataSource={datatable} />;
 
             <Modal footer={null} style={{ fontFamily: "revert-layer" }} title={titleModal} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <p>Tên Khách hàng: {handleBooking?.name}</p>

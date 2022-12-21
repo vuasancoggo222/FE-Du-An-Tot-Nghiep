@@ -10,7 +10,7 @@ import {
   servicesStatistic,
   turnoverServicesMonth,
 } from "../../api/services";
-import { userAccountStatistics } from "../../api/user";
+import { httpGetTopUser, userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
 const Dashboard = () => {
@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [service, setService] = useState();
   const [acCount, setaccCount] = useState();
   const [loading, setLoading] = useState(false);
+  const [topUser, setTopUser] = useState();
   const [turnover, setTurnover] = useState();
   const [ageByService, setAgeByService] = useState();
   const [genderByService, setGenderByService] = useState();
@@ -32,7 +33,7 @@ const Dashboard = () => {
   // const [dataChartService, setDataChartService] = useState();
   const [chartYear, setChartYear] = useState(moment().format("YYYY"));
   const [isChart, setIsChart] = useState("turnover");
-  
+
   function formatCash(str) {
     const string = str.toString();
     return string
@@ -110,9 +111,8 @@ const Dashboard = () => {
   const countCustomerByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (item.employeeId != undefined) {
@@ -214,9 +214,8 @@ const Dashboard = () => {
   const countCustomerSpaIngByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (
@@ -233,9 +232,8 @@ const Dashboard = () => {
   const countCustomerSpaSuccessByEmployee = (idEmployee) => {
     let coutn = 0;
     const thisday = new Date();
-    const today = `${thisday.getFullYear()}-${
-      thisday.getMonth() + 1
-    }-${thisday.getDate()}`;
+    const today = `${thisday.getFullYear()}-${thisday.getMonth() + 1
+      }-${thisday.getDate()}`;
     booking?.forEach((item) => {
       let dayItem = renderDate(item.date);
       if (
@@ -337,6 +335,25 @@ const Dashboard = () => {
       });
     }
   };
+
+  const newFilterService = async () => {
+    setLoading(true)
+    const res = await servicesStatistic();
+    await setService(res);
+    setServiceFilter("");
+    setServiceFilterMonth("");
+    setLoading(false)
+  }
+
+  const newFilterEmployee= async () => {
+    setLoading(true)
+    const res = await employeeOrderStatistics(undefined, undefined);
+    setEmployees(res);
+    setEmployeeFilterYear("");
+    setEmployeeFilterMonth("");
+    setLoading(false)
+  }
+
   useEffect(() => {
     const getBooking = async () => {
       const res = await httpGetAll();
@@ -345,6 +362,15 @@ const Dashboard = () => {
       // setDataChartFirst(arrData);
     };
     getBooking();
+
+    const getUserTop = async () => {
+      const res = await httpGetTopUser();
+      await setTopUser(res);
+      console.log(res);
+      // setTatalChartBefor(countBefor);
+      // setDataChartFirst(arrData);
+    };
+    getUserTop();
 
     const getAgeByService = async () => {
       const res = await groupAgeByService();
@@ -406,7 +432,7 @@ const Dashboard = () => {
     getServicesStatistic();
 
     const getAccount = async () => {
-      const res = await userAccountStatistics();message.error
+      const res = await userAccountStatistics(); message.error
       await setaccCount(res);
     };
     getAccount();
@@ -414,11 +440,11 @@ const Dashboard = () => {
     const getEmployee = async () => {
       try {
         const res = await employeeOrderStatistics(undefined, undefined);
-        setEmployees(res); 
+        setEmployees(res);
       } catch (error) {
         message.error(`${error.response.data.message}`);
       }
-      
+
     };
     getEmployee();
 
@@ -452,9 +478,9 @@ const Dashboard = () => {
             {" "}
             Thống kê{" "}
             {
-               chartYear != ""
-              ? chartYear
-              : "tất cả thời gian"}
+              chartYear != ""
+                ? chartYear
+                : "tất cả thời gian"}
           </span>
           <Button
             onClick={() => {
@@ -481,7 +507,7 @@ const Dashboard = () => {
           />
         </div>{" "}
         <br />
-      
+
         <div className="flex flex-wrap -mx-3 mt-3">
           {/* card1 */}
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
@@ -746,13 +772,13 @@ const Dashboard = () => {
                     {employeeFilterMonth != ""
                       ? employeeFilterMonth
                       : employeeFilterYear != ""
-                      ? employeeFilterYear
-                      : "tất cả thời gian"}
+                        ? employeeFilterYear
+                        : "tất cả thời gian"}
                   </span>
                 </h6>
                 <Button
                   onClick={() => {
-                    setEmployeeFilterMonth(""), setEmployeeFilterYear("");
+                    newFilterEmployee()
                   }}
                   style={{
                     float: "right",
@@ -807,7 +833,7 @@ const Dashboard = () => {
                           style={{
                             display:
                               employeeFilterDate ==
-                              moment().format("YYYY-MM-DD")
+                                moment().format("YYYY-MM-DD")
                                 ? "block"
                                 : "none",
                           }}
@@ -861,7 +887,7 @@ const Dashboard = () => {
                               style={{
                                 display:
                                   employeeFilterDate ==
-                                  moment().format("YYYY-MM-DD")
+                                    moment().format("YYYY-MM-DD")
                                     ? ""
                                     : "none",
                               }}
@@ -882,7 +908,7 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                moment().format("YYYY-MM-DD")
+                                  moment().format("YYYY-MM-DD")
                                   ? countCustomerByEmployee(item._id)
                                   : item.finished}
                               </span>
@@ -890,18 +916,18 @@ const Dashboard = () => {
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                moment().format("YYYY-MM-DD")
+                                  moment().format("YYYY-MM-DD")
                                   ? countCustomerSpaIngByEmployee(item._id)
                                   : item.turnover.toLocaleString("vi", {
-                                      style: "currency",
-                                      currency: "VND",
-                                    })}
+                                    style: "currency",
+                                    currency: "VND",
+                                  })}
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
-                                moment().format("YYYY-MM-DD") ? (
+                                  moment().format("YYYY-MM-DD") ? (
                                   countCustomerSpaSuccessByEmployee(item._id)
                                 ) : (
                                   <div className="flex items-center justify-center">
@@ -909,21 +935,20 @@ const Dashboard = () => {
                                       {item.percentage == null
                                         ? 0
                                         : item.percentage
-                                            ?.toString()
-                                            .substring(0, 5)}
+                                          ?.toString()
+                                          .substring(0, 5)}
                                       %
                                     </span>
                                     <div>
                                       <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                         <div
                                           style={{
-                                            width: `${
-                                              item.percentage == null
+                                            width: `${item.percentage == null
                                                 ? 0
                                                 : item.percentage
-                                                    ?.toString()
-                                                    .substring(0, 5)
-                                            }%`,
+                                                  ?.toString()
+                                                  .substring(0, 5)
+                                              }%`,
                                             backgroundColor: colorbyRevenue(),
                                           }}
                                           className="flex flex-col justify-center h-auto overflow-hidden "
@@ -932,8 +957,8 @@ const Dashboard = () => {
                                             item.percentage == null
                                               ? 0
                                               : item.percentage
-                                                  ?.toString()
-                                                  .substring(0, 5)
+                                                ?.toString()
+                                                .substring(0, 5)
                                           }
                                           aria-valuemin={0}
                                           aria-valuemax={100}
@@ -978,8 +1003,8 @@ const Dashboard = () => {
                     {serviceFilter != ""
                       ? ` ${serviceFilter}`
                       : serviceFilterMonth != ""
-                      ? serviceFilterMonth
-                      : "tất cả thời gian"}
+                        ? serviceFilterMonth
+                        : "tất cả thời gian"}
                   </span>{" "}
                   <br />
                   <span style={{ color: "red", fontSize: "16px" }}>
@@ -989,7 +1014,7 @@ const Dashboard = () => {
                 </h6>{" "}
                 <Button
                   onClick={() => {
-                    setServiceFilter(""), setServiceFilterMonth("");
+                    newFilterService()
                   }}
                   style={{
                     float: "right",
@@ -1113,19 +1138,18 @@ const Dashboard = () => {
                                   {item.percentage == null
                                     ? 0
                                     : item.percentage
-                                        .toString()
-                                        .substring(0, 5)}
+                                      .toString()
+                                      .substring(0, 5)}
                                   %
                                 </span>
                                 <div>
                                   <div className="text-xs h-0.75 w-30 m-0 flex overflow-visible rounded-lg bg-gray-200">
                                     <div
                                       style={{
-                                        width: `${
-                                          item.percentage == null
+                                        width: `${item.percentage == null
                                             ? 0
                                             : item.percentage
-                                        }%`,
+                                          }%`,
                                         backgroundColor: colorbyRevenue(),
                                       }}
                                       className="flex flex-col justify-center h-auto overflow-hidden "
@@ -1141,6 +1165,142 @@ const Dashboard = () => {
                                   </div>
                                 </div>
                               </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                {/* <div style={{ width: "50%", marginLeft: "25%" }} className="flex-auto p-4 mt-3">
+                  <canvas id="chartService" ></canvas>
+                </div> */}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap -mx-3">
+          <div className="flex-none w-full max-w-full px-3">
+            <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+              <div className="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+                <h6
+                  style={{
+                    float: "left",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  className="dark:text-white"
+                >
+                  Top khách hàng thân quen{" "}
+
+                  <br />
+                  <span style={{ color: "red", fontSize: "16px" }}>
+                    {" "}
+                    {/* Tổng {totalTurnover()} */}
+                  </span>{" "}
+                </h6>{" "}
+
+              </div>
+              <div className=" px-0 pt-0 pb-2 ">
+                <div className="p-0 overflow-x-auto">
+                  <table className="items-center justify-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
+                    <thead className="align-bottom">
+                      <tr>
+                        <th className="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Thông tin
+                        </th>
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Số điện thoại
+                        </th>
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Tuổi
+                        </th>
+
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Giới tính
+                        </th>
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Địa chỉ
+                        </th>
+                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Số lượt Spa
+                        </th>
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                          Trạng thái tài khoản
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="border-t">
+                      {topUser?.map((item) => {
+                        if (item._id == "637e321c347223cf109f85e3") {
+                          return
+                        }
+                        return (
+                          // eslint-disable-next-line react/jsx-key
+                          <tr
+                            style={{
+                              backgroundColor:
+                                item.status == 1 ? "" : "#f4f4f4",
+                            }}
+                          >
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <div className="flex px-2">
+                                <div>
+                                  <img
+                                    src={item.avatar}
+                                    className="inline-flex items-center justify-center mr-2 text-sm text-white transition-all duration-200 ease-in-out rounded-full h-9 w-9"
+                                    alt="spotify"
+                                  />
+                                </div>
+                                <div className="my-auto">
+                                  <h6 className="mb-0 text-sm leading-normal dark:text-white">
+                                    {item.name}
+                                  </h6>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
+                                {item.phoneNumber}
+                              </p>
+                            </td> 
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
+                                {item.age}
+                              </p>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
+                              {item.gender == 0 ? "Nam" : "Nữ"}
+                              </p>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
+                              {item.address}
+                              </p>
+                            </td>
+
+                            
+                            <td
+                              id="totalserviceID"
+                              className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                            >
+                              {item.usedQuantity}
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <span
+                                style={{
+                                  color:
+                                    item.status == 1
+                                      ? "#a0d911"
+                                      : "#b83a1b",
+                                }}
+                                className="  text-xs font-semibold leading-tight dark:text-white dark:opacity-60"
+                              >
+                                {item.status == 1
+                                  ? "Hoạt động"
+                                  : "Khóa"}
+                              </span>
                             </td>
                           </tr>
                         );

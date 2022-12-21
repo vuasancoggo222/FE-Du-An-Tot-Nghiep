@@ -668,7 +668,7 @@ const ListBookingByEmployee = (props) => {
         setLoading(false)
 
         // eslint-disable-next-line react/prop-types
-    }, [props.dataBooking])
+    }, [props.dataBooking, booking])
     return <Spin Spin spinning={loading} style={{
         position: "fixed",
         top: "25%",

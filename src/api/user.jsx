@@ -21,6 +21,9 @@ export const register = (values) => {
 export const httpGetAllUser = () => {
   return instance.get(`users`,header);
 };
+export const httpGetTopUser = () => {
+  return instance.get(`users/loyal-customer`);
+};
 export const getProfile = (token) => {
   const url = `/user/my-profile`;
   const header2 = {

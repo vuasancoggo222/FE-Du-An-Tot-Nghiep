@@ -13,7 +13,6 @@ import {
 import { userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
-import { isAuthenticate } from "../../utils/LocalStorage";
 const Dashboard = () => {
   const [booking, setBooking] = useState();
   const [employees, setEmployees] = useState();
@@ -488,10 +487,10 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "turnover" ? "#525252" : "",
+                backgroundColor: isChart == "turnover" ? "#525252" : "white",
                 color: isChart == "turnover" ? "white" : "",
               }}
-              className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+              className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
               <div className="flex-auto p-4 ">
                 <div className="flex flex-row -mx-3">
@@ -508,7 +507,7 @@ const Dashboard = () => {
                       </h5>
                       <p
                         style={{
-                          color: isChart != "turnover" ? "#168ea0" : "#fbff08",
+                          color: isChart != "turnover" ? "#fbff08" : "#168ea0 ",
                         }}
                         className="mb-0 dark:texgenderBySerVicet-white dark:opacity-60"
                       >
@@ -541,10 +540,10 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "user" ? "#525252" : "",
+                backgroundColor: isChart == "user" ? "#525252" : "white",
                 color: isChart == "user" ? "white" : "",
               }}
-              className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+              className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
               <div className="flex-auto p-4">
                 <div className="flex flex-row -mx-3">
@@ -593,10 +592,10 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "genderBySerVice" ? "#525252" : "",
+                backgroundColor: isChart == "genderBySerVice" ? "#525252" : "white",
                 color: isChart == "genderBySerVice" ? "white" : "",
               }}
-              className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+              className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
               <div className="flex-auto p-4">
                 <div className="flex flex-row -mx-3">
@@ -648,10 +647,10 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "ageBySerVice" ? "#525252" : "",
+                backgroundColor: isChart == "ageBySerVice" ? "#525252" : "white",
                 color: isChart == "ageBySerVice" ? "white" : "",
               }}
-              className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+              className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
             >
               <div className="flex-auto p-4">
                 <div className="flex flex-row -mx-3">

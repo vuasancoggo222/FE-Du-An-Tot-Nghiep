@@ -32,7 +32,11 @@ const httpAddBooking = (token, data,userId) => {
   return instance.post(`booking?user=${userID}`, data, header);
 };
 const bookingAddByEmployeeApi = (data) => {
-  return instance.post(`bookingAddByEmployee`, data,header); 
+  let userID = ""
+  if(!userID){
+    userID = "637e321c347223cf109f85e3"
+  }
+  return instance.post(`bookingAddByEmployee?user${userID}`, data,header); 
 };
 const httpGetOne = (id) => {
   return instance.get(`booking/${id}`,header);

@@ -11,6 +11,8 @@ import Formcomment from "../../components/clients/comment";
 import { generateCaptcha } from "../../utils/GenerateCaptcha";
 import { signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase/config";
+import { socket } from "../../App";
+import { SocketEvent } from "../../utils/SocketConstant";
 const Detaibooking = (props) => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -40,13 +42,19 @@ const Detaibooking = (props) => {
       .then(async (result) => {
         console.log(result._tokenResponse.idToken);
         const token = result._tokenResponse.idToken;
-        await httpAddBooking(token, {
+        const response = await httpAddBooking(token, {
           ...formData,
           services: { serviceId: service._id, price: service.price },
           bookingPrice: service.price,
           status: 0,
         });
+        const newNotification = {
+          id: response._id,
+          type: "admin",
+          text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
+        };
         message.success("Đặt lịch thành công", 2);
+        socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);
         navigate("/");
       })
       .catch((error) => {

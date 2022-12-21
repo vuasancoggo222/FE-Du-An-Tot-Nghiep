@@ -124,7 +124,6 @@ const ListBookingByEmployee = (props) => {
 
     // eslint-disable-next-line no-unused-vars
     const handleOk = async (data) => {
-        alert(data.note)
         if (ishandle === "5") {
             setIsModalOpen(false);
             return
@@ -134,16 +133,16 @@ const ListBookingByEmployee = (props) => {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3, note: data.note })
                 message.success(`Chờ thanh toán "${handleBooking.name}"`)
-                const res = await httpGetAll()
-                setBooking(res)
                 const notification = {
                     id: handleBooking._id,
                     notificationType: "admin",
-                    text: `Nhân viên ${user.name} đã hoàn thành đơn làm việc ${handleBooking._id}.`,
-                    from: user.id,
+                    text: `Nhân viên ${user.name} đã hoàn thành đơn làm việc khách hàng ${handleBooking.name},vui lòng thanh toán.`,
                 };
+                console.log('abc');
                 socket.emit(SocketEvent.NEWNOTIFICATION, notification);
                 socket.off(SocketEvent.NEWNOTIFICATION);
+                const res = await httpGetAll()
+                setBooking(res)
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }

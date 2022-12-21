@@ -1212,6 +1212,17 @@ const ListBooking = (props) => {
             time: timeUpdate
           });
           message.success("Sửa lịch đến thành công cho khách hàng " + handleBooking?.name)
+          if (handleBooking.userId) {
+            const notification = {
+              id: handleBooking._id,
+              notificationType: "user",
+              text: "Lịch đến của bạn đã được cập nhật.",
+              from: user.id,
+              userId: handleBooking.userId._id,
+            };
+            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+            socket.off(SocketEvent.NEWUSERNOTIFICATION);
+          }
         } catch (error) {
           message.error(`${error.response.data.message}`);
         }

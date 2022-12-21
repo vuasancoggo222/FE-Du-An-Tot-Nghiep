@@ -64,7 +64,6 @@ const ListBooking = (props) => {
   const [voucher, setVoucher] = useState();
   const [ishouseNoneBlock, setIsHouseNoneBlock] = useState();
   const [timeUpdate, setTimeUpdate] = useState();
-  const [nonePage, setNonePage] = useState();
   const [bookingPrice, setBookingPirce] = useState();
   const [booking, setBooking] = useState();
   const [dateUpdate, setDateUpdate] = useState();
@@ -447,11 +446,6 @@ const ListBooking = (props) => {
       ),
   });
 
-const handleChangeStatus = async () => {
-  await setNonePage(true)
-  console.log(nonePage);
-} 
-
   const getColumnSearchTime = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -580,6 +574,7 @@ const handleChangeStatus = async () => {
         idBooking = e.target.offsetParent.getAttribute("dataId");
         show = e.target.offsetParent.getAttribute("isshow");
       }
+      localStorage.setItem("nonePage", "true")
       let count = 0;
       let isBooking;
       // eslint-disable-next-line react/prop-types
@@ -680,6 +675,16 @@ const handleChangeStatus = async () => {
       setBooking(res);
     };
     changeStatus();
+    if (localStorage.getItem("nonePage")) {
+      // window.scroll({
+      //   top: 220,
+      //   left: 0,
+      //   behavior: 'smooth'
+      // })
+      
+      setPage(true)
+      localStorage.removeItem("nonePage") 
+    }
 
   };
   const renderTime = (value) => {
@@ -880,7 +885,7 @@ const handleChangeStatus = async () => {
             className="selectChangeSatus"
             style={{ width: "150px", color: "blue", textAlign: "center" }}
             value="Đổi trạng thái"
-            onClick={handleChangeStatus}
+
           >
             <Option value="1">
               {" "}
@@ -1112,7 +1117,7 @@ const handleChangeStatus = async () => {
               return
             }
           }
-          
+
           console.log(handleBooking);
           await httpGetChangeStatus(handleBooking._id, {
             ...data,
@@ -1215,40 +1220,40 @@ const handleChangeStatus = async () => {
       }
       else if (ishandle === "6") {
         let res = "";
-          if (!data.services[0].lable) {
-            res = data.services.map((item) => {
-              let price;
-              props.dataService?.map((current) => {
-                if (current._id == item) {
-                  price = current.price;
-                }
-              });
-              return {
-                serviceId: item,
-                price: price,
-              };
+        if (!data.services[0].lable) {
+          res = data.services.map((item) => {
+            let price;
+            props.dataService?.map((current) => {
+              if (current._id == item) {
+                price = current.price;
+              }
             });
-          } else {
-            res = data.services.map((item) => {
-              let price;
-              props.dataService?.map((current) => {
-                if (current._id == item.value) {
-                  price = current.price;
-                }
-              });
-              return {
-                serviceId: item.value,
-                price: price,
-              };
+            return {
+              serviceId: item,
+              price: price,
+            };
+          });
+        } else {
+          res = data.services.map((item) => {
+            let price;
+            props.dataService?.map((current) => {
+              if (current._id == item.value) {
+                price = current.price;
+              }
             });
+            return {
+              serviceId: item.value,
+              price: price,
+            };
+          });
+        }
+        for (let i = 0; i < res.length; i++) {
+          const result = await httpGetOneService(res[0].serviceId);
+          if (result.status != 1) {
+            message.error("Có dịch vụ đã tạm dừng kinh doanh")
+            return
           }
-          for (let i = 0; i < res.length; i++) {
-            const result = await httpGetOneService(res[0].serviceId);
-            if (result.status != 1) {
-              message.error("Có dịch vụ đã tạm dừng kinh doanh")
-              return
-            }
-          }
+        }
         try {
           await httpGetChangeStatus(handleBooking._id, {
             date: dateUpdate,
@@ -1526,13 +1531,17 @@ const handleChangeStatus = async () => {
         element[0].style.display = "block";
         element[0].scrollIntoView({ behavior: "smooth" });
       }
-      setPage(false)  
+      setPage(false)
       localStorage.removeItem("Idback") 
       setTimeout(() => {
-        console.log(nonePage);
-        if(nonePage == true) {
-          alert()
+        if (localStorage.getItem("nonePage")) {
+         return
         }else{
+          window.scroll({
+            top: 220,
+            left: 0,
+            behavior: 'smooth'
+          })
           element[0].style.display = "none";
           setPage(true)
         }

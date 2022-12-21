@@ -52,7 +52,7 @@ const ListBookingByEmployee = (props) => {
         }
         return time
     }
-
+    
     const renderDate = (value) => {
         const d = new Date(value)
         let date = d.getDate();
@@ -619,7 +619,6 @@ const ListBookingByEmployee = (props) => {
     }
 
     useEffect(() => {
-
         setLoading(true)
         const adminLogin = async () => {
             let res

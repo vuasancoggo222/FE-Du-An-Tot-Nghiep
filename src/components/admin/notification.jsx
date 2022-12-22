@@ -3,61 +3,58 @@ import moment from "moment";
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-employeeNotificationLengthState,
-employeeNotificationState,
-notificationLengthState,
+  notificationLengthState,
   notificationState,
   userNotificationLengthState,
   userNotificationState,
 } from "../../recoil/notificationState";
 import { isAuthenticate } from "../../utils/LocalStorage";
 import { readedNotification } from "../../api/notification";
+import { useNavigate } from "react-router-dom";
 
 const notification = () => {
   const user = isAuthenticate();
   const adminNotification = useRecoilValue(notificationState);
-  const userNotification= useRecoilValue(userNotificationState);
-  const employeeNotification = useRecoilValue(employeeNotificationState)
-  const [userNotificationUnRead,setUserNotificationUnRead] = useRecoilState(userNotificationLengthState)
-  const [adminNotificationUnRead,setAdminNotificationUnRead] = useRecoilState(notificationLengthState)
-  const [employeeNotificationUnRead,setEmployeeNotificationUnRead] = useRecoilState(employeeNotificationLengthState)
+  const userNotification = useRecoilValue(userNotificationState);
+  const [userNotificationUnRead, setUserNotificationUnRead] = useRecoilState(userNotificationLengthState)
+  const [adminNotificationUnRead, setAdminNotificationUnRead] = useRecoilState(notificationLengthState)
   const [show, setShow] = React.useState(false);
- 
+  const navigate = useNavigate()
   const onClick = () => {
     setShow(!show);
   };
   const readNotification = async (id) => {
     try {
-      const readed = await readedNotification(id,user.token)
-      message.success('Đã đọc thông báo !',4);
-      if(user.role == 2 && adminNotificationUnRead > 0){
-        const isReaded = adminNotification.find(item => item.bookingId?._id == readed.bookingId && item.readed == false)
-      if(isReaded){
+      const readed = await readedNotification(id, user.token)
+      message.success('Đã đọc thông báo !', 4);
+      console.log(adminNotification);
+      const booking = adminNotification.find((item) => {
+        return item._id == id
+      })
+      localStorage.setItem("bookingNew", booking.bookingId._id)
+      navigate("/admin/booking")
+      const res = useRecoilValue(notificationState);
+      setAdminNotificationUnRead(res)
+      console.log(booking);
+      const isReaded = adminNotification.find(item => item.bookingId?._id == readed.bookingId && item.readed == false)
+
+      if (isReaded) {
         setAdminNotificationUnRead(adminNotificationUnRead - 1)
       }
+      const isReadedUser = userNotification.find(item => item.bookingId?._id == readed.bookingId && item.readed == false)
+      if (isReadedUser) {
+        setUserNotificationUnRead(userNotificationUnRead - 1)
       }
-      else if(user.role == 0 && userNotificationUnRead > 0){
-        const isReadedUser = userNotification.find(item => item.bookingId?._id == readed.bookingId && item.readed == false)
-        if(isReadedUser){
-          setUserNotificationUnRead(userNotificationUnRead - 1)
-        }
-      }
-      else if(user.role == 1 && employeeNotificationUnRead > 0 ) {
-        const isReadEmp = employeeNotification.find(item => item.bookingId?._id == readed.bookingId && item.readed == false)
-        console.log(isReadEmp);
-        if(isReadEmp){
-          setEmployeeNotificationUnRead(employeeNotificationUnRead - 1)
-        }
-      }
+
      
     } catch (error) {
       console.log(error);
-      message.error(`${error}`,4)
+      message.error(`${error.response.message}`, 4)
     }
   }
-  return ( 
+  return (
     <>
-     {user.role == 2 ?  <li className="relative flex items-center pr-2">
+      {user.role == 2 ? <li className="relative flex items-center pr-2">
         <p className="hidden transform-dropdown-show" />
         <a
           href="javascript:;"
@@ -75,40 +72,37 @@ const notification = () => {
           </Badge>
         </a>
         <ul
-          className={`${
-            show === false ? "hidden" : ""
-          } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
+          className={`${show === false ? "hidden" : ""
+            } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
         >
-          { adminNotification && adminNotification.map((item, index) => {
-                  return (
-                    
-                    <li className="relative mb-2" key={index} onClick={() => readNotification(item._id)}>
-                     
-                      <a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">
-                        <div className="flex py-1">
-                          {/* <div className="my-auto">
+          {adminNotification && adminNotification.map((item, index) => {
+            return (
+              <li style={{backgroundColor:item.readed == true ? "white" : "#e7e7e7"}} className="relative mb-2" key={index} onClick={() => readNotification(item._id)}>
+                <a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">
+                  <div className="flex py-1">
+                    {/* <div className="my-auto">
                       <img
                         src=""
                         className="inline-flex items-center justify-center mr-4 text-sm text-white h-9 w-9 max-w-none rounded-xl"
                       />
                     </div> */}
-                          <div className="flex flex-col justify-center">
-                            <h6 className="mb-1 text-sm font-normal leading-normal dark:text-white">
-                              <p>{item.text}</p>
-                            </h6>
-                            <p className="mb-0 text-xs leading-tight text-slate-400 dark:text-white/80">
-                              <i className="mr-1 fa fa-clock" />
-                              {moment(item.createdAt).fromNow()}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  );
-                })}
+                    <div className="flex flex-col justify-center">
+                      <h6 className="mb-1 text-sm font-normal leading-normal dark:text-white">
+                        <p>{item.text}</p>
+                      </h6>
+                      <p className="mb-0 text-xs leading-tight text-slate-400 dark:text-white/80">
+                        <i className="mr-1 fa fa-clock" />
+                        {moment(item.createdAt).fromNow()}
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </li> : ""}
-      {user.role == 0 ?  <li className="relative flex items-center pr-2">
+      {user.role == 0 ? <li className="relative flex items-center pr-2">
         <p className="hidden transform-dropdown-show" />
         <a
           href="javascript:;"
@@ -126,88 +120,34 @@ const notification = () => {
           </Badge>
         </a>
         <ul
-          className={`${
-            show === false ? "hidden" : ""
-          } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
+          className={`${show === false ? "hidden" : ""
+            } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
         >
-          { userNotification && userNotification.map((item, index) => {
-                  return (
-                    <li className="relative mb-2" key={index} onClick={() => readNotification(item._id)}>
-                      
-                      <a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">
-                        <div className="flex py-1">
-                          {/* <div className="my-auto">
+          {userNotification && userNotification.map((item, index) => {
+            return (
+              <li className="relative mb-2" key={index} onClick={() => readNotification(item._id)}>
+                <a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">
+                  <div className="flex py-1">
+                    {/* <div className="my-auto">
                       <img
                         src=""
                         className="inline-flex items-center justify-center mr-4 text-sm text-white h-9 w-9 max-w-none rounded-xl"
                       />
                     </div> */}
-                          <div className="flex flex-col justify-center">
-                            <h6 className="mb-1 text-sm font-normal leading-normal dark:text-white">
-                              <p>{item.text}</p>
-                            </h6>
-                            <p className="mb-0 text-xs leading-tight text-slate-400 dark:text-white/80">
-                              <i className="mr-1 fa fa-clock" />
-                              {moment(item.createdAt).fromNow()}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  );
-                })}
-        </ul>
-      </li> : ""}
-      {user.role == 1 ?  <li className="relative flex items-center pr-2">
-        <p className="hidden transform-dropdown-show" />
-        <a
-          href="javascript:;"
-          className="block p-0 text-sm text-white transition-all ease-nav-brand"
-          aria-expanded="false"
-        >
-          <Badge
-            count={employeeNotificationUnRead}
-            overflowCount={100}
-          >
-            <i
-              className="cursor-pointer fa fa-bell text-3xl text-white"
-              onClick={onClick}
-            />
-          </Badge>
-        </a>
-        <ul
-          className={`${
-            show === false ? "hidden" : ""
-          } overflow-y-scroll max-h-96 text-sm mt-[50px] before:font-awesome before:leading-default before:duration-350 before:ease lg:shadow-3xl duration-250 min-w-44 before:sm:right-8 before:text-5.5  absolute right-0 top-0 z-50 origin-top list-none rounded-lg border-0 border-solid border-transparent dark:shadow-dark-xl dark:bg-slate-850 bg-white bg-clip-padding px-2 py-4 text-left text-slate-500 transition-all before:absolute before:right-2 before:left-auto before:top-0 before:z-50 before:inline-block before:font-normal before:text-white before:antialiased before:transition-all before:content-['\f0d8']`}
-        >
-          { employeeNotification && employeeNotification.map((item, index) => {
-                  return (
-                    <li className="relative mb-2" key={index} onClick={() => readNotification(item._id)}>
-                    
-                      <a className="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors">
-                      <span>{item.readed ? "Đã đọc" : "Chưa đọc"}</span> 
-                        <div className="flex py-1">
-                       
-                          {/* <div className="my-auto">
-                      <img
-                        src=""
-                        className="inline-flex items-center justify-center mr-4 text-sm text-white h-9 w-9 max-w-none rounded-xl"
-                      />
-                    </div> */}
-                          <div className="flex flex-col justify-center">
-                            <h6 className="mb-1 text-sm font-normal leading-normal dark:text-white">
-                              <p>{item.text}</p>
-                            </h6>
-                            <p className="mb-0 text-xs leading-tight text-slate-400 dark:text-white/80">
-                              <i className="mr-1 fa fa-clock" />
-                              {moment(item.createdAt).fromNow()}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                  );
-                })}
+                    <div className="flex flex-col justify-center">
+                      <h6 className="mb-1 text-sm font-normal leading-normal dark:text-white">
+                        <p>{item.text}</p>
+                      </h6>
+                      <p className="mb-0 text-xs leading-tight text-slate-400 dark:text-white/80">
+                        <i className="mr-1 fa fa-clock" />
+                        {moment(item.createdAt).fromNow()}
+                      </p>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </li> : ""}
     </>

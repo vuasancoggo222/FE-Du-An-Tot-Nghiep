@@ -32,3 +32,6 @@
 .h-sidenav {
   height: 100vh !important;
 }
+.apexcharts-menu-icon {
+  display: none;
+}

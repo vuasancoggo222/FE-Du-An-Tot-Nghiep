@@ -20,7 +20,6 @@ const SideBar = () => {
     const post = async () => {
       const fetch = await getPosts();
       setPosts(fetch);
-      console.log("post", fetch);
     };
     post();
   }, []);

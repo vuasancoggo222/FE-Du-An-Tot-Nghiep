@@ -432,6 +432,8 @@ const Dashboard = () => {
     getServicesStatistic();
 
     const getAccount = async () => {
+      const res = await userAccountStatistics();
+      message.error;
       const res = await userAccountStatistics(); message.error
       await setaccCount(res);
     };
@@ -447,7 +449,6 @@ const Dashboard = () => {
 
     };
     getEmployee();
-
   }, [chartYear]);
   return (
     <Spin
@@ -476,6 +477,7 @@ const Dashboard = () => {
             }}
           >
             {" "}
+            Thống kê {chartYear != "" ? chartYear : "tất cả thời gian"}
             Thống kê{" "}
             {
               chartYear != ""
@@ -618,7 +620,8 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "genderBySerVice" ? "#525252" : "white",
+                backgroundColor:
+                  isChart == "genderBySerVice" ? "#525252" : "white",
                 color: isChart == "genderBySerVice" ? "white" : "",
               }}
               className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
@@ -673,7 +676,8 @@ const Dashboard = () => {
           <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
             <div
               style={{
-                backgroundColor: isChart == "ageBySerVice" ? "#525252" : "white",
+                backgroundColor:
+                  isChart == "ageBySerVice" ? "#525252" : "white",
                 color: isChart == "ageBySerVice" ? "white" : "",
               }}
               className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
@@ -764,6 +768,7 @@ const Dashboard = () => {
                 >
                   Thống kê nhân viên{" "}
                   <span
+                    className="text-[#005e2e]"
                     style={{
                       textDecoration: "underline",
                       textDecorationColor: "blue",
@@ -772,6 +777,8 @@ const Dashboard = () => {
                     {employeeFilterMonth != ""
                       ? employeeFilterMonth
                       : employeeFilterYear != ""
+                      ? employeeFilterYear
+                      : " tất cả thời gian"}
                         ? employeeFilterYear
                         : "tất cả thời gian"}
                   </span>
@@ -826,7 +833,7 @@ const Dashboard = () => {
                   <table className="items-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                     <thead className="align-bottom">
                       <tr>
-                        <th className="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="text-[15px] text-gray-700 px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Thông tin
                         </th>
                         <th
@@ -837,21 +844,22 @@ const Dashboard = () => {
                                 ? "block"
                                 : "none",
                           }}
-                          className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70"
+                          className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]"
                         >
                           Trạng thái
                         </th>
-                        <th className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           {employeeFilterDate == moment().format("YYYY-MM-DD")
                             ? "Tổng khách dự kiến"
                             : "Tổng khách đã làm"}
                         </th>
-                        <th className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           {employeeFilterDate == moment().format("YYYY-MM-DD")
                             ? "Khách đang làm"
                             : "Đóng góp doanh thu"}
                         </th>
-                        <th className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+
+                        <th className="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-collapse shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           {employeeFilterDate == moment().format("YYYY-MM-DD")
                             ? " Khách hoàn thành"
                             : "Phần trăm"}
@@ -873,7 +881,7 @@ const Dashboard = () => {
                                   />
                                 </div>
                                 <div className="flex flex-col justify-center">
-                                  <h6 className="mb-0 text-sm leading-normal dark:text-white">
+                                  <h6 className="mb-0 text-sm leading-normal dark:text-white text-[#0b5931]">
                                     {item.employee.name}
                                   </h6>
                                   <p className="mb-0 text-xs leading-tight dark:text-white dark:opacity-80 text-slate-400">
@@ -906,7 +914,7 @@ const Dashboard = () => {
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                              <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
+                              <span className="text-[15px] font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
                                   moment().format("YYYY-MM-DD")
                                   ? countCustomerByEmployee(item._id)
@@ -914,7 +922,7 @@ const Dashboard = () => {
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                              <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
+                              <span className="text-[15px] font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
                                   moment().format("YYYY-MM-DD")
                                   ? countCustomerSpaIngByEmployee(item._id)
@@ -925,13 +933,13 @@ const Dashboard = () => {
                               </span>
                             </td>
                             <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                              <span className="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
+                              <span className="text-[15px] font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">
                                 {employeeFilterDate ==
                                   moment().format("YYYY-MM-DD") ? (
                                   countCustomerSpaSuccessByEmployee(item._id)
                                 ) : (
                                   <div className="flex items-center justify-center">
-                                    <span className="mr-2 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
+                                    <span className="mr-2 text-[] font-semibold leading-tight dark:text-white dark:opacity-60">
                                       {item.percentage == null
                                         ? 0
                                         : item.percentage
@@ -995,9 +1003,10 @@ const Dashboard = () => {
                 >
                   Thống kê dịch vụ{" "}
                   <span
+                    className="text-[#005e2e]"
                     style={{
                       textDecoration: "underline",
-                      textDecorationColor: "blue",
+                      textDecorationColor: "#005e2e",
                     }}
                   >
                     {serviceFilter != ""
@@ -1054,22 +1063,22 @@ const Dashboard = () => {
                   <table className="items-center justify-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
                     <thead className="align-bottom">
                       <tr>
-                        <th className="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="text-[15px] px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70">
                           Thông tin
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           Giá - vnđ
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           Trạng thái
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           Số lượt hoàn thành
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           Doanh thu - vnđ
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                        <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-[15px]">
                           Phần trăm
                         </th>
                       </tr>
@@ -1094,14 +1103,14 @@ const Dashboard = () => {
                                   />
                                 </div>
                                 <div className="my-auto">
-                                  <h6 className="mb-0 text-sm leading-normal dark:text-white">
+                                  <h6 className="mb-0 text-sm leading-normal dark:text-white text-[#005e2e]">
                                     {item.service.name}
                                   </h6>
                                 </div>
                               </div>
                             </td>
                             <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                              <p className="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
+                              <p className="text-[15px] mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
                                 {formatCash(item.service.price)}
                               </p>
                             </td>
@@ -1113,28 +1122,28 @@ const Dashboard = () => {
                                       ? "#a0d911"
                                       : "#b83a1b",
                                 }}
-                                className="  text-xs font-semibold leading-tight dark:text-white dark:opacity-60"
+                                className="text-[15px] font-semibold leading-tight dark:text-white dark:opacity-60"
                               >
                                 {item.service.status == 1
                                   ? "Kinh doanh"
                                   : "Dừng kinh doanh"}
                               </span>
                             </td>
-                            <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <td className="text-[15px] font-medium p-2 text-center align-middle text-slate-400 bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               {item.complete}
                             </td>
                             <td
                               id="totalserviceID"
-                              className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
+                              className="text-[15px] font-medium p-2 text-center align-middle text-slate-400 bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent"
                             >
                               {item.turnover.toLocaleString("vi", {
                                 style: "currency",
                                 currency: "VND",
                               })}
                             </td>
-                            <td className="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <td className="text-[15px] font-medium p-2 text-center align-middle text-slate-400 bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <div className="flex items-center justify-center">
-                                <span className="mr-2 text-xs font-semibold leading-tight dark:text-white dark:opacity-60">
+                                <span className="mr-2 text-[] font-semibold leading-tight dark:text-white dark:opacity-60">
                                   {item.percentage == null
                                     ? 0
                                     : item.percentage

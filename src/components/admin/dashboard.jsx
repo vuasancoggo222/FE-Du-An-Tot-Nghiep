@@ -14,7 +14,7 @@ import { httpGetTopUser, userAccountStatistics } from "../../api/user";
 import moment from "moment";
 import ReactApexChart from "react-apexcharts";
 const Dashboard = () => {
-  const [booking, setBooking] = useState();
+  const [booking, setBooking] = useState([]);
   const [employees, setEmployees] = useState();
   const [service, setService] = useState();
   const [acCount, setaccCount] = useState();
@@ -34,15 +34,17 @@ const Dashboard = () => {
   const [chartYear, setChartYear] = useState(moment().format("YYYY"));
   const [isChart, setIsChart] = useState("turnover");
 
-  function formatCash(str) {
-    const string = str.toString();
-    return string
-      .split("")
-      .reverse()
-      .reduce((prev, next, index) => {
-        return (index % 3 ? next : next + ",") + prev;
-      });
-  }
+  console.log("Booking", booking);
+
+  // function formatCash(str) {
+  //   const string = str.toString();
+  //   return string
+  //     .split("")
+  //     .reverse()
+  //     .reduce((prev, next, index) => {
+  //       return (index % 3 ? next : next + ",") + prev;
+  //     });
+  // }
   const datavl = {
     series: dataChart != undefined ? dataChart : "",
     options: {
@@ -1085,10 +1087,10 @@ const Dashboard = () => {
                         <th className="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-sm">
                           Thông tin
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-sm">
+                        <th className="px-6 py-3 pl-2 text-center font-bold uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-sm">
                           Giá tiền (vnđ)
                         </th>
-                        <th className="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-sm">
+                        <th className="px-6 py-3 pl-2 text-center font-bold uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-sm">
                           Trạng thái
                         </th>
                         <th className="px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-gray-700 opacity-70 text-sm">
@@ -1129,14 +1131,14 @@ const Dashboard = () => {
                               </div>
                             </td>
                             <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                              <p className="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60">
+                              <p className="mb-0 text-sm text-center font-semibold leading-normal dark:text-white dark:opacity-60">
                                 {item.service.price.toLocaleString("vi", {
                                   style: "currency",
                                   currency: "VND",
                                 })}
                               </p>
                             </td>
-                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            <td className="p-2 align-middle text-center bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <span
                                 style={{
                                   color:
@@ -1223,7 +1225,11 @@ const Dashboard = () => {
                   }}
                   className="dark:text-white"
                 >
-                  Top khách hàng thân quen <br />
+                  Thống kê{" "}
+                  <span className="text-[#00502b] underline">
+                    khách hàng thân quen
+                  </span>{" "}
+                  <br />
                   <span style={{ color: "red", fontSize: "16px" }}>
                     {" "}
                     {/* Tổng {totalTurnover()} */}
@@ -1325,6 +1331,130 @@ const Dashboard = () => {
                               >
                                 {item.status == 1 ? "Hoạt động" : "Khóa"}
                               </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                {/* <div style={{ width: "50%", marginLeft: "25%" }} className="flex-auto p-4 mt-3">
+                  <canvas id="chartService" ></canvas>
+                </div> */}
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Thống kê lịch hủy */}
+        <div className="flex flex-wrap -mx-3">
+          <div className="flex-none w-full max-w-full px-3">
+            <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+              <div className="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+                <h6
+                  style={{
+                    float: "left",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  className="dark:text-white"
+                >
+                  Thống kê{" "}
+                  <span className="text-[#b82821] underline">lịch đã hủy</span>{" "}
+                  <br />
+                  <span style={{ color: "red", fontSize: "16px" }}>
+                    {" "}
+                    {/* Tổng {totalTurnover()} */}
+                  </span>{" "}
+                </h6>{" "}
+              </div>
+              <div className=" px-0 pt-0 pb-2 ">
+                <div className="p-0 overflow-x-auto">
+                  <table className="items-center justify-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
+                    <thead className="align-bottom">
+                      <tr>
+                        <th className="text-sm text-gray-700 px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Thông tin
+                        </th>
+                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Số điện thoại
+                        </th>
+                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Tuổi
+                        </th>
+                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Giới tính
+                        </th>
+                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Ngày đặt lịch
+                        </th>
+                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Dịch vụ đặt
+                        </th>
+                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                          Lí do hủy
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="border-t">
+                      {booking?.map((item) => {
+                        if (
+                          item.status == "0" ||
+                          item.status == "1" ||
+                          item.status == "3" ||
+                          item.status == "4"
+                        ) {
+                          return;
+                        }
+                        return (
+                          // eslint-disable-next-line react/jsx-key
+                          <tr
+                            style={{
+                              backgroundColor:
+                                item.status == 1 ? "" : "#f4f4f4",
+                            }}
+                          >
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <div className="flex px-2">
+                                <div></div>
+                                <div className="my-auto">
+                                  <h6 className="mb-0 ml-2 text-sm leading-normal dark:text-white text-[#005e2e]">
+                                    {item.name}
+                                  </h6>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
+                                {item.phoneNumber}
+                              </p>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
+                                {item.age == item.age ? `${item.age}` : "trống"}
+                              </p>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
+                                {item.gender == 0 ? "Nam" : "Nữ"}
+                              </p>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
+                                {item.date}
+                              </p>
+                            </td>
+
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
+                                {item?.services.map((service) => {
+                                  return " | " + service.serviceId.name + " | ";
+                                })}
+                              </p>
+                            </td>
+                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                              <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
+                                ...
+                              </p>
                             </td>
                           </tr>
                         );

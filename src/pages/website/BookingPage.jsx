@@ -122,8 +122,10 @@ const BookingPage = () => {
         text: `Khách hàng ${response.name} đã đặt lịch,vui lòng xác nhận.`,
       };
       socket.emit(SocketEvent.NEWNOTIFICATION, newNotification);
-      message.success("Đặt lịch thành công", 2);
-      navigate("/");
+      // message.success("Đặt lịch thành công", 2);
+
+      // navigate("/");
+      window.location.href = "/booked-success";
     } catch (error) {
       console.log("formsubmit", {
         ...formValues,

@@ -57,7 +57,7 @@ const ListBooking = (props) => {
   const [girl, setGirl] = useState(false);
   const [loading, setLoading] = useState(false);
   const [titleModal, setTitleModal] = useState("Xác nhận");
-  const [page, setPage] = useState(localStorage.getItem("Idback") == undefined ? true : false);
+  const [page, setPage] = useState(localStorage.getItem("Idback") == undefined && localStorage.getItem("bookingNew") == undefined ? true : false);
   const [handleBooking, setHandleBooking] = useState();
   const [ishouse, setIsHouse] = useState();
   const [voucher, setVoucher] = useState();
@@ -536,6 +536,13 @@ const ListBooking = (props) => {
       ),
   });
   console.log(document.getElementsByClassName('dbd487'));
+  if (localStorage.getItem("bookingNew")) {
+    const element = document.querySelectorAll("#higtlight")
+    console.log(element);
+    for (let i = 0; i < element.length; i++) {
+      element[i].style.display = "none";
+    }
+  }
   // let elemenPick; 
   const showModal = async (e) => {
     // eslint-disable-next-line react/prop-types
@@ -666,7 +673,7 @@ const ListBooking = (props) => {
   // eslint-disable-next-line no-unused-vars
   const handleOk = async () => { };
 
-  const handleCancel =  async () => {
+  const handleCancel = async () => {
     setIsModalOpen(false);
 
     const changeStatus = async () => {
@@ -682,11 +689,10 @@ const ListBooking = (props) => {
       })
       const element = await document.querySelectorAll("#higtlight")
       console.log(element);
-      for(let i = 0 ; i < element.length; i++) {
-        element[i].style.display = "none";  
+      for (let i = 0; i < element.length; i++) {
+        element[i].style.display = "none";
       }
-      setPage(true)
-      localStorage.removeItem("nonePage") 
+      localStorage.removeItem("nonePage")
     }
   };
 
@@ -1535,23 +1541,74 @@ const ListBooking = (props) => {
         element[0].scrollIntoView({ behavior: "smooth" });
       }
       setPage(false)
-      localStorage.removeItem("Idback") 
+      localStorage.removeItem("Idback")
       setTimeout(() => {
         if (localStorage.getItem("nonePage")) {
-         return
-        }else{
+          return
+        } else {
           window.scroll({
             top: 220,
             left: 0,
             behavior: 'smooth'
           })
           element[0].style.display = "none";
-          setPage(true)
         }
-      }, 5000);
+      }, 7000);
     }
   }
   getEle()
+
+  const HightLightBookingNew = async () => {
+    const idBooking = localStorage.getItem("bookingNew")
+    if (idBooking) {
+      try {
+        const element = await document.getElementsByClassName(idBooking.slice(-6, idBooking.length))
+        console.log(element);
+        if (element) {
+          element[0].style.display = "block";
+          element[0].scrollIntoView({ behavior: "smooth" });
+        }
+        setPage(false)
+        localStorage.removeItem("bookingNew")
+        setTimeout(() => {
+          if (localStorage.getItem("nonePage")) {
+            return
+          } else {
+            window.scroll({
+              top: 220,
+              left: 0,
+              behavior: 'smooth'
+            })
+            element[0].style.display = "none";
+          }
+        }, 7000);
+      } catch (error) {
+        setPage(false)
+        const element = await document.getElementsByClassName(idBooking.slice(-6, idBooking.length))
+        console.log(element);
+        if (element) {
+          element[0].style.display = "block";
+          element[0].scrollIntoView({ behavior: "smooth" });
+        }
+        setPage(false)
+        localStorage.removeItem("bookingNew")
+        setTimeout(() => {
+          if (localStorage.getItem("nonePage")) {
+            return
+          } else {
+            window.scroll({
+              top: 220,
+              left: 0,
+              behavior: 'smooth'
+            })
+            element[0].style.display = "none";
+          }
+        }, 7000);
+      }
+
+    }
+  }
+  HightLightBookingNew()
   useEffect(() => {
 
     setLoading(true);
@@ -1584,19 +1641,53 @@ const ListBooking = (props) => {
           <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
             Danh sách lịch đặt
           </h1>
-          <Button
-            onClick={showModal}
-            data="addBooking"
-            type="success"
-            style={{
-              border: "1px solid white",
-
-              font: "bold",
-            }}
-          >
-            + Thêm khách đến trực tiếp
-          </Button>
-          {page}
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Button
+              onClick={showModal}
+              data="addBooking"
+              type="success"
+              style={{
+                border: "1px solid white",
+                fontWeight: "bold",
+                font: "bold",
+              }}
+            >
+              + Thêm khách đến trực tiếp
+            </Button>
+            <div>
+              <Button
+                onClick={() => {
+                  setPage(false)
+                }}
+                data="addBooking"
+                type="success"
+                style={{
+                  border: "1px solid white",
+                  marginRight: "5px",
+                  fontWeight: page == true ? "bold" : "normal",
+                  color: page == true ? "#0ba2b9": "#fefefe",
+                  backgroundColor: page == false ? "#a1a1a1" : "white",
+                }}
+              >
+                Một trang
+              </Button>
+              <Button
+                onClick={() => {
+                  setPage(true)
+                }}
+                data="addBooking"
+                type="success"
+                style={{
+                  border: "1px solid white",
+                  fontWeight: page == false ? "bold" : "normal",
+                  color: page == false ? "#0ba2b9": "#fefefe",
+                  backgroundColor: page == true ? "#a1a1a1" : "white",
+                }}
+              >
+                Phân trang
+              </Button>
+            </div>
+          </div>
         </div>
         <Table pagination={page} className="mt-5" columns={columns} dataSource={datatable} />;
         <Modal

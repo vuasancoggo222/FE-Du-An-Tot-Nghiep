@@ -149,14 +149,27 @@ function App() {
         duration: 15,
       });
     });
+    socket.on(SocketEvent.NEWNOTIFICATION, (data) => {
+      notification.info({
+        message: `${data.createdAt}`,
+        description: `${data.text}`,
+        duration: 15,
+        onClick: () => {
+          localStorage.setItem("bookingNew", data.bookingId._id)
+          Navigate("/admin/booking")
+        },
+        style:{
+          cursor:"pointer"
+        }
+      });
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
-      setNotification(data.notfication);
+      setNotification(data.notification);
       setNotificationLength(data.unRead);
     });
     socket.on(SocketEvent.USERLISTNOTIFICATION, (data) => {
       setUserNotification(data.notification);
       setUserNotificationLength(data.unRead);
-      console.log("USERLISTNOTIFICATION", data.notification);
     });
     socket.on("myNewNotification", (data) => {
       notification.info({
@@ -185,6 +198,7 @@ function App() {
     };
     getService();
     return () => {
+      socket.off(SocketEvent.NEWNOTIFICATION)
       socket.off(SocketEvent.NOTIFICATION);
       socket.off(SocketEvent.USERLISTNOTIFICATION);
       socket.off("employeeNotification");

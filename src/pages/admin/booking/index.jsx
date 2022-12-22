@@ -1556,11 +1556,11 @@ const ListBooking = (props) => {
         if (localStorage.getItem("nonePage")) {
           return
         } else {
-          window.scroll({
-            top: 220,
-            left: 0,
-            behavior: 'smooth'
-          })
+          // window.scroll({
+          //   top: 220,
+          //   left: 0,
+          //   behavior: 'smooth'
+          // })
           element[0].style.display = "none";
         }
       }, 7000);
@@ -1584,11 +1584,11 @@ const ListBooking = (props) => {
           if (localStorage.getItem("nonePage")) {
             return
           } else {
-            window.scroll({
-              top: 220,
-              left: 0,
-              behavior: 'smooth'
-            })
+            // window.scroll({
+            //   top: 220,
+            //   left: 0,
+            //   behavior: 'smooth'
+            // })
             element[0].style.display = "none";
           }
         }, 7000);
@@ -1606,11 +1606,11 @@ const ListBooking = (props) => {
           if (localStorage.getItem("nonePage")) {
             return
           } else {
-            window.scroll({
-              top: 220,
-              left: 0,
-              behavior: 'smooth'
-            })
+            // window.scroll({
+            //   top: 220,
+            //   left: 0,
+            //   behavior: 'smooth'
+            // })
             element[0].style.display = "none";
           }
         }, 7000);

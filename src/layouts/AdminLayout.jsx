@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { socket } from "../App";
 import Header from "../components/admin/Header";
@@ -9,6 +9,7 @@ import { notificationState } from "../recoil/notificationState";
 import { SocketEvent } from "../utils/SocketConstant";
 
 const AdminLayout = () => {
+  const navigate = useNavigate()
   const listNotification = useRecoilValue(notificationState);
   useEffect(() => {
     socket.on(SocketEvent.NEWNOTIFICATION, (data) => {
@@ -17,6 +18,10 @@ const AdminLayout = () => {
         message: `${data.createdAt}`,
         description: `${data.text}`,
         duration: 15,
+        onClick: () => {
+          localStorage.setItem("bookingNew", data.bookingId._id)
+          navigate("/admin/booking")
+        }
       });
     });
     return () => {

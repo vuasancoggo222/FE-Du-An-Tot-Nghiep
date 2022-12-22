@@ -32,3 +32,35 @@
 .h-sidenav {
   height: 100vh !important;
 }
+.apexcharts-menu-icon {
+  display: none;
+}
+
+#SvgjsTspan1410,
+#SvgjsTspan1413,
+#SvgjsTspan1416,
+#SvgjsTspan1416,
+#SvgjsTspan1419,
+#SvgjsTspan1422,
+#SvgjsTspan1425,
+#SvgjsTspan1428,
+#SvgjsTspan1431 {
+  font-size: 13px !important;
+  font-weight: bold;
+}
+
+#SvgjsText1376,
+#SvgjsText1379,
+#SvgjsText1382,
+#SvgjsText1385,
+#SvgjsText1388,
+#SvgjsText1391,
+#SvgjsText1394,
+#SvgjsText1397,
+#SvgjsText1400,
+#SvgjsText1403,
+#SvgjsText1406,
+#SvgjsText1409 {
+  font-size: 15px !important;
+  font-weight: bold;
+}

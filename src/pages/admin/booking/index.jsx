@@ -4,6 +4,7 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useRef, useState } from "react";
 import { InfoCircleTwoTone, SearchOutlined } from "@ant-design/icons";
+import moment from 'moment'
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -34,7 +35,7 @@ import {
   httpGetChangeStatus,
 } from "../../../api/booking";
 import Highlighter from "react-highlight-words";
-import moment from "moment";
+
 import { ChangeToSlug } from "../../../utils/ConvertStringToSlug";
 import { isAuthenticate } from "../../../utils/LocalStorage";
 import { readMoney } from "../../../utils/ReadMoney";
@@ -46,7 +47,6 @@ import { useEffect } from "react";
 import { httpGetOne } from "../../../api/employee";
 import { httpGetOneService } from "../../../api/services";
 import { ListVouchers, useVoucher } from "../../../api/voucher";
-
 // import { httpChangeStatusTimeWork } from "../../../api/employee";
 const ListBooking = (props) => {
   const [form] = Form.useForm();
@@ -667,7 +667,7 @@ const ListBooking = (props) => {
   // eslint-disable-next-line no-unused-vars
   const handleOk = async () => { };
 
-  const handleCancel = () => {
+  const handleCancel =  async () => {
     setIsModalOpen(false);
 
     const changeStatus = async () => {
@@ -676,17 +676,21 @@ const ListBooking = (props) => {
     };
     changeStatus();
     if (localStorage.getItem("nonePage")) {
-      // window.scroll({
-      //   top: 220,
-      //   left: 0,
-      //   behavior: 'smooth'
-      // })
-      
+      window.scroll({
+        top: 220,
+        left: 0,
+        behavior: 'smooth'
+      })
+      const element = await document.querySelectorAll("#higtlight")
+      console.log(element);
+      for(let i = 0 ; i < element.length; i++) {
+        element[i].style.display = "none";  
+      }
       setPage(true)
       localStorage.removeItem("nonePage") 
     }
-
   };
+
   const renderTime = (value) => {
     const d = new Date(value);
     let time = d.getHours();
@@ -720,7 +724,7 @@ const ListBooking = (props) => {
       key: 'id',
       render: (item) => {
         return (
-          <div style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
+          <div id="higtlight" style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
         )
       }
 
@@ -1119,7 +1123,7 @@ const ListBooking = (props) => {
           }
 
           console.log(handleBooking);
-          await httpGetChangeStatus(handleBooking._id, {
+          const response = await httpGetChangeStatus(handleBooking._id, {
             ...data,
             date: dateUpdate,
             time: timeUpdate,
@@ -1127,6 +1131,7 @@ const ListBooking = (props) => {
             bookingPrice: bookingPrice,
             services: res,
           });
+          console.log(response);
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
           if (handleBooking.userId) {
             const notification = {
@@ -1140,10 +1145,10 @@ const ListBooking = (props) => {
             socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
           const newEmployeeNotification = {
-            id: handleBooking._id,
+            id: response._id,
             notificationType: "employee",
-            text: "Bạn có lịch đặt mới",
-            employeeId: handleBooking.employeeId,
+            text: `Bạn có lịch đặt mới từ khách hàng ${response.name}`,
+            employeeId: response.employeeId,
           }
           socket.emit('newEmployeeNotification', newEmployeeNotification)
           socket.off('newEmployeeNotification');
@@ -1153,18 +1158,26 @@ const ListBooking = (props) => {
         }
       } else if (ishandle === "2") {
         try {
-          await httpGetChangeStatus(handleBooking._id, { status: 2 });
+          const response = await httpGetChangeStatus(handleBooking._id, { status: 2 });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
           if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              text: "Admin đã huỷ lịch đặt của bạn.",
               from: user.id,
               userId: handleBooking.userId._id,
             };
             socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
             socket.off(SocketEvent.NEWUSERNOTIFICATION);
+            const newEmployeeNotification = {
+              id: response._id,
+              notificationType: "employee",
+              text: `Lịch đặt từ khách hàng ${response.name} đã bị huỷ.`,
+              employeeId: response.employeeId,
+            }
+            socket.emit('newEmployeeNotification', newEmployeeNotification)
+            socket.off('newEmployeeNotification');
           }
         } catch (error) {
           message.error(`${error.response.data.message}`);
@@ -1177,7 +1190,7 @@ const ListBooking = (props) => {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              text: "Admin đã cập nhật trạng thái lịch đặt của bạn của bạn.",
               from: user.id,
               userId: handleBooking.userId._id,
             };
@@ -1207,7 +1220,7 @@ const ListBooking = (props) => {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Admin đã cập nhật trạng thái đơn hàng của bạn.",
+              text: "Thanh toán thành công,cảm ơn đã sử dụng Spa của chúng tôi.",
               from: user.id,
               userId: handleBooking.userId._id,
             };

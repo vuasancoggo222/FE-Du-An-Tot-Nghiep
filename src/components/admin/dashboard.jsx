@@ -1378,18 +1378,18 @@ const Dashboard = () => {
                         <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Số điện thoại
                         </th>
-                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                        {/* <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Tuổi
                         </th>
                         <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Giới tính
-                        </th>
+                        </th> */}
                         <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Ngày đặt lịch
                         </th>
-                        <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
+                        {/* <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Dịch vụ đặt
-                        </th>
+                        </th> */}
                         <th className="text-sm text-gray-700 px-6 py-3 pl-2 font-bold text-center uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap opacity-70">
                           Lí do hủy
                         </th>
@@ -1428,7 +1428,7 @@ const Dashboard = () => {
                                 {item.phoneNumber}
                               </p>
                             </td>
-                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            {/* <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
                                 {item.age == item.age ? `${item.age}` : "trống"}
                               </p>
@@ -1437,20 +1437,20 @@ const Dashboard = () => {
                               <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
                                 {item.gender == 0 ? "Nam" : "Nữ"}
                               </p>
-                            </td>
+                            </td> */}
                             <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
                                 {item.date}
                               </p>
                             </td>
 
-                            <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                            {/* <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
                                 {item?.services.map((service) => {
                                   return " | " + service.serviceId.name + " | ";
                                 })}
                               </p>
-                            </td>
+                            </td> */}
                             <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
                                 ...

@@ -1440,7 +1440,7 @@ const Dashboard = () => {
                             </td> */}
                             <td className="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                               <p className="mb-0 text-sm font-semibold text-center leading-normal dark:text-white dark:opacity-60">
-                                {item.date}
+                                {moment(item.date).format("DD/MM/YYYY")}
                               </p>
                             </td>
 

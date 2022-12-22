@@ -1572,6 +1572,8 @@ const ListBooking = (props) => {
     const idBooking = localStorage.getItem("bookingNew")
     if (idBooking) {
       try {
+        const res = await httpGetAll();
+        setBooking(res)
         const element = await document.getElementsByClassName(idBooking.slice(-6, idBooking.length))
         console.log(element);
         if (element) {
@@ -1593,6 +1595,8 @@ const ListBooking = (props) => {
           }
         }, 7000);
       } catch (error) {
+        const res = await httpGetAll();
+        setBooking(res)
         setPage(false)
         const element = await document.getElementsByClassName(idBooking.slice(-6, idBooking.length))
         console.log(element);

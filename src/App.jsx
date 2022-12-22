@@ -73,6 +73,7 @@ import Swal from "sweetalert2";
 import ListVoucher from "./pages/admin/voucher";
 import AddVoucher from "./pages/admin/voucher/add";
 import EditVoucher from "./pages/admin/voucher/edit";
+import Bookingsuccess from "./components/clients/bookingsuccess";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
@@ -137,17 +138,17 @@ function App() {
       setIsConnected(false);
     });
     socket.on("employeeNotification", (data) => {
-     setEmployeeNotification(data.notification)
-     setEmployeeNotificationLength(data.unRead)
+      setEmployeeNotification(data.notification);
+      setEmployeeNotificationLength(data.unRead);
     });
-    socket.on("myNewEmployeeNotification",(data)=>{
+    socket.on("myNewEmployeeNotification", (data) => {
       console.log(data);
       notification.info({
         message: `${moment(data.createdAt).fromNow()}`,
         description: `${data.text}`,
         duration: 15,
       });
-    })
+    });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
       setNotification(data.notfication);
       setNotificationLength(data.unRead);
@@ -158,7 +159,6 @@ function App() {
       console.log("USERLISTNOTIFICATION", data.notification);
     });
     socket.on("myNewNotification", (data) => {
-     
       notification.info({
         message: `${moment(data.createdAt).fromNow()}`,
         description: `${data.text}`,
@@ -224,6 +224,7 @@ function App() {
               }
             />
             <Route path="/verify" element={<VerifyPage />} />
+            <Route path="/booked-success" element={<Bookingsuccess />} />
             <Route path="*" element={<h1>404 Not Found</h1>} />
           </Route>
           <Route

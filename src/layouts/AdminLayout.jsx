@@ -21,6 +21,9 @@ const AdminLayout = () => {
         onClick: () => {
           localStorage.setItem("bookingNew", data.bookingId._id)
           navigate("/admin/booking")
+        },
+        style:{
+          cursor:"pointer"
         }
       });
     });

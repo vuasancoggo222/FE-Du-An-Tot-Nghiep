@@ -26,7 +26,6 @@ const notification = () => {
   const readNotification = async (id) => {
     try {
       const readed = await readedNotification(id, user.token)
-      message.success('Đã đọc thông báo !', 4);
       console.log(adminNotification);
       const booking = adminNotification.find((item) => {
         return item._id == id

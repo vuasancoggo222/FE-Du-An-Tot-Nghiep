@@ -38,3 +38,29 @@
 .theP:first-child {
   border-left: 1px solid #ccc;
 }
+
+/* hover image*/
+img {
+  vertical-align: middle;
+}
+.box-hover {
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  height: 520px;
+  overflow: hidden;
+  position: relative;
+}
+.box-hover img {
+  max-width: 100%;
+  transition: all 1s;
+}
+
+.box-hover .img-change {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 1;
+}
+.box-hover:hover .img-change {
+  opacity: 0;
+}

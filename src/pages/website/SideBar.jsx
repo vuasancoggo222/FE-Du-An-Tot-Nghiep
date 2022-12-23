@@ -10,8 +10,8 @@ const SideBar = () => {
 
   useEffect(() => {
     const data = async () => {
-      const fetch = await httpGetAllService();
-      setServices(fetch);
+      const res = await httpGetAllService();
+      setServices(res.filter((item) => item.status !== 0));
     };
     data();
   }, []);

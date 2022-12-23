@@ -20,8 +20,8 @@ const Post = () => {
           TIN TỨC NỔI BẬT
         </h4>
         <div className="grid grid-cols-[360px_1fr] gap-[10px]">
-          {fistPost?.map((item) => (
-            <div>
+          {fistPost?.map((item, index) => (
+            <div key={index}>
               <a href={`news/detail/${item.slug}`}>
                 <img src={item?.thumbnail} alt="" width="359px" />
                 <h5 className=" text-[#00502b] py-[10px] text-base">
@@ -33,8 +33,11 @@ const Post = () => {
           ))}
 
           <div>
-            {nextPost?.map((item) => (
-              <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
+            {nextPost?.map((item, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]"
+              >
                 <div>
                   <a href={`news/detail/${item.slug}`}>
                     <img src={item?.thumbnail} alt="" width="100px" />
@@ -48,61 +51,6 @@ const Post = () => {
                 </div>
               </div>
             ))}
-
-            {/* <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-              <div>
-                <img
-                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/tri-ran-da4.jpg"
-                  alt=""
-                  width="100px"
-                />
-              </div>
-              <div>
-                <h6 className="text-[#00502b] text-base">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </h6>
-                <p>
-                  Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của nhiều
-                  người khi
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-              <div>
-                <img
-                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/mong-teo-lep.jpg"
-                  alt=""
-                  width="100px"
-                />
-              </div>
-              <div>
-                <h6 className="text-[#00502b] text-base">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </h6>
-                <p>
-                  Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của nhiều
-                  người khi
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-[100px_1fr] gap-[10px] pb-[10px]">
-              <div>
-                <img
-                  src="https://beautyspa4.shostweb.com/wp-content/uploads/2021/11/cay-mo-mong-2-1.jpg"
-                  alt=""
-                  width="100px"
-                />
-              </div>
-              <div>
-                <h6 className="text-[#00502b] text-base">
-                  Trị sẹo lồi bằng laser bao nhiêu tiền?
-                </h6>
-                <p>
-                  Trị sẹo lồi bằng laser bao nhiêu tiền là băn khoăn của nhiều
-                  người khi
-                </p>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
@@ -110,51 +58,30 @@ const Post = () => {
         <h4 className="text-center text-[#00502b] text-lg py-[20px]">
           HỎI ĐÁP MỸ PHẨM
         </h4>
-        <a href="">
+        <p className="">
           {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
+          <button className="w-[100%] rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
             Trị sẹo lồi bằng laser bao nhiêu tiền?
           </button>
-        </a>
-        <a href="">
+        </p>
+        <p className="">
           {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
+          <button className="w-[100%] rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
+            Thời gian một liệu trình trị nám?
           </button>
-        </a>
-        <a href="">
+        </p>
+        <p className="">
           {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
+          <button className="w-[100%] rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
+            Spa có chế độ bảo hành ra sao?
           </button>
-        </a>
-        <a href="">
+        </p>
+        <p className="">
           {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
+          <button className="w-[100%] rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
+            Dịch vụ của Spa được đào tạo từ đâu?
           </button>
-        </a>
-        {/* <h3 className="text-center text-[#00502b] py-[20px] text-lg">
-          Tin Tức Mới
-        </h3>
-        <a href="">
-          {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
-          </button>
-        </a>
-        <a href="">
-          {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
-          </button>
-        </a>
-        <a href="">
-          {" "}
-          <button className="rounded-t-lg bg-[#dbe2df] text-[#287538] text-base px-[55px] py-[5px] mb-[10px]">
-            Trị sẹo lồi bằng laser bao nhiêu tiền?
-          </button>
-        </a> */}
+        </p>
       </div>
     </div>
   );

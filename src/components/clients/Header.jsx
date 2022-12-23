@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocalStorage } from 'react-use';
+import { useLocalStorage } from "react-use";
 import { Link } from "react-router-dom";
 import "react-slideshow-image/dist/styles.css";
 import { Avatar, Dropdown, Menu, Modal } from "antd";
@@ -26,19 +26,20 @@ const Header = () => {
     setIsModal(e.target.getAttribute("data"));
   };
 
-  useEffect(() =>{
-    if(users){
-      const getProfileData = () =>{
-        getProfile(users.token).then(response =>{
-          setUser(response)
-        }) 
-        .catch(error =>{
-          console.log(error);
-        }) 
-       }
-       getProfileData()
+  useEffect(() => {
+    if (users) {
+      const getProfileData = () => {
+        getProfile(users.token)
+          .then((response) => {
+            setUser(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      };
+      getProfileData();
     }
-  },[])
+  }, []);
   const callbackFunction = (childData) => {
     if (childData) {
       setAuth(true);
@@ -61,7 +62,6 @@ const Header = () => {
   };
 
   const handleOk = () => {
-   
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
@@ -156,9 +156,9 @@ const Header = () => {
       setUser(user);
     }
   }, []);
-  const onHandleCloseModal = ()=>{
+  const onHandleCloseModal = () => {
     setOpen(false);
-  }
+  };
   return (
     <div className="bg-[#005E2E] ">
       <header className="h-[80px] sm:w-[1200px] max-w-full m-auto py-[4px] lg:py-[29px] justify-center">
@@ -232,10 +232,10 @@ const Header = () => {
                   </div>
                   <div>
                     <div className="mr-[10px]">
-                    <Notification/>
+                      <Notification />
                     </div>
                   </div>
-                  <button className="xl:text-[15px] sm:px-2 w-[100px] lg:inline-block text-[11px] whitespace-nowrap mr-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block my-1">
+                  <button className="xl:text-[15px] sm:px-2 w-[100px] lg:inline-block text-[11px] whitespace-nowrap mr-3 rounded-md bg-[#003C21] hover:bg-[#024b2a] border-2 border-emerald-500 block my-1">
                     <Link className="text-[#fff]" to={`/booking`}>
                       Đặt Lịch
                     </Link>
@@ -244,7 +244,6 @@ const Header = () => {
               ) : (
                 <div className="flex ">
                   <button
-                  
                     data="signin"
                     onClick={showModal}
                     className="text-[12px] sm:text-[14px] lg:text-[16px] whitespace-nowrap mr-3 px-3 rounded-md bg-[#003C21] border-2 border-emerald-500 block text-[#fff] "
@@ -281,7 +280,10 @@ const Header = () => {
         >
           <p>
             {ismolDal == "signin" ? (
-              <SignIn  closeModal={onHandleCloseModal} parentCallback={callbackFunction} />
+              <SignIn
+                closeModal={onHandleCloseModal}
+                parentCallback={callbackFunction}
+              />
             ) : ismolDal == "signup" ? (
               <SignUp handleSignUp={handleSignUp()} />
             ) : (

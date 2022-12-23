@@ -34,8 +34,6 @@ const Dashboard = () => {
   const [chartYear, setChartYear] = useState(moment().format("YYYY"));
   const [isChart, setIsChart] = useState("turnover");
 
-  console.log("Booking", booking);
-
   // function formatCash(str) {
   //   const string = str.toString();
   //   return string

@@ -9,7 +9,7 @@ const PriceList = () => {
   useEffect(() => {
     const getListPrice = async () => {
       const data = await httpGetAllService();
-      setListPrice(data);
+      setListPrice(data.filter((item) => item.status !== 0));
     };
     getListPrice();
   }, []);

@@ -147,7 +147,8 @@ function App() {
         message: `${moment(data.createdAt).fromNow()}`,
         description: `${data.text}`,
         duration: 15,
-        onClick: () => {
+        onClick: (e) => {
+          e.target.parentNode.parentNode.parentNode.style.display='none';
           console.log(data);
           localStorage.setItem("bookingNew", data.bookingId)
           navigate("/admin/booking/employee")
@@ -162,7 +163,8 @@ function App() {
         message: `${data.createdAt}`,
         description: `${data.text}`,
         duration: 15,
-        onClick: () => {
+        onClick: (e) => {
+          e.target.parentNode.parentNode.parentNode.style.display='none';
           console.log(data);
           localStorage.setItem("bookingNew", data.bookingId)
           navigate("/admin/booking")

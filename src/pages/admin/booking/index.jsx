@@ -4,7 +4,7 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useRef, useState } from "react";
 import { InfoCircleTwoTone, SearchOutlined } from "@ant-design/icons";
-import moment from 'moment'
+import moment from "moment";
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -58,7 +58,12 @@ const ListBooking = (props) => {
   const [girl, setGirl] = useState(false);
   const [loading, setLoading] = useState(false);
   const [titleModal, setTitleModal] = useState("Xác nhận");
-  const [page, setPage] = useState(localStorage.getItem("Idback") == undefined && localStorage.getItem("bookingNew") == undefined ? true : false);
+  const [page, setPage] = useState(
+    localStorage.getItem("Idback") == undefined &&
+      localStorage.getItem("bookingNew") == undefined
+      ? true
+      : false
+  );
   const [handleBooking, setHandleBooking] = useState();
   const [ishouse, setIsHouse] = useState();
   const [voucher, setVoucher] = useState();
@@ -103,52 +108,51 @@ const ListBooking = (props) => {
     return current && current < moment().endOf("hour");
   };
   const changeVoucher = async () => {
-    const code = document.getElementById("code")
-    let flagVoucher = false
-    let res
+    const code = document.getElementById("code");
+    let flagVoucher = false;
+    let res;
     voucher?.map((item) => {
       if (item.code == code.value) {
-        flagVoucher = true
-        res = item
+        flagVoucher = true;
+        res = item;
       }
-    })
+    });
     if (flagVoucher == false) {
-      message.error("Mã voucher không đúng")
+      message.error("Mã voucher không đúng !");
     } else {
       console.log(res);
-      setAddVoucher(res)
-      let flag = false
-      let serrvice
+      setAddVoucher(res);
+      let flag = false;
+      let serrvice;
       handleBooking?.services.map((item) => {
         // console.log(item.serviceId._id);
         if (item.serviceId._id == res.service._id) {
-          flag = true
-          serrvice = item.serviceId
-          return
+          flag = true;
+          serrvice = item.serviceId;
+          return;
         }
-      })
+      });
 
       if (flag == false) {
-        message.error("Voucher không áp dụng khuyến mãi cho dịch vụ này")
+        message.error("Voucher không áp dụng khuyến mãi cho dịch vụ này !");
       } else {
-        let coinDown
+        let coinDown;
         if (res.type == "direct") {
-          coinDown = res.discount
+          coinDown = res.discount;
         } else {
-          coinDown = (serrvice.price / 100) * res.discount
+          coinDown = (serrvice.price / 100) * res.discount;
         }
-        setCoinVoucher(coinDown)
-        const coinResult = handleBooking.bookingPrice - coinDown
+        setCoinVoucher(coinDown);
+        const coinResult = handleBooking.bookingPrice - coinDown;
         if (coinResult < 0) {
-          setBookingPirce(0)
+          setBookingPirce(0);
         } else {
-          setBookingPirce(coinResult)
+          setBookingPirce(coinResult);
         }
-        message.success("Đã áp dụng")
+        message.success("Đã áp dụng Voucher !");
       }
     }
-
-  }
+  };
 
   // const renderNameService = () => {
   //   let text = ""
@@ -224,8 +228,6 @@ const ListBooking = (props) => {
     setSearchText("");
   };
 
-
-
   const onchangeTimeBooking = async (value) => {
     console.log(value);
     setTimeUpdate(value);
@@ -260,8 +262,8 @@ const ListBooking = (props) => {
   }
 
   const handleSetNote = (data) => {
-    setNote(data.target.value)
-  }
+    setNote(data.target.value);
+  };
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
@@ -457,7 +459,8 @@ const ListBooking = (props) => {
         style={{
           padding: 8,
         }}
-      >form
+      >
+        form
         <TimePicker
           onChange={async (e) => {
             console.log(renderTime(e._d)),
@@ -469,7 +472,6 @@ const ListBooking = (props) => {
           }}
           format={format}
         />
-
         <Space>
           <Button
             type="primary"
@@ -536,15 +538,15 @@ const ListBooking = (props) => {
         text
       ),
   });
-  console.log(document.getElementsByClassName('dbd487'));
+  console.log(document.getElementsByClassName("dbd487"));
   if (localStorage.getItem("bookingNew")) {
-    const element = document.querySelectorAll("#higtlight")
+    const element = document.querySelectorAll("#higtlight");
     console.log(element);
     for (let i = 0; i < element.length; i++) {
       element[i].style.display = "none";
     }
   }
-  // let elemenPick; 
+  // let elemenPick;
   const showModal = async (e) => {
     // eslint-disable-next-line react/prop-types
     if (
@@ -566,7 +568,7 @@ const ListBooking = (props) => {
         gender: "",
         date: undefined,
         time: undefined,
-        codeVoucher: undefined
+        codeVoucher: undefined,
       });
       setBookingPirce(0);
       setTitleModal("Thêm khách đến trực tiếp");
@@ -581,7 +583,7 @@ const ListBooking = (props) => {
         idBooking = e.target.offsetParent.getAttribute("dataId");
         show = e.target.offsetParent.getAttribute("isshow");
       }
-      localStorage.setItem("nonePage", "true")
+      localStorage.setItem("nonePage", "true");
       let count = 0;
       let isBooking;
       // eslint-disable-next-line react/prop-types
@@ -603,8 +605,8 @@ const ListBooking = (props) => {
           if (item.status == isButon || show == "false") {
             return;
           }
-          setAddVoucher("")
-          setCoinVoucher("")
+          setAddVoucher("");
+          setCoinVoucher("");
           await seDateBooking(item.date.toString());
           setBookingPirce(item?.bookingPrice);
           form.setFieldsValue({
@@ -626,7 +628,7 @@ const ListBooking = (props) => {
               item?.time != undefined
                 ? moment(renderTime(item?.time), format)
                 : "",
-            codeVoucher: undefined
+            codeVoucher: undefined,
           });
           await setIsModalOpen(true);
           document.getElementById("js-licensing").style.display = "none";
@@ -672,7 +674,7 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => { };
+  const handleOk = async () => {};
 
   const handleCancel = async () => {
     setIsModalOpen(false);
@@ -686,14 +688,14 @@ const ListBooking = (props) => {
       window.scroll({
         top: 220,
         left: 0,
-        behavior: 'smooth'
-      })
-      const element = await document.querySelectorAll("#higtlight")
+        behavior: "smooth",
+      });
+      const element = await document.querySelectorAll("#higtlight");
       console.log(element);
       for (let i = 0; i < element.length; i++) {
         element[i].style.display = "none";
       }
-      localStorage.removeItem("nonePage")
+      localStorage.removeItem("nonePage");
     }
   };
 
@@ -725,15 +727,20 @@ const ListBooking = (props) => {
   };
   const columns = [
     {
-      title: '',
-      dataIndex: 'id',
-      key: 'id',
+      title: "",
+      dataIndex: "id",
+      key: "id",
       render: (item) => {
         return (
-          <div id="higtlight" style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
-        )
-      }
-
+          <div
+            id="higtlight"
+            style={{ display: "none", fontSize: "20px" }}
+            className={item}
+          >
+            <InfoCircleTwoTone />
+          </div>
+        );
+      },
     },
     {
       title: "Mã",
@@ -895,7 +902,6 @@ const ListBooking = (props) => {
             className="selectChangeSatus"
             style={{ width: "150px", color: "blue", textAlign: "center" }}
             value="Đổi trạng thái"
-
           >
             <Option value="1">
               {" "}
@@ -1086,10 +1092,10 @@ const ListBooking = (props) => {
       }
     } else {
       if (ishandle === "1") {
-        const res = await httpGetOne(data.employeeId, user.token)
+        const res = await httpGetOne(data.employeeId, user.token);
         if (res.status != 1) {
-          message.error("Nhân viên này tạm thời không thể thực hiện")
-          return
+          message.error("Nhân viên này tạm thời không thể thực hiện");
+          return;
         }
         try {
           let res = "";
@@ -1123,8 +1129,8 @@ const ListBooking = (props) => {
           for (let i = 0; i < res.length; i++) {
             const result = await httpGetOneService(res[0].serviceId);
             if (result.status != 1) {
-              message.error("Có dịch vụ đã tạm dừng kinh doanh")
-              return
+              message.error("Có dịch vụ đã tạm dừng kinh doanh");
+              return;
             }
           }
 
@@ -1146,7 +1152,7 @@ const ListBooking = (props) => {
               text: "Lịch đặt của bạn đã được xác nhận",
               from: user.id,
               userId: handleBooking.userId._id,
-            }
+            };
             socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
             socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
@@ -1155,16 +1161,18 @@ const ListBooking = (props) => {
             notificationType: "employee",
             text: `Bạn có lịch đặt mới từ khách hàng ${response.name}`,
             employeeId: response.employeeId,
-          }
-          socket.emit('newEmployeeNotification', newEmployeeNotification)
-          socket.off('newEmployeeNotification');
+          };
+          socket.emit("newEmployeeNotification", newEmployeeNotification);
+          socket.off("newEmployeeNotification");
         } catch (error) {
           console.log(error);
           message.error(`${error.response?.data?.message}`);
         }
       } else if (ishandle === "2") {
         try {
-          const response = await httpGetChangeStatus(handleBooking._id, { status: 2 });
+          const response = await httpGetChangeStatus(handleBooking._id, {
+            status: 2,
+          });
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
           if (handleBooking.userId) {
             const notification = {
@@ -1181,9 +1189,9 @@ const ListBooking = (props) => {
               notificationType: "employee",
               text: `Lịch đặt từ khách hàng ${response.name} đã bị huỷ.`,
               employeeId: response.employeeId,
-            }
-            socket.emit('newEmployeeNotification', newEmployeeNotification)
-            socket.off('newEmployeeNotification');
+            };
+            socket.emit("newEmployeeNotification", newEmployeeNotification);
+            socket.off("newEmployeeNotification");
           }
         } catch (error) {
           message.error(`${error.response.data.message}`);
@@ -1209,18 +1217,24 @@ const ListBooking = (props) => {
       } else if (ishandle === "4") {
         if (addVoucher != "") {
           try {
-            const res = await useVoucher(handleBooking._id, { code: addVoucher.code })
+            const res = await useVoucher(handleBooking._id, {
+              code: addVoucher.code,
+            });
             console.log(res);
           } catch (error) {
             message.error(`${error.response?.data?.message}`);
-            return
+            return;
           }
         }
 
         try {
-          const res = await httpGetChangeStatus(handleBooking._id, { status: 4, note: data.note, bookingPrice: bookingPrice });
-          await setHandleBooking(res)
-          handleToolbarClick()
+          const res = await httpGetChangeStatus(handleBooking._id, {
+            status: 4,
+            note: data.note,
+            bookingPrice: bookingPrice,
+          });
+          await setHandleBooking(res);
+          handleToolbarClick();
           message.success(`${titleModal} khách hàng ${handleBooking.name}`);
           if (handleBooking.userId) {
             const notification = {
@@ -1236,8 +1250,7 @@ const ListBooking = (props) => {
         } catch (error) {
           message.error(`${error.response.data.message}`);
         }
-      }
-      else if (ishandle === "6") {
+      } else if (ishandle === "6") {
         let res = "";
         if (!data.services[0].lable) {
           res = data.services.map((item) => {
@@ -1269,17 +1282,20 @@ const ListBooking = (props) => {
         for (let i = 0; i < res.length; i++) {
           const result = await httpGetOneService(res[0].serviceId);
           if (result.status != 1) {
-            message.error("Có dịch vụ đã tạm dừng kinh doanh")
-            return
+            message.error("Có dịch vụ đã tạm dừng kinh doanh");
+            return;
           }
         }
         try {
           await httpGetChangeStatus(handleBooking._id, {
             date: dateUpdate,
             time: timeUpdate,
-            services: res
+            services: res,
           });
-          message.success("Sửa thông tin thành công cho khách hàng " + handleBooking?.name)
+          message.success(
+            "Cập nhật thông tin thành công cho khách hàng " +
+              handleBooking?.name
+          );
           if (handleBooking.userId) {
             const notification = {
               id: handleBooking._id,
@@ -1330,7 +1346,7 @@ const ListBooking = (props) => {
               cells: [
                 {
                   colSpan: 2,
-                  value: "Dịch vụ Tuyến Spa",
+                  value: "Thẩm mỹ viện Tuyến Spa",
                   style: {
                     fontSize: 20,
                     hAlign: "Center",
@@ -1344,7 +1360,7 @@ const ListBooking = (props) => {
               cells: [
                 {
                   colSpan: 2,
-                  value: "Web: http://tuyenspa.com",
+                  value: "Website: http://tuyenspa.com",
                   style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
@@ -1353,7 +1369,7 @@ const ListBooking = (props) => {
               cells: [
                 {
                   colSpan: 2,
-                  value: "Tel: 012344567 / 012344567",
+                  value: "Tel: (028) 4455 7788 / 0866 824 564",
                   style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
@@ -1435,21 +1451,18 @@ const ListBooking = (props) => {
                   style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
-
             },
             // this
-
           ],
         },
         footer: {
           footerRows: 5,
           rows: [
-
             {
               cells: [
                 {
                   colSpan: 1,
-                  value: `Voucher:`,
+                  value: `Khuyến mại Voucher:`,
                   style: { bold: true, wrapText: true, fontSize: 12 },
                 },
                 {
@@ -1463,7 +1476,7 @@ const ListBooking = (props) => {
               cells: [
                 {
                   colSpan: 1,
-                  value: `Thanh toán:`,
+                  value: `Tổng thanh toán:`,
                   style: { bold: true, wrapText: true, fontSize: 15 },
                 },
                 {
@@ -1477,7 +1490,9 @@ const ListBooking = (props) => {
               cells: [
                 {
                   colSpan: 2,
-                  value: `Ghi chú: ${note != undefined ? note : handleBooking?.note}`,
+                  value: `Ghi chú: ${
+                    note != undefined ? note : handleBooking?.note
+                  }`,
                   style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
@@ -1537,24 +1552,24 @@ const ListBooking = (props) => {
       time: time,
       employeeId: item.employeeId?.name,
       action: item,
-      id: item._id.slice(-6, item._id.length)
+      id: item._id.slice(-6, item._id.length),
     };
   });
 
   const getEle = async () => {
-    const idback = localStorage.getItem("Idback")
+    const idback = localStorage.getItem("Idback");
     if (idback) {
-      const element = await document.getElementsByClassName(idback)
+      const element = await document.getElementsByClassName(idback);
       console.log(element);
       if (element) {
         element[0].style.display = "block";
         element[0].scrollIntoView({ behavior: "smooth" });
       }
-      setPage(false)
-      localStorage.removeItem("Idback")
+      setPage(false);
+      localStorage.removeItem("Idback");
       setTimeout(() => {
         if (localStorage.getItem("nonePage")) {
-          return
+          return;
         } else {
           // window.scroll({
           //   top: 220,
@@ -1565,26 +1580,28 @@ const ListBooking = (props) => {
         }
       }, 7000);
     }
-  }
-  getEle()
+  };
+  getEle();
 
   const HightLightBookingNew = async () => {
-    const idBooking = localStorage.getItem("bookingNew")
+    const idBooking = localStorage.getItem("bookingNew");
     if (idBooking) {
       try {
         const res = await httpGetAll();
-        setBooking(res)
-        const element = await document.getElementsByClassName(idBooking.slice(-6, idBooking.length))
+        setBooking(res);
+        const element = await document.getElementsByClassName(
+          idBooking.slice(-6, idBooking.length)
+        );
         console.log(element);
         if (element) {
           element[0].style.display = "block";
           element[0].scrollIntoView({ behavior: "smooth" });
         }
-        setPage(false)
-        localStorage.removeItem("bookingNew")
+        setPage(false);
+        localStorage.removeItem("bookingNew");
         setTimeout(() => {
           if (localStorage.getItem("nonePage")) {
-            return
+            return;
           } else {
             // window.scroll({
             //   top: 220,
@@ -1596,19 +1613,21 @@ const ListBooking = (props) => {
         }, 7000);
       } catch (error) {
         const res = await httpGetAll();
-        setBooking(res)
-        setPage(false)
-        const element = await document.getElementsByClassName(idBooking.slice(-6, idBooking.length))
+        setBooking(res);
+        setPage(false);
+        const element = await document.getElementsByClassName(
+          idBooking.slice(-6, idBooking.length)
+        );
         console.log(element);
         if (element) {
           element[0].style.display = "block";
           element[0].scrollIntoView({ behavior: "smooth" });
         }
-        setPage(false)
-        localStorage.removeItem("bookingNew")
+        setPage(false);
+        localStorage.removeItem("bookingNew");
         setTimeout(() => {
           if (localStorage.getItem("nonePage")) {
-            return
+            return;
           } else {
             // window.scroll({
             //   top: 220,
@@ -1619,18 +1638,16 @@ const ListBooking = (props) => {
           }
         }, 7000);
       }
-
     }
-  }
-  HightLightBookingNew()
+  };
+  HightLightBookingNew();
   useEffect(() => {
-
     setLoading(true);
     const getBooking = async () => {
       const res = await httpGetAll();
       setBooking(res);
     };
-    getBooking()
+    getBooking();
 
     const getVoucher = async () => {
       const res = await ListVouchers();
@@ -1639,7 +1656,6 @@ const ListBooking = (props) => {
     getVoucher();
 
     setLoading(false);
-
   }, []);
   return (
     <Spin
@@ -1671,7 +1687,7 @@ const ListBooking = (props) => {
             <div>
               <Button
                 onClick={() => {
-                  setPage(false)
+                  setPage(false);
                 }}
                 data="addBooking"
                 type="success"
@@ -1679,7 +1695,7 @@ const ListBooking = (props) => {
                   border: "1px solid white",
                   marginRight: "5px",
                   fontWeight: page == true ? "bold" : "normal",
-                  color: page == true ? "#0ba2b9": "#fefefe",
+                  color: page == true ? "#0ba2b9" : "#fefefe",
                   backgroundColor: page == false ? "#a1a1a1" : "white",
                 }}
               >
@@ -1687,14 +1703,14 @@ const ListBooking = (props) => {
               </Button>
               <Button
                 onClick={() => {
-                  setPage(true)
+                  setPage(true);
                 }}
                 data="addBooking"
                 type="success"
                 style={{
                   border: "1px solid white",
                   fontWeight: page == false ? "bold" : "normal",
-                  color: page == false ? "#0ba2b9": "#fefefe",
+                  color: page == false ? "#0ba2b9" : "#fefefe",
                   backgroundColor: page == true ? "#a1a1a1" : "white",
                 }}
               >
@@ -1703,7 +1719,13 @@ const ListBooking = (props) => {
             </div>
           </div>
         </div>
-        <Table pagination={page} className="mt-5" columns={columns} dataSource={datatable} />;
+        <Table
+          pagination={page}
+          className="mt-5"
+          columns={columns}
+          dataSource={datatable}
+        />
+        ;
         <Modal
           footer={null}
           style={{ fontFamily: "revert-layer" }}
@@ -1722,7 +1744,10 @@ const ListBooking = (props) => {
             allowExcelExport={true}
             wrapText={true}
             dataSource={handleBooking?.services.map((item) => {
-              return { name: item.serviceId.name, price: formatCash(item?.price) }
+              return {
+                name: item.serviceId.name,
+                price: formatCash(item?.price),
+              };
             })}
             // toolbarClick={handleToolbarClick}
             allowPaging={true}
@@ -1737,11 +1762,10 @@ const ListBooking = (props) => {
 
               <ColumnDirective
                 field="price"
-                headerText="Đơn Giá"
+                headerText="Đơn giá"
                 width="110"
                 textAlign="right"
               />
-
             </ColumnsDirective>
             <Inject services={[ExcelExport]} />
           </GridComponent>
@@ -1836,7 +1860,6 @@ const ListBooking = (props) => {
                 },
               ]}
             >
-
               <Select
                 mode="multiple"
                 allowClear
@@ -1847,20 +1870,20 @@ const ListBooking = (props) => {
                 {props.dataService?.map((item, index) => {
                   if (item.status == 1) {
                     return (
-                      (
-                        <Select.Option value={item._id} key={index}>
-                          {item.name}
-                        </Select.Option>
-                      )
-                    )
+                      <Select.Option value={item._id} key={index}>
+                        {item.name}
+                      </Select.Option>
+                    );
                   } else {
                     return (
-                      (
-                        <Select.Option disabled={true} value={item._id} key={index}>
-                          {item.name}
-                        </Select.Option>
-                      )
-                    )
+                      <Select.Option
+                        disabled={true}
+                        value={item._id}
+                        key={index}
+                      >
+                        {item.name}
+                      </Select.Option>
+                    );
                   }
                 })}
               </Select>
@@ -1883,7 +1906,7 @@ const ListBooking = (props) => {
                 format={dateFormat}
                 onChange={onchangeDateBooking}
                 placeholder="Ngày đến"
-              // onOk={onOk}
+                // onOk={onOk}
               />
             </Form.Item>
 
@@ -1906,20 +1929,20 @@ const ListBooking = (props) => {
                 {props.dataEmployy?.map((item, index) => {
                   if (item.status == 1) {
                     return (
-                      (
-                        <Select.Option value={item._id} key={index}>
-                          {item.name}
-                        </Select.Option>
-                      )
-                    )
+                      <Select.Option value={item._id} key={index}>
+                        {item.name}
+                      </Select.Option>
+                    );
                   } else {
                     return (
-                      (
-                        <Select.Option disabled={true} value={item._id} key={index}>
-                          {item.name}
-                        </Select.Option>
-                      )
-                    )
+                      <Select.Option
+                        disabled={true}
+                        value={item._id}
+                        key={index}
+                      >
+                        {item.name}
+                      </Select.Option>
+                    );
                   }
                 })}
               </Select>
@@ -1959,20 +1982,27 @@ const ListBooking = (props) => {
             {/* chọn ca  */}
 
             <Form.Item name="note" label="Ghi chú">
-              <Input.TextArea onBlur={handleSetNote} disabled={ishandle == 1 || ishandle == 4 ? false : true} />
+              <Input.TextArea
+                onBlur={handleSetNote}
+                disabled={ishandle == 1 || ishandle == 4 ? false : true}
+              />
             </Form.Item>
-            <Form.Item
-              name="codeVoucher"
-              label="Mã voucher"
-            >
-
-              <Input id="code"
+            <Form.Item name="codeVoucher" label="Mã voucher">
+              <Input
+                id="code"
                 disabled={ishandle == 4 ? false : true}
                 placeholder="Nhập mã"
               />
             </Form.Item>
             <Form.Item className="mb-5" label=" ">
-              <Button disabled={ishandle == 4 ? false : true} onClick={changeVoucher} style={{ marginTop: "2px" }} type="primary">Áp dụng voucher</Button>
+              <Button
+                disabled={ishandle == 4 ? false : true}
+                onClick={changeVoucher}
+                style={{ marginTop: "2px" }}
+                type="primary"
+              >
+                Áp dụng voucher
+              </Button>
             </Form.Item>
             <Form.Item name="bookingPrice" label="Thanh toán">
               <span className="font-semibold">
@@ -1999,14 +2029,13 @@ const ListBooking = (props) => {
               </Button>
 
               <Button
-
                 style={{
                   display:
                     titleModal == "Thanh toán và in hóa đơn"
                       ? "block"
                       : titleModal == "Thông tin"
-                        ? "none"
-                        : "",
+                      ? "none"
+                      : "",
                 }}
                 type="primary"
                 htmlType="submit"

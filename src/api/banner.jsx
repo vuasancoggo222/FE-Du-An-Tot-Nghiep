@@ -1,17 +1,17 @@
 import instance from "./instance";
 import { isAuthenticate } from "../utils/LocalStorage";
 
-const user = isAuthenticate()
-let header = {}
-if(user){
-header = {
-  headers: {
-    Authorization: `${user.token}`,
-  },
-}
+const user = isAuthenticate();
+let header = {};
+if (user) {
+  header = {
+    headers: {
+      Authorization: `${user.token}`,
+    },
+  };
 }
 export const httpAddBanner = (data) => {
-  return instance.post(`/banners`, data,header);
+  return instance.post(`/banners`, data, header);
 };
 
 export const httpListBanner = () => {
@@ -19,7 +19,7 @@ export const httpListBanner = () => {
 };
 
 export const httpDeleteBanner = (id) => {
-  return instance.delete(`/banners/${id}`,null,header);
+  return instance.delete(`/banners/${id}`, header);
 };
 
 export const httpGetOne = (id) => {
@@ -27,5 +27,5 @@ export const httpGetOne = (id) => {
 };
 
 export const httpUpdateBanner = (id, data) => {
-  return instance.patch(`banners/${id}`, data,header);
+  return instance.patch(`banners/${id}`, data, header);
 };

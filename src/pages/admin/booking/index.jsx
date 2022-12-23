@@ -968,7 +968,7 @@ const ListBooking = (props) => {
                   } else if (item.status == 2) {
                     return;
                   } else {
-                    await props.handleToEmployee(item.employeeId._id, item._id);
+                    await props.handleToEmployee(item.employeeId._id, item._id.slice(-6, item._id.length));
                     navigate("/admin/booking/employee");
                   }
                 }}
@@ -1603,7 +1603,7 @@ const ListBooking = (props) => {
           if (localStorage.getItem("nonePage")) {
             return;
           } else {
-            // window.scroll({
+            // window.scroll({ooking(
             //   top: 220,
             //   left: 0,
             //   behavior: 'smooth'

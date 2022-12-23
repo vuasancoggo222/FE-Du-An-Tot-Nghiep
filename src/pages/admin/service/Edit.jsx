@@ -1,13 +1,4 @@
-import {
-  Button,
-  Form,
-  Input,
-  Upload,
-  Select,
-  message,
-  Tag,
-  InputNumber,
-} from "antd";
+import { Button, Form, Input, Upload, message, InputNumber } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { httpGetOneService } from "../../../api/services";
@@ -183,7 +174,7 @@ const EditService = () => {
               </Upload>
             </ImgCrop>
           </Form.Item>
-         
+
           <Form.Item
             name="description"
             label="Mô tả dịch vụ"

@@ -11,9 +11,9 @@ import {
 import React, { useState } from "react";
 import { uploadCloudinary } from "../../../api/upload";
 import { InboxOutlined } from "@ant-design/icons";
-import { httpPost } from "../../../api/services";
 import { Link, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
+import { createService } from "../../../api/service";
 const normFile = (e) => {
   console.log("Upload event:", e);
 
@@ -48,7 +48,7 @@ const AddService = () => {
   const [content, setContent] = useState("");
   const create = async (data) => {
     try {
-      await httpPost("/service", data).then(() => {
+      await createService(data).then(() => {
         message.success("Thêm dịch vụ thành công", 4);
         navigate("/admin/service");
       });
@@ -94,7 +94,7 @@ const AddService = () => {
         return Upload.LIST_IGNORE;
       }
     },
-    onChange: (info) => {
+    onChange: () => {
       // setImageFile(info);
     },
     listType: "picture",

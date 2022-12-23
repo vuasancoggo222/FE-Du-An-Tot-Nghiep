@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect, useRef, useState } from "react";
@@ -20,7 +21,10 @@ const ListBookingByEmployee = (props) => {
     const [titleModal, setTitleModal] = useState("");
     const [fillerMonth, setFillterMonth] = useState("");
     const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(true);
+    const [page, setPage] = useState(localStorage.getItem("Idback") == undefined &&
+        localStorage.getItem("bookingNew") == undefined
+        ? true
+        : false);
     const [fillterYear, setFillterYear] = useState("");
     const [handleBooking, setHandleBooking] = useState();
     const [ishandle, setIshandle] = useState();
@@ -28,13 +32,19 @@ const ListBookingByEmployee = (props) => {
     const [employeeIdFromAdmin, setEmployeeIdFromAdmin] = useState('')
     const [booking, setBooking] = useState();
     const user = isAuthenticate()
-    
+
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
-
+    if (localStorage.getItem("bookingNew")) {
+        const element = document.querySelectorAll("#higtlight");
+        console.log(element);
+        for (let i = 0; i < element.length; i++) {
+            element[i].style.display = "none";
+        }
+    }
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText('');
@@ -52,7 +62,7 @@ const ListBookingByEmployee = (props) => {
         }
         return time
     }
-    
+
     const renderDate = (value) => {
         const d = new Date(value)
         let date = d.getDate();
@@ -65,7 +75,7 @@ const ListBookingByEmployee = (props) => {
         }
         return `${d.getFullYear()}-${month}-${date}`;
     }
-
+    
     function formatCash(str) {
         const string = str.toString()
         return string.split('').reverse().reduce((prev, next, index) => {
@@ -123,6 +133,11 @@ const ListBookingByEmployee = (props) => {
         if (ishandle === "3") {
             try {
                 await httpGetChangeStatus(handleBooking._id, { status: 3, note: data.note })
+                const changeStatus = async () => {
+                    const res = await httpGetAll();
+                    setBooking(res);
+                };
+                changeStatus();
                 message.success(`Chờ thanh toán "${handleBooking.name}"`)
                 const notification = {
                     id: handleBooking._id,
@@ -132,16 +147,15 @@ const ListBookingByEmployee = (props) => {
                 console.log('abc');
                 socket.emit(SocketEvent.NEWNOTIFICATION, notification);
                 socket.off(SocketEvent.NEWNOTIFICATION);
-                const res = await httpGetAll()
-                setBooking(res)
+                // eslint-disable-next-line react/prop-types    
             } catch (error) {
                 message.error(`${error.response.data.message}`)
             }
         }
+      
+        handleCancel();
         // eslint-disable-next-line react/prop-types
 
-        // eslint-disable-next-line react/prop-types
-        props.handleChangeStatus();
     };
 
     const getColumnSearchProps = (dataIndex) => ({
@@ -393,19 +407,35 @@ const ListBookingByEmployee = (props) => {
     });
     const handleCancel = () => {
         setIsModalOpen(false);
+        const changeStatus = async () => {
+            const res = await httpGetAll();
+            setBooking(res);
+        };
+        changeStatus();
     };
 
     const columns = [
         {
-            title: '',
-            dataIndex: 'id',
-            key: 'id',
+            title: "",
+            dataIndex: "id",
+            key: "id",
             render: (item) => {
                 return (
-                    <div style={{ display: "none", fontSize: "20px" }} className={item}><InfoCircleTwoTone /></div>
-                )
-            }
-
+                    <div
+                        id="higtlight"
+                        style={{ display: "none", fontSize: "20px" }}
+                        className={item}
+                    >
+                        <InfoCircleTwoTone />
+                    </div>
+                );
+            },
+        },
+        {
+            title: "Mã",
+            dataIndex: "id",
+            key: "id",
+            ...getColumnSearchProps("id"),
         },
         {
             title: 'Tên',
@@ -570,7 +600,7 @@ const ListBookingByEmployee = (props) => {
     let datatable = [];
     // eslint-disable-next-line react/prop-types
     booking?.forEach((item) => {
-        if (item.employeeId?._id == employee?._id && item.status == 1 || item.employeeId?._id == employee?._id && item.status == 4 || item.employeeId?._id == employee?._id && item.status == 3) {
+        if (item.employeeId?._id == employee?._id && item.status == 1 || item.employeeId?._id == employee?._id && item.status == 4 || item.employeeId?._id == employee?._id && item.status == 3 || item.employeeId?._id == employee?._id && item.status == 2) {
             const time = renderTime(item.time)
             const date = renderDate(item.date)
             datatable.push({
@@ -581,7 +611,7 @@ const ListBookingByEmployee = (props) => {
                 time: time,
                 employeeId: item.employeeId?.name,
                 action: (item),
-                id: item._id
+                id: item._id.slice(-6, item._id.length),
             })
         }
     })
@@ -595,7 +625,7 @@ const ListBookingByEmployee = (props) => {
             setLoading(true)
             const month = moment(date).format("MM")
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee?._id  || employeeIdFromAdmin, month, year, user.token);
+            const res = await employeeStatistics(employee?._id || employeeIdFromAdmin, month, year, user.token);
             setEmpoyeeStatic(res)
             setFillterYear("");
             setFillterMonth(dateString);
@@ -610,16 +640,79 @@ const ListBookingByEmployee = (props) => {
         } else {
             setLoading(true)
             const year = moment(date).format("YYYY")
-            const res = await employeeStatistics(employee?._id  || employeeIdFromAdmin, undefined, year, user.token);
+            const res = await employeeStatistics(employee?._id || employeeIdFromAdmin, undefined, year, user.token);
             setEmpoyeeStatic(res)
             setFillterMonth("");
             setFillterYear(dateString);
         }
         setLoading(false)
     }
-
+    const HightLightBookingNew = async () => {
+        const idBooking = localStorage.getItem("bookingNew");
+        if (idBooking) {
+            try {
+                const res = await httpGetAll();
+                setBooking(res);
+                const element = await document.getElementsByClassName(
+                    idBooking.slice(-6, idBooking.length)
+                );
+                console.log(element);
+                if (element) {
+                    element[0].style.display = "block";
+                    element[0].scrollIntoView({ behavior: "smooth" });
+                }
+                setPage(false);
+                localStorage.removeItem("bookingNew");
+                setTimeout(() => {
+                    if (localStorage.getItem("nonePage")) {
+                        return;
+                    } else {
+                        // window.scroll({ooking(
+                        //   top: 220,
+                        //   left: 0,
+                        //   behavior: 'smooth'
+                        // })
+                        element[0].style.display = "none";
+                    }
+                }, 7000);
+            } catch (error) {
+                const res = await httpGetAll();
+                setBooking(res);
+                setPage(false);
+                const element = await document.getElementsByClassName(
+                    idBooking.slice(-6, idBooking.length)
+                );
+                console.log(element);
+                if (element) {
+                    element[0].style.display = "block";
+                    element[0].scrollIntoView({ behavior: "smooth" });
+                }
+                setPage(false);
+                localStorage.removeItem("bookingNew");
+                setTimeout(() => {
+                    if (localStorage.getItem("nonePage")) {
+                        return;
+                    } else {
+                        // window.scroll({
+                        //   top: 220,
+                        //   left: 0,
+                        //   behavior: 'smooth'
+                        // })
+                        element[0].style.display = "none";
+                    }
+                }, 7000);
+            }
+        }
+    };
+    HightLightBookingNew()
     useEffect(() => {
         setLoading(true)
+
+        const getBooking = async () => {
+            const res = await httpGetAll();
+            setBooking(res);
+        };
+        getBooking();
         const adminLogin = async () => {
             let res
             // eslint-disable-next-line react/prop-types
@@ -645,11 +738,11 @@ const ListBookingByEmployee = (props) => {
                         highlight[0].style.display = "block";
                         highlight[0].scrollIntoView({ behavior: "smooth" });
                         // eslint-disable-next-line react/prop-types
-                        localStorage.setItem("Idback",props.dataBookingId.slice(-6, props.dataBookingId.length)) 
+                        localStorage.setItem("Idback", props.dataBookingId.slice(-6, props.dataBookingId.length))
                     }
-                }else{
+                } else {
                     setPage(true)
-                    const res = {...user, _id: user.employeeId}
+                    const res = { ...user, _id: user.employeeId }
                     console.log(res);
                     setEmployee(res)
                 }
@@ -658,17 +751,11 @@ const ListBookingByEmployee = (props) => {
             setEmpoyeeStatic(data)
         }
         adminLogin()
-        const getBooking = async () => {
-            const res = await httpGetAll()
-            setBooking(res)
-        }
-
-        getBooking()
 
         setLoading(false)
 
         // eslint-disable-next-line react/prop-types
-    }, [props.dataBooking])
+    }, [])
     return <Spin Spin spinning={loading} style={{
         position: "fixed",
         top: "25%",
@@ -681,45 +768,81 @@ const ListBookingByEmployee = (props) => {
                 </h1>
 
             </div>
-            <div className="b-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
 
-                <Button
-                    onClick={() => {
-                        fillerMonth(""), fillterYear("");
-                    }}
-                    style={{
-                        float: "right",
-                        marginLeft: "3px",
-                        backgroundColor: "#168ea0",
-                        fontFamily: "monospace",
-                        color: "white",
-                    }}
-                >
-                    Làm mới
-                </Button>
-                <DatePicker
-                    value={fillterYear == "" ? null : moment(fillterYear)}
-                    placeholder="Lọc năm"
-                    status="warning"
-                    style={{
-                        float: "right",
-                        fontWeight: "bold",
-                        marginLeft: "3px",
-                    }}
-                    onChange={onChangeYear}
-                    picker="year"
-                />
-                <DatePicker
-                    value={fillerMonth == "" ? null : moment(fillerMonth)}
-                    placeholder="Lọc tháng "
-                    status="warning"
-                    style={{ float: "right", fontWeight: "bold" }}
-                    onChange={onChangeMonth}
-                    picker="month"
-                />
+            <div style={{ display: "flex", justifyContent: "space-between" }} >
+                <div className="b-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+
+                    <Button
+                        onClick={() => {
+                            fillerMonth(""), fillterYear("");
+                        }}
+                        style={{
+                            float: "right",
+                            marginLeft: "3px",
+                            backgroundColor: "#168ea0",
+                            fontFamily: "monospace",
+                            color: "white",
+                        }}
+                    >
+                        Làm mới
+                    </Button>
+                    <DatePicker
+                        value={fillterYear == "" ? null : moment(fillterYear)}
+                        placeholder="Lọc năm"
+                        status="warning"
+                        style={{
+                            float: "right",
+                            fontWeight: "bold",
+                            marginLeft: "3px",
+                        }}
+                        onChange={onChangeYear}
+                        picker="year"
+                    />
+                    <DatePicker
+                        value={fillerMonth == "" ? null : moment(fillerMonth)}
+                        placeholder="Lọc tháng "
+                        status="warning"
+                        style={{ float: "right", fontWeight: "bold" }}
+                        onChange={onChangeMonth}
+                        picker="month"
+                    />
+                </div>
+                <div>
+                    <Button
+                        onClick={() => {
+                            setPage(false);
+                        }}
+                        data="addBooking"
+                        type="success"
+                        style={{
+                            border: "1px solid white",
+                            marginRight: "5px",
+                            fontWeight: page == true ? "bold" : "normal",
+                            color: page == true ? "#0ba2b9" : "#fefefe",
+                            backgroundColor: page == false ? "#a1a1a1" : "white",
+                        }}
+                    >
+                        Một trang
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setPage(true);
+                        }}
+                        data="addBooking"
+                        type="success"
+                        style={{
+                            border: "1px solid white",
+                            fontWeight: page == false ? "bold" : "normal",
+                            color: page == false ? "#0ba2b9" : "#fefefe",
+                            backgroundColor: page == true ? "#a1a1a1" : "white",
+                        }}
+                    >
+                        Phân trang
+                    </Button>
+                </div>
             </div>
             <br />
-            <div className="flex flex-wrap -mx-3 mt-7 ">
+            <div className="flex flex-wrap -mx-3 ">
                 {/* card1 */}
                 <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 ">
                     <div className="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -898,7 +1021,7 @@ const ListBookingByEmployee = (props) => {
                         <Input disabled={ishandle == 5 ? true : false} placeholder="Thêm ghi chú hoặc sản phẩm spa" />
                     </Form.Item>
                     <Button
-                    style={{marginLeft:"75%",  width:"25%"}}
+                        style={{ marginLeft: "75%", width: "25%" }}
                         type="primary"
                         htmlType="submit">{titleModal}</Button>
                 </Form>

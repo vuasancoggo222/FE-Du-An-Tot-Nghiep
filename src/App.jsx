@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import "./index.css";
@@ -102,7 +102,7 @@ function App() {
   const [countDown, setCountDown] = useState("");
   const [employeeId, setEmployeeId] = useState();
   const [bookingId, setBookingId] = useState();
-
+  const navigate = useNavigate()
   window.addEventListener("unload", () => {
     if (countDown > 0) {
       localStorage.setItem("countDown", countDown);
@@ -127,7 +127,7 @@ function App() {
   };
 
   useEffect(() => {
-    
+
     socket.on("connect", () => {
       setIsConnected(true);
     });
@@ -147,6 +147,14 @@ function App() {
         message: `${moment(data.createdAt).fromNow()}`,
         description: `${data.text}`,
         duration: 15,
+        onClick: () => {
+          console.log(data);
+          localStorage.setItem("bookingNew", data.bookingId)
+          navigate("/admin/booking/employee")
+        },
+        style: {
+          cursor: "pointer"
+        }
       });
     });
     socket.on(SocketEvent.NEWNOTIFICATION, (data) => {
@@ -155,11 +163,12 @@ function App() {
         description: `${data.text}`,
         duration: 15,
         onClick: () => {
-          localStorage.setItem("bookingNew", data.bookingId._id)
-          Navigate("/admin/booking")
+          console.log(data);
+          localStorage.setItem("bookingNew", data.bookingId)
+          navigate("/admin/booking")
         },
-        style:{
-          cursor:"pointer"
+        style: {
+          cursor: "pointer"
         }
       });
     });

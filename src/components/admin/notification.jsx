@@ -1,7 +1,7 @@
 import { Badge, message } from "antd";
 import moment from "moment";
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   notificationLengthState,
   notificationState,
@@ -30,9 +30,7 @@ const notification = () => {
   const readNotification = async (id) => {
     try {
       const readed = await readedNotification(id, user.token)
-      message.success('Đã đọc thông báo.',2)
       if(user.role == 2){
-     
         setAdminNotification(readed.notification)
         setAdminNotificationUnRead(readed.unRead)
         const booking = adminNotification.find((item) => item._id == id)
@@ -46,6 +44,9 @@ const notification = () => {
       else if(user.role == 1 ){
         setEmployeeNotification(readed.notification)
         setEmployeeNotificationUnRead(readed.unRead)
+        const booking = employeeNotification.find((item) => item._id == id)
+        localStorage.setItem("bookingNew", booking.bookingId._id)
+        navigate("/admin/booking/employee")
       }
      
     } catch (error) {

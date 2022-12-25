@@ -2,7 +2,7 @@
 import { Button, DatePicker, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import { httpGetAll } from "../../api/booking";
+import { httpGetAll, statusStatistic } from "../../api/booking";
 import { employeeOrderStatistics } from "../../api/employee";
 import {
   groupAgeByService,
@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [topUser, setTopUser] = useState();
   const [turnover, setTurnover] = useState();
+  const [cancel, setCancel] = useState();
   const [ageByService, setAgeByService] = useState();
   const [genderByService, setGenderByService] = useState();
   const [serviceFilter, setServiceFilter] = useState(""); // năm
@@ -337,13 +338,34 @@ const Dashboard = () => {
       });
     }else if (isChart == "cancel") {
       setIsChart("cancel");
-      setDataChart(genderByService.groupGender);
+      setDataChart(
+        cancel?.allData.map((item) => {
+          return {
+            name: item.service.name,
+            data: item.datas,
+          };
+        })
+      );
       //
       setLableChart({
         type: "",
-        categories: genderByService.categories,
+        categories: [
+          "Tháng 1",
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+          "Tháng 8",
+          "Tháng 9",
+          "Tháng 10",
+          "Tháng 11",
+          "Tháng 12",
+        ],
       });
     }
+
   };
 
   const newFilterService = async () => {
@@ -363,6 +385,16 @@ const Dashboard = () => {
     setEmployeeFilterMonth("");
     setLoading(false);
   };
+
+  const totalCancel = () => {
+    let count = 0
+    cancel?.allData.map((item) => {
+      item.datas.map((current) => {
+        count += current
+      })
+    })
+    return count
+  }
 
   useEffect(() => {
     const getBooking = async () => {
@@ -387,6 +419,16 @@ const Dashboard = () => {
       setAgeByService(res);
     };
     getAgeByService();
+
+    const getCancel = async () => {
+      let year = moment().format("YYYY");
+      if (chartYear != "") {
+        year = chartYear;
+      }
+      const res = await statusStatistic(year);
+      setCancel(res);
+    };
+    getCancel();
 
     const getGenderByService = async () => {
       const res = await groupGenderByService();
@@ -585,7 +627,7 @@ const Dashboard = () => {
                         style={{ color: isChart == "cancel" ? "white" : "" }}
                         className="mb-2 font-bold dark:text-white"
                       >
-                        {totalTurnover()}
+                        {totalCancel()}
                       </h5>
                       <p
                         style={{

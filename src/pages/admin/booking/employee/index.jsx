@@ -142,7 +142,7 @@ const ListBookingByEmployee = (props) => {
                 const notification = {
                     id: handleBooking._id,
                     notificationType: "admin",
-                    text: `Nhân viên ${user.name} đã hoàn thành đơn làm việc khách hàng ${handleBooking.name},vui lòng thanh toán.`,
+                    text: `Thanh toán lịch đặt của khách hàng ${handleBooking.name}` ,
                 };
                 console.log('abc');
                 socket.emit(SocketEvent.NEWNOTIFICATION, notification);

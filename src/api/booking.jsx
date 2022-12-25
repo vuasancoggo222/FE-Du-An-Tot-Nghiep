@@ -59,6 +59,11 @@ export const userHistory = (id) => {
 export const bookingForEmployee = () => {
   return instance.get(`/booking-employee-list/${user.employeeId}`, header);
 };
+
+export const statusStatistic = (year) => {
+  return instance.get(`/status-statistics?year=${year}`, header);
+};
+
 export {
   httpGetAll,
   httpAddBooking,

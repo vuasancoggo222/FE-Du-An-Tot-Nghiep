@@ -968,7 +968,10 @@ const ListBooking = (props) => {
                   } else if (item.status == 2) {
                     return;
                   } else {
-                    await props.handleToEmployee(item.employeeId._id, item._id.slice(-6, item._id.length));
+                    await props.handleToEmployee(
+                      item.employeeId._id,
+                      item._id.slice(-6, item._id.length)
+                    );
                     navigate("/admin/booking/employee");
                   }
                 }}
@@ -1078,8 +1081,16 @@ const ListBooking = (props) => {
       };
       console.log(bodyData);
       try {
-        await bookingAddByEmployeeApi(bodyData);
+        const response = await bookingAddByEmployeeApi(bodyData);
         message.success("Thêm khách đến trực tiếp thành công", 2);
+        const notification = {
+          id: response._id,
+          text: `Bạn có lịch đặt mới từ khách hàng ${response.name} `,
+          notificationType: "employee",
+          employeeId: response.employeeId,
+        };
+        socket.emit("newEmployeeNotification", notification);
+        socket.off("newEmployeeNotification");
         setIsModalOpen(false);
         const changeStatus = async () => {
           const res = await httpGetAll();

@@ -102,7 +102,7 @@ function App() {
   const [countDown, setCountDown] = useState("");
   const [employeeId, setEmployeeId] = useState();
   const [bookingId, setBookingId] = useState();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   window.addEventListener("unload", () => {
     if (countDown > 0) {
       localStorage.setItem("countDown", countDown);
@@ -127,7 +127,6 @@ function App() {
   };
 
   useEffect(() => {
-
     socket.on("connect", () => {
       setIsConnected(true);
     });
@@ -148,30 +147,30 @@ function App() {
         description: `${data.text}`,
         duration: 15,
         onClick: (e) => {
-          e.target.parentNode.parentNode.parentNode.style.display='none';
+          e.target.parentNode.parentNode.parentNode.style.display = "none";
           console.log(data);
-          localStorage.setItem("bookingNew", data.bookingId)
-          navigate("/admin/booking/employee")
+          localStorage.setItem("bookingNew", data.bookingId);
+          navigate("/admin/booking/employee");
         },
         style: {
-          cursor: "pointer"
-        }
+          cursor: "pointer",
+        },
       });
     });
     socket.on(SocketEvent.NEWNOTIFICATION, (data) => {
       notification.info({
-        message: `${data.createdAt}`,
+        message: `${moment(data.createdAt).fromNow()}`,
         description: `${data.text}`,
         duration: 15,
         onClick: (e) => {
-          e.target.parentNode.parentNode.parentNode.style.display='none';
+          e.target.parentNode.parentNode.parentNode.style.display = "none";
           console.log(data);
-          localStorage.setItem("bookingNew", data.bookingId)
-          navigate("/admin/booking")
+          localStorage.setItem("bookingNew", data.bookingId);
+          navigate("/admin/booking");
         },
         style: {
-          cursor: "pointer"
-        }
+          cursor: "pointer",
+        },
       });
     });
     socket.on(SocketEvent.NOTIFICATION, (data) => {
@@ -209,7 +208,7 @@ function App() {
     };
     getService();
     return () => {
-      socket.off(SocketEvent.NEWNOTIFICATION)
+      socket.off(SocketEvent.NEWNOTIFICATION);
       socket.off(SocketEvent.NOTIFICATION);
       socket.off(SocketEvent.USERLISTNOTIFICATION);
       socket.off("employeeNotification");

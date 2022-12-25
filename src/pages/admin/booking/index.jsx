@@ -1171,13 +1171,13 @@ const ListBooking = (props) => {
             id: response._id,
             notificationType: "employee",
             text: `Bạn có lịch đặt mới từ khách hàng ${response.name}`,
-            employeeId: response.employeeId,
+            employeeId: response.employeeId._id,
           };
           socket.emit("newEmployeeNotification", newEmployeeNotification);
           socket.off("newEmployeeNotification");
         } catch (error) {
           console.log(error);
-          message.error(`${error.response?.data?.message}`);
+          message.error(`${error}`);
         }
       } else if (ishandle === "2") {
         try {

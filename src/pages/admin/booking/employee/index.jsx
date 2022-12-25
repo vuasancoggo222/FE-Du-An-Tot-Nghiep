@@ -846,7 +846,7 @@ const ListBookingByEmployee = (props) => {
       <div className="w-full px-6 py-6 mx-auto">
         <div>
           <h1 className="mb-0 font-bold text-white capitalize pb-[20px] text-center text-[50px]">
-            Booking by {employee?.name}
+            Lịch làm việc của {employee?.name}
           </h1>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>

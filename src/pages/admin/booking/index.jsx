@@ -74,7 +74,6 @@ const ListBooking = (props) => {
   const [dateUpdate, setDateUpdate] = useState();
   const [coinVoucher, setCoinVoucher] = useState();
   const [note, setNote] = useState();
-  const [addVoucher, setAddVoucher] = useState();
   const [employeeBooking, setEmployeeBooking] = useState();
   // eslint-disable-next-line no-unused-vars
   const [dateBooking, seDateBooking] = useState();
@@ -118,10 +117,9 @@ const ListBooking = (props) => {
       }
     });
     if (flagVoucher == false) {
-      message.error("Mã voucher không đúng !");
+      message.error("Voucher không hợp lệ.");
     } else {
       console.log(res);
-      setAddVoucher(res);
       let flag = false;
       let serrvice;
       handleBooking?.services.map((item) => {
@@ -605,7 +603,6 @@ const ListBooking = (props) => {
           if (item.status == isButon || show == "false") {
             return;
           }
-          setAddVoucher("");
           setCoinVoucher("");
           await seDateBooking(item.date.toString());
           setBookingPirce(item?.bookingPrice);
@@ -674,7 +671,7 @@ const ListBooking = (props) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  const handleOk = async () => {};
+  const handleOk = async () => { };
 
   const handleCancel = async () => {
     setIsModalOpen(false);
@@ -685,11 +682,11 @@ const ListBooking = (props) => {
     };
     changeStatus();
     if (localStorage.getItem("nonePage")) {
-      window.scroll({
-        top: 220,
-        left: 0,
-        behavior: "smooth",
-      });
+      // window.scroll({
+      //   top: 220,
+      //   left: 0,
+      //   behavior: "smooth",
+      // });
       const element = await document.querySelectorAll("#higtlight");
       console.log(element);
       for (let i = 0; i < element.length; i++) {
@@ -968,7 +965,10 @@ const ListBooking = (props) => {
                   } else if (item.status == 2) {
                     return;
                   } else {
-                    await props.handleToEmployee(item.employeeId._id, item._id.slice(-6, item._id.length));
+                    await props.handleToEmployee(
+                      item.employeeId._id,
+                      item._id.slice(-6, item._id.length)
+                    );
                     navigate("/admin/booking/employee");
                   }
                 }}
@@ -1078,8 +1078,16 @@ const ListBooking = (props) => {
       };
       console.log(bodyData);
       try {
-        await bookingAddByEmployeeApi(bodyData);
+        const response = await bookingAddByEmployeeApi(bodyData);
         message.success("Thêm khách đến trực tiếp thành công", 2);
+        const notification = {
+          id: response._id,
+          text: `Bạn có lịch đặt mới từ khách hàng ${response.name} `,
+          notificationType: "employee",
+          employeeId: response.employeeId,
+        };
+        socket.emit("newEmployeeNotification", notification);
+        socket.off("newEmployeeNotification");
         setIsModalOpen(false);
         const changeStatus = async () => {
           const res = await httpGetAll();
@@ -1160,13 +1168,13 @@ const ListBooking = (props) => {
             id: response._id,
             notificationType: "employee",
             text: `Bạn có lịch đặt mới từ khách hàng ${response.name}`,
-            employeeId: response.employeeId,
+            employeeId: response.employeeId._id,
           };
           socket.emit("newEmployeeNotification", newEmployeeNotification);
           socket.off("newEmployeeNotification");
         } catch (error) {
           console.log(error);
-          message.error(`${error.response?.data?.message}`);
+          message.error(`${error}`);
         }
       } else if (ishandle === "2") {
         try {
@@ -1212,44 +1220,67 @@ const ListBooking = (props) => {
             socket.off(SocketEvent.NEWUSERNOTIFICATION);
           }
         } catch (error) {
-          message.error(`${error.response.data.message}`);
+          return message.error(`${error.response?.data?.message}`);
         }
       } else if (ishandle === "4") {
-        if (addVoucher != "") {
+        const code = document.getElementById("code");
+        if (code.value == "") {
           try {
+            const resB = await httpGetChangeStatus(handleBooking._id, {
+              status: 4,
+              note: data.note,
+            });
+            await setHandleBooking(resB);
+            handleToolbarClick();
+            message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+            if (handleBooking.userId) {
+              const notification = {
+                id: handleBooking._id,
+                notificationType: "user",
+                text: "Thanh toán thành công,cảm ơn đã sử dụng Spa của chúng tôi.",
+                from: user.id,
+                userId: handleBooking.userId._id,
+              };
+              socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+              socket.off(SocketEvent.NEWUSERNOTIFICATION);
+            }
+          } catch (error) {
+            return message.error(`${error.response?.data?.message}`);
+          }
+        } else {
+          try {
+            console.log(code.value);
             const res = await useVoucher(handleBooking._id, {
-              code: addVoucher.code,
+              code: code.value,
             });
             console.log(res);
+            const resB = await httpGetChangeStatus(handleBooking._id, {
+              ...res,
+              status: 4,
+              note: data.note,
+            });
+
+            await setHandleBooking(resB);
+            handleToolbarClick();
+            message.success(`${titleModal} khách hàng ${handleBooking.name}`);
+            if (handleBooking.userId) {
+              const notification = {
+                id: handleBooking._id,
+                notificationType: "user",
+                text: "Thanh toán thành công,cảm ơn đã sử dụng Spa của chúng tôi.",
+                from: user.id,
+                userId: handleBooking.userId._id,
+              };
+              socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
+              socket.off(SocketEvent.NEWUSERNOTIFICATION);
+            }
           } catch (error) {
             message.error(`${error.response?.data?.message}`);
             return;
           }
         }
 
-        try {
-          const res = await httpGetChangeStatus(handleBooking._id, {
-            status: 4,
-            note: data.note,
-            bookingPrice: bookingPrice,
-          });
-          await setHandleBooking(res);
-          handleToolbarClick();
-          message.success(`${titleModal} khách hàng ${handleBooking.name}`);
-          if (handleBooking.userId) {
-            const notification = {
-              id: handleBooking._id,
-              notificationType: "user",
-              text: "Thanh toán thành công,cảm ơn đã sử dụng Spa của chúng tôi.",
-              from: user.id,
-              userId: handleBooking.userId._id,
-            };
-            socket.emit(SocketEvent.NEWUSERNOTIFICATION, notification);
-            socket.off(SocketEvent.NEWUSERNOTIFICATION);
-          }
-        } catch (error) {
-          message.error(`${error.response.data.message}`);
-        }
+
       } else if (ishandle === "6") {
         let res = "";
         if (!data.services[0].lable) {
@@ -1294,7 +1325,7 @@ const ListBooking = (props) => {
           });
           message.success(
             "Cập nhật thông tin thành công cho khách hàng " +
-              handleBooking?.name
+            handleBooking?.name
           );
           if (handleBooking.userId) {
             const notification = {
@@ -1490,9 +1521,8 @@ const ListBooking = (props) => {
               cells: [
                 {
                   colSpan: 2,
-                  value: `Ghi chú: ${
-                    note != undefined ? note : handleBooking?.note
-                  }`,
+                  value: `Ghi chú: ${note != undefined ? note : handleBooking?.note
+                    }`,
                   style: { fontSize: 10, hAlign: "Center", bold: true },
                 },
               ],
@@ -1906,7 +1936,7 @@ const ListBooking = (props) => {
                 format={dateFormat}
                 onChange={onchangeDateBooking}
                 placeholder="Ngày đến"
-                // onOk={onOk}
+              // onOk={onOk}
               />
             </Form.Item>
 
@@ -1992,6 +2022,12 @@ const ListBooking = (props) => {
                 id="code"
                 disabled={ishandle == 4 ? false : true}
                 placeholder="Nhập mã"
+                onChange={ (e) => {
+                  if(e.target.value == "") {
+                    setBookingPirce(handleBooking?.bookingPrice)
+                    setCoinVoucher("")
+                  }
+                } }
               />
             </Form.Item>
             <Form.Item className="mb-5" label=" ">
@@ -2034,8 +2070,8 @@ const ListBooking = (props) => {
                     titleModal == "Thanh toán và in hóa đơn"
                       ? "block"
                       : titleModal == "Thông tin"
-                      ? "none"
-                      : "",
+                        ? "none"
+                        : "",
                 }}
                 type="primary"
                 htmlType="submit"

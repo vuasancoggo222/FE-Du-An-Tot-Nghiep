@@ -74,6 +74,7 @@ import ListVoucher from "./pages/admin/voucher";
 import AddVoucher from "./pages/admin/voucher/add";
 import EditVoucher from "./pages/admin/voucher/edit";
 import Bookingsuccess from "./components/clients/bookingsuccess";
+import { readedNotification } from "./api/notification";
 
 function App() {
   const [isConnected, setIsConnected] = useState(null);
@@ -148,9 +149,15 @@ function App() {
         duration: 15,
         onClick: (e) => {
           e.target.parentNode.parentNode.parentNode.style.display = "none";
-          console.log(data);
           localStorage.setItem("bookingNew", data.bookingId);
           navigate("/admin/booking/employee");
+          readedNotification(data._id,user.token).then(response =>{
+            setEmployeeNotification(response.notification);
+            setEmployeeNotificationLength(response.unRead);
+          })
+          .catch(error =>{
+            message.error(`${error}`)
+          })
         },
         style: {
           cursor: "pointer",
@@ -165,6 +172,13 @@ function App() {
         onClick: (e) => {
           e.target.parentNode.parentNode.parentNode.style.display = "none";
           console.log(data);
+          readedNotification(data._id,user.token).then(response =>{
+            setNotification(response.notification);
+            setNotificationLength(response.unRead);
+          })
+          .catch(error =>{
+            message.error(`${error}`)
+          })
           localStorage.setItem("bookingNew", data.bookingId);
           navigate("/admin/booking");
         },

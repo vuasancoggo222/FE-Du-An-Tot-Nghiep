@@ -168,7 +168,7 @@ const ListBookingByEmployee = (props) => {
         message.success(`Chờ thanh toán "${handleBooking.name}"`);
         const notification = {
           id: response._id,
-          notificationType: "admin",
+          type: "admin",
           text: `Nhân viên ${response.employeeId.name} đã hoàn thành đơn làm việc khách hàng ${response.name},vui lòng thanh toán.`,
         };
         socket.emit(SocketEvent.NEWNOTIFICATION, notification);

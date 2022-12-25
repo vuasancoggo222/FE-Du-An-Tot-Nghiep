@@ -1212,7 +1212,7 @@ const ListBooking = (props) => {
             const notification = {
               id: handleBooking._id,
               notificationType: "user",
-              text: "Admin đã cập nhật trạng thái lịch đặt của bạn của bạn.",
+              text: "Admin đã cập nhật trạng thái lịch đặt của bạn",
               from: user.id,
               userId: handleBooking.userId._id,
             };

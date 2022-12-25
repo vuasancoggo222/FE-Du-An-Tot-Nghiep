@@ -2,7 +2,7 @@
 import { Button, DatePicker, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import { httpGetAll } from "../../api/booking";
+import { httpGetAll, statusStatistic } from "../../api/booking";
 import { employeeOrderStatistics } from "../../api/employee";
 import {
   groupAgeByService,
@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [topUser, setTopUser] = useState();
   const [turnover, setTurnover] = useState();
+  const [cancel, setCancel] = useState();
   const [ageByService, setAgeByService] = useState();
   const [genderByService, setGenderByService] = useState();
   const [serviceFilter, setServiceFilter] = useState(""); // năm
@@ -335,7 +336,36 @@ const Dashboard = () => {
         type: "",
         categories: genderByService.categories,
       });
+    }else if (isChart == "cancel") {
+      setIsChart("cancel");
+      setDataChart(
+        cancel?.allData.map((item) => {
+          return {
+            name: item.service.name,
+            data: item.datas,
+          };
+        })
+      );
+      //
+      setLableChart({
+        type: "",
+        categories: [
+          "Tháng 1",
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+          "Tháng 8",
+          "Tháng 9",
+          "Tháng 10",
+          "Tháng 11",
+          "Tháng 12",
+        ],
+      });
     }
+
   };
 
   const newFilterService = async () => {
@@ -355,6 +385,16 @@ const Dashboard = () => {
     setEmployeeFilterMonth("");
     setLoading(false);
   };
+
+  const totalCancel = () => {
+    let count = 0
+    cancel?.allData.map((item) => {
+      item.datas.map((current) => {
+        count += current
+      })
+    })
+    return count
+  }
 
   useEffect(() => {
     const getBooking = async () => {
@@ -379,6 +419,16 @@ const Dashboard = () => {
       setAgeByService(res);
     };
     getAgeByService();
+
+    const getCancel = async () => {
+      let year = moment().format("YYYY");
+      if (chartYear != "") {
+        year = chartYear;
+      }
+      const res = await statusStatistic(year);
+      setCancel(res);
+    };
+    getCancel();
 
     const getGenderByService = async () => {
       const res = await groupGenderByService();
@@ -506,7 +556,7 @@ const Dashboard = () => {
         <br />
         <div className="flex flex-wrap -mx-3 mt-3">
           {/* card1 */}
-          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/5">
             <div
               style={{
                 backgroundColor: isChart == "turnover" ? "#525252" : "white",
@@ -519,7 +569,7 @@ const Dashboard = () => {
                   <div className="flex-none w-2/3 max-w-full px-3">
                     <div>
                       <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
-                        Doanh thu (Vnđ)
+                        Doanh thu
                       </p>
                       <h5
                         style={{ color: isChart == "turnover" ? "white" : "" }}
@@ -558,8 +608,60 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+           <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/5">
+            <div
+              style={{
+                backgroundColor: isChart == "cancel" ? "#525252" : "white",
+                color: isChart == "cancel" ? "white" : "",
+              }}
+              className="relative flex flex-col min-w-0 break-words shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border"
+            >
+              <div className="flex-auto p-4 ">
+                <div className="flex flex-row -mx-3">
+                  <div className="flex-none w-2/3 max-w-full px-3">
+                    <div>
+                      <p className="mb-0 font-sans text-sm font-semibold leading-normal uppercase dark:text-white dark:opacity-60">
+                         Đơn hủy 
+                      </p>
+                      <h5
+                        style={{ color: isChart == "cancel" ? "white" : "" }}
+                        className="mb-2 font-bold dark:text-white"
+                      >
+                        {totalCancel()}
+                      </h5>
+                      <p
+                        style={{
+                          color: isChart != "cancel" ? "#fbff08" : "#168ea0 ",
+                        }}
+                        className="mb-0 dark:texgenderBySerVicet-white dark:opacity-60"
+                      >
+                        {/* since yesterday */}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="px-3 text-right basis-1/3">
+                    <div className="inline-block w-12 h-12 text-center rounded-circle bg-gradient-to-tl ">
+                      <img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-assets-factory-flaticons-lineal-color-flat-icons-3.png" />
+                    </div>
+                  </div>
+                </div>
+                <button>
+                  <span
+                    style={{
+                      color: isChart != "cancel" ? "#168ea0" : "#fbff08",
+                    }}
+                    data="cancel"
+                    onClick={handleChooseChart}
+                    className="text-sm font-bold leading-normal "
+                  >
+                    Xem biểu đồ năm {chartYear}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
           {/* card2 */}
-          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/5">
             <div
               style={{
                 backgroundColor: isChart == "user" ? "#525252" : "white",
@@ -611,7 +713,7 @@ const Dashboard = () => {
             </div>
           </div>
           {/* card3 */}
-          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
+          <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/5">
             <div
               style={{
                 backgroundColor:
@@ -667,7 +769,7 @@ const Dashboard = () => {
             </div>
           </div>
           {/* card4 */}
-          <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
+          <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/5">
             <div
               style={{
                 backgroundColor:
@@ -720,7 +822,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
+          <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/5">
             <div
               style={{
                 backgroundColor: isChart == "employee" ? "#525252" : "",

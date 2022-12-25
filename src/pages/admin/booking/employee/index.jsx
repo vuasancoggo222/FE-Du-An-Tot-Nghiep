@@ -36,12 +36,7 @@ const ListBookingByEmployee = (props) => {
   const [titleModal, setTitleModal] = useState("");
   const [fillerMonth, setFillterMonth] = useState("");
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(
-    localStorage.getItem("Idback") == undefined &&
-      localStorage.getItem("bookingNew") == undefined
-      ? true
-      : false
-  );
+  const [page, setPage] = useState();
   const [fillterYear, setFillterYear] = useState("");
   const [handleBooking, setHandleBooking] = useState();
   const [ishandle, setIshandle] = useState();
@@ -154,6 +149,16 @@ const ListBookingByEmployee = (props) => {
           status: 3,
           note: data.note,
         });
+        const dataR = await employeeStatistics(
+          props.dataAdminLogin == undefined
+            ? user.employeeId
+            : props.dataAdminLogin,
+          undefined,
+          undefined,
+          user.token
+        );
+        console.log(props.dataAdminLogin);
+        setEmpoyeeStatic(dataR);
         console.log(response);
         const changeStatus = async () => {
           const res = await httpGetAll();
@@ -711,13 +716,23 @@ const ListBookingByEmployee = (props) => {
       setFillterYear(dateString);
     }
     setLoading(false);
-  };
+  }; 
+  
   const HightLightBookingNew = async () => {
     const idBooking = localStorage.getItem("bookingNew");
     if (idBooking) {
       try {
         const res = await httpGetAll();
         setBooking(res);
+        const data = await employeeStatistics(
+          props.dataAdminLogin == undefined
+            ? user.employeeId
+            : props.dataAdminLogin,
+          undefined,
+          undefined,
+          user.token
+        );
+        setEmpoyeeStatic(data);
         const element = await document.getElementsByClassName(
           idBooking.slice(-6, idBooking.length)
         );
@@ -743,6 +758,15 @@ const ListBookingByEmployee = (props) => {
       } catch (error) {
         const res = await httpGetAll();
         setBooking(res);
+        const data = await employeeStatistics(
+        props.dataAdminLogin == undefined
+          ? user.employeeId
+          : props.dataAdminLogin,
+        undefined,
+        undefined,
+        user.token
+      );
+      setEmpoyeeStatic(data);
         setPage(false);
         const element = await document.getElementsByClassName(
           idBooking.slice(-6, idBooking.length)
@@ -770,6 +794,26 @@ const ListBookingByEmployee = (props) => {
     }
   };
   HightLightBookingNew();
+  const hightlight = async () => {
+    // eslint-disable-next-line react/prop-types
+    if (props.dataBookingId) {
+      // eslint-disable-next-line react/prop-types
+      const highlight = await document.getElementsByClassName(
+        props.dataBookingId
+      );
+      console.log(props.dataBookingId);
+      if (highlight != undefined) {
+        highlight[0].style.display = "block";
+        highlight[0].scrollIntoView({ behavior: "smooth" });
+        // eslint-disable-next-line react/prop-types
+        localStorage.setItem(
+          "Idback",
+          props.dataBookingId.slice(-6, props.dataBookingId.length)
+        );
+      }
+    } 
+  };
+  hightlight();
   useEffect(() => {
     setLoading(true);
 
@@ -801,34 +845,16 @@ const ListBookingByEmployee = (props) => {
       );
       setEmpoyeeStatic(data);
       console.log(data);
-      const hightlight = async () => {
-        // eslint-disable-next-line react/prop-types
-        if (props.dataBookingId) {
-          // eslint-disable-next-line react/prop-types
-          const highlight = await document.getElementsByClassName(
-            props.dataBookingId
-          );
-          if (highlight != undefined) {
-            highlight[0].style.display = "block";
-            highlight[0].scrollIntoView({ behavior: "smooth" });
-            // eslint-disable-next-line react/prop-types
-            localStorage.setItem(
-              "Idback",
-              props.dataBookingId.slice(-6, props.dataBookingId.length)
-            );
-          }
-        } else {
-          setPage(true);
-          const res = { ...user, _id: user.employeeId };
-          console.log(res);
-          setEmployee(res);
-        }
-      };
-      hightlight();
-      setEmpoyeeStatic(data);
+
     };
     adminLogin();
-
+    const hightl = async () => {
+      setPage(true);
+      const res = { ...user, _id: user.employeeId };
+      console.log(res);
+      setEmployee(res);
+      } 
+    hightl();
     setLoading(false);
 
     // eslint-disable-next-line react/prop-types
